@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta charset="utf-8">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+		<!--모바일 최적화 : 화면 자동확대, 터치 딜레이 제거 (시작)-->
+		<script type="text/javascript" src="./package/subtool.js"></script>
+		<script type="text/javascript" src="./package/fastclick.js"></script>
+		<!--모바일 최적화 : 화면 자동확대, 터치 딜레이 제거 (끝)-->
+
+		<link rel="stylesheet" type="text/css" href="./css/sist_cardNinfo.css" />
+		<link rel="stylesheet" type="text/css" href="./css/sist_main.css" />
+
+		<title>심플 스톤</title>
+
+	</head>
+	<body>
+        <div id="wrapper">
+			<!--헤더-->
+            <header id="frame_header">
+                <div id="header_top">
+					<button id="header_home" class="header_button"><img src="./images/icon_home.png"></button>
+					심플 스톤
+					<button id="header_info" class="header_button"><img src="./images/icon_info.png"></button>
+				</div>
+                <div id="header_bottom" class="subscreen">
+					<button id="search_class" class="search_button">직업 카드</button>
+					<div class="mobile_only">
+						<button id="search_mobilefilter" class="search_button">&#128295; 검색 필터</button>
+					</div>
+
+					<div class="desktop_only">
+						<button id="search_mana" class="search_button">마나 : 전체</button>
+						<button id="search_rarity" class="search_button">등급 : 전체</button>
+						<button id="search_set" class="search_button">세트 : 전체</button>
+
+						<button id="search_reset" class="search_button">필터<br>초기화</button>
+						<button id="search_keyword" class="search_button">&#128269;  <span id="keyword_text">검색어</span></button>
+					</div>
+                </div>
+            </header>
+
+			<!--메인창-->
+            <section id="frame_main">
+				<!--타이틀스크린-->
+                <div id="main_titlescreen" class="mainscreen main_both">
+                    <div class="main_title">심플 스톤</div>
+                    <div id="titlescreen_card">
+                        <button id="start_card" class="titlescreen_button"><img src="./images/icon_search.png"></button>
+                        <p class="titlescren_desc">카드 정보</p>
+                    </div>
+                    <div id="titlescreen_deck">
+                        <button id="start_deck" class="titlescreen_button"><img src="./images/icon_decklist.png"></button>
+                        <p class="titlescren_desc">덱 관리</p>
+                    </div>
+                </div>
+
+				<!--덱 목록-->
+				<div id="main_decklist" class="mainscreen main_both">
+					<div class="main_title">최근 작업 덱</div>
+					<button id="decklist_temp" class="decklist_button" data-name="temp">향후 구현 예정</button>
+				</div>
+
+				<!--카드정보 불러오기-->
+				<div id="main_loading" class="mainscreen main_both">
+                    <div id="main_loading_title" class="main_title">카드정보 불러오는 중</div>
+					<img class="loading_mark" src="./images/loading_transparent.gif" alt="로딩 이미지">
+				</div>
+
+				<!--덱 설정-->
+				<div id="main_deckconfig" class="mainscreen main_left">
+					<button id="deckconfig_name" class="deckconfig_button">덱 이름 편집</button>
+					<button id="deckconfig_deckstring" class="deckconfig_button">덱코드 출력</button>
+					<button id="deckconfig_text" class="deckconfig_button">덱설명 출력</button>
+					<button id="deckconfig_format" class="deckconfig_button"></button>
+				</div>
+
+				<!--카드 목록-->
+				<div id="main_collection" class="mainscreen main_left">
+					<div id="collection_loading">
+						<img class="loading_mark" src="./images/loading_white.svg" alt="로딩 이미지">
+					</div>
+					<div id="collection_list" class="clusterize-scroll">
+						<div id="collection_list_content" class="clusterize-content"></div>
+					</div>
+				</div>
+
+				<!--카드 정보-->
+				<div id="main_cardinfo" class="mainscreen main_right"></div>
+
+				<!--덱 목록-->
+				<div id="main_deck" class="mainscreen main_right">
+					<div id="deck_hero">
+						<div id="deck_hero_cover">
+							<div id="deck_dust">
+								<img id="dust_icon" src="./images/icon_dust.png" alt="가루">
+								<div id="dust_quantity"></div>
+							</div>
+							<div id="deck_format" class=""></div>
+							<p id="deck_name"></p>
+						</div>
+					</div>
+					<div id="deck_list_cover">
+						<div id="deck_list_cover_overlay"></div>
+						<div id="deck_list" class="clusterize-scroll">
+							<div id="deck_list_content" class="clusterize-content"></div>
+						</div>
+					</div>
+					<div id="deck_bottom_cover">
+						<div id="deck_bottom"></div>
+					</div>
+				</div>
+            </section>
+
+			<!--푸터-->
+            <footer id="frame_footer">
+				<div id="footer_top">
+					<div id="footer_notice" class="footer_desc">공지사항 (작성 예정)</div>
+					<div id="footer_name_left" class="footer_desc"></div>
+					<div id="footer_name_right" class="footer_desc"></div>
+				</div>
+                <div id="footer_bottom" class="subscreen">
+					<button id="bottom_undo" class="footer_button disabled">
+						<div id="undo_icon" class="log_icon">&#8630;</div>
+						<div id="undo_text" class="log_text desktop_only"> 취소</div>
+						<div id="undo_num" class="log_num">0</div>
+					</button>
+					<button id="bottom_redo" class="footer_button disabled">
+						<div id="redo_icon" class="log_icon">&#8631;</div>
+						<div id="redo_text" class="log_text desktop_only">복구 </div>
+						<div id="redo_num" class="log_num">0</div>
+					</button>
+					<button id="bottom_done" class="footer_button"><img src="./images/icon_done.png"><span class="desktop_only"> 완료</span></button>
+                </div>
+                <div id="footer_decklist" class="subscreen">
+					<button id="button_readcode" class="footer_decklist_button"><img src="./images/icon_deckcode.png"><span> 덱코드 입력</span></button>
+					<button id="botton_newdeck" class="footer_decklist_button"><img src="./images/icon_newdeck.png"><span> 새로운 덱</span></button>
+				</div>
+                <div id="footer_deckconfig" class="subscreen">
+					<button id="button_edit"><img src="./images/icon_edit.png"><span> 편집</span></button>
+				</div>
+            </footer>
+
+			<!--별도 창 - 카드 필터(모바일)-->
+			<section id="frame_mobilefilter" class="">
+				<div class="mobilefilter_desc top">&#128295; 검색 필터</div>
+				<button class="mobilefilter_close mobilefilter_button">필터 닫기</button>
+
+				<div class="mobilefilter_desc margin_top">카드 마나</div>
+				<button id="mobilefilter_mana" class="mobilefilter_button">마나 : 전체</button>
+				<div class="mobilefilter_desc margin_top">카드 등급</div>
+				<button id="mobilefilter_rarity" class="mobilefilter_button">등급 : 전체</button>
+				<div class="mobilefilter_desc margin_top">카드 세트</div>
+				<button id="mobilefilter_set" class="mobilefilter_button">세트 : 전체</button>
+				<div class="mobilefilter_desc margin_top">검색어</div>
+				<button id="mobilefilter_keyword" class="mobilefilter_button">&#128269;  <span id="keyword_text2">검색어</span></button>
+
+				<button class="mobilefilter_close mobilefilter_button">필터 닫기</button>
+			</section>
+			<section id="frame_mobilefilter_reset" class="">
+				<button id="mobilefilter_reset" class="mobilefilter_button">필터 초기화</button>
+			</section>
+        </div>
+		<!--별도 창 - 카드 정보 (커버)-->
+		<section id="frame_cardcover">
+			<div id="cardcover_top"></div>
+			<div id="cardcover_desc">
+				화면을 클릭하면 창이 닫힙니다.
+			</div>
+		</section>
+		<!--별도 창 - 카드 정보 (좌측)-->
+		<section id="frame_cardmonitor" class="subscreen"></section>
+
+		<!--외부 보조 라이브러리-->
+		<script src="./package/sweetalert2/dist/sweetalert2.min.js"></script>
+			<link rel="stylesheet" href="./package/sweetalert2/dist/sweetalert2.css">
+		<script src="./package/clusterize.min.js"></script>
+			<link href="./package/clusterize.css" rel="stylesheet">
+		<script src="./package/localforage.min.js"></script>
+		<script src="./package/native-toast/native-toast.min.js"></script>
+			<link href="./package/native-toast/native-toast.css" rel="stylesheet">
+			<!-- for IE support -->
+			<script src="./package/sweetalert2/node_modules/es6-promise-polyfill/promise.min.js"></script>
+			<script src="./package/fetch.js"></script>
+		<!--외부 보조 라이브러리-->
+
+        <script type="text/javascript" src="./js/deckstrings.js"></script>
+        <script type="text/javascript" src="./js/sist_data.js"></script>
+		<script type="text/javascript" src="./js/sist_process.js"></script>
+		<script type="text/javascript" src="./js/sist_filterNsearch.js"></script>
+		<script type="text/javascript" src="./js/sist_cardinfo.js"></script>
+		<script type="text/javascript" src="./js/sist_deckcode.js"></script>
+
+
+	</body>
+	<!-- Histats.com  START  (aync)-->
+ <script type="text/javascript">var _Hasync= _Hasync|| [];
+ _Hasync.push(['Histats.start', '1,4102260,4,0,0,0,00010000']);
+ _Hasync.push(['Histats.fasi', '1']);
+ _Hasync.push(['Histats.track_hits', '']);
+ (function() {
+ var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+ hs.src = ('//s10.histats.com/js15_as.js');
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+ })();</script>
+ <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4102260&101" alt="website page counter" border="0"></a></noscript>
+ <!-- Histats.com  END  -->
+</html>

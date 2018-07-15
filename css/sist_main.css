@@ -1,0 +1,1181 @@
+* {
+    margin:0;
+    padding:0;
+    border:0;
+
+    font-size:16px;
+    font-family:'맑은 고딕','Malgun Gothic',나눔고딕,돋움,Dotum,굴림,Gulim,'Apple SD Gothid Neo',sans-serif;
+}
+
+/*=====================================================*/
+/* 골격 */
+/*=====================================================*/
+html {
+    width:100%;
+    height:100%;
+}
+body {
+    height:100%;
+
+    background:#909090;
+    overscroll-behavior:contain;
+}
+    html body.swal2-height-auto {
+        height:100%;
+    }
+
+#wrapper {
+    position:relative;
+    overflow:hidden;
+
+    margin:0 auto;
+    width:100%;
+        max-width:800px;
+    height:100%;
+        min-height:550px;
+        max-height:2000px;
+
+    background:linear-gradient(
+        to bottom,
+        #484442 0%,
+        #3C3431 100%);
+}
+
+/*=====================================================*/
+/* 헤더 */
+/*=====================================================*/
+#frame_header {
+    position:relative;
+
+    width:100%;
+    height:auto;
+
+    background-color:#798689;
+}
+    #header_top {
+        position:relative;
+        z-index:2;
+
+        width:100%;
+        height:50px;
+
+        background-color:#3e40e5;
+
+        color:white;
+        font-size:23px;
+        line-height:50px;
+        text-align:center;
+    }
+        .header_button {
+            position:absolute;
+            display:block;
+
+            padding:2px;
+            height:40px;
+
+            background-color:rgba(255,255,255,0.2);
+            border:2px white solid;
+            border-radius: 5px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:23px;
+            cursor:pointer;
+        }
+            .header_button img {
+                width:32px;
+                height:32px;
+            }
+            #header_home{
+                left:5px;top:5px;
+                width:60px;}
+            #header_info{
+                right:5px;top:5px;
+                width:60px;
+                letter-spacing:-1px;}
+            .header_button:hover {
+                background-color:rgba(255,255,255,0.4);
+            }
+            .header_button:active {
+                background-color:rgba(255,255,255,0.8);
+            }
+    #header_bottom {
+        position:relative;
+        z-index:1;
+        overflow:hidden;
+
+        width:100%;
+        height:40px;
+
+        background:#798689;
+        box-sizing: border-box;
+        transform:translate(0,-100%);
+        transition:transform 0.5s;
+        pointer-events: none;
+    }
+            #header_bottom.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        .search_button {
+            position:relative;
+            overflow:hidden;
+            float:left;
+            display:block;
+
+            margin:2px 0px 2px 5px;
+            width:110px;
+            height:36px;
+
+            background-color:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 7px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:18px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor:pointer;
+        }
+            .search_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .search_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+        #search_keyword {
+            float:right;
+
+            margin:2px 5px 2px 0;
+            padding-left:8px;
+            width:100px;
+
+            box-sizing: border-box;
+
+            text-align:left;
+        }
+            #search_keyword > img {
+                width:18px;
+                height:18px;
+            }
+            #keyword_text {
+                font-size:18px;
+                letter-spacing: -2px;
+                font-weight:bold;
+            }
+            #search_keyword.activate {
+                border:2px lime solid;
+            }
+        #search_reset {
+            float:right;
+
+            margin:2px 5px 2px 0;
+            width:60px;
+
+            background:red;
+
+            font-size:13px;
+            line-height:120%;
+        }
+            #search_reset:hover {
+                background:#FF4242;
+            }
+            #search_reset:active {
+                background:#FF9E9E;
+            }
+
+        #search_mobilefilter {
+            float:right;
+            width:45%;
+        }
+        /*필터 팝업 관련*/
+        .popup_button {
+            display:block;
+            position:relative;
+            float:left;
+
+            margin:0 2px 10px 2px;
+            width:calc(50% - 4px);
+            height:45px;
+
+            background:#DDDDDD;
+
+            font-size:21px;
+            letter-spacing: -1px;
+            white-space: nowrap;
+            cursor:pointer;
+        }
+                .popup_button.full {
+                    margin:0 0 10px 0;
+                    width:100%;
+                }
+                .popup_button.trisection {
+                    margin:0 2px 10px 2px;
+                    width:calc(33% - 4px);
+                }
+                .popup_button.small {
+                    margin:0 0 10px 0;
+                    width:100%;
+                    height:35px;
+
+                    font-size:18px;
+                }
+                .popup_button .FREE{color:#858585;font-size:inherit;}
+                .popup_button .COMMON{color:#858585;font-size:inherit;}
+                .popup_button .RARE{color:#315376;font-size:inherit;}
+                .popup_button .EPIC{color:#644c82;font-size:inherit;}
+                .popup_button .LEGENDARY{color:#ffb00d;font-size:inherit;}
+            .popup_button:hover, .popup_button.selected {
+                background:#87ece9;
+
+                color:black;
+            }
+        .popup_title {
+            position: relative;
+            display:inline-block;
+
+            margin: 0 0 .4em;
+            padding: 0;
+            width:100%;
+            height:50px;
+
+            background:#494949;
+
+            color: white;
+            font-size: 30px;
+                line-height:50px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: none;
+        }
+        .popup_subtitle {
+            position: relative;
+            display:inline-block;
+
+            margin: 0 0 .4em;
+            padding: 0;
+            width:100%;
+
+            color: #595959;
+            font-size: 25px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: none;
+        }
+        .popup_select {
+            width:100%;
+
+            border:1px gray solid;
+        }
+            .popup_select option[disabled] {
+                color:red;
+                font-style:italic;
+            }
+    /*모바일 필터*/
+    #frame_mobilefilter {
+        position:absolute;
+            right:0;top:0;
+            z-index:3;
+
+        padding:0 10px;
+        width:50%;
+        height:100%;
+
+        background:rgba(0,0,0,0.8);
+        box-sizing: border-box;
+        transform:translate(100%,0);
+        transition:transform 0.3s;
+        pointer-events: none;
+    }
+    #frame_mobilefilter_reset {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:3;
+
+        padding:0 10px;
+        width:50%;
+        height:50px;
+
+        background:rgba(0,0,0,0.8);
+        box-sizing: border-box;
+        transform:translate(-100%,0);
+        transition:transform 0.3s;
+        pointer-events: none;
+    }
+        #frame_mobilefilter.show, #frame_mobilefilter_reset.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+        .mobilefilter_desc {
+            width:100%;
+            height:30px;
+
+            color:white;
+            font-size:20px;
+                line-height:30px;
+            font-weight:bold;
+            text-align:center;
+        }
+            .mobilefilter_desc.top {
+                height:40px;
+                font-size:25px;
+                line-height:40px;
+            }
+            .margin_top {
+                margin-top:15px;
+            }
+        .mobilefilter_hr {
+            border-top:1px white solid;
+        }
+        .mobilefilter_button {
+            display:block;
+            overflow-x: hidden;
+
+            width:100%;
+            height:40px;
+
+            background:#404040;
+            border:2px white solid;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            color:white;
+            font-weight: bold;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        #mobilefilter_keyword.activate {
+            border:2px lime solid;
+        }
+        .mobilefilter_close {
+            margin-top:10px;
+
+            background:#87ece9;
+
+            color:black;
+        }
+            .mobilefilter_close:last-child {
+                position:absolute;
+                    left:10px;bottom:5px;
+
+                width:calc(100% - 20px);
+            }
+        #mobilefilter_reset {
+            margin-top:5px;
+            width:70%;
+
+            background:red;
+
+            font-size:14px;
+        }
+
+/*=====================================================*/
+/* 메인 */
+/*=====================================================*/
+#frame_main {
+    position:relative;
+    overflow:hidden;
+
+    width:100%;
+    height:calc(100% - 75px - 90px);
+}
+    .mainscreen {
+        position:absolute;
+        z-index: 1;
+
+        height:100%;
+
+        background-color:white;
+        pointer-events: none;
+    }
+            .mainscreen.show {
+                z-index: 2;
+
+                transform:translate(0,0);
+                transition:transform 0.5s;
+                pointer-events: auto;
+            }
+        .main_both {
+            left:0;top:0;
+
+            width:100%;
+
+            transform:translate(100%,0);
+        }
+        .main_left {
+            left:0;top:0;
+
+            width:50%;
+
+            transform:translate(-100%,0);
+            border-right:1px #ccc solid;
+            box-sizing: border-box;
+        }
+        .main_right {
+            right:0;top:0;
+
+            width:50%;
+
+            transform:translate(100%,0);
+            box-sizing: border-box;
+        }
+   .main_title {
+        width:100%;
+        height:60px;
+
+        font-size:30px;
+            line-height:60px;
+        font-weight:bold;
+        text-align:center;
+    }
+
+    /*첫 화면*/
+    #main_titlescreen {
+        display:block;
+    }
+
+    #titlescreen_card, #titlescreen_deck {
+        float:left;
+
+        padding:10px 2% 0 2%;
+        width:48%;
+        height:280px;
+
+        box-sizing: border-box;
+    }
+            #titlescreen_card {
+                margin-left:2%;
+                border-right:1px #ccc solid;
+            }
+
+        .titlescreen_button {
+            display:block;
+
+            width:100%;
+            height:200px;
+
+            background:#DDDDDD;
+
+            font-size:100px;
+            cursor:pointer;
+        }
+            .titlescreen_button:hover {
+                background:#87ece9;
+            }
+            .titlescreen_button img {
+                width:auto;
+                height:100px;
+            }
+        .titlescren_desc {
+            margin:10px auto 0 auto;
+            width:80%;
+            height:30px;
+
+            border-bottom:1px #ccc solid;
+
+            font-size:20px;
+                line-height:30px;
+            text-align:center;
+            font-weight:bold;
+        }
+
+    /*덱 생성*/
+    #main_decklist {
+        padding:0 10px;
+        box-sizing: border-box;
+    }
+        .decklist_button {
+            position:relative;
+
+            margin-bottom:5px;
+            width:100%;
+            height:60px;
+            display:block;
+
+            background:#DDDDDD;
+
+            font-weight:bold;
+            cursor:pointer;
+        }
+            .decklist_button:hover, .decklist_button.selected {
+                background:#87ece9;
+            }
+
+    /*로딩 화면*/
+    #main_loading {/*로딩화면은 화면 전환 효과 없음*/
+        transition-property: none;
+    }
+    .loading_mark {
+        display:block;
+
+        margin:10px auto 0 auto;
+        width:90%;
+            max-width:300px;
+        height:auto;
+    }
+
+    /*카드 목록*/
+    #main_collection {
+        position:relative;
+    }
+        #collection_loading {
+            position:absolute;
+                left:0;top:0;
+            z-index:2;
+
+            width:100%;
+            height:100%;
+
+            background-color:rgba(0,0,0,0.5);
+            box-sizing: border-box;
+        }
+        #collection_list {
+            position:relative;
+            overflow-y:scroll;
+
+            width:100%;
+            height:100%;
+
+            background-color:#E7D099;
+        }
+        #collection_list_content {
+            position:relative;
+
+            padding:10px 5px;
+            width:100%;
+            height:100%;
+
+            box-sizing: border-box;
+        }
+    /*카드 커버*/
+    #frame_cardcover {
+        position:fixed;
+            left:0;top:0;
+        z-index:10;
+        display:none;
+
+        width:100%;
+        height:100%;
+
+        background:rgba(0,0,0,0.7);
+    }
+            #frame_cardcover.show {
+                display:block;
+                animation:cardcover_show 0.3s;
+            }
+            @keyframes cardcover_show {
+                0% {opacity:0;}
+                1% {opacity:0.01;}
+                100% {opacity:1;}
+            }
+        #cardcover_top {
+            position:relative;
+
+            padding:10px;
+            width:100%;
+            height:calc(100% - 30px);
+
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        #cardcover_desc {
+            position:absolute;
+                left:0;bottom:0;
+
+            width:100%;
+            height:40px;
+
+            background:rgba(255,255,255,0.1);
+
+            color:white;
+            font-size:20px;
+            line-height:40px;
+            text-align: center;
+            pointer-events: none;
+        }
+    /*카드 모니터*/
+    #frame_cardmonitor {
+        position:absolute;
+            left:calc((100vw - 800px) / 2 - 250px);top:90px;
+        overflow:hidden;
+        display:none;
+
+        width:250px;
+        height:400px;
+
+        background-color:#3e40e5;
+        border-top-left-radius:10px;
+        border-bottom-left-radius:10px;
+    }
+            #frame_cardmonitor.show {
+                display:block
+            }
+        @media (max-width: 1300px) {
+            #frame_cardmonitor {
+                left:0;
+                width:calc((100vw - 800px) / 2);
+            }
+        }
+        @media (max-width: 1100px) {
+            #frame_cardmonitor {display:none;}
+        }
+    /*카드 정보*/
+    #main_cardinfo {
+        background-color:#392C4A;
+            background-repeat:no-repeat;
+            background-size:contain;
+        box-sizing: border-box;
+    }
+
+    /*덱 리스트*/
+    #main_deck {}
+        #deck_hero {
+            position: relative;
+            width:100%;
+            height:50px;
+
+            background-color:#503C23;
+                background-repeat:no-repeat;
+                background-position:right 50%;
+                background-size:contain;
+            border:5px gold outset;
+            box-sizing: border-box;
+        }
+            #deck_hero_cover {
+                position: relative;
+
+                width:100%;
+                height:100%;
+
+                background: linear-gradient(
+                    to right,
+                    rgba(60,60,60,1) 0%,
+                    rgba(60,60,60,1) calc(100% - 100px),
+                    rgba(60,60,60,0) 100%);
+                outline:2px #3C3C3C solid;
+                box-sizing: border-box;
+            }
+                #deck_dust {
+                    position:absolute;
+                        left:5px;top:0;
+                    overflow:hidden;
+
+                    width:100%;
+
+                    text-overflow: ellipsis;
+                }
+                    #dust_icon {
+                        position:relative;
+                        display:block;
+                        float:left;
+
+                        margin-right:4px;
+                        width:16px;
+                        height:16px;
+                    }
+                    #dust_quantity {
+                        position:relative;
+                        display:block;
+                        float:left;
+
+                        color:skyblue;
+                        text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                        font-size:16px;
+                            line-height:100%;
+                        font-weight: bold;
+                        white-space: nowrap;
+                    }
+                #deck_format {
+                    position:absolute;
+                        right:5px;top:0;
+
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-size:16px;
+                        line-height:100%;
+                    font-weight: bold;
+                    white-space: nowrap;
+                }
+                    #deck_format.standard {
+                        color:lime;
+                    }
+                    #deck_format.wild {
+                        color:orange;
+                    }
+                #deck_name {
+                    position:absolute;
+                        left:5px;bottom:0;
+                    overflow:hidden;
+
+                    width:100%;
+
+                    color:white;
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-size:18px;
+                    font-weight: bold;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+        #deck_list_cover {
+            position: relative;
+
+            height:calc(100% - 85px);
+        }
+            #deck_list_cover_overlay {
+                position:absolute;
+                    left:0;top:0;
+                z-index:2;
+
+                width:100%;
+                height:100%;
+
+                box-sizing: border-box;
+                pointer-events: none;
+            }
+            #deck_list_cover_overlay.complete {
+                background:
+                    linear-gradient(
+                        to bottom,
+                        #B3FFFF 0%,
+                        transparent 15px,
+                        transparent calc(100% - 15px),
+                        #B3FFFF 100%),
+                    linear-gradient(
+                        to right,
+                        #B3FFFF 0%,
+                        transparent 15px);
+            }
+        #deck_list {
+            position: relative;
+            overflow-y:scroll;
+
+            width:100%;
+            height:100%;;
+
+            background:#392C4A;
+        }
+            #deck_list_content {
+                position: relative;
+
+                padding:10px 5px;
+                width:100%;
+                height:100%;
+
+                background:transparent;
+                box-sizing: border-box;
+            }
+            #deck_list_content_cover {
+                position: relative;
+                    z-index:2;
+
+                width:100%;
+                height:100%;
+            }
+        #deck_bottom_cover {
+            position: relative;
+
+            padding:5px 10px 5px 5px;
+            width:100%;
+            height:35px;
+
+            border-top:2px #7B573F inset;
+            background-color:#463325;
+            box-sizing: border-box;
+        }
+            #deck_bottom {
+                position: relative;
+                overflow:hidden;
+
+                width:100%;
+                height:100%;
+
+                background-color:#392C4A;
+                border:2px #303030 inset;
+                border-radius:10px;
+                box-sizing: border-box;
+
+                color:white;
+                text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                font-size:15px;
+                    line-height:20px;
+                text-align:center;
+            }
+
+    /*덱 설정*/
+    #main_deckconfig {
+        position:absolute;
+
+        padding:10px;
+
+        background:linear-gradient(
+            to bottom,
+            #6E4D28 0%,
+            #AF7A41 100%);
+        box-sizing: border-box;
+    }
+        .deckconfig_button {
+            margin-bottom:20px;
+            width:100%;
+            height:50px;
+
+            background:#F7E595;
+            border:4px #D5B666 inset;
+            border-radius: 5px;
+            box-sizing: border-box;
+
+            color:#685231;
+            font-size:20px;
+                letter-spacing: -1px;
+            font-weight:bold;
+            white-space: nowrap;
+            cursor:pointer;
+        }
+            #deckconfig_format {
+                position:absolute;
+                    left:0;right:0;bottom:10px;
+
+                margin:auto;
+                width:calc(100% - 20px);
+
+                font-size:16px;
+                line-height:20px;
+            }
+            .deckconfig_button:hover {
+                background:#F7E5CB;
+                color:black;
+            }
+            .deckconfig_button:active {
+                border:4px #228DFF inset;
+            }
+
+
+
+/*=====================================================*/
+/* 푸터 */
+/*=====================================================*/
+#frame_footer {
+    position:absolute;
+        left:0;bottom:0;
+
+    width:100%;
+    height:auto;
+
+    background:#3e40e5;
+}
+    #footer_top {
+        position:relative;
+
+        width:100%;
+        height:25px;
+
+        background-color:#798689;
+    }
+        .footer_desc {
+            position:relative;
+            float:left;
+            display:none;
+
+            width:50%;
+            height:100%;
+
+            box-sizing: border-box;
+
+            color:white;
+            font-size:16px;
+            line-height:25px;
+            text-align:center;
+        }
+            #footer_notice {
+                width:100%;
+            }
+    #footer_bottom {
+        position:relative;
+        overflow:hidden;
+
+        width:100%;
+        height:50px;
+
+        background:#3e40e5;
+        transform:translate(0,100%);
+        transition:transform 0.5s;
+        pointer-events: none;
+    }
+            #footer_bottom.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        .footer_button {
+            position:relative;
+
+            margin:5px 0px 5px 5px;
+            width:110px;
+            height:40px;
+
+            background:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:25px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+                .footer_button:hover {
+                    background-color:rgba(255,255,255,0.2);
+                }
+                .footer_button:active {
+                    background-color:rgba(255,255,255,0.4);
+                }
+            #bottom_undo, #bottom_redo {
+                float:left;
+
+                margin:5px 0px 5px 5px;
+                width:110px;
+                height:40px;
+
+                font-size:22px;
+                user-select:none;
+                pointer-events: auto;
+            }
+                #bottom_redo {margin-right:0;}
+                #bottom_undo.disabled, #bottom_redo.disabled {
+                    border:2px gray solid;
+                    color:gray;
+                    pointer-events: none;
+                }
+                .log_icon {
+                    position:relative;
+                    width:56px;
+                    height:24px;
+                    font-size:24px;
+                    line-height:24px;
+                    text-align:center;
+                }
+                    #undo_icon {float:left;}
+                    #redo_icon {float:right;}
+                .log_num {
+                    position:relative;
+                    width:56px;
+                    height:12px;
+                    color:yellow;
+                    font-size:12px;
+                    line-height:12px;
+                    text-align:center;
+                }
+                    #undo_num {clear:left;float:left;}
+                    #redo_num {clear:right;float:right;}
+                .log_text {
+                    position:relative;
+                    width:50px;
+                    height:36px;
+                    line-height:36px;
+                }
+                    #undo_text {float:right;text-align:left;}
+                    #redo_text {float:left;text-align:right;}
+            #bottom_done {
+                float:right;
+
+                margin:5px;
+                width:120px;
+                height:40px;
+            }
+                #bottom_done > img {
+                    vertical-align: middle;
+                    width:40px;
+                    height:40px;
+                }
+    #footer_decklist {
+        position:absolute;
+            left:0;top:0;
+            z-index:2;
+
+        padding:5px;
+        width:100%;
+        height:100%;
+
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        transition:transform 0.5s;
+        pointer-events: none;
+    }
+            #footer_decklist.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        .footer_decklist_button {
+            position:relative;
+            width:calc(50% - 10px);
+            height:100%;
+
+            background:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:22px;
+            letter-spacing: -1px;
+            font-weight:bold;
+            cursor:pointer;
+            white-space: nowrap;
+        }
+            .footer_decklist_button > img {
+                vertical-align:middle;
+                width:33px;
+                height:33px;
+            }
+            .footer_decklist_button > span {
+                vertical-align:middle;
+                font-size:inherit;
+            }
+            .footer_decklist_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .footer_decklist_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+        #button_readcode {
+            float:left;
+        }
+        #botton_newdeck {
+            float:right;
+            }
+    #footer_deckconfig {
+        position:absolute;
+            left:0;top:0;
+            z-index:2;
+
+        padding:5px;
+        width:100%;
+        height:100%;
+
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        transition:transform 0.5s;
+        pointer-events: none;
+    }
+            #footer_deckconfig.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+    #button_edit {
+        position:relative;
+        float:right;
+
+        width:100px;
+        height:100%;
+
+        background:rgba(255,255,255,0.1);
+        border:2px white solid;
+        border-radius: 10px;
+        box-sizing: border-box;
+
+        color:white;
+        font-size:22px;
+        letter-spacing: -1px;
+        font-weight:bold;
+        cursor:pointer;
+        white-space: nowrap;
+    }
+        #button_edit > img {
+            vertical-align:middle;
+            width:33px;
+            height:33px;
+        }
+        #button_edit > span {
+            vertical-align:middle;
+            font-size:inherit;
+        }
+        #button_edit:hover {
+            background-color:rgba(255,255,255,0.2);
+        }
+        #button_edit:active {
+            background-color:rgba(255,255,255,0.4);
+        }
+
+/*=====================================================*/
+/* 모바일 화면조정 */
+/*=====================================================*/
+.desktop_only {
+    font-size:inherit;
+}
+.mobile_only {
+    font-size:inherit;
+}
+
+/*PC 모드*/
+@media (min-width: 635px) {
+    /*전체 구도*/
+    div.desktop_only {
+        display:block;
+    }
+    span.desktop_only {
+        display:inline;
+    }
+    .mobile_only {
+        display:none;
+    }
+    /*특정 구도*/
+}
+/*모바일 모드*/
+@media (max-width: 635px) {
+    /*전체 구도*/
+    .desktop_only {
+        display:none;
+    }
+    div.mobile_only {
+        display:block;
+    }
+    span.mobile_only {
+        display:inline;
+    }
+    /*특정 구도*/
+    #search_class {
+        margin:2px 0;
+        width:45%;
+    }
+    #footer_bottom .footer_button {
+        width:60px;
+    }
+    .footer_decklist_button {
+        font-size:16px;
+    }
+}
+
+
+
+/*======================================================================================================*/
+/* ※ 기타 */
+/*======================================================================================================*/
+#imagePreloader {
+	width:1px;
+	height:1px;
+
+	display:none;
+}
+
+/*모바일 스크롤바 가시화*/
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: gold;
+    border-radius: 10px;
+    border: 2px gold outset;
+}
+
+::-webkit-scrollbar-track {
+    background-color:#202020;
+}

@@ -1,0 +1,143 @@
+{
+  "name": "sweetalert2",
+  "version": "6.4.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/limonte/sweetalert2.git"
+  },
+  "homepage": "https://limonte.github.io/sweetalert2/",
+  "description": "An awesome and accessible (WAI-ARIA) replacement for JavaScript's popup boxes, supported fork of sweetalert",
+  "main": "dist/sweetalert2.js",
+  "jsnext:main": "src/sweetalert2.js",
+  "types": "sweetalert2.d.ts",
+  "dependencies": {
+    "es6-promise": "^4.0.5"
+  },
+  "devDependencies": {
+    "babel-plugin-external-helpers": "latest",
+    "babel-plugin-transform-object-assign": "latest",
+    "babel-preset-es2015": "latest",
+    "gulp": "latest",
+    "gulp-autoprefixer": "latest",
+    "gulp-clean-css": "latest",
+    "gulp-rename": "latest",
+    "gulp-rollup": "latest",
+    "gulp-sass": "latest",
+    "gulp-sass-lint": "latest",
+    "gulp-standard": "latest",
+    "gulp-uglify": "latest",
+    "rollup": "latest",
+    "rollup-plugin-babel": "latest",
+    "standard": "latest",
+    "testee": "^0.3.0",
+    "uglify-js": "latest"
+  },
+  "standard": {
+    "ignore": [
+      "dist/"
+    ],
+    "global": [
+      "MutationObserver"
+    ]
+  },
+  "files": [
+    "dist",
+    "src",
+    "sweetalert2.d.ts"
+  ],
+  "author": {
+    "name": "Limon Monte",
+    "email": "limon.monte@gmail.com",
+    "url": "https://limonte.github.io"
+  },
+  "contributors": [
+    {
+      "name": "Johan Fagerberg",
+      "url": "https://github.com/birjolaxew"
+    },
+    {
+      "name": "Morgan Touverey-Quilling",
+      "email": "mtouverey@alembic-dev.com",
+      "url": "https://github.com/toverux"
+    },
+    {
+      "name": "Sam Turrell",
+      "email": "sam@samturrell.co.uk",
+      "url": "http://samturrell.co.uk"
+    },
+    {
+      "name": "Tristan Edwards",
+      "email": "tristan.edwards@me.com",
+      "url": "http://tristanedwards.me"
+    },
+    {
+      "name": "Leo Correa",
+      "email": "lcorr005@gmail.com",
+      "url": "https://leonardocorrea.com/"
+    },
+    {
+      "name": "Joseph Schultz",
+      "url": "https://github.com/acupajoe"
+    }
+  ],
+  "keywords": [
+    "sweetalert",
+    "sweetalert2",
+    "alert",
+    "prompt"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "testee qunit",
+    "assume-dist-unchanged": "git ls-files dist | tr '\\n' ' ' | xargs git update-index --assume-unchanged",
+    "no-assume-dist-unchanged": "git ls-files dist | tr '\\n' ' ' | xargs git update-index --no-assume-unchanged"
+  },
+  "bugs": {
+    "url": "https://github.com/limonte/sweetalert2/issues"
+  },
+  "license": "MIT",
+  "gitHead": "86e22519906167c6cad78df818023bf91993de1c",
+  "_id": "sweetalert2@6.4.2",
+  "_shasum": "0505b3acaf812af1ad04f00980a83625508e3d61",
+  "_from": "sweetalert2@latest",
+  "_npmVersion": "4.1.2",
+  "_nodeVersion": "7.5.0",
+  "_npmUser": {
+    "name": "limonte",
+    "email": "limon.monte@gmail.com"
+  },
+  "dist": {
+    "shasum": "0505b3acaf812af1ad04f00980a83625508e3d61",
+    "tarball": "https://registry.npmjs.org/sweetalert2/-/sweetalert2-6.4.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "birjolaxew",
+      "email": "johanringmann@gmail.com"
+    },
+    {
+      "name": "jdcrensh",
+      "email": "jdcrensh@gmail.com"
+    },
+    {
+      "name": "limonte",
+      "email": "limon.monte@gmail.com"
+    },
+    {
+      "name": "samturrell",
+      "email": "sam@samturrell.co.uk"
+    },
+    {
+      "name": "toverux",
+      "email": "mtouverey@methodinthemadness.eu"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/sweetalert2-6.4.2.tgz_1487165558148_0.4218829246237874"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/sweetalert2/-/sweetalert2-6.4.2.tgz"
+}

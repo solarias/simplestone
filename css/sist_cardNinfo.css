@@ -1,0 +1,382 @@
+/*공용 - 카드등급*/
+.rarity_FREE, .rarity_COMMON {
+    background-color:#858585;
+}
+.rarity_RARE {
+    background-color:#315376;
+}
+.rarity_EPIC {
+    background-color:#644c82;
+}
+.rarity_LEGENDARY {
+    background-color:#ffb00d;
+}
+
+/*공용 - 카드*/
+.card {
+    position:relative;
+    overflow:hidden;
+
+    margin-bottom:10px;
+    width:100%;
+    height:40px;
+
+    background-color:#C0C0C0;
+        background-repeat:no-repeat;
+        background-position:right 50%;
+        background-size:auto 40px;
+    outline:2px #303030 outset;
+    box-sizing: border-box;
+    animation:add_flash 0.8s;
+
+    cursor:pointer;
+    user-select:none;
+}
+    @keyframes add_flash {
+        0% {
+            filter:brightness(3);
+        }
+        100% {
+            filter:brightness(1);
+        }
+    }
+    .card.flash_hidden {
+        animation:none;
+    }
+        .card:hover, .card:active {
+            box-shadow:0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #228DFF, 0 0 7px #228DFF, 0 0 8px #228DFF, 0 0 10px #228DFF, 0 0 15px #228DFF;
+        }
+.card_cost {
+    float:left;
+
+    width:30px;
+    height:40px;
+
+    pointer-events: none;
+
+    color:white;
+    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+    font-size:20px;
+        line-height:35px;
+    text-align:center;
+}
+.card_name {
+    display:table;
+    overflow:hidden;
+
+    pointer-events: none;
+
+    padding-left:5px;
+    width:calc(100% - 50px);
+    height:40px;
+
+    background: linear-gradient(
+        to right,
+        rgba(100,100,100,1) 0%,
+        rgba(100,100,100,1) calc(100% - 100px),
+        rgba(100,100,100,0) 100%);
+    box-sizing: border-box;
+
+    color:white;
+    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+    font-size:15px;
+        line-height:20px;
+    letter-spacing:-1px;
+}
+    .card_name p {
+        display:table-cell;
+
+        height:100%;
+
+        pointer-events: none;
+
+        font-size:15px;
+        vertical-align: middle;
+        box-sizing: border-box;
+    }
+.card_quantity {
+    position:absolute;
+    right:0;top:0;
+
+    width:20px;
+    height:100%;
+
+    background-color:black;
+    pointer-events: none;
+
+    color:gold;
+    font-size:16px;
+        line-height:40px;
+    text-align:center;
+}
+    .card_quantity.quantity_hidden {display:none;}
+
+/*공용 - 카드 정보*/
+.cardinfo.wrapper {
+    position:relative;
+    overflow:hidden;
+
+    margin:auto;
+    padding:5px;
+    width:auto;
+        min-width:250px;
+        max-width:300px;
+    height:520px;
+
+    background:rgba(0,0,0,0.5);
+    border-radius:10px;
+    box-sizing: border-box;
+    transform-origin:0% 0%;
+
+    vertical-align: middle;
+}
+        #cardcover_top .cardinfo.wrapper {
+            position:absolute;
+                left:0;right:0;top:0;bottom:0;
+        }
+        .cardinfo.wrapper.simple {
+            height:400px;
+        }
+    .cardinfo.cardcase {
+        position:relative;
+        overflow: hidden;
+
+        width:100%;
+        height:340px;
+
+        background:white;
+        border-radius:5px;
+    }
+        .cardinfo.top {
+            position:relative;
+
+            width:100%;
+            height:140px;
+
+            background-color:black;
+        }
+                .cardinfo.top.show {
+                    background-image:url('../images/loading_white.svg');
+                        background-repeat:no-repeat;
+                        background-size:contain;
+                        background-position:50% 50%;
+                }
+            .cardinfo.image {
+                position:relative;
+
+                width:100%;
+                height:100%;
+
+                background-repeat:no-repeat;
+                background-size:140% auto;
+                background-position:50% 30%;
+            }
+            .cardinfo.mana {
+                position:absolute;
+                    left:0;top:0;
+                z-index:2;
+
+                width:50px;
+                height:50px;
+
+                background:#007bff;
+                border-right:2px black solid;
+                border-bottom:2px black solid;
+                box-sizing: border-box;
+
+                color:white;
+                text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                font-size:30px;
+                    line-height:50px;
+                text-align:center;
+            }
+            .cardinfo.type {
+                position:absolute;
+                    right:0;top:0;
+                z-index:2;
+
+                width:80px;
+                height:40px;
+
+                background:rgba(80,80,80,0.9);
+                border-bottom-left-radius: 10px;
+                border-left:1px black solid;
+                border-bottom:1px black solid;
+                box-sizing: border-box;
+
+                color:white;
+                text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                font-size:20px;
+                    line-height:40px;
+                text-align:center;
+            }
+        .cardinfo.name {
+            position:relative;
+            overflow: hidden;
+            width:100%;
+            height:35px;
+
+            background-color:#41B1E1;
+
+            color:white;
+            text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+            font-size:20px;
+                line-height:35px;
+            font-weight:bold;
+            text-align:center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .cardinfo.rarity {
+            position:relative;
+            margin:0 auto;
+            width:100%;
+            height:20px;
+
+            color:white;
+            text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+            font-size:16px;
+                line-height:20px;
+            text-align:center;
+        }
+            .cardinfo.rarity.rarity_FREE {
+                background-color:white;
+            }
+        .cardinfo.text {
+            position:relative;
+            overflow:hidden;
+            display:table;
+
+            padding:0 5px;
+            width:100%;
+            height:100px;
+
+            background-color:white;
+            box-sizing: border-box;
+
+            color:black;
+            font-size:16px;
+                line-height:25px;
+            text-align:center;
+        }
+            .cardinfo.text p {
+                display:table-cell;
+                vertical-align: middle;
+
+                font-size:inherit;
+                letter-spacing: -1px;
+                line-height:inherit;
+            }
+            .cardinfo.text p b,.cardinfo.text p i {
+                font-size:inherit;
+            }
+        .cardinfo.bottom {
+            position:relative;
+            display:none;
+
+            width:100%;
+            height:45px;
+
+            background-color:#41B1E1;
+            box-sizing: border-box;
+        }
+            .cardinfo.attack {
+                position:absolute;
+                    left:0;top:0;
+
+                width:50px;
+                height:100%;
+
+                background-color:yellow;
+                border-top:1px gray solid;
+                box-sizing: border-box;
+
+                color:black;
+                font-size:30px;
+                    line-height:45px;
+                font-weight:bold;
+                text-align:center;
+            }
+            .cardinfo.race {
+                position:relative;
+
+                margin:0 auto;
+                width:calc(100% - 50px - 50px);
+                height:100%;
+
+                background-color:#41B1E1;
+                box-sizing: border-box;
+
+                color:white;
+                font-size:20px;
+                    line-height:45px;
+                font-weight:bold;
+                text-align:center;
+            }
+            .cardinfo.health {
+                position:absolute;
+                    right:0;top:0;
+
+                width:50px;
+                height:100%;
+
+                background-color:red;
+
+                color:white;
+                font-size:30px;
+                    line-height:45px;
+                font-weight:bold;
+                text-align:center;
+            }
+                .cardinfo.health.armor {
+                    background-color:#c0c0c0;
+                    border-top:1px gray solid;
+                    box-sizing: border-box;
+
+                    color:black;
+                }
+    .cardinfo.set {
+        position:relative;
+
+        margin-top:10px;
+        width:100%;
+        height:40px;
+
+        background:#808080;
+        border:2px #606060 inset;
+        box-sizing: border-box;
+
+        color:white;
+        font-size:20px;
+            line-height:36px;
+        font-weight:bold;
+        text-align:center;
+    }
+    .cardinfo.flavor {
+        position:relative;
+        overflow:hidden;
+        display:table;
+
+        margin-top:20px;
+        padding:0 10px;
+        width:100%;
+        height:100px;
+
+        background:#B1986F;
+        border-radius:10px;
+        box-sizing: border-box;
+    }
+        .simple .cardinfo.flavor {
+            display:none;
+        }
+        .cardinfo.flavor p {
+            display:table-cell;
+            vertical-align: middle;
+
+            max-height:100px;
+
+            color:black;
+            font-size:14px;
+                line-height:17px;
+            text-align:center;
+        }

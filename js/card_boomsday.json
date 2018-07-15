@@ -1,0 +1,19 @@
+﻿
+[
+	{
+		"dbfid":"boom1",
+		"class":"NEUTRAL",
+		"rarity":"LEGENDARY",
+		"cost":8,
+		"name":"위대한 박사 붐",
+		"type":"HERO",
+		"set":"BOOM",
+		"text":"",
+		"race":"",
+		"attack":"",
+		"health":"",
+		"durability":"",
+		"armor":"",
+		"url":"abc.jpg"
+	}
+]

@@ -1,0 +1,125 @@
+.native-toast {
+  position: fixed;
+  background-color: rgba(50, 50, 50, .8);
+  border-radius: 33px;
+  color: white;
+  left: 50%;
+  text-align: center;
+  padding: 10px 20px;
+  opacity: 0;
+  z-index: 99999;
+  transition: transform .15s, opacity .15s, top .15s;
+  box-sizing: border-box;
+  /*customized*/
+  cursor:auto;
+  user-select: none;
+}
+
+.native-toast-bottom {
+  bottom: 50px;
+  -ms-transform: translateX(-50%) translateY(50px);
+      transform: translateX(-50%) translateY(50px)
+}
+
+.native-toast-bottom.native-toast-shown {
+  opacity: 1;
+  -ms-transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(0);
+}
+
+.native-toast-bottom.native-toast-edge {
+  bottom: 0;
+}
+
+.native-toast-top {
+  top: 50px;
+  -ms-transform: translateX(-50%) translateY(-50px);
+      transform: translateX(-50%) translateY(-50px)
+}
+
+.native-toast-top.native-toast-shown {
+  opacity: 1;
+  -ms-transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(0);
+}
+
+.native-toast-top.native-toast-edge {
+  top: 0;
+}
+
+.native-toast-center {
+  top: 0;
+  -ms-transform: translateX(-50%) translateY(-50px);
+      transform: translateX(-50%) translateY(-50px)
+}
+
+.native-toast-center.native-toast-shown {
+  opacity: 1;
+  top: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+}
+
+.native-toast-edge {
+  border-radius: 0;
+  width: 100%;
+  text-align: left;
+}
+
+@media screen and (min-width: 40rem) {
+  .native-toast:not(.native-toast-edge) {
+    max-width: 18rem;
+  }
+}
+
+/*
+  max-width does not seem to work in small screen?
+*/
+
+/*@media screen and (max-width: 768px) {
+  .native-toast:not(.native-toast-edge) {
+    max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 468px) {
+  .native-toast:not(.native-toast-edge) {
+    max-width: 300px;
+  }
+}*/
+
+/* types */
+
+.native-toast-error {
+  /*background-color: #d92727;*/
+  background-color:rgba(217,39,39,0.9);
+  color: white;
+}
+
+.native-toast-success {
+  /*background-color: #62a465;*/
+  background-color:rgba(98,164,101,0.9);
+  color: white;
+}
+
+.native-toast-warning {
+  /*background-color: #fdaf17;*/
+  background-color:rgba(253,175,23,0.9);
+  color: white;
+}
+
+.native-toast-info {
+  /*background-color: #5060ba;*/
+  background-color:rgba(80,96,186,0.9);
+  color: white;
+}
+
+[class^="native-toast-icon-"] {
+  vertical-align: middle;
+  margin-right: 8px
+}
+
+[class^="native-toast-icon-"] svg {
+  width: 16px;
+  height: 16px;
+}
