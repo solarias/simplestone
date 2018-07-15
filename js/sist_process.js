@@ -314,7 +314,7 @@ function window_shift(keyword, keyword2) {
             function loading_formatvalidate() {
                 if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
                     for (let i = 0;i < process.deck.cards.length;i++) {
-                        if (DATA.SET_FORMAT[session.db[parseInt(process.deck.cards[i].ssi)].set] === "야생") {
+                        if (DATA.SET.FORMAT[session.db[parseInt(process.deck.cards[i].ssi)].set] === "야생") {
                             process.deck.format = "야생";
                             break;
                         }
@@ -703,7 +703,7 @@ function window_shift(keyword, keyword2) {
                             process.deck.format = "정규";
                             //정규 카드 제외
                             process.deck.cards.forEach(function(card, i) {
-                                if (DATA.SET_FORMAT[session.db[parseInt(card.ssi)].set] === "야생") {
+                                if (DATA.SET.FORMAT[session.db[parseInt(card.ssi)].set] === "야생") {
                                     process.deck.cards.splice(i,1);
                                 }
                             })
@@ -1201,12 +1201,12 @@ function deck_refresh(cmd) {
             process.deck.dust = 0;
         }
         //영웅 이미지 출력
-        $("#deck_hero").style.backgroundImage = "url(" + TILEURL + DATA.CLASS_ID[process.deck.class] + ".jpg)";
+        $("#deck_hero").style.backgroundImage = "url(" + TILEURL + DATA.CLASS.ID[process.deck.class] + ".jpg)";
         //덱 이름 출력
         if (process.deck.name) {
             $("#deck_name").innerHTML = process.deck.name
         } else {
-            let deckname = "나만의 " + DATA.CLASS_KR[process.deck.class] + " 덱";
+            let deckname = "나만의 " + DATA.CLASS.KR[process.deck.class] + " 덱";
             process.deck.name = deckname;
             $("#deck_name").innerHTML = deckname;
         }
@@ -1214,7 +1214,7 @@ function deck_refresh(cmd) {
         cluster_update("deck", false, false);
     }
     //정규/야생 출력
-    $("#deck_format").className = DATA.FORMAT_EN[process.deck.format];
+    $("#deck_format").className = DATA.FORMAT.EN[process.deck.format];
     $("#deck_format").innerHTML = process.deck.format + "전";
 
     //덱 가루, 수량 확인 및 출력
@@ -1222,7 +1222,7 @@ function deck_refresh(cmd) {
     let dust = 0;
     process.deck.cards.forEach(function(x) {
         quantity += x.quantity;
-        dust += DATA.RARITY_DUST[session.db[x.ssi].rarity] * x.quantity;
+        dust += DATA.RARITY.DUST[session.db[x.ssi].rarity] * x.quantity;
     })
         //덱 수량 저장, 출력
         process.deck.quantity = quantity;

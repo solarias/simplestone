@@ -29,12 +29,12 @@ function sort_arr(arr) {
 function searchable(keyword) {
     let text = keyword;
     //분류 한글화
-    Object.keys(DATA.TYPE_KR).forEach(function(x) {
-        text = text.replaceAll(x,DATA.TYPE_KR[x]);
+    Object.keys(DATA.TYPE.KR).forEach(function(x) {
+        text = text.replaceAll(x,DATA.TYPE.KR[x]);
     })
     //종족명 한글화
-    Object.keys(DATA.RACE_KR).forEach(function(x) {
-        text = text.replaceAll(x,DATA.RACE_KR[x]);
+    Object.keys(DATA.RACE.KR).forEach(function(x) {
+        text = text.replaceAll(x,DATA.RACE.KR[x]);
     })
     //불필요 기호 제거
     //text = text.replace(/\s|<b>|<\/b>|\n|\[x\]|\$|#|<i>|<\/i>|@|\.|,|(|)|:/g,"");
@@ -75,7 +75,7 @@ function card_matchMana(target, mana) {
             if (target.cost === parseInt(mana)) return true;
             break;
         case "7"://마나 = 7 이상
-            if (target.cost > 7) return true;
+            if (target.cost >= 7) return true;
             break;
         case "odd"://홀수
             if (target.cost % 2 === 1) return true;
@@ -130,7 +130,7 @@ function card_setFilter(cmd) {
         //초기"글자" 설정
         if (text === "init") {
             //검색버튼 키워드 변경
-            $("#search_class").innerHTML = DATA.CLASS_KR[process.search.class];
+            $("#search_class").innerHTML = DATA.CLASS.KR[process.search.class];
         //버튼 클릭
         } else {
             //카드 정보
@@ -159,7 +159,7 @@ function card_setFilter(cmd) {
                                 let classtext = x.dataset.class;
                                 process.search.class = classtext;
                                 //키워드 변경
-                                let krtext = DATA.CLASS_KR[classtext];
+                                let krtext = DATA.CLASS.KR[classtext];
                                 $("#search_class").innerHTML = krtext;
                                 $("#mobilefilter_rarity").innerHTML = krtext;
                                 //창 닫기
@@ -179,7 +179,7 @@ function card_setFilter(cmd) {
                 //검색 직업 변경
                 process.search.class = (process.search.class === "NEUTRAL" ? process.deck.class : "NEUTRAL")
                 //검색버튼 키워드 변경
-                $("#search_class").innerHTML = DATA.CLASS_KR[process.search.class];
+                $("#search_class").innerHTML = DATA.CLASS.KR[process.search.class];
                 //재검색
                 card_search();
             }
@@ -322,17 +322,17 @@ function card_setFilter(cmd) {
                 case "정규":
                     //세트 버튼 구성
                     let text = "";
-                    let setarr = Object.keys(DATA.SET_KR);
+                    let setarr = Object.keys(DATA.SET.KR);
                     setarr.unshift("all");
                     setarr.forEach(function(x,i) {
                         if (x === "all" ||
-                        DATA.SET_FORMAT[x] === "정규" ||
-                        process.deck.format === DATA.SET_FORMAT[x]) {
+                        DATA.SET.FORMAT[x] === "정규" ||
+                        process.deck.format === DATA.SET.FORMAT[x]) {
                             let btn = document.createElement("button");
                                 btn.id = "popup_set_" + x;
                                 btn.classList.add("popup_button","small");
-                                btn.dataset.set = (DATA.SET_KR[x]) ? DATA.SET_KR[x] : "전체";
-                                btn.innerHTML = (DATA.SET_KR[x]) ? DATA.SET_KR[x] : "전체";
+                                btn.dataset.set = (DATA.SET.KR[x]) ? DATA.SET.KR[x] : "전체";
+                                btn.innerHTML = (DATA.SET.KR[x]) ? DATA.SET.KR[x] : "전체";
                             text += btn.outerHTML;
                         }
                     });
@@ -385,9 +385,9 @@ function card_setFilter(cmd) {
                             select_standard.options[0] = new Option("개별 세트(정규)");
                             select_standard.options[0].disabled = true;
                             //개별 세트
-                            Object.keys(DATA.SET_KR).forEach(function(x,i) {
-                                if (DATA.SET_FORMAT[x] === "정규") {
-                                    select_standard.options[select_standard.options.length] = new Option(DATA.SET_KR[x],x);
+                            Object.keys(DATA.SET.KR).forEach(function(x,i) {
+                                if (DATA.SET.FORMAT[x] === "정규") {
+                                    select_standard.options[select_standard.options.length] = new Option(DATA.SET.KR[x],x);
                                     //현재 검색필터 세트이면 강조
                                     if (x === process.search.set) {
                                         select_standard.options[select_standard.options.length-1].selected = true;
@@ -399,9 +399,9 @@ function card_setFilter(cmd) {
                             select_wild.options[0] = new Option("개별 세트(야생)");
                             select_wild.options[0].disabled = true;
                             //개별 세트
-                            Object.keys(DATA.SET_KR).forEach(function(x,i) {
-                                if (DATA.SET_FORMAT[x] === "야생") {
-                                    select_wild.options[select_wild.options.length] = new Option(DATA.SET_KR[x],x);
+                            Object.keys(DATA.SET.KR).forEach(function(x,i) {
+                                if (DATA.SET.FORMAT[x] === "야생") {
+                                    select_wild.options[select_wild.options.length] = new Option(DATA.SET.KR[x],x);
                                     //현재 검색필터 세트이면 강조
                                     if (x === process.search.set) {
                                         select_wild.options[select_wild.options.length-1].selected = true;
@@ -588,7 +588,7 @@ function card_search() {
         if (x.cardClass === process.search.class &&//직업
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
-        (DATA.SET_FORMAT[x.set] === "정규" || DATA.SET_FORMAT[x.set] === process.search.format) &&//포맷(정규는 무조건 포함)
+        (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format) &&//포맷(정규는 무조건 포함)
         (process.search.mana === "all" || card_matchMana(x, process.search.mana) === true) &&//마나
         (process.search.rarity === "all" || x.rarity === process.search.rarity) &&//등급
         (process.search.set === "all" || x.set === process.search.set) &&//세트

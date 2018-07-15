@@ -42,12 +42,12 @@ function deckcode_decode(deckcode) {
     //포맷(향후 덱 포맷 검증 별도로 함)
     output.format = "정규";
     for (let i = 0;i < output.cards.length;i++) {
-        if (DATA.SET_FORMAT[session.db[parseInt(output.cards[i].ssi)].set] === "야생") {
+        if (DATA.SET.FORMAT[session.db[parseInt(output.cards[i].ssi)].set] === "야생") {
             output.format = "야생";
             break;
         }
     }
-    //output.format = DATA.FORMAT_DECODE[input.format.toString()];
+    //output.format = DATA.FORMAT.DECODE[input.format.toString()];
     //출력
     return output;
 }
@@ -56,9 +56,9 @@ function deckcode_decode(deckcode) {
 function deckcode_encode() {
     let output = {};
     //포맷
-    output.format = DATA.FORMAT_CODE[process.deck.format];
+    output.format = DATA.FORMAT.CODE[process.deck.format];
     //직업
-    output.heroes = [DATA.CLASS_DBFID[process.deck.class]];
+    output.heroes = [DATA.CLASS.DBFID[process.deck.class]];
     //카드
     output.cards = [];
     process.deck.cards.forEach(function(x) {
@@ -83,7 +83,7 @@ function deckcode_text() {
     //덱 이름
     outputtext += "###" + process.deck.name + "\n";
     //직업
-    outputtext += "#직업 : " + DATA.CLASS_KR[process.deck.class] + "\n";
+    outputtext += "#직업 : " + DATA.CLASS.KR[process.deck.class] + "\n";
     //포맷
     outputtext += "#대전방식 : " + process.deck.format + "\n";
     //연도

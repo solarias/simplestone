@@ -103,7 +103,7 @@ const DATA = {
         }
     },
     DECKCODE_VERSION:1,
-    FORMAT;{
+    FORMAT:{
         CODE:{
             "야생":1,
             "정규":2

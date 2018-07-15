@@ -6,6 +6,11 @@
 //마스터 노드 생성
 function cardinfo_generateMaster() {
     let elm_wrapper = document.createElement("div.cardinfo.wrapper");
+        let elm_notice = document.createElement("div.cardinfo.notice");
+            elm_notice.classList.add("show");
+            elm_notice.innerHTML = "<p>여기에<br>카드 정보가<br>표시됩니다.</p>";
+        let elm_illust = document.createElement("div.cardinfo.illust");
+            let elm_illustImage = document.createElement("div.cardinfo.illustImage");
         let elm_cardcase = document.createElement("div.cardinfo.cardcase");
             let elm_top = document.createElement("div.cardinfo.top");
                 let elm_image = document.createElement("div.cardinfo.image");
@@ -21,6 +26,9 @@ function cardinfo_generateMaster() {
         let elm_set = document.createElement("div.cardinfo.set");
         let elm_flavor = document.createElement("div.cardinfo.flavor");
 
+    elm_wrapper.appendChild(elm_notice);
+    elm_wrapper.appendChild(elm_illust);
+        elm_illust.appendChild(elm_illustImage);
     elm_wrapper.appendChild(elm_cardcase);
         elm_cardcase.appendChild(elm_top);
             elm_top.appendChild(elm_image);
@@ -67,13 +75,13 @@ function cardinfo_setup(id, showflavor) {
 function cardinfo_setScale(node, showflavor) {
     let parent = node.parentNode;
     let w = parent.offsetWidth, h = parent.offsetHeight;
-    let scaleH = (h / 400).toString();
-    let scaleW = (w / 250).toString();
-    if (w >= 250) {
-        if (h >= 520) {
+    let scaleH = (h / 460).toString();
+    let scaleW = (w / 260).toString();
+    if (w >= 260) {
+        if (h >= 565) {
             node.classList.remove("simple");
             node.style.transform = "";
-        } else if (h >= 400) {
+        } else if (h >= 460) {
             node.classList.add("simple");
             node.style.transform = "";
         } else {
@@ -81,10 +89,10 @@ function cardinfo_setScale(node, showflavor) {
             node.style.transform = "scale(" + scaleH + ")";
         }
     } else {
-        if (h / w > 520 / 250) {
+        if (h / w > 565 / 260) {
             node.classList.remove("simple");
             node.style.transform = "scale(" + scaleW + ")";
-        } else if (h / w > 400 / 250) {
+        } else if (h / w > 460 / 260) {
             node.classList.add("simple");
             node.style.transform = "scale(" + scaleW + ")";
         } else {
@@ -97,6 +105,10 @@ function cardinfo_setScale(node, showflavor) {
 //정보 출력
 function cardinfo_show(id, info) {
     let site = $("#" + id);
+    //안내 문구 닫기, 카드 및 세트 출력
+    $(".notice",site).classList.remove("show");
+    $(".cardcase",site).classList.add("show");
+    $(".set",site).classList.add("show");
     //상단 출력
     $(".top",site).classList.add("show");
     //이미지
@@ -105,15 +117,15 @@ function cardinfo_show(id, info) {
     //마나
     $(".mana",site).innerHTML = info.cost.toString();
     //타입
-    $(".type",site).innerHTML = DATA.TYPE_KR[info.type];
+    $(".type",site).innerHTML = DATA.TYPE.KR[info.type];
     //이름
     $(".name",site).innerHTML = info.name;
     //등급
-    Object.keys(DATA.RARITY_KR).forEach(function(x) {
+    Object.keys(DATA.RARITY.KR).forEach(function(x) {
         $(".rarity",site).classList.remove("rarity_" + x);
     })
     $(".rarity",site).classList.add("rarity_" + info.rarity);
-    $(".rarity",site).innerHTML = DATA.RARITY_KR[info.rarity];
+    $(".rarity",site).innerHTML = DATA.RARITY.KR[info.rarity];
     //텍스트
     if (info.text && info.text.length > 0)
         $(".text",site).innerHTML = "<p>" + readable(info.text) + "</p>";
@@ -121,7 +133,6 @@ function cardinfo_show(id, info) {
         $(".text",site).innerHTML = "";
     //하단부
     let statpoint = [0,0,0];//각각 공격력, 종족, 체력/방어도 유무
-    $(".bottom",site).style.display = "block";
         //공격력
         if (info.attack !== undefined) {
             $(".attack",site).style.display = "block";
@@ -133,7 +144,7 @@ function cardinfo_show(id, info) {
         //종족
         if (info.race !== undefined) {
             $(".race",site).style.display = "block";
-            $(".race",site).innerHTML = DATA.RACE_KR[info.race];
+            $(".race",site).innerHTML = DATA.RACE.KR[info.race];
             statpoint[1] += 1;
         } else {
             $(".race",site).style.display = "none";
@@ -156,9 +167,15 @@ function cardinfo_show(id, info) {
         //하단부를 하나도 출력하지 않았다면 하단부 가리기
         if (statpoint[0] + statpoint[1] + statpoint[2] <= 0) {
             $(".bottom",site).style.display = "none";
+            //텍스트 칸 늘리기
+            $(".text",site).classList.add("large");
+        } else {
+            $(".bottom",site).style.display = "block";
+            //텍스트 칸 줄리기
+            $(".text",site).classList.remove("large");
         }
     //세트
-    $(".set",site).innerHTML = DATA.SET_KR[info.set];
+    $(".set",site).innerHTML = DATA.SET.KR[info.set];
     //플레이버 텍스트
     $(".flavor",site).innerHTML = "<p>" + readable(info.flavor) + "</p>";
 }
