@@ -16,7 +16,9 @@ const PNGURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
 let clusterize = {};
 //꾹 눌려 카드정보 열람 auto
 let autoInfo;
-let autoInfoTime = 500;//누르는 시간: 0.5초
+const AUTOINFOTIME = 500;//누르는 시간: 0.5초
+//이벤트 관리
+let eventobj = {};
 
 //===========================================================
 //※ 상수 설정

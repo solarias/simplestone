@@ -391,13 +391,9 @@ function window_shift(keyword, keyword2) {
                     cardinfo_show("main_cardinfo",info);
                 }
             }
-            $("#collection_list_content").ontouchend = function(e) {
+            $("#collection_list_content").onscroll = function(e) {
                 e = e || event;
-                let target = e.target || e.srcElement;
-                if (target.classList.contains("card")) {
-                    let info = session.db[target.dataset.ssi];
-                    cardinfo_show("main_cardinfo",info);
-                }
+                e.preventDefault();
             }
 
             break;
@@ -781,7 +777,7 @@ function window_shift(keyword, keyword2) {
     }
 }
 
-//상호작용 모음
+//상호작용 함수 모음
 let interact_addCard = function(e, ismouse) {
     e = e || event;
         if (ismouse === true && e.button !== 0) return false;//우클릭 배제
@@ -848,7 +844,7 @@ let interact_infoCoverWait = function(e, ismouse) {
             //창이 뜨면 상호작용 대상 비우기
             interact_target = "";
             e.preventDefault();
-        },autoInfoTime);
+        },AUTOINFOTIME);
     }
 }
 let interact_stopAuto = function(e) {
