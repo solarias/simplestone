@@ -1,0 +1,37 @@
+{
+  "short_name": "심플 스톤",
+  "name": "심플 스톤",
+  "lang": "ko",
+  "description": "Hearthstone Simple Deckbuilder",
+  "start_url": "index.html",
+  "icons": [
+    {
+      "src": "./images/logo_64.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "./images/logo_128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "./images/logo_144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "./images/logo_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./images/logo_256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    }
+  ],
+  "theme_color": "#798689",
+  "display": "standalone",
+  "orientation": "portrait"
+}
