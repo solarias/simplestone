@@ -111,9 +111,14 @@ function cardinfo_show(id, info) {
     $(".set",site).classList.add("show");
     //상단 출력
     $(".top",site).classList.add("show");
-    //이미지
-    let image = "url(" + IMAGEURL + info.id + ".jpg)";
-    $(".image",site).style.backgroundImage = image;
+    //이미지(오프라인 모드가 아니라면)
+    if (session.offline === false)   {
+        let image = "url(" + IMAGEURL + info.id + ".jpg)";
+        $(".image",site).style.backgroundImage = image;
+        $(".top",site).classList.remove("offline");
+    } else {
+        $(".top",site).classList.add("offline");
+    }
     //마나
     $(".mana",site).innerHTML = info.cost.toString();
     //타입

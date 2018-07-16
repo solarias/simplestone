@@ -4,10 +4,11 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         <meta charset="utf-8">
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
-		<!--모바일 최적화 : 화면 자동확대, 터치 딜레이 제거 (시작)-->
+		<!--모바일 최적화 : 화면 자동확대, 터치 딜레이 제거-->
 		<script type="text/javascript" src="./package/subtool.js"></script>
 		<script type="text/javascript" src="./package/fastclick.js"></script>
-		<!--모바일 최적화 : 화면 자동확대, 터치 딜레이 제거 (끝)-->
+		<!--IE 11 미만 퇴치용-->
+		<script src="./package/no_ie10.js" type="text/javascript"></script>
 
 		<link rel="stylesheet" type="text/css" href="./css/sist_cardNinfo.css" />
 		<link rel="stylesheet" type="text/css" href="./css/sist_main.css" />
@@ -16,7 +17,6 @@
 		<link rel="manifest" href="./manifest.json">
 
 		<title>심플 스톤</title>
-
 	</head>
 	<body>
         <div id="wrapper">
@@ -24,7 +24,7 @@
             <header id="frame_header">
                 <div id="header_top">
 					<button id="header_home" class="header_button"><img src="./images/icon_home.png"></button>
-					심플 스톤
+					<div id="header_status">심플 스톤</div>
 					<button id="header_info" class="header_button"><img src="./images/icon_info.png"></button>
 				</div>
                 <div id="header_bottom" class="subscreen">
@@ -46,6 +46,13 @@
 
 			<!--메인창-->
             <section id="frame_main">
+				<!--업데이트 화면-->
+				<div id="main_init" class="mainscreen main_both">
+                    <div class="main_title">공지사항</div>
+					<div id="init_notice"></div>
+					<div id="init_update"></div>
+				</div>
+
 				<!--타이틀스크린-->
                 <div id="main_titlescreen" class="mainscreen main_both">
                     <div class="main_title">심플 스톤</div>
@@ -68,7 +75,9 @@
 				<!--카드정보 불러오기-->
 				<div id="main_loading" class="mainscreen main_both">
                     <div id="main_loading_title" class="main_title">카드정보 불러오는 중</div>
+					<!--
 					<img class="loading_mark" src="./images/loading_transparent.gif" alt="로딩 이미지">
+					-->
 				</div>
 
 				<!--덱 설정-->
@@ -76,7 +85,6 @@
 					<button id="deckconfig_name" class="deckconfig_button">덱 이름 편집</button>
 					<button id="deckconfig_deckstring" class="deckconfig_button">덱코드 출력</button>
 					<button id="deckconfig_text" class="deckconfig_button">덱설명 출력</button>
-					<button id="deckconfig_format" class="deckconfig_button"></button>
 				</div>
 
 				<!--카드 목록-->
@@ -117,13 +125,23 @@
             </section>
 
 			<!--푸터-->
-            <footer id="frame_footer">
-				<div id="footer_top">
-					<div id="footer_notice" class="footer_desc">공지사항 (작성 예정)</div>
+			<footer id="footer_init" class="subscreen">
+				<button id="button_update" class="footer_init_button">업데이트 및 시작</button>
+				<button id="button_offline" class="footer_init_button">오프라인 모드</button>
+			</footer>
+			<footer id="footer_decklist" class="subscreen">
+				<button id="button_readcode" class="footer_decklist_button"><img src="./images/icon_deckcode.png"><span> 덱코드 입력</span></button>
+				<button id="botton_newdeck" class="footer_decklist_button"><img src="./images/icon_newdeck.png"><span> 새로운 덱</span></button>
+			</footer>
+			<footer id="footer_collectionNdeck" class="subscreen">
+				<div id="footer_collectionNdeck_top" class="subscreen">
+					<div id="footer_notice" class="footer_desc"></div>
 					<div id="footer_name_left" class="footer_desc"></div>
 					<div id="footer_name_right" class="footer_desc"></div>
 				</div>
-                <div id="footer_bottom" class="subscreen">
+                <div id="footer_collectionNdeck_cardinfo" class="subscreen">
+                </div>
+                <div id="footer_collectionNdeck_deckbuilding" class="subscreen">
 					<button id="bottom_undo" class="footer_button disabled">
 						<div id="undo_icon" class="log_icon">&#8630;</div>
 						<div id="undo_text" class="log_text desktop_only"> 취소</div>
@@ -135,15 +153,13 @@
 						<div id="redo_num" class="log_num">0</div>
 					</button>
 					<button id="bottom_done" class="footer_button"><img src="./images/icon_done.png"><span class="desktop_only"> 완료</span></button>
+					<button id="bottom_info" class="footer_button"><img src="./images/icon_cardinfo.png"><span class="mobile_only"> 사용<br>방법</span><span class="desktop_only"> 사용방법</span></button>
                 </div>
-                <div id="footer_decklist" class="subscreen">
-					<button id="button_readcode" class="footer_decklist_button"><img src="./images/icon_deckcode.png"><span> 덱코드 입력</span></button>
-					<button id="botton_newdeck" class="footer_decklist_button"><img src="./images/icon_newdeck.png"><span> 새로운 덱</span></button>
-				</div>
-                <div id="footer_deckconfig" class="subscreen">
-					<button id="button_edit"><img src="./images/icon_edit.png"><span> 편집</span></button>
-				</div>
-            </footer>
+			</footer>
+            <footer id="footer_deckconfig" class="subscreen">
+				<button id="button_format">야생 <br> 전환</button>
+				<button id="button_edit"><img src="./images/icon_edit.png"><span> 편집</span></button>
+			</footer>
 
 			<!--별도 창 - 카드 필터(모바일)-->
 			<section id="frame_mobilefilter" class="">
@@ -190,10 +206,11 @@
 
         <script type="text/javascript" src="./js/deckstrings.js"></script>
         <script type="text/javascript" src="./js/sist_data.js"></script>
-		<script type="text/javascript" src="./js/sist_process.js"></script>
 		<script type="text/javascript" src="./js/sist_filterNsearch.js"></script>
 		<script type="text/javascript" src="./js/sist_cardinfo.js"></script>
 		<script type="text/javascript" src="./js/sist_deckcode.js"></script>
+		<script type="text/javascript" src="./js/sist_window.js"></script>
+		<script type="text/javascript" src="./js/sist_process.js"></script>
 
 
 	</body>

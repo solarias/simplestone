@@ -6,19 +6,27 @@ let process = {};//임시 정보
 let session = {
     db:undefined,//카드 DB (비용, 이름에 따라 정렬)
     index:{},//dbfid로 카드 DB 검색하기 위해 사용
-    master:undefined,//마스터 노드
-    fragment:undefined//프래그먼트
+    masterNode:undefined,//마스터 노드
+    masterInfo:undefined,//마스터 인포
+    fragment:undefined,//프래그먼트
+    offline:undefined//오프라인 모드 유무
 };
 const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";
 const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";
 const PNGURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
+const HEROURL = "./images/heroes/";
 //클러스터
 let clusterize = {};
 //꾹 눌려 카드정보 열람 auto
 let autoInfo;
 const AUTOINFOTIME = 500;//누르는 시간: 0.5초
 //이벤트 관리
-let eventobj = {};
+let eventObj = {
+    "collection_list_content":{},
+    "collection_list":{},
+    "deck_list_content":{},
+    "deck_list":{}
+};
 
 //===========================================================
 //※ 상수 설정

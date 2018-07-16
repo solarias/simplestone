@@ -60,12 +60,16 @@ body {
         height:50px;
 
         background-color:#3e40e5;
-
-        color:white;
-        font-size:23px;
-        line-height:50px;
-        text-align:center;
     }
+        #header_status {
+            width:100%;
+            height:100%;
+
+            color:white;
+            font-size:23px;
+            line-height:50px;
+            text-align:center;
+        }
         .header_button {
             position:absolute;
             display:block;
@@ -87,8 +91,10 @@ body {
                 height:32px;
             }
             #header_home{
+                display:none;
                 left:5px;top:5px;
                 width:60px;}
+                #header_home.show {display:block;}
             #header_info{
                 right:5px;top:5px;
                 width:60px;
@@ -378,13 +384,14 @@ body {
     overflow:hidden;
 
     width:100%;
-    height:calc(100% - 75px - 90px);
+    height:calc(100% - 90px);
 }
     .mainscreen {
         position:absolute;
         z-index: 1;
 
         height:100%;
+        height:calc(100% - 75px);
 
         background-color:white;
         pointer-events: none;
@@ -430,9 +437,53 @@ body {
         text-align:center;
     }
 
+    /*업데이트 화면*/
+    #main_init {
+        transition-property: none;
+    }
+        #init_notice {
+            position:relative;
+            overflow-y:scroll;
+
+            margin:10px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:calc(100% - 60px - 10px - 90px);
+
+            background:rgba(0,0,0,0.6);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+            #init_notice p[date] {
+                width:100%;
+                color:lime;
+            }
+            #init_notice p[content] {
+                margin-left:10px;
+                margin-bottom:5px;
+                width:calc(100% - 5px);
+                color:white;
+            }
+        #init_update {
+            position:relative;
+
+            margin:20px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:40px;
+
+            background:rgba(0,0,0,0.6);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+
     /*첫 화면*/
     #main_titlescreen {
         display:block;
+
+        height:100%;
     }
 
     #titlescreen_card, #titlescreen_deck {
@@ -505,6 +556,8 @@ body {
     /*로딩 화면*/
     #main_loading {/*로딩화면은 화면 전환 효과 없음*/
         transition-property: none;
+
+        height:100%;
     }
     .loading_mark {
         display:block;
@@ -618,7 +671,7 @@ body {
             }
         }
         @media (max-width: 1120px) {
-            #frame_cardmonitor {display:none;}
+            #frame_cardmonitor, #frame_cardmonitor.show {display:none;}
         }
     /*카드 정보*/
     #main_cardinfo {
@@ -637,7 +690,7 @@ body {
 
             background-color:#503C23;
                 background-repeat:no-repeat;
-                background-position:right 50%;
+                background-position:calc(100% + 25px) 50%;
                 background-size:contain;
             border:5px gold outset;
             box-sizing: border-box;
@@ -651,7 +704,8 @@ body {
                 background: linear-gradient(
                     to right,
                     rgba(60,60,60,1) 0%,
-                    rgba(60,60,60,1) calc(100% - 100px),
+                    rgba(60,60,60,1) calc(100% - 125px),
+                    rgba(60,60,60,0) calc(100% - 25px),
                     rgba(60,60,60,0) 100%);
                 outline:2px #3C3C3C solid;
                 box-sizing: border-box;
@@ -853,219 +907,28 @@ body {
 /*=====================================================*/
 /* 푸터 */
 /*=====================================================*/
-#frame_footer {
+#footer_init {
     position:absolute;
         left:0;bottom:0;
+        z-index:2;
+    overflow:hidden;
 
+    padding:5px;
     width:100%;
-    height:auto;
+    height:75px;
 
     background:#3e40e5;
+    box-sizing: border-box;
+    transform:translate(0,100%);
+    transition:transform 0.5s;
+    pointer-events: none;
 }
-    #footer_top {
+        #footer_init.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+    .footer_init_button {
         position:relative;
-
-        width:100%;
-        height:25px;
-
-        background-color:#798689;
-    }
-        .footer_desc {
-            position:relative;
-            float:left;
-            display:none;
-
-            width:50%;
-            height:100%;
-
-            box-sizing: border-box;
-
-            color:white;
-            font-size:16px;
-            line-height:25px;
-            text-align:center;
-        }
-            #footer_notice {
-                width:100%;
-            }
-    #footer_bottom {
-        position:relative;
-        overflow:hidden;
-
-        width:100%;
-        height:50px;
-
-        background:#3e40e5;
-        transform:translate(0,100%);
-        transition:transform 0.5s;
-        pointer-events: none;
-    }
-            #footer_bottom.show {
-                transform:translate(0,0);
-                pointer-events: auto;
-            }
-        .footer_button {
-            position:relative;
-
-            margin:5px 0px 5px 5px;
-            width:110px;
-            height:40px;
-
-            background:rgba(255,255,255,0.1);
-            border:2px white solid;
-            border-radius: 10px;
-            box-sizing: border-box;
-
-            color:white;
-            font-size:25px;
-            font-weight:bold;
-            cursor:pointer;
-        }
-                .footer_button:hover {
-                    background-color:rgba(255,255,255,0.2);
-                }
-                .footer_button:active {
-                    background-color:rgba(255,255,255,0.4);
-                }
-            #bottom_undo, #bottom_redo {
-                float:left;
-
-                margin:5px 0px 5px 5px;
-                width:110px;
-                height:40px;
-
-                font-size:22px;
-                user-select:none;
-                pointer-events: auto;
-            }
-                #bottom_redo {margin-right:0;}
-                #bottom_undo.disabled, #bottom_redo.disabled {
-                    border:2px gray solid;
-                    color:gray;
-                    pointer-events: none;
-                }
-                .log_icon {
-                    position:relative;
-                    width:56px;
-                    height:24px;
-                    font-size:24px;
-                    line-height:24px;
-                    text-align:center;
-                }
-                    #undo_icon {float:left;}
-                    #redo_icon {float:right;}
-                .log_num {
-                    position:relative;
-                    width:56px;
-                    height:12px;
-                    color:yellow;
-                    font-size:12px;
-                    line-height:12px;
-                    text-align:center;
-                }
-                    #undo_num {clear:left;float:left;}
-                    #redo_num {clear:right;float:right;}
-                .log_text {
-                    position:relative;
-                    width:50px;
-                    height:36px;
-                    line-height:36px;
-                }
-                    #undo_text {float:right;text-align:left;}
-                    #redo_text {float:left;text-align:right;}
-            #bottom_done {
-                float:right;
-
-                margin:5px;
-                width:120px;
-                height:40px;
-            }
-                #bottom_done > img {
-                    vertical-align: middle;
-                    width:40px;
-                    height:40px;
-                }
-    #footer_decklist {
-        position:absolute;
-            left:0;top:0;
-            z-index:2;
-
-        padding:5px;
-        width:100%;
-        height:100%;
-
-        background:#3e40e5;
-        box-sizing: border-box;
-        transform:translate(0,100%);
-        transition:transform 0.5s;
-        pointer-events: none;
-    }
-            #footer_decklist.show {
-                transform:translate(0,0);
-                pointer-events: auto;
-            }
-        .footer_decklist_button {
-            position:relative;
-            width:calc(50% - 10px);
-            height:100%;
-
-            background:rgba(255,255,255,0.1);
-            border:2px white solid;
-            border-radius: 10px;
-            box-sizing: border-box;
-
-            color:white;
-            font-size:22px;
-            letter-spacing: -1px;
-            font-weight:bold;
-            cursor:pointer;
-            white-space: nowrap;
-        }
-            .footer_decklist_button > img {
-                vertical-align:middle;
-                width:33px;
-                height:33px;
-            }
-            .footer_decklist_button > span {
-                vertical-align:middle;
-                font-size:inherit;
-            }
-            .footer_decklist_button:hover {
-                background-color:rgba(255,255,255,0.2);
-            }
-            .footer_decklist_button:active {
-                background-color:rgba(255,255,255,0.4);
-            }
-        #button_readcode {
-            float:left;
-        }
-        #botton_newdeck {
-            float:right;
-            }
-    #footer_deckconfig {
-        position:absolute;
-            left:0;top:0;
-            z-index:2;
-
-        padding:5px;
-        width:100%;
-        height:100%;
-
-        background:#3e40e5;
-        box-sizing: border-box;
-        transform:translate(0,100%);
-        transition:transform 0.5s;
-        pointer-events: none;
-    }
-            #footer_deckconfig.show {
-                transform:translate(0,0);
-                pointer-events: auto;
-            }
-    #button_edit {
-        position:relative;
-        float:right;
-
-        width:100px;
         height:100%;
 
         background:rgba(255,255,255,0.1);
@@ -1080,21 +943,337 @@ body {
         cursor:pointer;
         white-space: nowrap;
     }
-        #button_edit > img {
+        .footer_init_button:hover {
+            background-color:rgba(255,255,255,0.2);
+        }
+        .footer_init_button:active {
+            background-color:rgba(255,255,255,0.4);
+        }
+    #button_update {
+        float:left;
+        width:calc(70% - 10px);
+        border:2px lime solid;
+        color:lime;
+    }
+    #button_offline {
+        float:right;
+        width:calc(30% - 10px);
+        border:2px orange solid;
+        color:orange;
+    }
+        #button_update[disabled], #button_offline[disabled] {
+            border:2px gray solid;
+            color:gray;
+            pointer-events: none;
+        }
+#footer_decklist {
+    position:absolute;
+        left:0;bottom:0;
+        z-index:2;
+    overflow:hidden;
+
+    padding:5px;
+    width:100%;
+    height:75px;
+
+    background:#3e40e5;
+    box-sizing: border-box;
+    transform:translate(0,100%);
+    transition:transform 0.5s;
+    pointer-events: none;
+}
+        #footer_decklist.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+    .footer_decklist_button {
+        position:relative;
+        height:100%;
+
+        background:rgba(255,255,255,0.1);
+        border-radius: 10px;
+        box-sizing: border-box;
+
+        font-size:22px;
+        letter-spacing: -1px;
+        font-weight:bold;
+        cursor:pointer;
+        white-space: nowrap;
+    }
+        .footer_decklist_button > img {
             vertical-align:middle;
             width:33px;
             height:33px;
         }
-        #button_edit > span {
+        .footer_decklist_button > span {
             vertical-align:middle;
             font-size:inherit;
         }
-        #button_edit:hover {
+        .footer_decklist_button:hover {
             background-color:rgba(255,255,255,0.2);
         }
-        #button_edit:active {
+        .footer_decklist_button:active {
             background-color:rgba(255,255,255,0.4);
         }
+    #button_readcode {
+        float:left;
+        width:calc(40% - 10px);
+        border:2px orange solid;
+        color:orange;
+    }
+    #botton_newdeck {
+        float:right;
+        width:calc(60% - 10px);
+        border:2px lime solid;
+        color:lime;
+    }
+#footer_collectionNdeck {
+    position:absolute;
+        left:0;bottom:0;
+        z-index:2;
+    overflow:hidden;
+
+    width:100%;
+    height:75px;
+
+    transform:translate(0,100%);
+    transition:transform 0.5s;
+    pointer-events: none;
+}
+    #footer_collectionNdeck.show {
+        transform:translate(0,0);
+        pointer-events: auto;
+    }
+#footer_collectionNdeck_top {
+    position:absolute;
+        left:0;top:0;
+
+    width:100%;
+    height:25px;
+
+    background-color:#798689;
+}
+    .footer_desc {
+        position:relative;
+        float:left;
+        display:none;
+
+        width:50%;
+        height:100%;
+
+        box-sizing: border-box;
+
+        color:white;
+        font-size:16px;
+        line-height:25px;
+        text-align:center;
+    }
+#footer_collectionNdeck_cardinfo {
+    position:absolute;
+        left:0;bottom:0;
+    overflow:hidden;
+
+    width:100%;
+    height:50px;
+
+    background:#3e40e5;
+
+    transform:translate(0,100%);
+    transition:transform 0.5s;
+    pointer-events: none;
+}
+    #footer_collectionNdeck_cardinfo.show {
+        transform:translate(0,0);
+        pointer-events: auto;
+    }
+#footer_collectionNdeck_deckbuilding {
+    position:absolute;
+        left:0;bottom:0;
+    overflow:hidden;
+
+    width:100%;
+    height:50px;
+
+    background:#3e40e5;
+
+    transform:translate(0,100%);
+    transition:transform 0.5s;
+    pointer-events: none;
+}
+    #footer_collectionNdeck_deckbuilding.show {
+        transform:translate(0,0);
+        pointer-events: auto;
+    }
+    .footer_button {
+        position:relative;
+
+        margin:5px 0px 5px 5px;
+        width:110px;
+        height:40px;
+
+        background:rgba(255,255,255,0.1);
+        border:2px white solid;
+        border-radius: 10px;
+        box-sizing: border-box;
+
+        color:white;
+        font-size:25px;
+        font-weight:bold;
+        cursor:pointer;
+    }
+            .footer_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .footer_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+        #bottom_undo, #bottom_redo {
+            float:left;
+
+            margin:5px 0px 5px 5px;
+            width:110px;
+            height:40px;
+
+            font-size:22px;
+            user-select:none;
+            pointer-events: auto;
+        }
+            #bottom_redo {margin-right:0;}
+            #bottom_undo.disabled, #bottom_redo.disabled {
+                border:2px gray solid;
+                color:gray;
+                pointer-events: none;
+            }
+            .log_icon {
+                position:relative;
+                width:56px;
+                height:24px;
+                font-size:24px;
+                line-height:24px;
+                text-align:center;
+            }
+                #undo_icon {float:left;}
+                #redo_icon {float:right;}
+            .log_num {
+                position:relative;
+                width:56px;
+                height:12px;
+                color:yellow;
+                font-size:12px;
+                line-height:12px;
+                text-align:center;
+            }
+                #undo_num {clear:left;float:left;}
+                #redo_num {clear:right;float:right;}
+            .log_text {
+                position:relative;
+                width:50px;
+                height:36px;
+                line-height:36px;
+            }
+                #undo_text {float:right;text-align:left;}
+                #redo_text {float:left;text-align:right;}
+        #bottom_done {
+            float:right;
+
+            margin:5px;
+            width:120px;
+            height:40px;
+        }
+            #bottom_done > img {
+                vertical-align: middle;
+                width:40px;
+                height:40px;
+            }
+        #bottom_info {
+            float:right;
+
+            margin:5px 10px 5px 0;
+            width:160px;
+            height:40px;
+        }
+            #bottom_info > img {
+                vertical-align: sub;
+                width:30px;
+                height:30px;
+            }
+            #bottom_info > .desktop_only {
+                vertical-align: top;
+            }
+#footer_deckconfig {
+    position:absolute;
+        left:0;bottom:0;
+        z-index:2;
+    overflow:hidden;
+
+    padding:5px;
+    width:100%;
+    height:75px;
+
+    background:#3e40e5;
+    box-sizing: border-box;
+    transform:translate(0,100%);
+    transition:transform 0.5s;
+    pointer-events: none;
+}
+        #footer_deckconfig.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+#button_format {
+    position:relative;
+    float:left;
+    overflow:hidden;
+
+    width:100px;
+    height:100%;
+
+    background:rgba(255,255,255,0.1);
+    border:2px white solid;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    white-space: nowrap;
+}
+#button_edit {
+    position:relative;
+    float:right;
+    overflow:hidden;
+
+    width:100px;
+    height:100%;
+
+    background:rgba(255,255,255,0.1);
+    border:2px white solid;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    color:white;
+    font-size:22px;
+    letter-spacing: -1px;
+    font-weight:bold;
+    cursor:pointer;
+    white-space: nowrap;
+}
+    #button_edit > img {
+        vertical-align:middle;
+        width:33px;
+        height:33px;
+    }
+    #button_edit > span {
+        vertical-align:middle;
+        font-size:inherit;
+    }
+    #button_edit:hover {
+        background-color:rgba(255,255,255,0.2);
+    }
+    #button_edit:active {
+        background-color:rgba(255,255,255,0.4);
+    }
 
 /*=====================================================*/
 /* 모바일 화면조정 */
@@ -1137,11 +1316,22 @@ body {
         margin:2px 0;
         width:45%;
     }
-    #footer_bottom .footer_button {
+    #footer_collectionNdeck_deckbuilding .footer_button {
         width:60px;
     }
-    .footer_decklist_button {
+    .footer_init_button, .footer_decklist_button {
         font-size:16px;
+        white-space: normal;
+    }
+    #footer_collectionNdeck_deckbuilding #bottom_info {
+        width:90px;
+    }
+    #footer_collectionNdeck_deckbuilding #bottom_info > .mobile_only {
+        display:inline-block;
+        vertical-align: top;
+        margin-left:5px;
+        font-size:16px;
+        line-height:16px;
     }
 }
 

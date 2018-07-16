@@ -9,29 +9,15 @@ function deckcode_decode(deckcode) {
     let output = {};
     //카드
     output.cards = [];
-    let dbfidArr = [];
-    let quantityArr = [];
-    input.cards.forEach(function(arr) {
-        dbfidArr.push(arr[0].toString());
-        quantityArr.push(arr[1]);
+    input.cards.forEach(function(card) {
+        let arr = [];
+        arr[0] = card[0].toString();
+        arr[1] = card[1];
+        output.cards.push(arr);
     })
-    for (let i = 0;i < session.db.length;i++) {
-        let card = session.db[i];
-        let cardobj = {};
-        let index = dbfidArr.indexOf(card.dbfid);
-        if (index >= 0) {
-            cardobj.ssi = card.ssi;
-            cardobj.quantity = quantityArr[index];
-                output.cards.push(cardobj);
-            //검색된 요소 제거
-            dbfidArr.splice(index,1);
-            quantityArr.splice(index,1);
-            //다 끝났으면 종료
-            if (dbfidArr.length <= 0 && quantityArr.length <= 0) {
-                break;
-            }
-        }
-    }
+    output.cards.sort(function(a, b) {
+        return (parseInt(session.index[a[0]]) < parseInt(session.index[b[0]])) ? -1 : 1;
+    });
     //직업
     for (let i = 0;i < session.db.length;i++) {
         if (session.db[i].dbfid === input.heroes[0].toString()) {
@@ -42,7 +28,7 @@ function deckcode_decode(deckcode) {
     //포맷(향후 덱 포맷 검증 별도로 함)
     output.format = "정규";
     for (let i = 0;i < output.cards.length;i++) {
-        if (DATA.SET.FORMAT[session.db[parseInt(output.cards[i].ssi)].set] === "야생") {
+        if (DATA.SET.FORMAT[session.db[session.index[output.cards[i][0]]].set] === "야생") {
             output.format = "야생";
             break;
         }
@@ -61,11 +47,11 @@ function deckcode_encode() {
     output.heroes = [DATA.CLASS.DBFID[process.deck.class]];
     //카드
     output.cards = [];
-    process.deck.cards.forEach(function(x) {
-        let cardarr = [];
-        cardarr[0] = parseInt(session.db[x.ssi].dbfid);
-        cardarr[1] = x.quantity;
-        output.cards.push(cardarr);
+    process.deck.cards.forEach(function(card) {
+        let arr = [];
+        arr[0] = parseInt(card[0]);
+        arr[1] = card[1];
+        output.cards.push(arr);
     })
 
     //출력
@@ -93,8 +79,11 @@ function deckcode_text() {
     outputtext += "#\n";
     //카드
     process.deck.cards.forEach(function(card) {
-        let info = session.db[parseInt(card.ssi)];
-        outputtext += "# " + card.quantity.toString() + "x (" + info.cost.toString() + ") " + info.name + "\n";
+        let info = session.db[session.index[card[0]]];
+        outputtext += "# " + card[1].toString();
+        outputtext += "x (" + info.cost.toString() + ") ";
+        outputtext += info.name;
+        outputtext += "    [" + DATA.SET.KR[info.set] + "]" + "\n";
     });
     outputtext += "#\n";
     //덱코드

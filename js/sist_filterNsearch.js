@@ -585,7 +585,8 @@ function card_search() {
     //1) 출력할 카드 목록 정리
     let arr = [];
     session.db.forEach(function(x) {
-        if (x.cardClass === process.search.class &&//직업
+        if ((x.cardClass === process.search.class ||//직업
+        (x.classes !== undefined && x.classes.indexOf(process.search.class) >= 0))&&//멀티클래스 체크
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
         (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format) &&//포맷(정규는 무조건 포함)
@@ -593,7 +594,7 @@ function card_search() {
         (process.search.rarity === "all" || x.rarity === process.search.rarity) &&//등급
         (process.search.set === "all" || x.set === process.search.set) &&//세트
         card_matchKeyword(x, process.search.keyword) === true) {
-            arr.push(x.ssi);
+            arr.push(x.dbfid);
         }
     })
         //카드 목록 저장

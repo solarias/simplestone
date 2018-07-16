@@ -57,9 +57,12 @@
     color:white;
     text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
     font-size:20px;
-        line-height:35px;
+        line-height:40px;
     text-align:center;
 }
+    .card:not(.unusable_hidden) .card_cost {
+        background-color:crimson;
+    }
 .card_name {
     display:table;
     overflow:hidden;
@@ -83,6 +86,13 @@
         line-height:20px;
     letter-spacing:-1px;
 }
+    .card:not(.unusable_hidden) .card_name {
+        background: linear-gradient(
+            to right,
+            rgba(180,0,0,1) 0%,
+            rgba(180,0,0,1) calc(100% - 100px),
+            rgba(180,0,0,0) 100%);
+    }
     .card_name p {
         display:table-cell;
 
@@ -182,6 +192,9 @@
                 background-size:contain;
                 background-position:50% 50%;
         }
+            .cardinfo.illust.show.offline {
+                background-image: none;
+            }
         .cardinfo.illustImage {
             position:relative;
 
@@ -219,6 +232,9 @@
                         background-repeat:no-repeat;
                         background-size:contain;
                         background-position:50% 50%;
+                }
+                .cardinfo.top.show.offline {
+                    background-image: none;
                 }
             .cardinfo.image {
                 position:relative;
@@ -444,7 +460,7 @@
             max-height:15px;
 
             color:black;
-            font-size:13px;
+            font-size:14px;
                 line-height:15px;
             text-align:center;
         }
