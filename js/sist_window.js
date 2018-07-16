@@ -524,7 +524,7 @@ function window_shift(keyword, keyword2) {
                         "<p>카드 목록에서 카드를 우클릭 또는 " + parseFloat(AUTOINFOTIME/1000).toString() + "초간 터치하세요.</p><br>"+
                         "<h1>취소, 복귀 기능</h1>"+
                         "<p>'취소'를 누르면 이전에 추가/제거한 카드를 되돌립니다.</p>"+
-                        "<p>'복귀'를 누르면 취소한 명령을 다시 수행합니다.</p>",
+                        "<p>'복귀'를 누르면 취소한 작업을 다시 실행합니다.</p>",
                     confirmButtonText:"확인"
                 })
             }

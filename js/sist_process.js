@@ -456,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             tag: 'div',
             scrollId: 'collection_list',
             contentId: 'collection_list_content',
-            rows_in_block:10,
+            rows_in_block:14,
             no_data_text: '결과 없음',
             no_data_class: 'clusterize-no-data'
         });
@@ -465,7 +465,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             tag: 'div',
             scrollId: 'deck_list',
             contentId: 'deck_list_content',
-            rows_in_block:10,
+            rows_in_block:14,
             no_data_text: ''
         });
 
