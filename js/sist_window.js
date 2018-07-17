@@ -323,7 +323,7 @@ function window_shift(keyword, keyword2) {
                         $$(".newdeck_button").forEach(function(target) {
                             target.onclick = function() {
                                 if (target.dataset.class) {
-                                    //직업 세
+                                    //직업 세팅
                                     if (!process.deck) process.deck = {};
                                     process.deck.class = target.dataset.class;
                                     //버튼 세팅
@@ -433,7 +433,7 @@ function window_shift(keyword, keyword2) {
             //==================
             //검색 초기치 강제 설정, 필터 활성화
             process.deck = [];
-                process.deck.class = "WARRIOR";
+                process.deck.class = undefined;
                 process.deck.format = "야생";
             card_setFilter("init");//필터 활성화
 

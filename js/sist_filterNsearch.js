@@ -117,7 +117,7 @@ function card_setFilter(cmd) {
     if (cmd === "init") {
         //검색 초기치 설정, 필터 활성화
         if (!process.search) process.search = {};
-        process.search.class = process.deck.class;//직업
+        process.search.class = (process.deck.class) ? process.deck.class : "WARRIOR";//직업
         process.search.mana = "all";//마나
         process.search.rarity = "all";//등급
         process.search.set = "all";//세트
@@ -587,7 +587,9 @@ function card_search() {
     session.db.forEach(function(x) {
         if (//직업
         ((x.classes === undefined && x.cardClass === process.search.class) ||//멀티클래스 없음
-        (x.classes !== undefined && x.classes.indexOf(process.search.class) >= 0))&&//멀티클래스 있음
+        (x.classes !== undefined &&//멀티클래스 있음
+            ((process.deck.class === undefined && x.cardClass === process.search.class) ||//현 직업 없음: 검색직업이 맞으면
+            (process.deck.class !== undefined && x.cardClass === process.search.class && x.classes.indexOf(process.deck.class) >= 0))))&&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
         (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format) &&//포맷(정규는 무조건 포함)
