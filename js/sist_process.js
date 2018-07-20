@@ -173,6 +173,9 @@ function card_move(cmd, log) {
         default:
             break;
     }
+
+    //덱 임시저장
+    deck_tempsave();
 }
 
 //카드 최종 정보 생성
@@ -393,25 +396,23 @@ function deck_refresh(cmd) {
 
 //덱 임시저장
 function deck_tempsave() {
-    let temp = {};
-    temp.cards = deepCopy(process.deck.cards);
-    temp.class = process.deck.class;
-    temp.format = process.deck.format;
-    temp.quantity = process.deck.quantity;
+    let tempdeck = {};
+    tempdeck.cards = deepCopy(process.deck.cards);
+    tempdeck.class = process.deck.class;
+    tempdeck.format = process.deck.format;
+    tempdeck.quantity = process.deck.quantity;
+    if (process.deck.name) tempdeck.name = process.deck.name;
+    if (process.deck.newset) tempdeck.newset = process.deck.newset;//신규덱 적용여부
+    //저장 날짜도 기록
+    tempdeck.date = new Date().toISOString().substring(0, 10);
 
-    let deck = {
-        "temp":temp
-    }
     //저장 및 문구 출력
-    localforage.setItem("sist_deck",deck)
-    .then(function() {
-        nativeToast({
-            message: '덱이 저장되었습니다.',
-            position: 'center',
-            timeout: 2000,
-            type: 'success',
-            closeOnClick: 'true'
-        });
+    localforage.setItem("sist_tempdeck",tempdeck)
+    .then(function(e) {
+        console.log("saved(temp)");
+    })
+    .catch(function(e) {
+        console.log("덱 임시저장에 실패하였습니다.");
     });
 }
 

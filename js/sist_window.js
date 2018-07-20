@@ -260,7 +260,61 @@ function window_shift(keyword, keyword2) {
             //덱 설정 초기화
             process.deck = {};
             process.deck.deckcode = "";
+            //==================
+            //※ 메인 버튼: 덱 목록
+            //==================
+            //최근 작업 덱
+                //최근 작업 덱 파악
+                localforage.getItem("sist_tempdeck")
+                .then(function(tempdeck) {
+                    //비어있으면
+                    if (!tempdeck) {
+                        //비었다고 표시
+                        $("#decklist_temp").innerHTML = "최근 작업 덱 : 없음";
+                        $("#decklist_temp").onclick = "";
+                    //불러올 게 있으면
+                    } else {
+                        //덱 이름 표기
+                        let name = tempdeck.name + " (" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")";
+                        $("#decklist_temp").innerHTML = "최근 작업 덱 : <b>" + name + "</b>";
+                        //클릭하면 불러오기
+                        $("#decklist_temp").onclick = function() {
+                            //의사 물어보기
+                            let html = "";
+                            html +=  "<b>" + tempdeck.name + "</b><br>";
+                            html += "(" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")" + "<br>";
+                            html += "완성도: " + tempdeck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString() + "<br>";
+                            html += "작업일시: " + tempdeck.date;
+                            swal({
+                                imageUrl:HEROURL + DATA.CLASS.ID[tempdeck.class] + ".jpg",
+                                //imageHeight:88,
+                                title:"최근 작업 덱을 불러옵니다.",
+                                html:html,
+                                showCancelButton:true,
+                                confirmButtonText: '확인',
+                                cancelButtonText: '취소',
+                                cancelButtonColor: '#d33'
+                            }).then(function(isConfirm){
+                                if (isConfirm) {
+                                    //덱 정보 적용
+                                    process.deck = deepCopy(tempdeck);
+                                    //로딩 개시
+                                    window_shift("loading","deckbuilding");
+                                } else {
+                                    //취소
+                                    return;
+                                }
+                            })
+                        }
+                    }
 
+                })
+            //==================
+            //※ 상단 버튼: 덱 정렬
+            //==================
+            //==================
+            //※ 하단 버튼: 덱코드 & 덱생성
+            //==================
             //덱코드 입력
             $("#button_readcode").onclick = function() {
                 //팝업창 열기
@@ -485,9 +539,15 @@ function window_shift(keyword, keyword2) {
             $("#footer_collectionNdeck").classList.add("show");
             $("#footer_collectionNdeck_deckbuilding").classList.add("show");
             //로그 초기화
-            $("#undo_num").innerHTML = "0";
+            if (process.log !== undefined)
+                $("#undo_num").innerHTML = process.log.length;
+            else
+                $("#undo_num").innerHTML = "0";
             $("#undo_num").classList.remove("show");
-            $("#redo_num").innerHTML = "0";
+            if (process.redo !== undefined)
+                $("#redo_num").innerHTML = process.redo.length;
+            else
+                $("#redo_num").innerHTML = "0";
             $("#redo_num").classList.remove("show");
 
             //==================
@@ -501,6 +561,9 @@ function window_shift(keyword, keyword2) {
 
             //덱 초기화
             deck_refresh("init");
+
+            //덱 임시저장
+            deck_tempsave();
 
             //==================
             //※ 카드정보 구성
@@ -661,6 +724,8 @@ function window_shift(keyword, keyword2) {
             //덱 초기화
             deck_refresh("init");
 
+            //덱 임시저장
+            deck_tempsave();
             //==================
             //※ 주 버튼
             //==================
@@ -692,9 +757,12 @@ function window_shift(keyword, keyword2) {
                     }
                 }).then(function(name) {
                     if (name) {
-                        //덱코드 기억
+                        //덱이름 기억
                         process.deck.name = name;
                         $("#deck_name").innerHTML = process.deck.name;
+
+                        //덱 임시저장
+                        deck_tempsave();
                     }
                 })
             }

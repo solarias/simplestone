@@ -207,14 +207,14 @@ function card_setFilter(cmd) {
                 title: '카드 마나 검색',
                 html:
                   '<button id="popup_mana_all" class="popup_button full" data-mana="전체">전체</button>' +
-                  '<button id="popup_mana_0" class="popup_button" data-mana="0"><span style="color:blue;font-size:20px;">&#11042;</span> 0</button>' +
-                  '<button id="popup_mana_1" class="popup_button" data-mana="1"><span style="color:blue;font-size:20px;">&#11042;</span> 1</button>' +
-                  '<button id="popup_mana_2" class="popup_button" data-mana="2"><span style="color:blue;font-size:20px;">&#11042;</span> 2</button>' +
-                  '<button id="popup_mana_3" class="popup_button" data-mana="3"><span style="color:blue;font-size:20px;">&#11042;</span> 3</button>' +
-                  '<button id="popup_mana_4" class="popup_button" data-mana="4"><span style="color:blue;font-size:20px;">&#11042;</span> 4</button>' +
-                  '<button id="popup_mana_5" class="popup_button" data-mana="5"><span style="color:blue;font-size:20px;">&#11042;</span> 5</button>' +
-                  '<button id="popup_mana_6" class="popup_button" data-mana="6"><span style="color:blue;font-size:20px;">&#11042;</span> 6</button>' +
-                  '<button id="popup_mana_7" class="popup_button" data-mana="7"><span style="color:blue;font-size:20px;">&#11042;</span> 7+</button>' +
+                  '<button id="popup_mana_0" class="popup_button" data-mana="0"><img src="./images/mana_blue.png">0</button>' +
+                  '<button id="popup_mana_1" class="popup_button" data-mana="1"><img src="./images/mana_blue.png">1</button>' +
+                  '<button id="popup_mana_2" class="popup_button" data-mana="2"><img src="./images/mana_blue.png">2</button>' +
+                  '<button id="popup_mana_3" class="popup_button" data-mana="3"><img src="./images/mana_blue.png">3</button>' +
+                  '<button id="popup_mana_4" class="popup_button" data-mana="4"><img src="./images/mana_blue.png">4</button>' +
+                  '<button id="popup_mana_5" class="popup_button" data-mana="5"><img src="./images/mana_blue.png">5</button>' +
+                  '<button id="popup_mana_6" class="popup_button" data-mana="6"><img src="./images/mana_blue.png">6</button>' +
+                  '<button id="popup_mana_7" class="popup_button" data-mana="7"><img src="./images/mana_blue.png">7+</button>' +
                   '<button id="popup_mana_odd" class="popup_button" data-mana="홀수">홀수</button>' +
                   '<button id="popup_mana_even" class="popup_button" data-mana="짝수">짝수</button>',
                 onOpen:function() {
@@ -263,11 +263,11 @@ function card_setFilter(cmd) {
                 title: '카드 등급 검색',
                 html:
                   '<button id="popup_rarity_all" class="popup_button full" data-rarity="전체">전체</button>' +
-                  '<button id="popup_rarity_FREE" class="popup_button full" data-rarity="기본"><span class="COMMON">&#11042;</span> 기본 카드</button>' +
-                  '<button id="popup_rarity_COMMON" class="popup_button full" data-rarity="일반"><span class="FREE">&#11042;</span> 일반 카드</button>' +
-                  '<button id="popup_rarity_RARE" class="popup_button full" data-rarity="희귀"><span class="RARE">&#11042;</span> 희귀 카드</button>' +
-                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="영웅"><span class="EPIC">&#11042;</span> 영웅 카드</button>' +
-                  '<button id="popup_rarity_LEGENDARY" class="popup_button full" data-rarity="전설"><span class="LEGENDARY">&#11042;</span> 전설 카드</button>',
+                  '<button id="popup_rarity_FREE" class="popup_button full" data-rarity="기본"><img src="./images/mana_free.png">기본 카드</button>' +
+                  '<button id="popup_rarity_COMMON" class="popup_button full" data-rarity="일반"><img src="./images/mana_common.png">일반 카드</button>' +
+                  '<button id="popup_rarity_RARE" class="popup_button full" data-rarity="희귀"><img src="./images/mana_rare.png">희귀 카드</button>' +
+                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="영웅"><img src="./images/mana_epic.png">영웅 카드</button>' +
+                  '<button id="popup_rarity_LEGENDARY" class="popup_button full" data-rarity="전설"><img src="./images/mana_legendary.png">전설 카드</button>',
                 onOpen:function() {
                     //현재 등급 검색필터 보여주기
                     $("#popup_rarity_" + process.search.rarity).classList.add("selected");
@@ -586,10 +586,18 @@ function card_search() {
     let arr = [];
     session.db.forEach(function(x) {
         if (//직업
-        ((x.classes === undefined && x.cardClass === process.search.class) ||//멀티클래스 없음
-        (x.classes !== undefined &&//멀티클래스 있음
-            ((process.deck.class === undefined && x.cardClass === process.search.class) ||//현 직업 없음: 검색직업이 맞으면
-            (process.deck.class !== undefined && x.cardClass === process.search.class && x.classes.indexOf(process.deck.class) >= 0))))&&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
+        (x.cardClass === process.search.class &&//검색 직업과 카드 직업은 반드시 맞아야 함
+            (process.deck.class === undefined ||//정해둔 직업 없으면 다 출력
+            (process.deck.class !== undefined &&//정해둔 직업 있으면
+                (x.cardClass === process.deck.class ||//현 직업과 맞거나
+                x.classes === undefined ||//다중직업이 없거나
+                (x.classes !== undefined &&//다중직업 중 하나에 속하거나
+                    x.classes.indexOf(process.deck.class)>= 0
+                )
+                )
+            )
+            )
+        ) &&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
         (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format) &&//포맷(정규는 무조건 포함)
