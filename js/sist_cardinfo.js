@@ -115,7 +115,7 @@ function cardinfo_show(id, info) {
     if (session.offline === false)   {
         let image;
         //확장팩이 아니면 이미지 출력
-        if (!process.newset || info.set !== DATA.SET.NEW.id) {
+        if (!info.url || !process.newset || info.set !== DATA.SET.NEW.id) {
             $(".illust",site).classList.remove("show");
             $(".cardcase",site).classList.add("show");
                 image = "url(" + IMAGEURL + info.id + ".jpg)";
