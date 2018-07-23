@@ -10,9 +10,11 @@ function card_generateMaster() {
         elm_card.dataset.dbfid = "$dbfid";//$dbfid
         elm_card.classList.add("flash_hidden");//flash 대상은 이 클래스 제거
         elm_card.classList.add("unusable_hidden");//이용불가 대상은 이 클래스 제거
+        elm_card.classList.add("newset_hidden");//신규 확장팩 대상은 이 클래스 제거
         //오프라인 모드가 아닐 경우에만 배경이미지 생성
         if (session.offline === false)
-            elm_card.style.backgroundImage = "url(" + TILEURL + "$id.jpg)";//$id: 카드 ID
+            //나머지: 타일 이미지 출력
+            elm_card.style.backgroundImage = "url($url)";//$url: 카드 이미지 주소
     let elm_card_cost = document.createElement("div.card_cost");
         elm_card_cost.classList.add("rarity_$rarity");//$rarity: 카드 희귀도
         elm_card_cost.innerHTML = "$cost";//$cost: 카드 비용
@@ -36,10 +38,20 @@ function card_generateFragment(info) {
     let fragment = session.masterNode;
     //필요한 정보 설정(수량 제외)
     fragment = fragment.replaceAll("$dbfid",info.dbfid);//인덱스 설정
-    fragment = fragment.replace("$id",info.id);//ID 설정
+    //이미지 설정
+        //신규 확장팩: 통 이미지
+        if (info.set === DATA.SET.NEW.id) {
+            fragment = fragment.replace("$url",info.url);
+        //그외: 타일 이미지
+        } else {
+            fragment = fragment.replace("$url",TILEURL + info.id + ".jpg");
+        }
     fragment = fragment.replace("$cost",info.cost);//비용 설정
     fragment = fragment.replace("$name",info.name);//이름 설정
     fragment = fragment.replace("$rarity",info.rarity);//등급 설정
+    //확장팩이면 "newset_hidden" 클래스 제거
+    if (info.set === DATA.SET.NEW.id)
+        fragment = fragment.replace(" newset_hidden","");//등급 설정
     //반환
     return fragment;
 }
@@ -404,7 +416,7 @@ function deck_tempsave() {
     if (process.deck.name) tempdeck.name = process.deck.name;
     if (process.deck.newset) tempdeck.newset = process.deck.newset;//신규덱 적용여부
     //저장 날짜도 기록
-    tempdeck.date = new Date().toISOString().substring(0, 10);
+    tempdeck.date = thisdate();//함수는 subtool.js 참고
 
     //저장 및 문구 출력
     localforage.setItem("sist_tempdeck",tempdeck)
@@ -432,6 +444,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     //첫 화면 상호작용
         //업데이트 화면 공개
         window_shift("init");
+        //window_shift("titlescreen");
 
         //홈 버튼
         $("#header_home").onclick = function() {

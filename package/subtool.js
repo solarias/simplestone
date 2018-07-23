@@ -251,7 +251,7 @@ function indexArrKey(arr, key, value) {
     }
 }
 //=================================================================================================================
-//※ 수 관련
+//※ 수, 날짜 관련
 //=================================================================================================================
 //천단위 콤마 표시 (출처 : http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript)
 function thousand(num) {
@@ -328,6 +328,15 @@ function isNumber(s) {
     return true;
 }
 
+//날짜 출력
+function thisdate() {//현재 날짜 출력
+    return new Date().toISOString().substring(0, 10)
+}
+function remaindate(a, b) {
+    let dateA = parseInt(a.replaceAll("-",""));
+    let dateB = parseInt(b.replaceAll("-",""));
+    return (dateB - dateA);
+}
 
 //=================================================================================================================
 //※ 문자열 관련

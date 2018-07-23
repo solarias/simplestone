@@ -113,9 +113,21 @@ function cardinfo_show(id, info) {
     $(".top",site).classList.add("show");
     //이미지(오프라인 모드가 아니라면)
     if (session.offline === false)   {
-        let image = "url(" + IMAGEURL + info.id + ".jpg)";
-        $(".image",site).style.backgroundImage = image;
-        $(".top",site).classList.remove("offline");
+        let image;
+        //확장팩이 아니면 이미지 출력
+        if (!process.newset || info.set !== DATA.SET.NEW.id) {
+            $(".illust",site).classList.remove("show");
+            $(".cardcase",site).classList.add("show");
+                image = "url(" + IMAGEURL + info.id + ".jpg)";
+                $(".image",site).style.backgroundImage = image;
+                $(".top",site).classList.remove("offline");
+        //확장팩이면 이미지"만" 출력
+        } else {
+            $(".illust",site).classList.add("show");
+                image = "url(" + info.url + ")";
+                $(".illustImage",site).style.backgroundImage = image;
+            $(".cardcase",site).classList.remove("show");
+        }
     } else {
         $(".top",site).classList.add("offline");
     }
@@ -132,14 +144,14 @@ function cardinfo_show(id, info) {
     $(".rarity",site).classList.add("rarity_" + info.rarity);
     $(".rarity",site).innerHTML = DATA.RARITY.KR[info.rarity];
     //텍스트
-    if (info.text && info.text.length > 0)
+    if (info.text && info.text !== "" && info.text.length > 0)
         $(".text",site).innerHTML = "<p>" + readable(info.text) + "</p>";
     else
         $(".text",site).innerHTML = "";
     //하단부
     let statpoint = [0,0,0];//각각 공격력, 종족, 체력/방어도 유무
         //공격력
-        if (info.attack !== undefined) {
+        if (info.attack !== undefined && info.attack !== "") {
             $(".attack",site).style.display = "block";
             $(".attack",site).innerHTML = info.attack.toString();
             statpoint[0] += 1;
@@ -147,7 +159,7 @@ function cardinfo_show(id, info) {
             $(".attack",site).style.display = "none";
         }
         //종족
-        if (info.race !== undefined) {
+        if (info.race !== undefined && info.race !== "") {
             $(".race",site).style.display = "block";
             $(".race",site).innerHTML = DATA.RACE.KR[info.race];
             statpoint[1] += 1;
@@ -155,13 +167,14 @@ function cardinfo_show(id, info) {
             $(".race",site).style.display = "none";
         }
         //체력/방어도
-        if (info.durability !== undefined || info.armor !== undefined) {
+        if ((info.durability !== undefined && info.durability !== "") ||
+            (info.armor !== undefined && info.armor !== "")) {
             $(".health",site).style.display = "block";
             $(".health",site).classList.add("armor");
             let stat = info.durability || info.armor;
             $(".health",site).innerHTML = stat.toString();
             statpoint[2] += 1;
-        } else if (info.health !== undefined) {
+        } else if (info.health !== undefined && info.health !== "") {
             $(".health",site).style.display = "block";
             $(".health",site).classList.remove("armor");
             $(".health",site).innerHTML = info.health.toString();
@@ -180,7 +193,14 @@ function cardinfo_show(id, info) {
             $(".text",site).classList.remove("large");
         }
     //세트
-    $(".set",site).innerHTML = DATA.SET.KR[info.set];
+        //확장팩
+    if (process.newset && info.set === DATA.SET.NEW.id) {
+        $(".set",site).innerHTML = DATA.SET.NEW.name;
+        //일반
+    } else {
+        $(".set",site).innerHTML = DATA.SET.KR[info.set];
+    }
     //플레이버 텍스트
-    $(".flavor",site).innerHTML = "<p>" + readable(info.flavor) + "</p>";
+    if (info.flavor && info.flavor !== "" && info.flavor.length > 0)
+        $(".flavor",site).innerHTML = "<p>" + readable(info.flavor) + "</p>";
 }

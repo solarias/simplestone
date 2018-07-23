@@ -105,23 +105,51 @@ function window_shift(keyword, keyword2) {
                         return response.json();
                     })
                     .then(function(myJson) {
-                        //카드정보 입력
-                        session.db = myJson;
-                        //카드정보 정렬
-                        sort_arr(session.db);
-                        //카드정보 정제
-                        session.db.forEach(function(x, index) {
-                            x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
-                        })
-                        //카드 정보 저장
-                        localforage.setItem("sist_db",session.db)
-                        .then(function() {
-                            //카드정보 구축 시작
-                            process_update_latter();
-                        }).catch(function() {
-                            //저장 못해도 '아무튼' 구축 시작
-                            process_update_latter();
-                        });
+                        //혹장팩 정보 (있으면) 불러오기
+                        if (DATA.SET.NEW !== undefined &&
+                        remaindate(DATA.SET.NEW.duedate, thisdate()) < 0) {
+                            fetch("./js_newset/cards_" + DATA.SET.NEW.id + ".json")
+                            .then(function(response2) {
+                                return response2.json();
+                            })
+                            .then(function(myJson2) {
+                                //카드정보 입력(일반+확장팩)
+                                session.db = myJson.concat(myJson2);
+                                //카드정보 정렬
+                                sort_arr(session.db);
+                                //카드정보 정제
+                                session.db.forEach(function(x, index) {
+                                    if (x.dbfId) x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
+                                })
+                                //카드 정보 저장
+                                localforage.setItem("sist_db",session.db)
+                                .then(function() {
+                                    //카드정보 구축 시작
+                                    process_update_latter();
+                                }).catch(function() {
+                                    //저장 못해도 '아무튼' 구축 시작
+                                    process_update_latter();
+                                });
+                            })
+                        } else {
+                            //카드정보 입력
+                            session.db = myJson;
+                            //카드정보 정렬
+                            sort_arr(session.db);
+                            //카드정보 정제
+                            session.db.forEach(function(x, index) {
+                                x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
+                            })
+                            //카드 정보 저장
+                            localforage.setItem("sist_db",session.db)
+                            .then(function() {
+                                //카드정보 구축 시작
+                                process_update_latter();
+                            }).catch(function() {
+                                //저장 못해도 '아무튼' 구축 시작
+                                process_update_latter();
+                            });
+                        }
                     });
                 //오프라인: 로컬 불러오기
                 } else if (session.offline === true) {
@@ -208,12 +236,99 @@ function window_shift(keyword, keyword2) {
                 $("#main_titlescreen").classList.add("show");
                 $("#header_home").classList.add("show");
 
+                //신규 확장팩 있으면 출력
+                if (DATA.SET.NEW !== undefined &&
+                remaindate(DATA.SET.NEW.duedate, thisdate()) < 0) {
+                    $("#titlescreen_newset").classList.add("show");
+                } else {
+                    $("#titlescreen_newset").classList.remove("show");
+                }
+
                 //시작 버튼
                 $("#start_card").onclick = function() {
                     window_shift("loading","cardinfo");
                 }
                 $("#start_deck").onclick = function() {
                     window_shift("decklist");
+                }
+
+                //신규 확장팩 버튼
+                $("#newset_cardinfo").onclick = function() {
+                    //신규 확장팩 활성화
+                    process.newset = DATA.SET.NEW.id;
+                    //화면 전환
+                    window_shift("loading","cardinfo");
+                }
+                $("#newset_newdeck").onclick = function() {
+                    //덱 설정 초기화
+                    process.deck = {};
+                    //팝업창 열기
+                    swal({
+                        html:
+                          '<span class="popup_title">새로운 덱 설정</span>'+
+                          '<span class="popup_subtitle">직업 선택</span>'+
+                          '<button id="popup_class_WARRIOR" class="popup_button trisection newdeck_button newdeck_class" data-class="WARRIOR">전사</button>' +
+                          '<button id="popup_class_SHAMAN" class="popup_button trisection newdeck_button newdeck_class" data-class="SHAMAN">주술사</button>' +
+                          '<button id="popup_class_ROGUE" class="popup_button trisection newdeck_button newdeck_class" data-class="ROGUE">도적</button>' +
+                          '<button id="popup_class_PALADIN" class="popup_button trisection newdeck_button newdeck_class" data-class="PALADIN">성기사</button>' +
+                          '<button id="popup_class_HUNTER" class="popup_button trisection newdeck_button newdeck_class" data-class="HUNTER">사냥꾼</button>' +
+                          '<button id="popup_class_DRUID" class="popup_button trisection newdeck_button newdeck_class" data-class="DRUID">드루이드</button>' +
+                          '<button id="popup_class_WARLOCK" class="popup_button trisection newdeck_button newdeck_class" data-class="WARLOCK">흑마법사</button>' +
+                          '<button id="popup_class_MAGE" class="popup_button trisection newdeck_button newdeck_class" data-class="MAGE">마법사</button>' +
+                          '<button id="popup_class_PRIEST" class="popup_button trisection newdeck_button newdeck_class" data-class="PRIEST">사제</button>'+
+                          '<span class="popup_subtitle">대전방식 선택</span>'+
+                          '<button id="popup_format_standard" class="popup_button newdeck_button newdeck_format" data-format="정규">정규</button>' +
+                          '<button id="popup_format_wild" class="popup_button newdeck_button newdeck_format" data-format="야생">야생</button>',
+                        onOpen:function() {
+                            $$(".newdeck_button").forEach(function(target) {
+                                target.onclick = function() {
+                                    if (target.dataset.class) {
+                                        //직업 세팅
+                                        if (!process.deck) process.deck = {};
+                                        process.deck.class = target.dataset.class;
+                                        //버튼 세팅
+                                        $$(".newdeck_class").forEach(function(x) {
+                                            x.classList.remove("selected");
+                                        })
+                                        target.classList.add("selected");
+                                    } else if (target.dataset.format) {
+                                        //대전 방식 세팅
+                                        if (!process.deck) process.deck = {};
+                                        process.deck.format = target.dataset.format;
+                                        //버튼 세팅
+                                        $$(".newdeck_format").forEach(function(x) {
+                                            x.classList.remove("selected");
+                                        })
+                                        target.classList.add("selected");
+                                    }
+                                }
+                            })
+                        },
+                        preConfirm: function() {
+                            return new Promise(function(resolve, reject) {
+                                if (!process.deck || !process.deck.class) {
+                                    reject('직업을 설정해주세요.');
+                                } else if (!process.deck.format) {
+                                    reject('대전 방식을 설정해주세요.');
+                                } else {
+                                    resolve();
+                                }
+                            })
+                        },
+                        allowOutsideClick:false,
+                        showCancelButton:true,
+                        confirmButtonText: '덱 생성',
+                        cancelButtonText: '취소',
+                        cancelButtonColor: '#d33',
+                        showCloseButton:true
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            //신규 확장팩 활성화
+                            process.newset = DATA.SET.NEW.id;
+                            //화면 전환
+                            window_shift("loading","deckbuilding");
+                        }
+                    })
                 }
             }
 
@@ -226,13 +341,19 @@ function window_shift(keyword, keyword2) {
                     swal({
                         type:"warning",
                         title:"첫 화면으로 돌아가시겠습니까?",
-                        text:"진행된 정보는 모두 초기화됩니다.",
+                        text:"작업중 덱은 '덱 관리'에 자동으로 저장됩니다.",
                         showCancelButton:true,
                         confirmButtonText: '확인',
                         cancelButtonText: '취소',
                         cancelButtonColor: '#d33'
                     }).then(function(isConfirm){
                         if (isConfirm) {
+                            //덱 (있으면) 임시저장
+                            if (process.deck) {
+                                if (process.deck.class && process.deck.format) {
+                                    deck_tempsave();
+                                }
+                            }
                             //화면 전환
                             process_titlescreen();
                         } else {
@@ -429,9 +550,9 @@ function window_shift(keyword, keyword2) {
             //덱코드가 있다면 덱코드 해석
             if (process.deck !== undefined && process.deck.deckcode !== undefined && process.deck.deckcode !== "") {
                 loading_deckcode();
-            //없으면 덱 포맷 검증
+            //없으면 덱 검증
             } else {
-                loading_formatvalidate();
+                loading_deckvalidate();
             }
 
             //덱코드 해석
@@ -442,20 +563,42 @@ function window_shift(keyword, keyword2) {
                 process.deck.class = decoded.class;
                 process.deck.format = decoded.format;
 
-                //있으면 덱 포맷 검증
-                loading_formatvalidate();
+                //있으면 덱 검증
+                loading_deckvalidate();
             }
 
-            //불러올 덱 포맷 검증
-            function loading_formatvalidate() {
+            //불러올 덱 검증 (포맷, 신규 확장팩)
+            function loading_deckvalidate() {
+                //검증할 덱이 있으면 검증
                 if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
+                    //포맷 검증
                     for (let i = 0;i < process.deck.cards.length;i++) {
                         if (DATA.SET.FORMAT[session.db[session.index[process.deck.cards[i][0]]].set] === "야생") {
                             process.deck.format = "야생";
                             break;
                         }
                     }
+                    //신규 확장팩 검증
+                    for (let i = 0;i < process.deck.cards.length;i++) {
+                        let info = session.db[session.index[process.deck.cards[i][0]]];
+                        if (DATA.SET.FORMAT[info.set] === undefined) {
+                            if (DATA.SET.NEW && DATA.SET.NEW.id === info.set) {
+                                process.newset = info.set;
+                                break;
+                            } else {
+                                nativeToast({
+                                    message: '세트를 인식할 수 없는 카드가 있습니다.<br>(이미 출시한 신규 확장팩으로 추정됨)',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'error',
+                                    closeOnClick: 'true'
+                                });
+                                return false;
+                            }
+                        }
+                    }
                 }
+
                 //Fragment 불러오기
                 window_shift(keyword2);
             }
@@ -466,7 +609,11 @@ function window_shift(keyword, keyword2) {
         case "cardinfo":
             //상태 기억
             process.state = "cardinfo";
-            $("#header_status").innerHTML = "카드 정보";
+            //제목 표시(신규 확장팩은 '새코드 정보'로 제목 표기)
+            if (!process.newset)
+                $("#header_status").innerHTML = "카드 정보";
+            else
+                $("#header_status").innerHTML = "새카드 정보";
             //==================
             //※ 화면 구성
             //==================
@@ -489,7 +636,8 @@ function window_shift(keyword, keyword2) {
             process.deck = [];
                 process.deck.class = undefined;
                 process.deck.format = "야생";
-            card_setFilter("init");//필터 활성화
+            //필터 활성화
+            card_setFilter("init", "newset");
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
             card_search();
@@ -523,6 +671,9 @@ function window_shift(keyword, keyword2) {
         case "deckbuilding":
             //상태 기억
             process.state = "deckbuilding";
+            if (process.newset)
+                $("#header_status").innerHTML = "확장팩 덱짜기";
+            else
             $("#header_status").innerHTML = "덱 편집기";
             //==================
             //※ 화면 구성
@@ -789,28 +940,49 @@ function window_shift(keyword, keyword2) {
                     });
                 //아니라면 덱코드 출력
                 } else {
-                    //덱코드 얻기
-                    let deckcode = deckcode_encode();
-                    //팝업창 열기
-                    swal({
-                        title: '덱코드 출력',
-                        text: '덱코드가 복사되었습니다!',
-                        input: 'text',
-                        inputValue: deckcode,
-                        allowOutsideClick:false,
-                        showConfirmButton:false,
-                        showCancelButton:true,
-                        cancelButtonText: '닫기',
-                        cancelButtonColor: '#d33',
-                        showCloseButton:true,
-                        onOpen: function() {
-                            $(".swal2-input").select();
-                            document.execCommand("copy");
+                    //확장팩은 덱코드 출력불가
+                    if (process.newset) {
+                        nativeToast({
+                            message: '신규 확장팩은 덱코드를 출력할 수 없습니다.<br>(텍스트은 출력 가능)',
+                            position: 'center',
+                            timeout: 2000,
+                            type: 'error',
+                            closeOnClick: 'true'
+                        });
+                    //나머지: 덱코드 얻기
+                    } else {
+                        try {
+                            let deckcode = deckcode_encode();
+                            //팝업창 열기
+                            swal({
+                                title: '덱코드 출력',
+                                text: '덱코드가 복사되었습니다!',
+                                input: 'text',
+                                inputValue: deckcode,
+                                allowOutsideClick:false,
+                                showConfirmButton:false,
+                                showCancelButton:true,
+                                cancelButtonText: '닫기',
+                                cancelButtonColor: '#d33',
+                                showCloseButton:true,
+                                onOpen: function() {
+                                    $(".swal2-input").select();
+                                    document.execCommand("copy");
+                                }
+                            })
+                        } catch(e) {
+                            nativeToast({
+                                message: '오류 발생 - 덱코드를 출력할 수 없습니다.',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'error',
+                                closeOnClick: 'true'
+                            });
                         }
-                    })
+                    }
                 }
             }
-            //덱설명 출력
+            //텍스트 출력
             $("#deckconfig_text").onclick = function() {
                 //미완성 시 경고창
                 if (process.deck.quantity < DATA.DECK_LIMIT) {
@@ -831,14 +1003,14 @@ function window_shift(keyword, keyword2) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
-                //아니라면 덱설명 출력
+                //아니라면 텍스트 출력
                 } else {
                     //덱코드 얻기
                     let decktext = deckcode_text();
                     //팝업창 열기
                     swal({
-                        title: '덱설명 출력',
-                        text: '덱설명이 복사되었습니다!',
+                        title: '텍스트 출력',
+                        text: '텍스트이 복사되었습니다!',
                         input: 'textarea',
                         inputValue: decktext,
                         allowOutsideClick:false,
@@ -927,7 +1099,7 @@ function window_shift(keyword, keyword2) {
             }
             $("#deck_list_content").addEventListener("mouseout",eventObj.deck_list_content.mouseout);
             eventObj.deck_list_content.mouseup = function(e) {
-                interact_removeCard(e, true);
+                interact_stopAuto(e);
                 return false;
             }
             $("#deck_list_content").addEventListener("mouseup",eventObj.deck_list_content.mouseup);
@@ -953,7 +1125,7 @@ function window_shift(keyword, keyword2) {
                 }
                 $("#deck_list").addEventListener("scroll",eventObj.deck_list.touchstart);
                 eventObj.deck_list_content.touchend = function(e) {
-                    interact_removeCard(e);
+                    interact_stopAuto(e);
                     return false;
                 }
                 $("#deck_list_content").addEventListener("touchend",eventObj.deck_list_content.touchend);

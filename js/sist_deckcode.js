@@ -61,8 +61,10 @@ function deckcode_encode() {
 
 //덱설명 출력
 function deckcode_text() {
-    //덱코드 획득
-    let deckcode = deckcode_encode();
+    //(확장팩이 아니라면)덱코드 획득
+    let deckcode;
+    if (!process.newset) deckcode = deckcode_encode();
+        else deckcode = false;
 
     //텍스트 작성
     let outputtext = "";
@@ -82,15 +84,25 @@ function deckcode_text() {
         let info = session.db[session.index[card[0]]];
         outputtext += "# " + card[1].toString();
         outputtext += "x (" + info.cost.toString() + ") ";
-        outputtext += info.name;
-        outputtext += "    [" + DATA.SET.KR[info.set] + "]" + "\n";
+        //이름, 확장팩 (신규 확장팩이면 앞에 "*" 표시)
+        if (deckcode || info.set !== DATA.SET.NEW.id) {
+            outputtext += info.name;
+            outputtext += "    [" + DATA.SET.KR[info.set] + "]" + "\n";
+        } else {
+            outputtext += "*" + info.name;
+            outputtext += "    [" + DATA.SET.NEW.name + "]" + "\n";
+        }
     });
     outputtext += "#\n";
-    //덱코드
-    outputtext += deckcode + "\n";
-    outputtext += "#\n";
-    //설명
-    outputtext += "# 이 덱을 사용하려면 클립보드에 복사한 후 하스스톤에서 새로운 덱을 만드세요." + "\n";
+    //덱코드 & 설명
+    if (deckcode) {
+        outputtext += deckcode + "\n";
+        outputtext += "#\n";
+        outputtext += "# 이 덱을 사용하려면 클립보드에 복사한 후 하스스톤에서 새로운 덱을 만드세요." + "\n";
+    } else {
+        outputtext += "('" + DATA.SET.NEW.name + "' 미리 덱 짜보기)\n";
+    }
+    //기타
     outputtext += "#Created at SimpleStone(https://solarias.github.io/hearthstone/sist.html)";
 
     //출력
