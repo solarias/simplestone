@@ -94,6 +94,9 @@ function window_shift(keyword, keyword2) {
 
             //1차: DB 업데이트 or 불러오기
             function process_update_former() {
+                //로딩 문구 출력
+                $("#init_update").classList.add("show");
+                
                 //업데이트: JSON 불러온 후 로컬에 저장
                 if (session.offline === false) {
                     //시작버튼 비활성화
@@ -637,7 +640,8 @@ function window_shift(keyword, keyword2) {
                 process.deck.class = undefined;
                 process.deck.format = "야생";
             //필터 활성화
-            card_setFilter("init", "newset");
+            if (process.newset) card_setFilter("init", "newset");
+            else card_setFilter("init");
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
             card_search();
@@ -919,18 +923,8 @@ function window_shift(keyword, keyword2) {
             }
             //덱코드 출력
             $("#deckconfig_deckstring").onclick = function() {
-                //미완성 시 경고창
-                if (process.deck.quantity < DATA.DECK_LIMIT) {
-                    let deckquantity = "(" + process.deck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString() + ")";
-                    nativeToast({
-                        message: '덱이 완성되지 않았습니다.<br>' + deckquantity,
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'error',
-                        closeOnClick: 'true'
-                    });
                 //사용불가 카드가 있다면 경고
-                } else if (process.deck.unusable > 0) {
+                if (process.deck.unusable > 0) {
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
@@ -938,6 +932,47 @@ function window_shift(keyword, keyword2) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
+                //미완성 시 경고창
+                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                    swal({
+                        type:"warning",
+                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        text:"정말로 덱코드를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            try {
+                                let deckcode = deckcode_encode();
+                                //팝업창 열기
+                                swal({
+                                    title: '덱코드 출력',
+                                    text: '덱코드가 복사되었습니다!',
+                                    input: 'text',
+                                    inputValue: deckcode,
+                                    allowOutsideClick:false,
+                                    showConfirmButton:false,
+                                    showCancelButton:true,
+                                    cancelButtonText: '닫기',
+                                    cancelButtonColor: '#d33',
+                                    showCloseButton:true,
+                                    onOpen: function() {
+                                        $(".swal2-input").select();
+                                        document.execCommand("copy");
+                                    }
+                                })
+                            } catch(e) {
+                                nativeToast({
+                                    message: '오류 발생 - 덱코드를 출력할 수 없습니다.',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'error',
+                                    closeOnClick: 'true'
+                                });
+                            }
+                        }
+                    })
                 //아니라면 덱코드 출력
                 } else {
                     //확장팩은 덱코드 출력불가
@@ -984,18 +1019,8 @@ function window_shift(keyword, keyword2) {
             }
             //텍스트 출력
             $("#deckconfig_text").onclick = function() {
-                //미완성 시 경고창
-                if (process.deck.quantity < DATA.DECK_LIMIT) {
-                    let deckquantity = "(" + process.deck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString() + ")";
-                    nativeToast({
-                        message: '덱이 완성되지 않았습니다.<br>' + deckquantity,
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'error',
-                        closeOnClick: 'true'
-                    });
                 //사용불가 카드가 있다면 경고
-                } else if (process.deck.unusable > 0) {
+                if (process.deck.unusable > 0) {
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
@@ -1003,7 +1028,41 @@ function window_shift(keyword, keyword2) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
-                //아니라면 텍스트 출력
+                //미완성 시 경고창
+                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                    swal({
+                        type:"warning",
+                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        text:"정말로 덱코드를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //덱코드 얻기
+                            let decktext = deckcode_text();
+                            //팝업창 열기
+                            swal({
+                                title: '텍스트 출력',
+                                text: '텍스트이 복사되었습니다!',
+                                input: 'textarea',
+                                inputValue: decktext,
+                                allowOutsideClick:false,
+                                showConfirmButton:false,
+                                showCancelButton:true,
+                                cancelButtonText: '닫기',
+                                cancelButtonColor: '#d33',
+                                showCloseButton:true,
+                                onOpen: function() {
+                                    $(".swal2-textarea").style.fontSize = "12px";
+                                    $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
+                                    $(".swal2-textarea").scrollTo(0,0);
+                                    $(".swal2-textarea").select();
+                                    document.execCommand("copy");
+                                }
+                            })
+                        }
+                    })
                 } else {
                     //덱코드 얻기
                     let decktext = deckcode_text();

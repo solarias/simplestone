@@ -489,7 +489,19 @@ body {
             background:rgba(0,0,0,0.6);
             border-radius:10px;
             box-sizing: border-box;
+            transform:scale(0,1);
+
+            color:white;
+            text-align: center;
         }
+            #init_update.show {
+                animation:init_update_scale 0.1s linear 0s forwards;
+            }
+            @keyframes init_update_scale {
+                0% {transform:scale(0,1);}
+                1% {transform:scale(0.01,1);}
+                100% {transform:scale(1,1);}
+            }
 
     /*첫 화면*/
     #main_titlescreen {

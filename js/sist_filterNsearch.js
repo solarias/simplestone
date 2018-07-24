@@ -122,7 +122,7 @@ function card_setFilter(cmd, isnewset) {
         process.search.rarity = "all";//등급
         process.search.set = "all";//세트
             //신규확장팩이면 검색 세트 강제 설정
-            if (isnewset) process.search.set = process.newset;
+            if (isnewset && process.newset) process.search.set = process.newset;
         process.search.format = process.deck.format;//포맷
         process.search.keyword = "";//키워드
     }
