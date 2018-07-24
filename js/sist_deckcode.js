@@ -100,7 +100,7 @@ function deckcode_text() {
         outputtext += "#\n";
         outputtext += "# 이 덱을 사용하려면 클립보드에 복사한 후 하스스톤에서 새로운 덱을 만드세요." + "\n";
     } else {
-        outputtext += "#('" + DATA.SET.NEW.name + "' 미리 덱 짜보기)\n";
+        outputtext += "#'" + DATA.SET.NEW.name + "' 미리 덱 짜보기\n";
     }
     //기타
     outputtext += "#Created at SimpleStone(https://solarias.github.io/simplestone)";
