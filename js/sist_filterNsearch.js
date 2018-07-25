@@ -112,7 +112,7 @@ function card_matchKeyword(target, keyword) {
 }
 
 //카드 필터 구성
-function card_setFilter(cmd, isnewset) {
+function card_setFilter(cmd, isNewset) {
     //초기 작업: 검색치 초기화
     if (cmd === "init") {
         //검색 초기치 설정, 필터 활성화
@@ -122,7 +122,7 @@ function card_setFilter(cmd, isnewset) {
         process.search.rarity = "all";//등급
         process.search.set = "all";//세트
             //신규확장팩이면 검색 세트 강제 설정
-            if (isnewset && process.newset) process.search.set = process.newset;
+            if (isNewset && process.deck.newset) process.search.set = process.deck.newset;
         process.search.format = process.deck.format;//포맷
         process.search.keyword = "";//키워드
     }
@@ -339,9 +339,9 @@ function card_setFilter(cmd, isnewset) {
                         }
                     });
                     //확장팩이면 확장팩 세트 추가
-                    if (process.newset) {
+                    if (process.deck.newset) {
                         let btn = document.createElement("button");
-                            btn.id = "popup_set_" + process.newset;
+                            btn.id = "popup_set_" + process.deck.newset;
                             btn.classList.add("popup_button","small");
                             btn.dataset.set = DATA.SET.NEW.name;
                             btn.innerHTML = DATA.SET.NEW.name;
@@ -398,11 +398,11 @@ function card_setFilter(cmd, isnewset) {
                             //개별 세트
                             let setarr = Object.keys(DATA.SET.KR);
                                 //확장팩이면 확장팩 세트 추가
-                                if (process.newset) setarr.push(process.newset);
+                                if (process.deck.newset) setarr.push(process.deck.newset);
                             setarr.forEach(function(x,i) {
-                                if (DATA.SET.FORMAT[x] === "정규" || (process.newset && x === process.newset)) {
-                                    if (process.newset && x === process.newset) {
-                                        select_standard.options[select_standard.options.length] = new Option(DATA.SET.NEW.name,process.newset);
+                                if (DATA.SET.FORMAT[x] === "정규" || (process.deck.newset && x === process.deck.newset)) {
+                                    if (process.deck.newset && x === process.deck.newset) {
+                                        select_standard.options[select_standard.options.length] = new Option(DATA.SET.NEW.name,process.deck.newset);
                                     } else {
                                         select_standard.options[select_standard.options.length] = new Option(DATA.SET.KR[x],x);
                                     }
@@ -419,7 +419,7 @@ function card_setFilter(cmd, isnewset) {
                             //개별 세트
                             let setarr2 = Object.keys(DATA.SET.KR);
                                 //확장팩이면 확장팩 세트 추가
-                                if (process.newset) setarr2.push(DATA.SET.NEW.id);
+                                if (process.deck.newset) setarr2.push(DATA.SET.NEW.id);
                             setarr2.forEach(function(x,i) {
                                 if (DATA.SET.FORMAT[x] === "야생") {
                                     select_wild.options[select_wild.options.length] = new Option(DATA.SET.KR[x],x);
@@ -622,7 +622,7 @@ function card_search() {
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
         (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format ||//포맷(정규는 무조건 포함)
-            (process.newset && x.set === DATA.SET.NEW.id)) &&//신규 확장팩은 정규로 취급
+            (process.deck.newset && x.set === DATA.SET.NEW.id)) &&//신규 확장팩은 정규로 취급
         (process.search.mana === "all" || card_matchMana(x, process.search.mana) === true) &&//마나
         (process.search.rarity === "all" || x.rarity === process.search.rarity) &&//등급
         (process.search.set === "all" || x.set === process.search.set) &&

@@ -115,7 +115,7 @@ function cardinfo_show(id, info) {
     if (session.offline === false)   {
         let image;
         //확장팩이 아니면 이미지 출력
-        if (!info.url || !process.newset || info.set !== DATA.SET.NEW.id) {
+        if (!info.url || !process.deck.newset || info.set !== DATA.SET.NEW.id) {
             $(".illust",site).classList.remove("show");
             $(".cardcase",site).classList.add("show");
                 image = "url(" + IMAGEURL + info.id + ".jpg)";
@@ -194,7 +194,7 @@ function cardinfo_show(id, info) {
         }
     //세트
         //확장팩
-    if (process.newset && info.set === DATA.SET.NEW.id) {
+    if (process.deck.newset && info.set === DATA.SET.NEW.id) {
         $(".set",site).innerHTML = DATA.SET.NEW.name;
         //일반
     } else {

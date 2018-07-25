@@ -103,6 +103,7 @@ const DATA = {
         KR:{
             "ELEMENTAL":"정령",
             "MECHANICAL":"기계",
+            "MECH":"기계",//향후 키워드 변경 대비
             "DEMON":"악마",
             "MURLOC":"멀록",
             "DRAGON":"용족",

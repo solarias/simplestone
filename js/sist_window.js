@@ -36,13 +36,28 @@ function window_shift(keyword, keyword2) {
             .then(function(myJson) {
                 let notice = myJson.notice;
                 let noticeFrag = document.createDocumentFragment();
-                notice.forEach(function(each) {
+                for (let i = 0;i < Math.min(30,notice.length);i++) {//공지는 최대 30개만
+                    let each = notice[i];
+                    //날짜
                     let date = document.createElement("p[date]");
                         date.innerHTML = each.date;
-                    let content = document.createElement("p[content]");
-                        content.innerHTML = "- " + each.content;
                     noticeFrag.appendChild(date);
-                    noticeFrag.appendChild(content);
+                    //내용
+                    if (typeof each.content === "string") {
+                        let content = document.createElement("p.last[content]");
+                            content.innerHTML = "- " + each.content;
+                        noticeFrag.appendChild(content);
+                    } else {
+                        each.content.forEach(function(p, index) {
+                            let paragraph = document.createElement("p[content]");
+                            if (index == each.content.length - 1)
+                                paragraph.classList.add("last");
+                            paragraph.innerHTML = "- " + p;
+                            noticeFrag.appendChild(paragraph);
+                        })
+                    }
+                }
+                notice.forEach(function(each) {
                 })
 
                 $("#init_notice").appendChild(noticeFrag);
@@ -96,7 +111,7 @@ function window_shift(keyword, keyword2) {
             function process_update_former() {
                 //로딩 문구 출력
                 $("#init_update").classList.add("show");
-                
+
                 //업데이트: JSON 불러온 후 로컬에 저장
                 if (session.offline === false) {
                     //시작버튼 비활성화
@@ -258,7 +273,8 @@ function window_shift(keyword, keyword2) {
                 //신규 확장팩 버튼
                 $("#newset_cardinfo").onclick = function() {
                     //신규 확장팩 활성화
-                    process.newset = DATA.SET.NEW.id;
+                    if (!process.deck) process.deck = {};
+                    process.deck.newset = DATA.SET.NEW.id;
                     //화면 전환
                     window_shift("loading","cardinfo");
                 }
@@ -327,7 +343,8 @@ function window_shift(keyword, keyword2) {
                     }).then(function(isConfirm) {
                         if (isConfirm) {
                             //신규 확장팩 활성화
-                            process.newset = DATA.SET.NEW.id;
+                            if (!process.deck) process.deck = {};
+                            process.deck.newset = DATA.SET.NEW.id;
                             //화면 전환
                             window_shift("loading","deckbuilding");
                         }
@@ -572,32 +589,36 @@ function window_shift(keyword, keyword2) {
 
             //불러올 덱 검증 (포맷, 신규 확장팩)
             function loading_deckvalidate() {
-                //검증할 덱이 있으면 검증
-                if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
+                //덱이 있으면 검증
+                if (process.deck) {
                     //포맷 검증
-                    for (let i = 0;i < process.deck.cards.length;i++) {
-                        if (DATA.SET.FORMAT[session.db[session.index[process.deck.cards[i][0]]].set] === "야생") {
-                            process.deck.format = "야생";
-                            break;
+                    if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
+                        for (let i = 0;i < process.deck.cards.length;i++) {
+                            if (DATA.SET.FORMAT[session.db[session.index[process.deck.cards[i][0]]].set] === "야생") {
+                                process.deck.format = "야생";
+                                break;
+                            }
                         }
                     }
                     //신규 확장팩 검증
-                    for (let i = 0;i < process.deck.cards.length;i++) {
-                        let info = session.db[session.index[process.deck.cards[i][0]]];
-                        if (DATA.SET.FORMAT[info.set] === undefined) {
-                            if (DATA.SET.NEW && DATA.SET.NEW.id === info.set) {
-                                process.newset = info.set;
-                                break;
-                            } else {
-                                nativeToast({
-                                    message: '세트를 인식할 수 없는 카드가 있습니다.<br>(이미 출시한 신규 확장팩으로 추정됨)',
-                                    position: 'center',
-                                    timeout: 2000,
-                                    type: 'error',
-                                    closeOnClick: 'true'
-                                });
-                                return false;
-                            }
+                    if (process.deck.newset && DATA.SET.FORMAT[process.deck.newset] === undefined) {
+                        if (DATA.SET.NEW && process.deck.newset === DATA.SET.NEW.id) {
+                            nativeToast({
+                                message: '신규 확장팩이 인식되었습니다.',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'success',
+                                closeOnClick: 'true'
+                            });
+                        } else {
+                            nativeToast({
+                                message: '세트를 인식할 수 없는 카드가 있습니다.<br>(이미 출시한 신규 확장팩으로 추정됨)',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'error',
+                                closeOnClick: 'true'
+                            });
+                            return false;
                         }
                     }
                 }
@@ -613,10 +634,10 @@ function window_shift(keyword, keyword2) {
             //상태 기억
             process.state = "cardinfo";
             //제목 표시(신규 확장팩은 '새코드 정보'로 제목 표기)
-            if (!process.newset)
-                $("#header_status").innerHTML = "카드 정보";
-            else
+            if (process.deck && process.deck.newset)
                 $("#header_status").innerHTML = "새카드 정보";
+            else
+                $("#header_status").innerHTML = "카드 정보";
             //==================
             //※ 화면 구성
             //==================
@@ -636,11 +657,11 @@ function window_shift(keyword, keyword2) {
             //※ 필터 구성
             //==================
             //검색 초기치 강제 설정, 필터 활성화
-            process.deck = [];
+            if (!process.deck) process.deck = {};
                 process.deck.class = undefined;
                 process.deck.format = "야생";
             //필터 활성화
-            if (process.newset) card_setFilter("init", "newset");
+            if (process.deck.newset) card_setFilter("init", "newset");
             else card_setFilter("init");
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
@@ -675,7 +696,7 @@ function window_shift(keyword, keyword2) {
         case "deckbuilding":
             //상태 기억
             process.state = "deckbuilding";
-            if (process.newset)
+            if (process.deck.newset)
                 $("#header_status").innerHTML = "확장팩 덱짜기";
             else
             $("#header_status").innerHTML = "덱 편집기";
@@ -696,14 +717,16 @@ function window_shift(keyword, keyword2) {
             //로그 초기화
             if (process.log !== undefined)
                 $("#undo_num").innerHTML = process.log.length;
-            else
+            else {
                 $("#undo_num").innerHTML = "0";
-            $("#undo_num").classList.remove("show");
+                $("#bottom_undo").classList.add("disabled");
+            }
             if (process.redo !== undefined)
                 $("#redo_num").innerHTML = process.redo.length;
-            else
+            else {
                 $("#redo_num").innerHTML = "0";
-            $("#redo_num").classList.remove("show");
+                $("#bottom_redo").classList.add("disabled");
+            }
 
             //==================
             //※ 덱 & 필터 구성
@@ -976,7 +999,7 @@ function window_shift(keyword, keyword2) {
                 //아니라면 덱코드 출력
                 } else {
                     //확장팩은 덱코드 출력불가
-                    if (process.newset) {
+                    if (process.deck.newset) {
                         nativeToast({
                             message: '신규 확장팩은 덱코드를 출력할 수 없습니다.<br>(텍스트은 출력 가능)',
                             position: 'center',

@@ -415,7 +415,7 @@ function deck_tempsave() {
     tempdeck.quantity = process.deck.quantity;
     if (process.deck.name) tempdeck.name = process.deck.name;
     if (process.deck.newset) tempdeck.newset = process.deck.newset;//신규덱 적용여부
-    //저장 날짜도 기록
+    //저장 날짜 기록
     tempdeck.date = thisdate();//함수는 subtool.js 참고
 
     //저장 및 문구 출력

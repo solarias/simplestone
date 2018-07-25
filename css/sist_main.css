@@ -473,9 +473,12 @@ body {
             }
             #init_notice p[content] {
                 margin-left:10px;
-                margin-bottom:5px;
                 width:calc(100% - 5px);
                 color:white;
+                word-break: keep-all;
+            }
+            #init_notice p[content].last {
+                margin-bottom:10px;
             }
         #init_update {
             position:relative;

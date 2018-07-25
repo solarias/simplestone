@@ -63,7 +63,7 @@ function deckcode_encode() {
 function deckcode_text() {
     //(확장팩이 아니라면)덱코드 획득
     let deckcode;
-    if (!process.newset) deckcode = deckcode_encode();
+    if (!process.deck.newset) deckcode = deckcode_encode();
         else deckcode = false;
 
     //텍스트 작성
