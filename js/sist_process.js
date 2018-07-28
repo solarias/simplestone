@@ -443,10 +443,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     })
     //서비스 워커 실행
     if ('serviceWorker' in navigator) {
-      // Use the window load event to keep the page load performant
-      window.addEventListener('DOMContentLoaded', function(e) {
         navigator.serviceWorker.register('./sw.js');
-      });
     }
     //첫 화면 상호작용
         //업데이트 화면 공개

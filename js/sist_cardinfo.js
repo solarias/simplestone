@@ -115,21 +115,44 @@ function cardinfo_show(id, info) {
     if (session.offline === false)   {
         let image;
         //확장팩이 아니면 이미지 출력
-        if (!info.url || !process.deck.newset || info.set !== DATA.SET.NEW.id) {
+        if (!process.deck.newset || info.set !== DATA.SET.NEW.id) {
             $(".illust",site).classList.remove("show");
             $(".cardcase",site).classList.add("show");
                 image = "url(" + IMAGEURL + info.id + ".jpg)";
                 $(".image",site).style.backgroundImage = image;
                 $(".top",site).classList.remove("offline");
+        //확장팩인데 이미지가 없다면
+        } else if (!info.url) {
+            $(".illust",site).classList.remove("show");
+            $(".cardcase",site).classList.add("show");
+                image = "url(" + IMAGEURL + info.id + ".jpg)";
+                $(".image",site).style.backgroundImage = image;
+                $(".top",site).classList.add("offline");
         //확장팩이면 이미지"만" 출력
         } else {
             $(".illust",site).classList.add("show");
+            $(".cardcase",site).classList.remove("show");
+            //이미지 로딩 체크, 성공 시 출력, 실패 시 텍스트만 출력
+            let img = document.createElement('img');
+            img.onload = function() {
                 image = "url(" + info.url + ")";
                 $(".illustImage",site).style.backgroundImage = image;
-            $(".cardcase",site).classList.remove("show");
+            };
+            img.onerror = function() {
+                $(".illust",site).classList.remove("show");
+                $(".cardcase",site).classList.add("show");
+                    image = "url(" + IMAGEURL + info.id + ".jpg)";
+                    $(".image",site).style.backgroundImage = image;
+                    $(".top",site).classList.add("offline");
+            };
+            img.src = info.url;
         }
     } else {
-        $(".top",site).classList.add("offline");
+        $(".illust",site).classList.remove("show");
+        $(".cardcase",site).classList.add("show");
+            image = "url(" + IMAGEURL + info.id + ".jpg)";
+            $(".image",site).style.backgroundImage = image;
+            $(".top",site).classList.add("offline");
     }
     //마나
     $(".mana",site).innerHTML = info.cost.toString();

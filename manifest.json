@@ -29,8 +29,14 @@
       "src": "./images/logo_256.png",
       "type": "image/png",
       "sizes": "256x256"
+    },
+    {
+      "src": "./images/logo_256.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
+  "background_color": "#FFFFFF",
   "theme_color": "#798689",
   "display": "standalone",
   "orientation": "portrait"
