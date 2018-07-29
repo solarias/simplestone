@@ -89,6 +89,13 @@ const DATA = {
             "RARE":100,
             "EPIC":400,
             "LEGENDARY":1600
+        },
+        COLOR:{
+            "FREE":"#C0C0C0",
+            "COMMON":"#FFFFFF",
+            "RARE":"#198EFF",
+            "EPIC":"#AB48EE",
+            "LEGENDARY":"#F07000"
         }
     },
     TYPE:{

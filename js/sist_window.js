@@ -262,6 +262,12 @@ function window_shift(keyword, keyword2) {
                     $("#titlescreen_newset").classList.remove("show");
                 }
 
+                //테스트용(향후 지우기)
+                process.deck = JSON.parse(
+                    '{"cards":[["42338",1],["43420",1],["179",1],["242",1],["41168",1],["45590",2],["43502",2],["1084",2],["1369",2],["855",1],["41162",1],["41496",1],["43414",1],["41151",1]],"class":"MAGE","format":"정규","quantity":18,"name":"나만의 마법사 덱","date":"2018-07-28","unusable":0,"dust":5660}'
+                );
+                console.log(deckcode_tag());
+
                 //시작 버튼
                 $("#start_card").onclick = function() {
                     window_shift("loading","cardinfo");
@@ -966,34 +972,7 @@ function window_shift(keyword, keyword2) {
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
-                            try {
-                                let deckcode = deckcode_encode();
-                                //팝업창 열기
-                                swal({
-                                    title: '덱코드 출력',
-                                    text: '덱코드가 복사되었습니다!',
-                                    input: 'text',
-                                    inputValue: deckcode,
-                                    allowOutsideClick:false,
-                                    showConfirmButton:false,
-                                    showCancelButton:true,
-                                    cancelButtonText: '닫기',
-                                    cancelButtonColor: '#d33',
-                                    showCloseButton:true,
-                                    onOpen: function() {
-                                        $(".swal2-input").select();
-                                        document.execCommand("copy");
-                                    }
-                                })
-                            } catch(e) {
-                                nativeToast({
-                                    message: '오류 발생 - 덱코드를 출력할 수 없습니다.',
-                                    position: 'center',
-                                    timeout: 2000,
-                                    type: 'error',
-                                    closeOnClick: 'true'
-                                });
-                            }
+                            export_deckcode();//덱코드 출력
                         }
                     })
                 //아니라면 덱코드 출력
@@ -1009,34 +988,7 @@ function window_shift(keyword, keyword2) {
                         });
                     //나머지: 덱코드 얻기
                     } else {
-                        try {
-                            let deckcode = deckcode_encode();
-                            //팝업창 열기
-                            swal({
-                                title: '덱코드 출력',
-                                text: '덱코드가 복사되었습니다!',
-                                input: 'text',
-                                inputValue: deckcode,
-                                allowOutsideClick:false,
-                                showConfirmButton:false,
-                                showCancelButton:true,
-                                cancelButtonText: '닫기',
-                                cancelButtonColor: '#d33',
-                                showCloseButton:true,
-                                onOpen: function() {
-                                    $(".swal2-input").select();
-                                    document.execCommand("copy");
-                                }
-                            })
-                        } catch(e) {
-                            nativeToast({
-                                message: '오류 발생 - 덱코드를 출력할 수 없습니다.',
-                                position: 'center',
-                                timeout: 2000,
-                                type: 'error',
-                                closeOnClick: 'true'
-                            });
-                        }
+                        export_deckcode();//덱코드 출력
                     }
                 }
             }
@@ -1062,53 +1014,11 @@ function window_shift(keyword, keyword2) {
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
-                            //덱코드 얻기
-                            let decktext = deckcode_text();
-                            //팝업창 열기
-                            swal({
-                                title: '텍스트 출력',
-                                text: '텍스트이 복사되었습니다!',
-                                input: 'textarea',
-                                inputValue: decktext,
-                                allowOutsideClick:false,
-                                showConfirmButton:false,
-                                showCancelButton:true,
-                                cancelButtonText: '닫기',
-                                cancelButtonColor: '#d33',
-                                showCloseButton:true,
-                                onOpen: function() {
-                                    $(".swal2-textarea").style.fontSize = "12px";
-                                    $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
-                                    $(".swal2-textarea").scrollTo(0,0);
-                                    $(".swal2-textarea").select();
-                                    document.execCommand("copy");
-                                }
-                            })
+                            export_text();//텍스트 출력
                         }
                     })
                 } else {
-                    //덱코드 얻기
-                    let decktext = deckcode_text();
-                    //팝업창 열기
-                    swal({
-                        title: '텍스트 출력',
-                        text: '텍스트이 복사되었습니다!',
-                        input: 'textarea',
-                        inputValue: decktext,
-                        allowOutsideClick:false,
-                        showConfirmButton:false,
-                        showCancelButton:true,
-                        cancelButtonText: '닫기',
-                        cancelButtonColor: '#d33',
-                        showCloseButton:true,
-                        onOpen: function() {
-                            $(".swal2-textarea").style.fontSize = "12px";
-                            $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
-                            $(".swal2-textarea").scrollTo(0,0);
-                            $(".swal2-textarea").select();
-                            document.execCommand("copy");
-                        }
-                    })
+                    export_text();//텍스트 출력
                 }
             }
             //포맷 전환

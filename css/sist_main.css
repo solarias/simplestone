@@ -966,8 +966,12 @@ body {
             #AF7A41 100%);
         box-sizing: border-box;
     }
+        #main_deckconfig > hr {
+            margin:15px 0;
+            border-top:1px #d0a362 solid;
+        }
         .deckconfig_button {
-            margin-bottom:20px;
+            margin-bottom:10px;
             width:100%;
             height:50px;
 
@@ -983,6 +987,9 @@ body {
             white-space: nowrap;
             cursor:pointer;
         }
+            #deckconfig_name {
+                margin:0;
+            }
             #deckconfig_format {
                 position:absolute;
                     left:0;right:0;bottom:10px;
