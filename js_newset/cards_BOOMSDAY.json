@@ -975,16 +975,16 @@
 		"cardClass":"SHAMAN",
 		"rarity":"RARE",
 		"cost":1,
-		"name":"Voltaic Burst",
+		"name":"볼타 폭발",
 		"type":"SPELL",
 		"set":"BOOMSDAY",
-		"text":"<b>속공</b> 능력이 있는 1/1 Spark를 둘 소환합니다.\n<b>과부하</b>: (1)",
+		"text":"<b>속공</b> 능력이 있는 1/1 불꽃을 둘 소환합니다.\n<b>과부하</b>: (1)",
 		"race":"",
 		"attack":"",
 		"health":"",
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/7e102ad398e16bbebd2d68ebb1742cefe2a9648fbfc2e7588e5f61f03b3add99.png"
 	}, 
 	{
 		"index":59,
@@ -992,7 +992,7 @@
 		"cardClass":"DRUID",
 		"rarity":"EPIC",
 		"cost":4,
-		"name":"Juicy Psychmelon",
+		"name":"먹음직스러운 덥석멜론",
 		"type":"SPELL",
 		"set":"BOOMSDAY",
 		"text":"내 덱에서 비용이 7, 8, 9, 10인 하수인을 하나씩 뽑습니다.",
@@ -1001,7 +1001,7 @@
 		"health":"",
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/bf8421b2b2d2bad6c5ced623248a1c2b78d52ddd92d4e7d04f7e44577c5af5ff.png"
 	}, 
 	{
 		"index":60,
@@ -1018,7 +1018,7 @@
 		"health":"",
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/d06a72c46d6386da606be9ae202571e460e72867c5b5d3ed970962f899e58a5e.png"
 	}, 
 	{
 		"index":61,
@@ -1026,16 +1026,16 @@
 		"cardClass":"NEUTRAL",
 		"rarity":"EPIC",
 		"cost":3,
-		"name":"Augmented Elekk",
+		"name":"향상된 엘레크",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"내가 덱에 카드를 섞어넣을 때마다 그 카드를 추가로 복사하여 덱에 섞어 넣습니다.",
+		"text":"내가 덱에 카드를 섞어넣을 때마다 그 카드를 추가로 섞어 넣습니다.",
 		"race":"BEAST",
 		"attack":3,
 		"health":4,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/7fee9e484f94525f73699b06c9c53f0e1076c22ee4f90c3d7e2e7412e40d1267.png"
 	}, 
 	{
 		"index":62,
@@ -1043,7 +1043,7 @@
 		"cardClass":"ROGUE",
 		"rarity":"RARE",
 		"cost":3,
-		"name":"Necrium Blade",
+		"name":"네크리움 단검",
 		"type":"WEAPON",
 		"set":"BOOMSDAY",
 		"text":"<b>죽음의 메아리</b>: 무작위 아군 하수인 하나의 <b>죽음의 메아리</b> 능력을 발동시킵니다.",
@@ -1052,7 +1052,7 @@
 		"health":"",
 		"durability":2,
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/f5b706cdd3473e4618b77a91457ff5e64c1f92fa1ecb899524402d24b26c4e88.png"
 	}, 
 	{
 		"index":63,
@@ -1060,16 +1060,16 @@
 		"cardClass":"SHAMAN",
 		"rarity":"EPIC",
 		"cost":4,
-		"name":"Thunderhead",
+		"name":"천둥불꽃",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"내가 <b>과부하</b> 카드를 사용한 후, <b>속공</b> 능력이 있는 1/1 Spark를 둘 소환합니다.",
+		"text":"내가 <b>과부하</b> 카드를 사용한 후에, <b>속공</b> 능력이 있는 1/1 불꽃을 둘 소환합니다.",
 		"race":"ELEMENTAL",
 		"attack":3,
 		"health":5,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/6b5e584c7ebaf08c184f1a1c29f93fdf8abfb627bdca38962616d9d443e138c4.png"
 	}, 
 	{
 		"index":64,
@@ -1077,16 +1077,16 @@
 		"cardClass":"SHAMAN",
 		"rarity":"RARE",
 		"cost":4,
-		"name":"Storm Chaser",
+		"name":"폭풍 추적자",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"<b>전투의 함성</b>: 내 덱에서 비용이 (5) 이상인 주문을 한 장 뽑습니다.",
+		"text":"<b>전투의 함성</b>: 내 덱에서 비용이 (5) 이상인 주문을 하나 뽑습니다.",
 		"race":"ELEMENTAL",
 		"attack":3,
 		"health":4,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/3d0d6043b82af269c2f4dc71ca1e0644995b7391d8c0773c290c34f17e4d2ab9.png"
 	}, 
 	{
 		"index":65,
@@ -1094,16 +1094,16 @@
 		"cardClass":"NEUTRAL",
 		"rarity":"RARE",
 		"cost":4,
-		"name":"Replicating Menace",
+		"name":"증식하는 위협",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"<b>합체</b>\n<b>죽음의 메아리</b>: 1/1 마이크로봇을 셋 소환합니다.",
+		"text":"<b>합체</b>, <b>죽음의 메아리</b>:\n1/1 마이크로봇을 셋\n소환합니다.",
 		"race":"MECHANICAL",
 		"attack":3,
 		"health":1,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/43291dd5a642b50132b9a02e22f44cfb8d998553233860152ba42cc7efb942b5.png"
 	}, 
 	{
 		"index":66,
@@ -1111,16 +1111,16 @@
 		"cardClass":"WARRIOR",
 		"rarity":"RARE",
 		"cost":6,
-		"name":"Security Rover",
+		"name":"순찰용 부릉이",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"이 하수인이 피해를 입을 때마다, <b>도발</b> 능력이 있는 2/3 기계를 하나 소환합니다.",
+		"text":"이 하수인은 피해를 입을 때마다 <b>도발</b> 능력이 있는 2/3 기계를 하나 소환합니다.",
 		"race":"MECHANICAL",
 		"attack":2,
 		"health":5,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/5b19a31dbf40fbed251ecdeb77b3dd782c5083b33c4980600d79cb624285b032.png"
 	}, 
 	{
 		"index":67,
@@ -1128,16 +1128,16 @@
 		"cardClass":"NEUTRAL",
 		"rarity":"LEGENDARY",
 		"cost":10,
-		"name":"메카크툰",
+		"name":"메카툰",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"<b>죽음의 메아리</b>: 내 손과 덱, 전장에 카드가 하나도 없으면 상대 영웅을 파괴합니다.",
+		"text":"<b>죽음의 메아리</b>: 내 덱과 손과 전장에 카드가 하나도 없으면, 적 영웅을 파괴합니다.",
 		"race":"MECHANICAL",
 		"attack":10,
 		"health":10,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/4d085522bc973723a078e2fe1df8fa3251bd777e9b27e54307799b1c8faf3847.png"
 	}, 
 	{
 		"index":68,
@@ -1145,16 +1145,16 @@
 		"cardClass":"ROGUE",
 		"rarity":"EPIC",
 		"cost":5,
-		"name":"Necrium Vial",
+		"name":"네크리움 약병",
 		"type":"SPELL",
 		"set":"BOOMSDAY",
-		"text":"아군 하수인 하나의 <b>죽음의 메아리</b> 능력을 두 번 발동시킵니다.",
+		"text":"아군 하수인 하나의 <b>죽음의 메아리</b> 능력을 2번 발동시킵니다.",
 		"race":"",
 		"attack":"",
 		"health":"",
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/eacbde2ceddd2fa27185ae1b7cdf3b97d31ebabe239fda54721f88c2f73d7bfe.png"
 	}, 
 	{
 		"index":69,
@@ -1162,16 +1162,16 @@
 		"cardClass":"DRUID",
 		"rarity":"EPIC",
 		"cost":7,
-		"name":"Dreampetal Florist",
+		"name":"꿈결꽃잎 원예가",
 		"type":"MINION",
 		"set":"BOOMSDAY",
-		"text":"내 턴이 끝날 때, 손에 있는 무작위 하수인 하나의 비용이 (7) 감소합니다.",
+		"text":"내 턴이 끝날 때, 내 손에 있는 무작위 하수인 하나의 비용이 (7) 감소합니다.",
 		"race":"",
 		"attack":4,
 		"health":4,
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/57a4f886ce71a323715ae7d1d2ac321f3cba33a4b15d55159b6f4f94c0cf3169.png"
 	}, 
 	{
 		"index":70,
@@ -1179,15 +1179,49 @@
 		"cardClass":"WARLOCK",
 		"rarity":"LEGENDARY",
 		"cost":1,
-		"name":"The Soularium",
+		"name":"영혼관",
 		"type":"SPELL",
 		"set":"BOOMSDAY",
-		"text":"카드를 3장 뽑습니다. 내 턴이 끝날때 그 카드들을 다 버립니다.",
+		"text":"카드를 3장 뽑습니다. 내 턴이 끝날때, 그 카드들을 버립니다.",
 		"race":"",
 		"attack":"",
 		"health":"",
 		"durability":"",
 		"armor":"",
-		"url":""
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/d81c5e5d912b459f48b90c7e291d5a877f2d8847483afbca7a4a0764c0a65ee7.png"
+	}, 
+	{
+		"index":71,
+		"dbfid":"BOOMSDAY71",
+		"cardClass":"NEUTRAL",
+		"rarity":"RARE",
+		"cost":6,
+		"name":"비전 발전기",
+		"type":"MINION",
+		"set":"BOOMSDAY",
+		"text":"<b>전투의 함성</b>: 비용이\n(5) 이상인 주문을\n하나 <b>발견</b>합니다.",
+		"race":"",
+		"attack":3,
+		"health":4,
+		"durability":"",
+		"armor":"",
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/a159a0a4d8f7ab2022fe1a1326a3902d97e22a2075bdf7c9010e097999cd2890.png"
+	}, 
+	{
+		"index":72,
+		"dbfid":"BOOMSDAY72",
+		"cardClass":"SHAMAN",
+		"rarity":"EPIC",
+		"cost":2,
+		"name":"오메가 의식",
+		"type":"MINION",
+		"set":"BOOMSDAY",
+		"text":"<b>전투의 함성</b>: 내 마나 수정이 10개면, 이번 턴에 내 주문이 생명력 흡수를 얻습니다.",
+		"race":"",
+		"attack":2,
+		"health":3,
+		"durability":"",
+		"armor":"",
+		"url":"https://d15f34w2p8l1cc.cloudfront.net/hearthstone/46d0426589589a418ff7afb663e72b356eee20f7d09650f2dcc177e6bbe84f7a.png"
 	}
 ]
