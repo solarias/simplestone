@@ -42,6 +42,8 @@ function searchable(keyword) {
     unseable.forEach(function(x) {
         text = text.replaceAll(x,"");
     })
+    //소문자화
+    text = text.toLowerCase();
     //반환
     return text;
 }

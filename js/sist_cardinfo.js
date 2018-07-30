@@ -122,6 +122,7 @@ function cardinfo_show(id, info) {
                 image = "url(" + IMAGEURL + info.id + ".jpg)";
                 $(".image",site).style.backgroundImage = image;
                 $(".top",site).classList.remove("offline");
+                $(".image",site).innerHTML = "";
         //확장팩인데 이미지가 없다면
         } else if (!info.url) {
             $(".illust",site).classList.remove("show");
@@ -140,6 +141,7 @@ function cardinfo_show(id, info) {
                     $(".cardcase",site).classList.remove("show");
                         image = "url(" + info.url + ")";
                         $(".illustImage",site).style.backgroundImage = image;
+                        $(".image",site).innerHTML = "";
                 }
             };
             img.onerror = function() {
