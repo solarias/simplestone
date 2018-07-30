@@ -38,22 +38,35 @@ function searchable(keyword) {
     })
     //불필요 기호 제거
     //text = text.replace(/\s|<b>|<\/b>|\n|\[x\]|\$|#|<i>|<\/i>|@|\.|,|(|)|:/g,"");
-    let unseable = [" ", "<b>", "</b>", "\n", "[x]", "$", "#", "<i>", "</i>", "@", ".", ",", "/", "(", ")", ":"];
+    let unseable = [" ", "<b>", "</b>", "\n", "[x]", "$", "#", "<i>", "</i>", "@", ".", ",", "/", "(", ")", ":", "{0} "];
     unseable.forEach(function(x) {
         text = text.replaceAll(x,"");
     })
     //반환
     return text;
 }
-//키워드 읽을 수 있도록 정리
+//텍스트 읽을 수 있도록 정리
 function readable(text) {
-    let unseable = ["[x]", "$", "#", "@","{0} "];
+    let unseable = ["[x]", "$", "#", "@", "{0} "];
     let replacable = ["\n"];
     unseable.forEach(function(x) {
         text = text.replaceAll(x,"");
     })
     replacable.forEach(function(x) {
         text = text.replaceAll(x,"<br>");
+    })
+    //반환
+    return text;
+}
+//텍스트 타이틀 변환
+function titletext(text) {
+    let unseeable = ["[x]", "$", "#", "@", "{0} "];
+    let replacable = ["\n"];
+    unseeable.forEach(function(x) {
+        text = text.replaceAll(x,"");
+    })
+    replacable.forEach(function(x) {
+        text = text.replaceAll(x," ");
     })
     //반환
     return text;

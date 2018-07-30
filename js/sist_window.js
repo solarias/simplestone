@@ -955,7 +955,16 @@ function window_shift(keyword, keyword2) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
-                //미완성 시 경고창
+                //확장팩은 덱코드 출력불가
+            } else if (process.deck.newset) {
+                    nativeToast({
+                        message: '\'신규 확장팩 덱짜기\'에서는 덱코드를 출력할 수 없습니다.<br>(텍스트, HTML 태그는 출력 가능)',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                //미완성 시 경고창(허용 시 출력)
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
@@ -969,21 +978,9 @@ function window_shift(keyword, keyword2) {
                             export_deckcode();//덱코드 출력
                         }
                     })
-                //아니라면 덱코드 출력
+                //아니면 출력
                 } else {
-                    //확장팩은 덱코드 출력불가
-                    if (process.deck.newset) {
-                        nativeToast({
-                            message: '신규 확장팩은 덱코드를 출력할 수 없습니다.<br>(텍스트은 출력 가능)',
-                            position: 'center',
-                            timeout: 2000,
-                            type: 'error',
-                            closeOnClick: 'true'
-                        });
-                    //나머지: 덱코드 얻기
-                    } else {
-                        export_deckcode();//덱코드 출력
-                    }
+                    export_deckcode();//덱코드 출력
                 }
             }
             //텍스트 출력
@@ -1002,7 +999,7 @@ function window_shift(keyword, keyword2) {
                     swal({
                         type:"warning",
                         title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
-                        text:"정말로 덱코드를 출력하시겠습니까?",
+                        text:"정말로 텍스트를 출력하시겠습니까?",
                         showCancelButton:true,
                         confirmButtonText: '확인',
                         cancelButtonText: '취소'
@@ -1013,6 +1010,35 @@ function window_shift(keyword, keyword2) {
                     })
                 } else {
                     export_text();//텍스트 출력
+                }
+            }
+            //HTML 태그 출력
+            $("#deckconfig_tag").onclick = function() {
+                //사용불가 카드가 있다면 경고
+                if (process.deck.unusable > 0) {
+                    nativeToast({
+                        message: '대전 방식과 맞지 않는 카드가 있습니다.',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                //미완성 시 경고창
+                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                    swal({
+                        type:"warning",
+                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        text:"정말로 HTML 태그를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            export_tag();//텍스트 출력
+                        }
+                    })
+                } else {
+                    export_tag();//텍스트 출력
                 }
             }
             //포맷 전환
@@ -1074,47 +1100,18 @@ function window_shift(keyword, keyword2) {
                 interact_infoMonitor(e);
             }
             $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover);
-            eventObj.deck_list_content.mousedown = function(e) {
-                interact_infoCoverWait(e, true);
+            eventObj.deck_list_content.click = function(e) {
+                interact_infoCoverNow(e);
+                e.preventDefault();
                 return false;
             }
-            $("#deck_list_content").addEventListener("mousedown",eventObj.deck_list_content.mousedown);
-            eventObj.deck_list_content.mouseout = function(e) {
-                interact_stopAuto(e);
-                return false;
-            }
-            $("#deck_list_content").addEventListener("mouseout",eventObj.deck_list_content.mouseout);
-            eventObj.deck_list_content.mouseup = function(e) {
-                interact_stopAuto(e);
-                return false;
-            }
-            $("#deck_list_content").addEventListener("mouseup",eventObj.deck_list_content.mouseup);
+            $("#deck_list_content").addEventListener("click",eventObj.deck_list_content.click);
             eventObj.deck_list_content.contextmenu = function(e) {
                 interact_infoCoverNow(e);
                 e.preventDefault();
                 return false;
             }
             $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu);
-                //터치 기반
-                eventObj.deck_list_content.touchstart = function(e) {
-                    interact_infoCoverWait(e);
-                }
-                $("#deck_list_content").addEventListener("touchstart",eventObj.deck_list_content.touchstart);
-                eventObj.deck_list_content.touchcancel = function(e) {
-                    interact_stopAuto(e);
-                    return false;
-                }
-                $("#deck_list_content").addEventListener("touchcancel",eventObj.deck_list_content.touchcancel);
-                eventObj.deck_list.touchstart = function(e) {
-                    interact_stopAuto(e);
-                    return false;
-                }
-                $("#deck_list").addEventListener("scroll",eventObj.deck_list.touchstart);
-                eventObj.deck_list_content.touchend = function(e) {
-                    interact_stopAuto(e);
-                    return false;
-                }
-                $("#deck_list_content").addEventListener("touchend",eventObj.deck_list_content.touchend);
             //카드 정보창 닫기
             $("#frame_cardcover").onclick = function() {
                 $("#frame_cardcover").classList.remove("show");

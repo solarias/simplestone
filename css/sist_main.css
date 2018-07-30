@@ -714,7 +714,7 @@ body {
     }
             #frame_cardcover.show {
                 display:block;
-                animation:cardcover_show 0.3s;
+                animation:cardcover_show 0.2s;
             }
             @keyframes cardcover_show {
                 0% {opacity:0;}

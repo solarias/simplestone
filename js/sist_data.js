@@ -93,8 +93,8 @@ const DATA = {
         COLOR:{
             "FREE":"#C0C0C0",
             "COMMON":"#FFFFFF",
-            "RARE":"#198EFF",
-            "EPIC":"#AB48EE",
+            "RARE":"#44A5FF",
+            "EPIC":"#BC81EA",
             "LEGENDARY":"#F07000"
         }
     },

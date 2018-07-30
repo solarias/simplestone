@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         <meta charset="utf-8">
@@ -25,23 +25,23 @@
 			<!--헤더-->
             <header id="frame_header">
                 <div id="header_top">
-					<button id="header_home" class="header_button"><img src="./images/icon_home.png"></button>
+					<button id="header_home" class="header_button" aria-label="HOME"><img src="./images/icon_home.png" alt="HOME"></button>
 					<div id="header_status">심플 스톤</div>
-					<button id="header_info" class="header_button"><img src="./images/icon_info.png"></button>
+					<button id="header_info" class="header_button" aria-label="INFO"><img src="./images/icon_info.png" alt="INFO"></button>
 				</div>
                 <div id="header_bottom" class="subscreen">
-					<button id="search_class" class="search_button">직업 카드</button>
+					<button id="search_class" class="search_button" aria-label="검색필터_직업">직업 카드</button>
 					<div class="mobile_only">
-						<button id="search_mobilefilter" class="search_button">&#128295; 검색 필터</button>
+						<button id="search_mobilefilter" class="search_button" aria-label="검색필터">&#128295; 검색 필터</button>
 					</div>
 
 					<div class="desktop_only">
-						<button id="search_mana" class="search_button">마나 : 전체</button>
-						<button id="search_rarity" class="search_button">등급 : 전체</button>
-						<button id="search_set" class="search_button">세트 : 전체</button>
+						<button id="search_mana" class="search_button" aria-label="검색필터_마나">마나 : 전체</button>
+						<button id="search_rarity" class="search_button" aria-label="검색필터_등급">등급 : 전체</button>
+						<button id="search_set" class="search_button" aria-label="검색필터_세트">세트 : 전체</button>
 
-						<button id="search_reset" class="search_button">필터<br>초기화</button>
-						<button id="search_keyword" class="search_button">&#128269;  <span id="keyword_text">검색어</span></button>
+						<button id="search_reset" class="search_button" aria-label="검색필터_초기화">필터<br>초기화</button>
+						<button id="search_keyword" class="search_button" aria-label="검색필터_키워드">&#128269;  <span id="keyword_text">검색어</span></button>
 					</div>
                 </div>
             </header>
@@ -58,43 +58,40 @@
 				<!--타이틀스크린-->
                 <div id="main_titlescreen" class="mainscreen main_both">
                     <div id="titlescreen_card">
-                        <button id="start_card" class="titlescreen_button"><img src="./images/icon_search.png"></button>
+                        <button id="start_card" class="titlescreen_button" aria-label="카드 정보"><img src="./images/icon_search.png" alt="SEARCH"></button>
                         <p class="titlescren_desc">카드 정보</p>
                     </div>
                     <div id="titlescreen_deck">
-                        <button id="start_deck" class="titlescreen_button"><img src="./images/icon_decklist.png"></button>
+                        <button id="start_deck" class="titlescreen_button" aria-label="덱 관리"><img src="./images/icon_decklist.png" alt="DECKLIST"></button>
                         <p class="titlescren_desc">덱 관리</p>
                     </div>
                     <div id="titlescreen_newset">
 						<div id="newset_title_wrapper">
 							<span id="newset_title">박사 붐의 폭심만만 프로젝트</span>
 						</div>
-						<button id="newset_cardinfo" class="newset_button">새카드 정보</button>
-						<button id="newset_newdeck" class="newset_button">확장팩 덱짜기</button>
+						<button id="newset_cardinfo" class="newset_button" aria-label="새카드 정보">새카드 정보</button>
+						<button id="newset_newdeck" class="newset_button" aria-label="확장팩 덱짜기">확장팩 덱짜기</button>
                     </div>
                 </div>
 
 				<!--덱 목록-->
 				<div id="main_decklist" class="mainscreen main_both">
-					<button id="decklist_temp" class="decklist_button" data-name="temp"></button>
+					<button id="decklist_temp" class="decklist_button" data-name="temp" aria-label="최근 작업 덱"></button>
 					<hr class="decklist_hr">
 				</div>
 
 				<!--카드정보 불러오기-->
 				<div id="main_loading" class="mainscreen main_both">
                     <div id="main_loading_title" class="main_title">카드정보 불러오는 중</div>
-					<!--
-					<img class="loading_mark" src="./images/loading_transparent.gif" alt="로딩 이미지">
-					-->
 				</div>
 
 				<!--덱 설정-->
 				<div id="main_deckconfig" class="mainscreen main_left">
-					<button id="deckconfig_name" class="deckconfig_button">덱 이름 편집</button>
+					<button id="deckconfig_name" class="deckconfig_button" aria-label="덱 이름 편집">덱 이름 편집</button>
 					<hr>
-					<button id="deckconfig_deckstring" class="deckconfig_button">덱코드 출력</button>
-					<button id="deckconfig_text" class="deckconfig_button">텍스트 출력</button>
-					<button id="deckconfig_tag" class="deckconfig_button">HTML 태그 출력</button>
+					<button id="deckconfig_deckstring" class="deckconfig_button" aria-label="덱코드 출력">덱코드 출력</button>
+					<button id="deckconfig_text" class="deckconfig_button" aria-label="텍스트 출력">텍스트 출력</button>
+					<button id="deckconfig_tag" class="deckconfig_button" aria-label="HTML 태그 출력">HTML 태그 출력</button>
 				</div>
 
 				<!--카드 목록-->
@@ -136,12 +133,12 @@
 
 			<!--푸터-->
 			<footer id="footer_init" class="subscreen">
-				<button id="button_update" class="footer_init_button">업데이트 및 시작</button>
-				<button id="button_offline" class="footer_init_button">오프라인 모드</button>
+				<button id="button_update" class="footer_init_button" aria-label="업데이트 및 시작">업데이트 및 시작</button>
+				<button id="button_offline" class="footer_init_button" aria-label="오프라인 모드">오프라인 모드</button>
 			</footer>
 			<footer id="footer_decklist" class="subscreen">
-				<button id="button_readcode" class="footer_decklist_button"><img src="./images/icon_deckcode.png"><span> 덱코드 입력</span></button>
-				<button id="botton_newdeck" class="footer_decklist_button"><img src="./images/icon_newdeck.png"><span> 새로운 덱</span></button>
+				<button id="button_readcode" class="footer_decklist_button" aria-label="덱코드 입력"><img src="./images/icon_deckcode.png" alt="덱코드"><span> 덱코드 입력</span></button>
+				<button id="botton_newdeck" class="footer_decklist_button" aria-label="새로운 덱"><img src="./images/icon_newdeck.png" alt="새로운 덱"><span> 새로운 덱</span></button>
 			</footer>
 			<footer id="footer_collectionNdeck" class="subscreen">
 				<div id="footer_collectionNdeck_top" class="subscreen">
@@ -152,43 +149,43 @@
                 <div id="footer_collectionNdeck_cardinfo" class="subscreen">
                 </div>
                 <div id="footer_collectionNdeck_deckbuilding" class="subscreen">
-					<button id="bottom_undo" class="footer_button disabled">
+					<button id="bottom_undo" class="footer_button disabled" aria-label="취소">
 						<div id="undo_icon" class="log_icon">&#8630;</div>
 						<div id="undo_text" class="log_text desktop_only"> 취소</div>
 						<div id="undo_num" class="log_num">0</div>
 					</button>
-					<button id="bottom_redo" class="footer_button disabled">
+					<button id="bottom_redo" class="footer_button disabled" aria-label="복구">
 						<div id="redo_icon" class="log_icon">&#8631;</div>
 						<div id="redo_text" class="log_text desktop_only">복구 </div>
 						<div id="redo_num" class="log_num">0</div>
 					</button>
-					<button id="bottom_done" class="footer_button"><img src="./images/icon_done.png"><span class="desktop_only"> 완료</span></button>
-					<button id="bottom_info" class="footer_button"><img src="./images/icon_cardinfo.png"><span class="mobile_only"> 사용<br>방법</span><span class="desktop_only"> 사용방법</span></button>
+					<button id="bottom_done" class="footer_button" aria-label="완료"><img src="./images/icon_done.png" alt="완료"><span class="desktop_only"> 완료</span></button>
+					<button id="bottom_info" class="footer_button" aria-label="사용방법"><img src="./images/icon_cardinfo.png" alt="사용방법"><span class="mobile_only"> 사용<br>방법</span><span class="desktop_only"> 사용방법</span></button>
                 </div>
 			</footer>
             <footer id="footer_deckconfig" class="subscreen">
-				<button id="button_format">야생 <br> 전환</button>
-				<button id="button_edit"><img src="./images/icon_edit.png"><span> 편집</span></button>
+				<button id="button_format" aria-label="포맷 전환">야생 <br> 전환</button>
+				<button id="button_edit" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
 			</footer>
 
 			<!--별도 창 - 카드 필터(모바일)-->
 			<section id="frame_mobilefilter" class="">
 				<div class="mobilefilter_desc top">&#128295; 검색 필터</div>
-				<button class="mobilefilter_close mobilefilter_button">필터 닫기</button>
+				<button class="mobilefilter_close mobilefilter_button" aria-label="필터 닫기">필터 닫기</button>
 
 				<div class="mobilefilter_desc margin_top">카드 마나</div>
-				<button id="mobilefilter_mana" class="mobilefilter_button">마나 : 전체</button>
+				<button id="mobilefilter_mana" class="mobilefilter_button" aria-label="모바일 필터_마나">마나 : 전체</button>
 				<div class="mobilefilter_desc margin_top">카드 등급</div>
-				<button id="mobilefilter_rarity" class="mobilefilter_button">등급 : 전체</button>
+				<button id="mobilefilter_rarity" class="mobilefilter_button" aria-label="모바일 필터_등급">등급 : 전체</button>
 				<div class="mobilefilter_desc margin_top">카드 세트</div>
-				<button id="mobilefilter_set" class="mobilefilter_button">세트 : 전체</button>
+				<button id="mobilefilter_set" class="mobilefilter_button" aria-label="모바일 필터_세트">세트 : 전체</button>
 				<div class="mobilefilter_desc margin_top">검색어</div>
-				<button id="mobilefilter_keyword" class="mobilefilter_button">&#128269;  <span id="keyword_text2">검색어</span></button>
+				<button id="mobilefilter_keyword" class="mobilefilter_button" aria-label="모바일 필터_검색어">&#128269;  <span id="keyword_text2">검색어</span></button>
 
-				<button class="mobilefilter_close mobilefilter_button">필터 닫기</button>
+				<button class="mobilefilter_close mobilefilter_button" aria-label="필터 닫기">필터 닫기</button>
 			</section>
 			<section id="frame_mobilefilter_reset" class="">
-				<button id="mobilefilter_reset" class="mobilefilter_button">필터 초기화</button>
+				<button id="mobilefilter_reset" class="mobilefilter_button" aria-label="필터 초기화">필터 초기화</button>
 			</section>
         </div>
 		<!--별도 창 - 카드 정보 (커버)-->

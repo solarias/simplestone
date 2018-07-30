@@ -149,7 +149,7 @@ function deckcode_text() {
 //텍스트 출력
 function export_text() {
     try {
-        //덱코드 얻기
+        //텍스트 얻기
         let decktext = deckcode_text();
         //팝업창 열기
         swal({
@@ -186,6 +186,41 @@ function export_text() {
 //===============================================================
 //※ HTML 태그
 //===============================================================
+//HTML 태그 출력
+function export_tag() {
+    try {
+        //HTML 태그 얻기
+        let decktag = deckcode_tag();
+        //팝업창 열기
+        swal({
+            title: 'HTML 태그 출력',
+            text: 'HTML 태그가 복사되었습니다!',
+            input: 'textarea',
+            inputValue: decktag,
+            allowOutsideClick:false,
+            showConfirmButton:false,
+            showCancelButton:true,
+            cancelButtonText: '닫기',
+            cancelButtonColor: '#d33',
+            showCloseButton:true,
+            onOpen: function() {
+                $(".swal2-textarea").style.fontSize = "12px";
+                $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
+                $(".swal2-textarea").select();
+                document.execCommand("copy");
+            }
+        })
+    } catch(e) {
+        //오류창 열기
+        nativeToast({
+            message: '오류 발생 - 텍스트를 출력할 수 없습니다.',
+            position: 'center',
+            timeout: 2000,
+            type: 'error',
+            closeOnClick: 'true'
+        });
+    }
+}
 //HTML 태그 제작
 function deckcode_tag() {
     //정보 준비
@@ -197,7 +232,7 @@ function deckcode_tag() {
         } catch(e) {
             deckcode = ""
         }
-    } else deckcode = DATA.SET.NEW.name + "' 미리 덱 짜보기";
+    } else deckcode = "'" + DATA.SET.NEW.name + "' 미리 덱 짜보기";
     //직업별 카드 구분
     let outputCards = {
         class:[],
@@ -210,291 +245,435 @@ function deckcode_tag() {
             outputCards.neutral.push(card);
         }
     })
+
     //출력물 제작
-    let _wrapper= document.createElement("div.simplestone_wrapper");
+    let _wrapper= document.createElement("div");
+        //상단 공백
+        let p = document.createElement("p");
+            p.innerHTML = "<br>";
+        _wrapper.appendChild(p);
         let _header = document.createElement("div.simplestone_header");
-            Object.assign(_header.style,{
-                padding:"0.5em",
-                width:"100%",
-                height:"5em",
-                background:"#503C23",
-                border:"0.5em gold outset",
-                boxSizing:"border-box",
-                fontFamily:"Gothic",
-                fontWeight:"bold"
-            });
+            _header.setAttribute("style",
+                "PADDING:0.5em;"+
+                "WIDTH:100%;"+
+                "HEIGHT:5em;"+
+                "BACKGROUND:#542;"+
+                "BORDER:0.5em #FD0 outset;"+
+                "BOX-SIZING:border-box;"+
+                "FONT-FAMILY:Gothic;"+
+                "FONT-WEIGHT:bold;"
+            )
+        _wrapper.appendChild(_header);
             let _icon = document.createElement("img.simplestone_icon");
                 _icon.src = ICONDATA[deck.class];
                 _icon.alt = deck.class;
-                Object.assign(_icon.style,{
-                    float:"left",
-                    display:"block",
-                    width:"3em",
-                    height:"3em"
-                })
+                _icon.setAttribute("style",
+                    "FLOAT:left;"+
+                    "DISPLAY:block;"+
+                    "WIDTH:3em;"+
+                    "HEIGHT:3em;"
+                )
             _header.appendChild(_icon);
             let _headercenter = document.createElement("div.simplestone_headercenter");
-                Object.assign(_headercenter.style,{
-                    float:"left",
-                    marginLeft:"0.5em",
-                    width:"calc(100% - 8.5em)",
-                    height:"3em"
-                })
+                _headercenter.setAttribute("style",
+                    "FLOAT:left;"+
+                    "MARGIN-LEFT:0.5em;"+
+                    "WIDTH:calc(100% - 8.5em);"+
+                    "HEIGHT:3em;"
+                )
             _header.appendChild(_headercenter);
                 let _deckname = document.createElement("div.simplestone_deckname");
                     _deckname.innerHTML = deck.name;
-                    Object.assign(_deckname.style,{
-                        float:"left",
-                        overflow:"hidden",
-                        width:"100%",
-                        height:"1em",
-                        color:"white",
-                        fontSize:"1.8em",
-                        fontWeight:"bold",
-                        lineHeight:"100%",
-                        textShadow:"0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black",
-                        whiteSpace:"nowrap",
-                        textOverflow:"ellipsis"
-                    })
+                    _deckname.setAttribute("style",
+                        "FLOAT:left;"+
+                        "WIDTH:100%;"+
+                        "HEIGHT:1em;"+
+                        "COLOR:white;"+
+                        "FONT-SIZE:1.8em;"+
+                        "FONT-WEIGHT:bold;"+
+                        "LINE-HEIGHT:100%;"+
+                        "TEXT-SHADOW:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;"+
+                        "OVERFLOW:hidden;"+
+                        "WHITE-SPACE:nowrap;"+
+                        "TEXT-OVERFLOW:ellipsis;"
+                    )
                 _headercenter.appendChild(_deckname);
                 let _dusticon = document.createElement("img.simplestone_dusticon");
                     _dusticon.src = ICONDATA.DUST;
-                    Object.assign(_dusticon.style,{
-                        clear:"both",float:"left",
-                        marginTop:"0.2em",
-                        width:"1em",
-                        height:"1em",
-                    })
+                    _dusticon.setAttribute("style",
+                        "CLEAR:both;FLOAT:left;"+
+                        "MARGIN-TOP:0.2em;"+
+                        "WIDTH:1em;"+
+                        "HEIGHT:1em;"
+                    )
                 _headercenter.appendChild(_dusticon);
                 let _dust = document.createElement("div.simplestone_dust");
                     _dust.innerHTML = thousand(deck.dust);
-                    Object.assign(_dust.style,{
-                        float:"left",
-                        margin:"0.2em 0 0 0.2em",
-                        height:"1em",
-                        color:"skyblue",
-                        textShadow:"0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black",
-                        lineHeight:"1em"
-                    })
+                    _dust.setAttribute("style",
+                        "FLOAT:left;"+
+                        "MARGIN:0.2em 0 0 0.2em;"+
+                        "HEIGHT:1em;"+
+                        "COLOR:skyblue;"+
+                        "TEXT-SHADOW:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;"+
+                        "LINE-HEIGHT:1em;"
+                    )
                 _headercenter.appendChild(_dust);
             let _headerlight = document.createElement("div.simplestone_headerlight");
-                Object.assign(_headerlight.style,{
-                    float:"right",
-                    width:"5em",
-                    height:"3em"
-                })
+                _headerlight.setAttribute("style",
+                    "FLOAT:right;"+
+                    "WIDTH:5em;"+
+                    "HEIGHT:3em;"
+                )
             _header.appendChild(_headerlight);
                 let _classname = document.createElement("div.simplestone_classname");
                     _classname.innerHTML = DATA.CLASS.KR[deck.class];
-                    Object.assign(_classname.style,{
-                        float:"right",
-                        height:"1em",
-                        fontWeight:"bold",
-                        color:"white",
-                        textShadow:"0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black",
-                        lineHeight:"1em"
-                    })
+                    _classname.setAttribute("style",
+                        "FLOAT:right;"+
+                        "HEIGHT:1em;"+
+                        "COLOR:white;"+
+                        "LINE-HEIGHT:1em;"
+                    )
                 _headerlight.appendChild(_classname);
                 let _format = document.createElement("div.simplestone_format");
                     _format.innerHTML = deck.format;
                     let formatcolor = "";
                     if (deck.format === "정규") formatcolor = "lime";
                         else formatcolor = "orange";
-                    Object.assign(_format.style,{
-                        clear:"both",float:"right",
-                        marginTop:"1em",
-                        height:"1em",
-                        color:formatcolor,
-                        fontWeight:"bold",
-                        textShadow:"0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black",
-                        lineHeight:"1em"
-                    })
+                    _format.setAttribute("style",
+                        "CLEAR:both;FLOAT:right;"+
+                        "MARGIN-TOP:0.5em;"+
+                        "HEIGHT:1em;"+
+                        "FONT-SIZE:1.5em;"+
+                        "COLOR:" + formatcolor + ";"+
+                        "TEXT-SHADOW:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;"+
+                        "LINE-HEIGHT:1em;"
+                    )
                 _headerlight.appendChild(_format);
-        _wrapper.appendChild(_header);
         let _main = document.createElement("div.simplestone_main");
-            Object.assign(_main.style,{
-                display:"grid",
-                gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))",
-                gridGap:"2px",
-                padding:"0.1em 0 1em 0",
-                width:"100%",
-                height:"auto",
-                background:"#E7D099",
-                boxSizing:"border-box",
-                fontFamily:"Gothic",
-                fontWeight:"bold"
-            })
+            _main.setAttribute("style",
+                "COLUMNS:2 260px;"+
+                "COLUMN-GAP:0.2em;"+
+                "PADDING-BOTTOM:1em;"+
+                "WIDTH:100%;"+
+                "HEIGHT:auto;"+
+                "BACKGROUND:#FFF0A5;"+
+                "BOX-SIZING:border-box;"+
+                "FONT-FAMILY:Gothic;"+
+                "FONT-WEIGHT:bold;"
+            )
             let _classcard = document.createElement("div.simplestone_classcard");
-                Object.assign(_classcard.style,{
-                    height:"auto"
-                })
+                _classcard.setAttribute("style",
+                    "HEIGHT:auto;"+
+                    "PAGE-BREAK-INSIDE: avoid;"+
+                    "BREAK-INSIDE: avoid;"
+                )
             _main.appendChild(_classcard);
                 //헤더
                 let _classheader = document.createElement("div.simplestone_classheader");
-                    _classheader.innerHTML = "직업카드 (" + outputCards.class.length.toString() + ")";
-                    Object.assign(_classheader.style,{
-                        width:"100%",
-                        padding:"0 0.5em",
-                        height:"2em",
-                        background:"#212121",
-                        boxSizing:"border-box",
-                        fontSize:"1em",
-                        color:"white",
-                        lineHeight:"2em"
+                    let classCount = 0;
+                    outputCards.class.forEach(function(card) {
+                        classCount += card[1];
                     })
+                    _classheader.innerHTML = DATA.CLASS.KR[deck.class] + " 카드 (" + classCount.toString() + "장)";
+                    _classheader.setAttribute("style",
+                        "MARGIN-BOTTOM:0.2em;"+
+                        "WIDTH:100%;"+
+                        "PADDING:0 0.5em;"+
+                        "HEIGHT:2em;"+
+                        "BACKGROUND:#222;"+
+                        "BOX-SIZING:border-box;"+
+                        "FONT-SIZE:1em;"+
+                        "COLOR:white;"+
+                        "LINE-HEIGHT:2em;"
+                    )
                 _classcard.appendChild(_classheader);
                 //직업카드 목록
                 outputCards.class.forEach(function(card) {
                     let info = session.db[session.index[card[0]]];
-                    let elm_card = document.createElement("div.card");
-                        Object.assign(elm_card.style,{
-                            marginTop:"0.1em",
-                            width:"100%",
-                            height:"2em",
-                            background:"#404040",
-                        })
-                        let elm_card_cost = document.createElement("div.card_cost");
-                            elm_card_cost.innerHTML = info.cost;
-                            Object.assign(elm_card_cost.style,{
-                                float:"left",
-                                width:"2em",
-                                height:"2em",
-                                background:"blue",
-                                color:"white",
-                                lineHeight:"2em",
-                                textAlign:"center"
-                            })
-                        let elm_card_name = document.createElement("div.card_name");
-                            let raritycolor = DATA.RARITY.COLOR[info.rarity];
-                            elm_card_name.innerHTML = info.name;
-                            Object.assign(elm_card_name.style,{
-                                float:"left",
-                                paddingLeft:"0.5em",
-                                width:"auto",
-                                maxWidth:"calc(100% - 4em)",
-                                boxSizing:"border-box",
-                                height:"2em",
-                                color:raritycolor,
-                                lineHeight:"2em"
-                            })
-                        let elm_card_quantity = document.createElement("div.card_quantity");
-                            elm_card_quantity.innerHTML = "× " + card[1].toString();
-                            Object.assign(elm_card_quantity.style,{
-                                float:"left",
-                                width:"calc(2em)",
-                                height:"2em",
-                                color:"yellow",
-                                lineHeight:"2em",
-                                textAlign:"center"
-                            })
-                    //요소 합치기
-                    elm_card.appendChild(elm_card_cost);
-                    elm_card.appendChild(elm_card_name);
-                    elm_card.appendChild(elm_card_quantity);
-
+                    let elm_card = document.createElement("details.card");
+                        elm_card.setAttribute("style",
+                            "DISPLAY:block;"+
+                            "MARGIN-BOTTOM:0.2em;"+
+                            "WIDTH:100%;"+
+                            "HEIGHT:auto;"+
+                            "BACKGROUND:#444;"+
+                            "COLOR:transparent;"
+                        )
                     _classcard.appendChild(elm_card);
+                        let elm_cardsummary = document.createElement("summary.cardinfo");
+                            elm_cardsummary.title = "카드를 클릭하면 세부정보를 볼 수 있습니다.";
+                            elm_cardsummary.setAttribute("style",
+                                "DISPLAY:block;"+
+                                "WIDTH:100%;"+
+                                "HEIGHT:2em;"+
+                                "CURSOR:help;"
+                            )
+                        elm_card.appendChild(elm_cardsummary);
+                            let elm_card_cost = document.createElement("div.card_cost");
+                                elm_card_cost.innerHTML = info.cost;
+                                elm_card_cost.setAttribute("style",
+                                    "FLOAT:left;"+
+                                    "WIDTH:2em;"+
+                                    "HEIGHT:2em;"+
+                                    "BACKGROUND:blue;"+
+                                    "COLOR:white;"+
+                                    "LINE-HEIGHT:2em;"+
+                                    "TEXT-ALIGN:center;"
+                                )
+                            elm_cardsummary.appendChild(elm_card_cost);
+                            let elm_card_name = document.createElement("div.card_name");
+                                let raritycolor = DATA.RARITY.COLOR[info.rarity];
+                                if (DATA.SET.NEW && info.set === DATA.SET.NEW.id) {
+                                    elm_card_name.innerHTML = "*" + info.name;
+                                } else {
+                                    elm_card_name.innerHTML = info.name;
+                                }
+                                elm_card_name.setAttribute("style",
+                                    "FLOAT:left;"+
+                                    "PADDING-LEFT:0.5em;"+
+                                    "WIDTH:auto;"+
+                                    "MAX-WIDTH:calc(100% - 4.5em);"+
+                                    "BOX-SIZING:border-box;"+
+                                    "HEIGHT:2em;"+
+                                    "COLOR:" + raritycolor + ";"+
+                                    "LINE-HEIGHT:2em;"+
+                                    "OVERFLOW:hidden;"+
+                                    "WHITE-SPACE:nowrap;"+
+                                    "TEXT-OVERFLOW:ellipsis;"
+                                )
+                            elm_cardsummary.appendChild(elm_card_name);
+                            let elm_card_quantity = document.createElement("div.card_quantity");
+                                elm_card_quantity.innerHTML = "× " + card[1].toString();
+                                elm_card_quantity.setAttribute("style",
+                                    "FLOAT:left;"+
+                                    "WIDTH:2.5em;"+
+                                    "HEIGHT:2em;"+
+                                    "COLOR:yellow;"+
+                                    "LINE-HEIGHT:2em;"+
+                                    "TEXT-ALIGN:center;"
+                                )
+                            elm_cardsummary.appendChild(elm_card_quantity);
+                        let elm_cardinfo = document.createElement("div.cardinfo");
+                            //title 생성
+                            let classinfo = "";
+                            classinfo += "(" + DATA.TYPE.KR[info.type] + ")";
+                            switch (info.type) {
+                                case "MINION":
+                                    classinfo += " " + info.attack.toString() + "/" + info.health.toString();
+                                    if (info.race) classinfo += ", " + DATA.RACE.KR[info.race];
+                                    break;
+                                case "WEAPON":
+                                    classinfo += " " + info.attack.toString() + "/" + info.durability.toString();
+                                    break;
+                                case "HERO":
+                                    classinfo += " 방어도 " + info.armor.toString();
+                                    break;
+                            }
+                            classinfo += "<br>";
+                            if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>";
+                            if (!DATA.SET.NEW || info.set !== DATA.SET.NEW.id) {
+                                classinfo += "[" + DATA.SET.KR[info.set] + "]";
+                            } else {
+                                classinfo += "[*" + DATA.SET.NEW.name + "]";
+                            }
+                            elm_cardinfo.innerHTML = classinfo;
+                            elm_cardinfo.setAttribute("style",
+                                "PADDING:0.2em;"+
+                                "WIDTH:100%;"+
+                                "BACKGROUND:#DC9;"+
+                                "BORDER:2px #542 outset;"+
+                                "BORDER-TOP:0;"+
+                                "BOX-SIZING:border-box;"+
+                                "COLOR:black;"+
+                                "FONT-WEIGHT:normal;"+
+                                "FONT-SIZE:0.8em;"+
+                                "LINE-HEIGHT:160%;"+
+                                "WORD-BREAK:keep-all;"
+                            )
+                        elm_card.appendChild(elm_cardinfo);
                 })
             let _neutralcard = document.createElement("div.simplestone_neutralcard");
-                Object.assign(_neutralcard.style,{
-                    height:"auto"
-                })
+                _neutralcard.setAttribute("style",
+                    "HEIGHT:auto;"+
+                    "-WEBKIT-COLUMN-BREAK-INSIDE: avoid;"+
+                    "PAGE-BREAK-INSIDE: avoid;"+
+                    "BREAK-INSIDE: avoid;"
+                )
             _main.appendChild(_neutralcard);
                 //헤더
                 let _neutralheader = document.createElement("div.simplestone_neutralheader");
-                _neutralheader.innerHTML = "중립카드 (" + outputCards.class.length.toString() + ")";
-                Object.assign(_neutralheader.style,{
-                    width:"100%",
-                    padding:"0.5em",
-                    height:"2em",
-                    background:"#212121",
-                    boxSizing:"border-box",
-                    fontSize:"1em",
-                    color:"white",
-                    lineHeight:"1em"
-                })
+                let neutralCount = 0;
+                    outputCards.neutral.forEach(function(card) {
+                        neutralCount += card[1];
+                    })
+                    _neutralheader.innerHTML = "중립 카드 (" + neutralCount.toString() + "장)";
+                    _neutralheader.setAttribute("style",
+                        "MARGIN-BOTTOM:0.2em;"+
+                        "WIDTH:100%;"+
+                        "PADDING:0 0.5em;"+
+                        "HEIGHT:2em;"+
+                        "BACKGROUND:#222;"+
+                        "BOX-SIZING:border-box;"+
+                        "FONT-SIZE:1em;"+
+                        "COLOR:white;"+
+                        "LINE-HEIGHT:2em;"
+                    )
                 _neutralcard.appendChild(_neutralheader);
                 //중립카드 목록
                 outputCards.neutral.forEach(function(card) {
                     let info = session.db[session.index[card[0]]];
-                    let elm_card = document.createElement("div.card");
-                        Object.assign(elm_card.style,{
-                            marginTop:"0.1em",
-                            width:"100%",
-                            height:"2em",
-                            background:"#404040",
-                        })
-                        let elm_card_cost = document.createElement("div.card_cost");
-                            elm_card_cost.innerHTML = info.cost;
-                            Object.assign(elm_card_cost.style,{
-                                float:"left",
-                                width:"2em",
-                                height:"2em",
-                                background:"blue",
-                                color:"white",
-                                lineHeight:"2em",
-                                textAlign:"center"
-                            })
-                        let elm_card_name = document.createElement("div.card_name");
-                            let raritycolor = DATA.RARITY.COLOR[info.rarity];
-                            elm_card_name.innerHTML = info.name;
-                            Object.assign(elm_card_name.style,{
-                                float:"left",
-                                paddingLeft:"0.5em",
-                                width:"auto",
-                                maxWidth:"calc(100% - 4em)",
-                                boxSizing:"border-box",
-                                height:"2em",
-                                color:raritycolor,
-                                lineHeight:"2em"
-                            })
-                        let elm_card_quantity = document.createElement("div.card_quantity");
-                            elm_card_quantity.innerHTML = "× " + card[1].toString();
-                            Object.assign(elm_card_quantity.style,{
-                                float:"left",
-                                width:"calc(2em)",
-                                height:"2em",
-                                color:"yellow",
-                                lineHeight:"2em",
-                                textAlign:"center"
-                            })
-                    //요소 합치기
-                    elm_card.appendChild(elm_card_cost);
-                    elm_card.appendChild(elm_card_name);
-                    elm_card.appendChild(elm_card_quantity);
-
+                    let elm_card = document.createElement("details.card");
+                        elm_card.setAttribute("style",
+                            "DISPLAY:block;"+
+                            "MARGIN-BOTTOM:0.2em;"+
+                            "WIDTH:100%;"+
+                            "HEIGHT:auto;"+
+                            "BACKGROUND:#444;"+
+                            "COLOR:transparent;"
+                        )
                     _neutralcard.appendChild(elm_card);
+                        let elm_cardsummary = document.createElement("summary.cardinfo");
+                            elm_cardsummary.title = "카드를 클릭하면 세부정보를 볼 수 있습니다.";
+                            elm_cardsummary.setAttribute("style",
+                                "DISPLAY:block;"+
+                                "WIDTH:100%;"+
+                                "HEIGHT:2em;"+
+                                "CURSOR:help;"
+                            )
+                        elm_card.appendChild(elm_cardsummary);
+                            let elm_card_cost = document.createElement("div.card_cost");
+                                elm_card_cost.innerHTML = info.cost;
+                                elm_card_cost.setAttribute("style",
+                                    "FLOAT:left;"+
+                                    "WIDTH:2em;"+
+                                    "HEIGHT:2em;"+
+                                    "BACKGROUND:blue;"+
+                                    "COLOR:white;"+
+                                    "LINE-HEIGHT:2em;"+
+                                    "TEXT-ALIGN:center;"
+                                )
+                            elm_cardsummary.appendChild(elm_card_cost);
+                            let elm_card_name = document.createElement("div.card_name");
+                                let raritycolor = DATA.RARITY.COLOR[info.rarity];
+                                if (DATA.SET.NEW && info.set === DATA.SET.NEW.id) {
+                                    elm_card_name.innerHTML = "*" + info.name;
+                                } else {
+                                    elm_card_name.innerHTML = info.name;
+                                }
+                                elm_card_name.setAttribute("style",
+                                    "FLOAT:left;"+
+                                    "PADDING-LEFT:0.5em;"+
+                                    "WIDTH:auto;"+
+                                    "MAX-WIDTH:calc(100% - 4.5em);"+
+                                    "BOX-SIZING:border-box;"+
+                                    "HEIGHT:2em;"+
+                                    "COLOR:" + raritycolor + ";"+
+                                    "LINE-HEIGHT:2em;"+
+                                    "OVERFLOW:hidden;"+
+                                    "WHITE-SPACE:nowrap;"+
+                                    "TEXT-OVERFLOW:ellipsis;"
+                                )
+                            elm_cardsummary.appendChild(elm_card_name);
+                            let elm_card_quantity = document.createElement("div.card_quantity");
+                                elm_card_quantity.innerHTML = "× " + card[1].toString();
+                                elm_card_quantity.setAttribute("style",
+                                    "FLOAT:left;"+
+                                    "WIDTH:2.5em;"+
+                                    "HEIGHT:2em;"+
+                                    "COLOR:yellow;"+
+                                    "LINE-HEIGHT:2em;"+
+                                    "TEXT-ALIGN:center;"
+                                )
+                            elm_cardsummary.appendChild(elm_card_quantity);
+                        let elm_cardinfo = document.createElement("div.cardinfo");
+                            //title 생성
+                            let classinfo = "";
+                            classinfo += "(" + DATA.TYPE.KR[info.type] + ")";
+                            switch (info.type) {
+                                case "MINION":
+                                    classinfo += " " + info.attack.toString() + "/" + info.health.toString();
+                                    if (info.race) classinfo += ", " + DATA.RACE.KR[info.race];
+                                    break;
+                                case "WEAPON":
+                                    classinfo += " " + info.attack.toString() + "/" + info.durability.toString();
+                                    break;
+                                case "HERO":
+                                    classinfo += " 방어도 " + info.armor.toString();
+                                    break;
+                            }
+                            classinfo += "<br>";
+                            if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>";
+                            if (!DATA.SET.NEW || info.set !== DATA.SET.NEW.id) {
+                                classinfo += "[" + DATA.SET.KR[info.set] + "]";
+                            } else {
+                                classinfo += "[*" + DATA.SET.NEW.name + "]";
+                            }
+                            elm_cardinfo.innerHTML = classinfo;
+                            elm_cardinfo.setAttribute("style",
+                                "PADDING:0.2em;"+
+                                "WIDTH:100%;"+
+                                "BACKGROUND:#DC9;"+
+                                "BORDER:2px #542 outset;"+
+                                "BORDER-TOP:0;"+
+                                "BOX-SIZING:border-box;"+
+                                "COLOR:black;"+
+                                "LINE-HEIGHT:160%;"+
+                                "FONT-WEIGHT:normal;"+
+                                "FONT-SIZE:0.8em;"+
+                                "WORD-BREAK:keep-all;"
+                            )
+                        elm_card.appendChild(elm_cardinfo);
                 })
         _wrapper.appendChild(_main);
+        let _titleguide = document.createElement("div.simplestone_titleguide");
+            _titleguide.innerHTML = "카드를 클릭하면 세부정보를 볼 수 있습니다.";
+            _titleguide.setAttribute("style",
+                "PADDING:0.2em 0.5em;"+
+                "WIDTH:100%;"+
+                "HEIGHT:auto;"+
+                "BACKGROUND:#754;"+
+                "BOX-SIZING:border-box;"+
+                "FONT-SIZE:0.8em;"+
+                "LINE-HEIGHT:1em;"+
+                "COLOR:white;"+
+                "FONT-FAMILY:Gothic;"+
+                "WORD-BREAK:break-all;"
+            )
+        _wrapper.appendChild(_titleguide);
         let _deckcode = document.createElement("div.simplestone_deckcode");
             _deckcode.innerHTML = deckcode;
-            Object.assign(_deckcode.style,{
-                paddingLeft:"0.5em",
-                width:"100%",
-                height:"2em",
-                background:"#392C4A",
-                boxSizing:"border-box",
-                color:"white",
-                fontFamily:"Gothic",
-                lineHeight:"2em"
-            })
+            _deckcode.setAttribute("style",
+                "PADDING:0.2em 0.5em;"+
+                "WIDTH:100%;"+
+                "HEIGHT:auto;"+
+                "BACKGROUND:#392C4A;"+
+                "BOX-SIZING:border-box;"+
+                "COLOR:white;"+
+                "FONT-FAMILY:Gothic;"+
+                "WORD-BREAK:break-all;"
+            )
         _wrapper.appendChild(_deckcode);
         let _domain = document.createElement("div.simplestone_domain");
             _domain.innerHTML = "Created at SimpleStone(https://solarias.github.io/simplestone)";
-            Object.assign(_domain.style,{
-                paddingRight:"0.5em",
-                width:"100%",
-                height:"2em",
-                background:"#7B573F",
-                boxSizing:"border-box",
-                color:"white",
-                fontFamily:"Gothic",
-                fontSize:"0.8em",
-                lineHeight:"2em",
-                fontStyle:"italic",
-                textAlign:"right"
-            })
+            _domain.setAttribute("style",
+                "PADDING:0.2em 0.5em;"+
+                "WIDTH:100%;"+
+                "HEIGHT:auto;"+
+                "BACKGROUND:#754;"+
+                "BOX-SIZING:border-box;"+
+                "COLOR:white;"+
+                "FONT-FAMILY:Gothic;"+
+                "FONT-SIZE:0.8em;"+
+                "LINE-HEIGHT:1em;"+
+                "FONT-STYLE:italic;"+
+                "TEXT-ALIGN:right;"+
+                "WORD-BREAK:break-all;"
+            )
         _wrapper.appendChild(_domain);
+        //하단 공백
+        let p2 = document.createElement("p");
+            p2.innerHTML = "<br>";
+        _wrapper.appendChild(p2);
 
-
-    return _wrapper.outerHTML;
+    return _wrapper.innerHTML;
 }

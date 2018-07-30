@@ -104,6 +104,7 @@ function cardinfo_setScale(node, showflavor) {
 }
 //정보 출력
 function cardinfo_show(id, info) {
+    process.showImageDbfid = info.dbfid;
     let site = $("#" + id);
     //안내 문구 닫기, 카드 및 세트 출력
     $(".notice",site).classList.remove("show");
@@ -128,31 +129,39 @@ function cardinfo_show(id, info) {
                 image = "url(" + IMAGEURL + info.id + ".jpg)";
                 $(".image",site).style.backgroundImage = image;
                 $(".top",site).classList.add("offline");
+                $(".image",site).innerHTML = "이미지 없음";
         //확장팩이면 이미지"만" 출력
         } else {
-            $(".illust",site).classList.add("show");
-            $(".cardcase",site).classList.remove("show");
             //이미지 로딩 체크, 성공 시 출력, 실패 시 텍스트만 출력
             let img = document.createElement('img');
             img.onload = function() {
-                image = "url(" + info.url + ")";
-                $(".illustImage",site).style.backgroundImage = image;
+                if (info.dbfid === process.showImageDbfid) {
+                    $(".illust",site).classList.add("show");
+                    $(".cardcase",site).classList.remove("show");
+                        image = "url(" + info.url + ")";
+                        $(".illustImage",site).style.backgroundImage = image;
+                }
             };
             img.onerror = function() {
                 $(".illust",site).classList.remove("show");
                 $(".cardcase",site).classList.add("show");
-                    image = "url(" + IMAGEURL + info.id + ".jpg)";
-                    $(".image",site).style.backgroundImage = image;
                     $(".top",site).classList.add("offline");
+                    $(".image",site).innerHTML = "이미지 로딩 실패";
             };
             img.src = info.url;
+            //이미지 불러오는 동안 임시 정보 출력
+            if (img.complete === false) {
+                $(".illust",site).classList.remove("show");
+                $(".cardcase",site).classList.add("show");
+                    $(".top",site).classList.remove("offline");
+                    $(".image",site).innerHTML = "";
+            }
         }
     } else {
         $(".illust",site).classList.remove("show");
         $(".cardcase",site).classList.add("show");
-            image = "url(" + IMAGEURL + info.id + ".jpg)";
-            $(".image",site).style.backgroundImage = image;
             $(".top",site).classList.add("offline");
+            $(".image",site).innerHTML = "오프라인 모드";
     }
     //마나
     $(".mana",site).innerHTML = info.cost.toString();

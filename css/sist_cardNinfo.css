@@ -247,6 +247,9 @@
                     background-image: none;
                 }
             .cardinfo.image {
+                display:flex;
+                align-items: center;
+                justify-content: center;
                 position:relative;
 
                 width:100%;
@@ -255,6 +258,9 @@
                 background-repeat:no-repeat;
                 background-size:140% auto;
                 background-position:50% 30%;
+
+                color:#A0A0A0;
+                font-size:30px;
             }
             .cardinfo.mana {
                 position:absolute;
