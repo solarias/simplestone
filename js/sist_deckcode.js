@@ -107,15 +107,15 @@ function deckcode_text() {
     //텍스트 작성
     let outputtext = "";
     //덱 이름
-    outputtext += "###" + process.deck.name + "\n";
+    outputtext += "### " + process.deck.name + "\n";
     //직업
-    outputtext += "#직업 : " + DATA.CLASS.KR[process.deck.class] + "\n";
+    outputtext += "# 직업 : " + DATA.CLASS.KR[process.deck.class] + "\n";
     //포맷
-    outputtext += "#대전방식 : " + process.deck.format + "\n";
+    outputtext += "# 대전방식 : " + process.deck.format + "\n";
     //연도
-    outputtext += "#" + DATA.YEAR + "\n";
+    outputtext += "# " + DATA.YEAR + "\n";
     //가루
-    outputtext += "#가루 : " + thousand(process.deck.dust) + "\n";
+    outputtext += "# 가루 : " + thousand(process.deck.dust) + "\n";
     outputtext += "#\n";
     //카드
     process.deck.cards.forEach(function(card) {
@@ -138,10 +138,10 @@ function deckcode_text() {
         outputtext += "#\n";
         outputtext += "# 이 덱을 사용하려면 클립보드에 복사한 후 하스스톤에서 새로운 덱을 만드세요." + "\n";
     } else {
-        outputtext += "#'" + DATA.SET.NEW.name + "' 미리 덱 짜보기\n";
+        outputtext += "# '" + DATA.SET.NEW.name + "' 미리 덱 짜보기\n";
     }
     //기타
-    outputtext += "#Created at SimpleStone(https://solarias.github.io/simplestone)";
+    outputtext += "# Created at SimpleStone(https://solarias.github.io/simplestone)";
 
     //출력
     return outputtext;
