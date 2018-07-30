@@ -266,7 +266,7 @@ function deckcode_tag() {
         _wrapper.appendChild(_header);
             let _icon = document.createElement("img.simplestone_icon");
                 _icon.src = ICONDATA[deck.class];
-                _icon.alt = deck.class;
+                _icon.alt = DATA.CLASS.KR[deck.class];
                 _icon.setAttribute("style",
                     "FLOAT:left;"+
                     "DISPLAY:block;"+
@@ -300,6 +300,7 @@ function deckcode_tag() {
                 _headercenter.appendChild(_deckname);
                 let _dusticon = document.createElement("img.simplestone_dusticon");
                     _dusticon.src = ICONDATA.DUST;
+                    _dusticon.alt = "가루";
                     _dusticon.setAttribute("style",
                         "CLEAR:both;FLOAT:left;"+
                         "MARGIN-TOP:0.2em;"+
