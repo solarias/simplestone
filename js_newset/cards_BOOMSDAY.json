@@ -1172,5 +1172,22 @@
 		"durability":"",
 		"armor":"",
 		"url":""
+	}, 
+	{
+		"index":70,
+		"dbfid":"BOOMSDAY70",
+		"cardClass":"WARLOCK",
+		"rarity":"LEGENDARY",
+		"cost":1,
+		"name":"The Soularium",
+		"type":"SPELL",
+		"set":"BOOMSDAY",
+		"text":"카드를 3장 뽑습니다. 내 턴이 끝날때 그 카드들을 다 버립니다.",
+		"race":"",
+		"attack":"",
+		"health":"",
+		"durability":"",
+		"armor":"",
+		"url":""
 	}
 ]
