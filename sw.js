@@ -9,7 +9,7 @@ if (workbox) {
     ].concat(self.__precacheManifest || []);
     workbox.precaching.suppressWarnings();
     workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-    
+
     //캐시 설정
     workbox.routing.registerRoute(
       new RegExp('.*\.html'),
@@ -29,11 +29,11 @@ if (workbox) {
     );
     workbox.routing.registerRoute(
       /\.(?:png|gif|jpg|jpeg|svg)$/,
-      workbox.strategies.networkFirst({
+      workbox.strategies.cacheFirst({
         cacheName: 'images',
         plugins: [
           new workbox.expiration.Plugin({
-            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+            maxAgeSeconds: 10 * 24 * 60 * 60, //10 Days
           }),
         ],
       }),
