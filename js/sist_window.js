@@ -135,6 +135,7 @@ function window_shift(keyword, keyword2) {
                                 session.db = myJson.concat(myJson2);
                                 //카드정보 정렬
                                 sort_arr(session.db);
+                                sort_arr(session.db);
                                 //카드정보 정제
                                 session.db.forEach(function(x, index) {
                                     if (x.dbfId) x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
@@ -153,6 +154,7 @@ function window_shift(keyword, keyword2) {
                             //카드정보 입력
                             session.db = myJson;
                             //카드정보 정렬
+                            sort_arr(session.db);
                             sort_arr(session.db);
                             //카드정보 정제
                             session.db.forEach(function(x, index) {
