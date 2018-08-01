@@ -9,15 +9,12 @@ function sort_arr(arr) {
     arr.sort(function(x,y) {
         if (setZero.indexOf(x.cost) >= 0 ) x.cost = -1;
         if (setZero.indexOf(y.cost) >= 0 ) y.cost = -1;
-        if (x.cost > y.cost) {
-            return 1;
-        } else if (x.cost < y.cost) {
-            return -1;
+        if (x.cost !== y.cost) {
+            return x.cost - y.cost;
         } else {
             let order = [x.name,y.name];
-            let order2 = [x.name,y.name];
             order.sort();
-            if (order[0] === order2[0]) {
+            if (x.name === order[0]) {
                 return -1;
             } else {
                 return 1;
