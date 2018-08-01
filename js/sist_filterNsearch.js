@@ -5,7 +5,10 @@
 
 //카드 정렬 - 배열(비용, 이름 순)
 function sort_arr(arr) {
+    let setZero = [NaN, null, undefined, Infinity];
     arr.sort(function(x,y) {
+        if (setZero.indexOf(x.cost) >= 0 ) x.cost = -1;
+        if (setZero.indexOf(y.cost) >= 0 ) y.cost = -1;
         if (x.cost > y.cost) {
             return 1;
         } else if (x.cost < y.cost) {
