@@ -135,6 +135,7 @@ const DATA = {
             "정규":"standard"
         }
     },
+    DECK_SLOT_LIMIT:50,
     DECK_LIMIT:30,
     //여기서부터 향후 업데이트 시 변경
     YEAR:"까마귀의 해",

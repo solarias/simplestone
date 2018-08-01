@@ -497,9 +497,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
 //localhost에서는 오류 창 띄우지 않기
 if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
     window.onerror = function(msg, url, line, col, error) {
+        var site = !url ? '' : '* URL : ' + url + '\n';
         var extra = !col ? '' : ', Column : ' + col;
         extra += !error ? '' : '\n * 에러 : ' + error;
-        var notice = " * 내용 : " + msg + "\n * Line : " + line + extra;
+        var notice = " * 내용 : " + msg + "\n" + site + " * Line : " + line + extra;
         if (swal) {
             swal({
                 title:"오류 발생",
