@@ -155,8 +155,7 @@ const DATA = {
             "UNGORO":"운고로를 향한 여정",//2017↓
             "ICECROWN":"얼어붙은 왕좌의 기사들",
             "LOOTAPALOOZA":"코볼트와 지하 미궁",
-            "GILNEAS":"마녀숲",//2018↓
-            "BOOMSDAY":"박사 붐의 폭심만만 프로젝트"
+            "GILNEAS":"마녀숲"//2018↓
         },
         FORMAT:{
             "CORE":"정규",
@@ -173,8 +172,7 @@ const DATA = {
             "UNGORO":"정규",//2017↓
             "ICECROWN":"정규",
             "LOOTAPALOOZA":"정규",
-            "GILNEAS":"정규",//2018↓
-            "BOOMSDAY":"정규"
+            "GILNEAS":"정규"//2018↓
         },
         YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
             "NAXX":"2014",//2014↓
@@ -188,8 +186,7 @@ const DATA = {
             "UNGORO":"2017",//2017↓
             "ICECROWN":"2017",
             "LOOTAPALOOZA":"2017",
-            "GILNEAS":"2018",//2018↓
-            "BOOMSDAY":"2018"
+            "GILNEAS":"2018"//2018↓
         },
         NEW:{
             "name":"박사 붐의 폭심만만 프로젝트",
