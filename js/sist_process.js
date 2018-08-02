@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     })
     //서비스 워커 실행
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
+        //navigator.serviceWorker.register('./sw.js');
     }
     //첫 화면 상호작용
         //업데이트 화면 공개
@@ -503,6 +503,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             no_data_text: ''
         });
         //덱슬롯 클러스터 생성해두기
+    /*
         clusterize.slot = new Clusterize({
             tag: 'div',
             scrollId: 'decklist_slot',
@@ -510,6 +511,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             rows_in_block:14,
             no_data_text: ''
         });
+       */
 
         //종료 경고 메시지
         window.onbeforeunload = function() {
