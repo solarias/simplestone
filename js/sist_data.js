@@ -135,7 +135,7 @@ const DATA = {
             "정규":"standard"
         }
     },
-    DECK_SLOT_LIMIT:50,
+    DECK_SLOT_LIMIT:5,
     DECK_LIMIT:30,
     //여기서부터 향후 업데이트 시 변경
     YEAR:"까마귀의 해",
@@ -155,7 +155,8 @@ const DATA = {
             "UNGORO":"운고로를 향한 여정",//2017↓
             "ICECROWN":"얼어붙은 왕좌의 기사들",
             "LOOTAPALOOZA":"코볼트와 지하 미궁",
-            "GILNEAS":"마녀숲"//2018↓
+            "GILNEAS":"마녀숲",//2018↓
+            "BOOMSDAY":"박사 붐의 폭심만만 프로젝트"
         },
         FORMAT:{
             "CORE":"정규",
@@ -172,7 +173,8 @@ const DATA = {
             "UNGORO":"정규",//2017↓
             "ICECROWN":"정규",
             "LOOTAPALOOZA":"정규",
-            "GILNEAS":"정규"//2018↓
+            "GILNEAS":"정규",//2018↓
+            "BOOMSDAY":"정규"
         },
         YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
             "NAXX":"2014",//2014↓
@@ -186,7 +188,8 @@ const DATA = {
             "UNGORO":"2017",//2017↓
             "ICECROWN":"2017",
             "LOOTAPALOOZA":"2017",
-            "GILNEAS":"2018"//2018↓
+            "GILNEAS":"2018",//2018↓
+            "BOOMSDAY":"2018"
         },
         NEW:{
             "name":"박사 붐의 폭심만만 프로젝트",
@@ -194,14 +197,16 @@ const DATA = {
             "year":"2018",
             "duedate":"2018-08-08"
         }
-        //신규 확장팩을 적용하려면 다음과 같이 입력하세요.
+        //
         /*
+        신규 확장팩을 적용하려면 다음 오브젝트를 추가하세요.
         NEW:{
             "name":"박사 붐의 폭심만만 프로젝트",
             "id":"BOOMSDAY",
             "year":"2018",
             "duedate":"2018-08-08"
         }
+        확장팩이 없으면 다음과 같이 적용하세요.
         */
 
     },

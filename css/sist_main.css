@@ -115,11 +115,23 @@ body {
 
         background:#798689;
         box-sizing: border-box;
+    }
+    #header_search {
+        position:absolute;
+            left:0;top:0;
+        z-index:1;
+        overflow:hidden;
+
+        width:100%;
+        height:100%;
+
+        background:#798689;
+        box-sizing: border-box;
         transform:translate(0,-100%);
         transition:transform 0.5s;
         pointer-events: none;
     }
-            #header_bottom.show {
+            #header_search.show {
                 transform:translate(0,0);
                 pointer-events: auto;
             }
@@ -387,6 +399,53 @@ body {
 
             font-size:14px;
         }
+    #header_deckconfig {
+        position:absolute;
+            left:0;top:0;
+        z-index:1;
+        overflow:hidden;
+
+        width:100%;
+        height:100%;
+
+        background:#798689;
+        box-sizing: border-box;
+        transform:translate(0,-100%);
+        transition:transform 0.5s;
+        pointer-events: none;
+    }
+            #header_deckconfig.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        #deckconfig_format {
+            position:relative;
+            overflow:hidden;
+            float:right;
+            display:block;
+
+            margin:2px 5px 2px 0px;
+            padding:0 5px;
+            width:calc(50% - 9px);
+            height:36px;
+
+            background-color:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 7px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:18px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor:pointer;
+        }
+            #deckconfig_format:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            #deckconfig_format:active {
+                background-color:rgba(255,255,255,0.4);
+            }
 
 /*=====================================================*/
 /* 메인 */
@@ -637,7 +696,6 @@ body {
             position:relative;
             overflow:hidden;
 
-            margin-bottom:5px;
             width:100%;
             height:50px;
             display:block;
@@ -651,6 +709,13 @@ body {
             #decklist_temp:hover, #decklist_temp.selected {
                 background:#87ece9;
             }
+        #decklist_slot {
+            position:relative;
+            overflow-y:scroll;
+
+            width:100%;
+            height:calc(100% - 70px);
+        }
 
     /*로딩 화면*/
     #main_loading {/*로딩화면은 화면 전환 효과 없음*/
@@ -990,16 +1055,6 @@ body {
             #deckconfig_name {
                 margin:0;
             }
-            #deckconfig_format {
-                position:absolute;
-                    left:0;right:0;bottom:10px;
-
-                margin:auto;
-                width:calc(100% - 20px);
-
-                font-size:16px;
-                line-height:20px;
-            }
             .deckconfig_button:hover {
                 background:#F7E5CB;
                 color:black;
@@ -1328,25 +1383,6 @@ body {
             transform:translate(0,0);
             pointer-events: auto;
         }
-#button_format {
-    position:relative;
-    float:left;
-    overflow:hidden;
-
-    width:100px;
-    height:100%;
-
-    background:rgba(255,255,255,0.1);
-    border:2px white solid;
-    border-radius: 10px;
-    box-sizing: border-box;
-
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    white-space: nowrap;
-}
 #button_edit {
     position:relative;
     float:right;

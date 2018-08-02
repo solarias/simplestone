@@ -233,6 +233,8 @@ function window_shift(keyword, keyword2) {
                 session.db.forEach(function(info, index) {
                     session.fragment[index] = card_generateFragment(info);
                 })
+                //덱슬롯 생성
+                deckslot_generate();
 
                 //화면 전환
                 window_shift("titlescreen");
@@ -361,7 +363,7 @@ function window_shift(keyword, keyword2) {
                     swal({
                         type:"warning",
                         title:"첫 화면으로 돌아가시겠습니까?",
-                        text:"작업중 덱은 '덱 관리'에 자동으로 저장됩니다.",
+                        text:"작업중 덱은 '덱 목록'에 자동으로 저장됩니다.",
                         showCancelButton:true,
                         confirmButtonText: '확인',
                         cancelButtonText: '취소',
@@ -393,7 +395,7 @@ function window_shift(keyword, keyword2) {
         case "decklist":
             //진행상태 표시, 기억
             process.state = "decklist";
-            $("#header_status").innerHTML = "덱 관리";
+            $("#header_status").innerHTML = "덱 목록";
             //창 전환
             window_clear();
             $("#main_decklist").classList.add("show");
@@ -405,51 +407,72 @@ function window_shift(keyword, keyword2) {
             //※ 메인 버튼: 덱 목록
             //==================
             //최근 작업 덱
-                //최근 작업 덱 파악
-                localforage.getItem("sist_tempdeck")
-                .then(function(tempdeck) {
-                    //비어있으면
-                    if (!tempdeck) {
-                        //비었다고 표시
-                        $("#decklist_temp").innerHTML = "최근 작업 덱 : 없음";
-                        $("#decklist_temp").onclick = "";
-                    //불러올 게 있으면
-                    } else {
-                        //덱 이름 표기
-                        let name = tempdeck.name + " (" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")";
-                        $("#decklist_temp").innerHTML = "최근 작업 덱 : <b>" + name + "</b>";
-                        //클릭하면 불러오기
-                        $("#decklist_temp").onclick = function() {
-                            //의사 물어보기
-                            let html = "";
-                            html +=  "<b>" + tempdeck.name + "</b><br>";
-                            html += "(" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")" + "<br>";
-                            html += "완성도: " + tempdeck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString() + "<br>";
-                            html += "작업일시: " + tempdeck.date;
-                            swal({
-                                imageUrl:HEROURL + DATA.CLASS.ID[tempdeck.class] + ".jpg",
-                                //imageHeight:88,
-                                title:"최근 작업 덱을 불러옵니다.",
-                                html:html,
-                                showCancelButton:true,
-                                confirmButtonText: '확인',
-                                cancelButtonText: '취소',
-                                cancelButtonColor: '#d33'
-                            }).then(function(isConfirm){
-                                if (isConfirm) {
-                                    //덱 정보 적용
-                                    process.deck = deepCopy(tempdeck);
-                                    //로딩 개시
-                                    window_shift("loading","deckbuilding");
-                                } else {
-                                    //취소
-                                    return;
-                                }
-                            })
-                        }
+            localforage.getItem("sist_tempdeck")
+            .then(function(tempdeck) {
+                //비어있으면
+                if (!tempdeck) {
+                    //비었다고 표시
+                    $("#decklist_temp").innerHTML = "최근 작업 덱 : 없음";
+                    $("#decklist_temp").onclick = "";
+                //불러올 게 있으면
+                } else {
+                    //덱 이름 표기
+                    let name = tempdeck.name + "<br>(" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")";
+                    $("#decklist_temp").innerHTML = "최근 작업 덱 : <b>" + name + "</b>";
+                    //클릭하면 불러오기
+                    $("#decklist_temp").onclick = function() {
+                        //덱 정보 적용
+                        process.deck = deepCopy(tempdeck);
+                        //로딩 개시
+                        window_shift("loading","deckconfig");
+                        /*
+                        //의사 물어보기
+                        let html = "";
+                        html +=  "<b>" + tempdeck.name + "</b><br>";
+                        html += "(" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")" + "<br>";
+                        html += "완성도: " + tempdeck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString() + "<br>";
+                        html += "작업일시: " + tempdeck.date;
+                        swal({
+                            imageUrl:HEROURL + DATA.CLASS.ID[tempdeck.class] + ".jpg",
+                            //imageHeight:88,
+                            title:"최근 작업 덱을 불러옵니다.",
+                            html:html,
+                            showCancelButton:true,
+                            confirmButtonText: '확인',
+                            cancelButtonText: '취소',
+                            cancelButtonColor: '#d33'
+                        }).then(function(isConfirm){
+                            if (isConfirm) {
+                                //덱 정보 적용
+                                process.deck = deepCopy(tempdeck);
+                                //로딩 개시
+                                window_shift("loading","deckconfig");
+                            } else {
+                                //취소
+                                return;
+                            }
+                        })
+                        */
                     }
+                }
 
-                })
+            })
+            //==================
+            //※ 저장된 덱 목록 파악
+            //==================
+            /*
+            localforage.getItem("sist_decks")
+            .then(function(deck) {
+                //저장된 덱이 없으면
+                if (!decks) {
+                    //빈칸 표시
+                //불러올 게 있으면
+                } else {
+                    //저장된 개수만큼 슬롯 표시
+                    //남은 칸만큼 빈칸 표시
+                }
+            })
+            */
             //==================
             //※ 상단 버튼: 덱 정렬
             //==================
@@ -649,7 +672,7 @@ function window_shift(keyword, keyword2) {
                 $("#footer_name_left").innerHTML = "카드 목록";
             $("#footer_name_right").style.display = "block";
                 $("#footer_name_right").innerHTML = "카드 정보";
-            $("#header_bottom").classList.add("show");
+            $("#header_search").classList.add("show");
             $("#footer_collectionNdeck").classList.add("show");
             $("#footer_collectionNdeck_cardinfo").classList.add("show");
 
@@ -711,7 +734,7 @@ function window_shift(keyword, keyword2) {
                 $("#footer_name_left").innerHTML = "카드 목록";
             $("#footer_name_right").style.display = "block";
                 $("#footer_name_right").innerHTML = "덱 구성";
-            $("#header_bottom").classList.add("show");
+            $("#header_search").classList.add("show");
             $("#footer_collectionNdeck").classList.add("show");
             $("#footer_collectionNdeck_deckbuilding").classList.add("show");
             //로그 초기화
@@ -882,7 +905,7 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //*덱 관리
+        //*덱 목록
         case "deckconfig":
             //상태 기억
             process.state = "deckconfig";
@@ -894,6 +917,7 @@ function window_shift(keyword, keyword2) {
             window_clear();
             $("#main_deckconfig").classList.add("show");
             $("#main_deck").classList.add("show");
+            $("#header_deckconfig").classList.add("show");
             $("#footer_deckconfig").classList.add("show");
 
             //==================
@@ -907,6 +931,7 @@ function window_shift(keyword, keyword2) {
             //==================
             //※ 주 버튼
             //==================
+            //덱 저장
             //덱 이름 변경
             $("#deckconfig_name").onclick = function() {
                 //팝업창 열기
@@ -1043,17 +1068,17 @@ function window_shift(keyword, keyword2) {
             }
             //포맷 전환
             if (process.deck.format === "정규") {
-                $("#button_format").innerHTML = "\"야생\"으로<br>전환";
+                $("#deckconfig_format").innerHTML = "\"야생\"으로 전환";
             } else {
-                $("#button_format").innerHTML = "\"정규\"로<br>전환";
+                $("#deckconfig_format").innerHTML = "\"정규\"로 전환";
             }
-            $("#button_format").onclick = function() {
+            $("#deckconfig_format").onclick = function() {
                 if (process.deck.format === "정규") {
                     //덱 포맷 전환
                     process.deck.format = "야생";
                     deck_refresh("init");
                     //버튼 문구 변경
-                    $("#button_format").innerHTML = "\"정규\"로<br>전환";
+                    $("#deckconfig_format").innerHTML = "\"정규\"로 전환";
                     //문구 출력
                     nativeToast({
                         message: '대전방식이 변경되었습니다.<br>(정규 -> 야생)',
@@ -1067,7 +1092,7 @@ function window_shift(keyword, keyword2) {
                     process.deck.format = "정규";
                     deck_refresh("init");
                     //버튼 문구 변경
-                    $("#button_format").innerHTML = "\"야생\"으로<br>전환";
+                    $("#deckconfig_format").innerHTML = "\"야생\"으로 전환";
                     //문구 출력
                     nativeToast({
                         message: '대전방식이 변경되었습니다.<br>(야생 -> 정규)',

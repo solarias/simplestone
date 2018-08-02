@@ -124,11 +124,9 @@ function deckcode_text() {
         outputtext += "x (" + info.cost.toString() + ") ";
         //이름, 확장팩 (신규 확장팩이면 앞에 "*" 표시)
         if (deckcode || info.set !== DATA.SET.NEW.id) {
-            outputtext += info.name;
-            outputtext += "    [" + DATA.SET.KR[info.set] + "]" + "\n";
+            outputtext += info.name + "\n";
         } else {
-            outputtext += "*" + info.name;
-            outputtext += "    [" + DATA.SET.NEW.name + "]" + "\n";
+            outputtext += "*" + info.name + "\n";
         }
     });
     outputtext += "#\n";

@@ -40,7 +40,7 @@ function card_generateFragment(info) {
     fragment = fragment.replaceAll("$dbfid",info.dbfid);//인덱스 설정
     //이미지 설정
         //신규 확장팩: 통 이미지
-        if (info.set === DATA.SET.NEW.id) {
+        if (DATA.SET.NEW !== undefined && info.set === DATA.SET.NEW.id) {
             fragment = fragment.replace("$url",info.url);
         //그외: 타일 이미지
         } else {
@@ -50,7 +50,7 @@ function card_generateFragment(info) {
     fragment = fragment.replace("$name",info.name);//이름 설정
     fragment = fragment.replace("$rarity",info.rarity);//등급 설정
     //확장팩이면 "newset_hidden" 클래스 제거
-    if (info.set === DATA.SET.NEW.id)
+    if (DATA.SET.NEW !== undefined && info.set === DATA.SET.NEW.id)
         fragment = fragment.replace(" newset_hidden","");//등급 설정
     //반환
     return fragment;
@@ -406,6 +406,21 @@ function deck_refresh(cmd) {
     }
 }
 
+//===========================================================
+//※ 함수 - 덱 슬롯, 저장 관련
+//===========================================================
+//덱 슬롯 생성
+function deckslot_generate() {
+    let slots = document.createDocumentFragment();
+    for(let i = 0;i < DATA.DECK_SLOT_LIMIT;i++) {
+        let slotbutton = document.createElement("button.slot_buttons");
+            slotbutton
+    }
+}
+//덱 슬롯 리프레시
+function deckslot_refresh() {
+    //
+}
 //덱 임시저장
 function deck_tempsave() {
     let tempdeck = {};
@@ -484,6 +499,14 @@ document.addEventListener("DOMContentLoaded", function(e) {
             tag: 'div',
             scrollId: 'deck_list',
             contentId: 'deck_list_content',
+            rows_in_block:14,
+            no_data_text: ''
+        });
+        //덱슬롯 클러스터 생성해두기
+        clusterize.slot = new Clusterize({
+            tag: 'div',
+            scrollId: 'decklist_slot',
+            contentId: 'decklist_slot_content',
             rows_in_block:14,
             no_data_text: ''
         });
