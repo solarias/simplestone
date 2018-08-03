@@ -462,8 +462,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
         try{
           navigator.serviceWorker.getRegistrations()
           .then(function(registrations) {
-            for(let registration of registrations) {
-              registration.unregister()
+            if (registrations.length && registrations.length > 0) {
+              for(let registration of registrations) {
+                registration.unregister();
+                alert("현재 페이지에 오류가 있습니다. 페이지 새로고침을 하면 정상적으로 이용할 수 있습니다.");
+              }
             }
           })
         } catch(e) {}
