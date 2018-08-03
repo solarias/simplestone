@@ -459,6 +459,14 @@ document.addEventListener("DOMContentLoaded", function(e) {
     //서비스 워커 실행
     if ('serviceWorker' in navigator) {
         //navigator.serviceWorker.register('./sw.js');
+        try{
+          navigator.serviceWorker.getRegistrations()
+          .then(function(registrations) {
+            for(let registration of registrations) {
+              registration.unregister()
+            }
+          })
+        } catch(e) {}
     }
     //첫 화면 상호작용
         //업데이트 화면 공개
