@@ -466,6 +466,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
               for(let registration of registrations) {
                 registration.unregister();
                 alert("현재 페이지에 오류가 있습니다. 페이지 새로고침을 하면 정상적으로 이용할 수 있습니다.");
+                location.reload();
               }
             }
           })
