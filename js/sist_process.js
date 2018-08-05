@@ -683,8 +683,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
 });
 //오류 취급 (출처 : http://stackoverflow.com/questions/951791/javascript-global-error-handling)
 //localhost에서는 오류 창 띄우지 않기
+Object.prototype.ToString = function() {
+   console.log('삼성인터넷 Version 7.2 전용 버그')
+}
 if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
     window.onerror = function(msg, url, line, col, error) {
+        if (url && url.indexOf("/") >= 0 ) url = url.split("/")[url.split("/").length - 1];
         var site = !url ? '' : '* URL : ' + url + '\n';
         var extra = !col ? '' : ', Column : ' + col;
         extra += !error ? '' : '\n * 에러 : ' + error;

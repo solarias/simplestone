@@ -1486,7 +1486,7 @@ sweetAlert.close = sweetAlert.closeModal = function (onComplete) {
   resetPrevState();
 
   var removeModalAndResetState = function removeModalAndResetState() {
-    container.parentNode.removeChild(container);
+    if (container.parentNode) container.parentNode.removeChild(container);
     removeClass(document.documentElement, swalClasses.shown);
     removeClass(document.body, swalClasses.shown);
     undoScrollbar();
