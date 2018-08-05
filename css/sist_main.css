@@ -62,6 +62,9 @@ body {
         background-color:#3e40e5;
     }
         #header_status {
+            position:relative;
+            z-index:1;
+
             width:100%;
             height:100%;
 
@@ -72,6 +75,7 @@ body {
         }
         .header_button {
             position:absolute;
+            z-index:2;
             display:block;
 
             padding:2px;
@@ -128,7 +132,6 @@ body {
         background:#798689;
         box-sizing: border-box;
         transform:translate(0,-100%);
-        transition:transform 0.5s, opacity 0.2s;
         pointer-events: none;
     }
             #header_search.show {
@@ -411,7 +414,6 @@ body {
         background:#798689;
         box-sizing: border-box;
         transform:translate(0,-100%);
-        transition:transform 0.5s, opacity 0.2s;
         pointer-events: none;
     }
             #header_deckconfig.show {
@@ -491,14 +493,23 @@ body {
         height:calc(100% - 75px);
 
         background-color:white;
-        opacity:0.5;
-        transition:transform 0.5s, opacity 0.2s;
+        opacity:0.01;
+        transition:transform 0.5s, opacity 0.5s;
         pointer-events: none;
     }
             .mainscreen.show {
                 z-index: 2;
 
                 transform:translate(0,0);
+                opacity:1;
+                pointer-events: auto;
+            }
+            .subscreen:not(.show) {
+                opacity:0.01;
+                transition:transform 0.5s, opacity 0.5s;
+                pointer-events: none;
+            }
+            .subscreen.show {
                 opacity:1;
                 pointer-events: auto;
             }
@@ -1284,7 +1295,6 @@ body {
     background:#3e40e5;
     box-sizing: border-box;
     transform:translate(0,100%);
-    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
         #footer_init.show {
@@ -1345,7 +1355,6 @@ body {
     background:#3e40e5;
     box-sizing: border-box;
     transform:translate(0,100%);
-    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
         #footer_decklist.show {
@@ -1403,7 +1412,6 @@ body {
     height:75px;
 
     transform:translate(0,100%);
-    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
     #footer_collectionNdeck.show {
@@ -1445,7 +1453,6 @@ body {
     background:#3e40e5;
 
     transform:translate(0,100%);
-    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
     #footer_collectionNdeck_cardinfo.show {
@@ -1463,7 +1470,6 @@ body {
     background:#3e40e5;
 
     transform:translate(0,100%);
-    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
     #footer_collectionNdeck_deckbuilding.show {
@@ -1579,7 +1585,6 @@ body {
         background:#3e40e5;
         box-sizing: border-box;
         transform:translate(0,100%);
-        transition:transform 0.5s, opacity 0.2s;
         pointer-events: none;
     }
         #footer_deckconfig.show {
