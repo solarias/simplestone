@@ -8,6 +8,7 @@ let session = {
     index:{},//dbfid로 카드 DB 검색하기 위해 사용
     masterNode:undefined,//마스터 노드
     masterInfo:undefined,//마스터 인포
+    masterSlot:undefined,//마스터 슬롯
     fragment:undefined,//프래그먼트
     offline:undefined//오프라인 모드 유무
 };
@@ -155,7 +156,8 @@ const DATA = {
             "UNGORO":"운고로를 향한 여정",//2017↓
             "ICECROWN":"얼어붙은 왕좌의 기사들",
             "LOOTAPALOOZA":"코볼트와 지하 미궁",
-            "GILNEAS":"마녀숲"//2018↓
+            "GILNEAS":"마녀숲",//2018↓
+            "BOOMSDAY":"박사 붐의 폭심만만 프로젝트"
         },
         FORMAT:{
             "CORE":"정규",
@@ -172,7 +174,8 @@ const DATA = {
             "UNGORO":"정규",//2017↓
             "ICECROWN":"정규",
             "LOOTAPALOOZA":"정규",
-            "GILNEAS":"정규"//2018↓
+            "GILNEAS":"정규",//2018↓
+            "BOOMSDAY":"정규"
         },
         YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
             "NAXX":"2014",//2014↓
@@ -186,15 +189,9 @@ const DATA = {
             "UNGORO":"2017",//2017↓
             "ICECROWN":"2017",
             "LOOTAPALOOZA":"2017",
-            "GILNEAS":"2018"//2018↓
-        },
-        NEW:{
-            "name":"박사 붐의 폭심만만 프로젝트",
-            "id":"BOOMSDAY",
-            "year":"2018",
-            "duedate":"2018-08-08"
+            "GILNEAS":"2018",//2018↓
+            "BOOMSDAY":"2018"
         }
-        //
         /*
         신규 확장팩을 적용하려면 다음 오브젝트를 추가하세요.
         NEW:{
@@ -203,7 +200,6 @@ const DATA = {
             "year":"2018",
             "duedate":"2018-08-08"
         }
-        확장팩이 없으면 다음과 같이 적용하세요.
         */
 
     },

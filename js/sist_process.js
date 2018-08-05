@@ -32,7 +32,7 @@ function card_generateMaster() {
     //출력
     return elm_card.outerHTML;
 }
-//카드 개별 정보 생성
+//카드 개별 요소 생성
 function card_generateFragment(info) {
     //마스터 노드 복사
     let fragment = session.masterNode;
@@ -52,6 +52,58 @@ function card_generateFragment(info) {
     //확장팩이면 "newset_hidden" 클래스 제거
     if (DATA.SET.NEW !== undefined && info.set === DATA.SET.NEW.id)
         fragment = fragment.replace(" newset_hidden","");//등급 설정
+    //반환
+    return fragment;
+}
+
+//마스터 덱 슬롯 생성
+function deckslot_generateMaster() {
+    //요소 생성
+    let elm_slot = document.createElement("div.slot_button");
+    let elm_number = document.createElement("div.slot_button_number");
+        elm_number.innerHTML = "$number";
+    elm_slot.appendChild(elm_number);
+    let elm_date = document.createElement("div.slot_button_date");
+        elm_date.innerHTML = "$date";
+    elm_slot.appendChild(elm_date);
+    let elm_main = document.createElement("button.slot_button_main");
+        elm_main.dataset.id = "$id";
+        elm_main.style.backgroundImage = "url($url)";
+    elm_slot.appendChild(elm_main);
+        let elm_mainCover = document.createElement("div.slot_button_mainCover");
+        elm_main.appendChild(elm_mainCover);
+            let elm_name = document.createElement("div.slot_button_name");
+                elm_name.innerHTML = "$name";
+            elm_mainCover.appendChild(elm_name);
+            let elm_format = document.createElement("div.slot_button_format");
+                elm_format.classList.add("$formatcolor");
+                elm_format.innerHTML = "$format"
+            elm_mainCover.appendChild(elm_format);
+            let elm_quantity = document.createElement("div.slot_button_quantity");
+                elm_quantity.innerHTML = "$quantity";
+            elm_mainCover.appendChild(elm_quantity);
+    let elm_delete = document.createElement("button.slot_button_delete");
+        elm_delete.dataset.id = "$id";
+        elm_delete.dataset.number = "$number";
+    elm_slot.appendChild(elm_delete);
+
+    //텍스트로 반환
+    return elm_slot.outerHTML;
+}
+//덱 슬롯 개별 요소 생성
+function deckslot_generateFragment(deck, number, key) {
+    //마스터 슬롯 복사
+    let fragment = session.masterSlot;
+    //필요한 정보 설정
+    fragment = fragment.replaceAll("$url",HEROURL + DATA.CLASS.ID[deck.class] + ".jpg");//직업 이미지
+    fragment = fragment.replaceAll("$number",number.toString());//번호
+    fragment = fragment.replaceAll("$date","편집: " + deck.date);//날짜
+    fragment = fragment.replaceAll("$id",key);//이름
+    fragment = fragment.replaceAll("$name",deck.name);//이름
+    fragment = fragment.replaceAll("$quantity",deck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString());//수량
+    fragment = fragment.replaceAll("$formatcolor",DATA.FORMAT.EN[deck.format]);//대전방식 색상
+    fragment = fragment.replaceAll("$format",deck.format + "전");//대전방식
+
     //반환
     return fragment;
 }
@@ -187,7 +239,7 @@ function card_move(cmd, log) {
     }
 
     //덱 임시저장
-    deck_tempsave();
+    deck_save();
 }
 
 //카드 최종 정보 생성
@@ -385,7 +437,7 @@ function deck_refresh(cmd) {
     $("#deck_format").className = DATA.FORMAT.EN[process.deck.format];
     $("#deck_format").innerHTML = process.deck.format + "전";
 
-    //덱 가루, 수량 확인 및 출력
+    //덱 가루, 수량 확인
     let quantity = 0;
     let dust = 0;
     process.deck.cards.forEach(function(x) {
@@ -409,30 +461,60 @@ function deck_refresh(cmd) {
 //===========================================================
 //※ 함수 - 덱 슬롯, 저장 관련
 //===========================================================
-//덱 슬롯 생성
-function deckslot_generate() {
-    let slots = document.createDocumentFragment();
-    for(let i = 0;i < DATA.DECK_SLOT_LIMIT;i++) {
-        let slotbutton = document.createElement("button.slot_buttons");
-            slotbutton
-    }
-}
 //덱 슬롯 리프레시
 function deckslot_refresh() {
-    //
+    let slotarr = []
+    localforage.getItem("sist_decks")
+    .then(function(decks) {
+        //저장된 덱이 있으면 불러오기
+        if (decks) {
+            let keys = Object.keys(decks);
+            keys.sort(function(a,b) {
+                return parseInt(a.replace("deck","")) - parseInt(b.replace("deck",""));
+            })
+            keys.forEach(function(key, index) {
+                slotarr.push(deckslot_generateFragment(decks[key], index+1, key));
+            })
+        }
+        //불러온 덱 목록 관리
+
+        //클러스터 업데이트
+        clusterize.slot.update(slotarr);
+    })
 }
 //덱 임시저장
-function deck_tempsave() {
-    let tempdeck = {};
-    tempdeck.cards = deepCopy(process.deck.cards);
-    tempdeck.class = process.deck.class;
-    tempdeck.format = process.deck.format;
-    tempdeck.quantity = process.deck.quantity;
-    if (process.deck.name) tempdeck.name = process.deck.name;
-    if (process.deck.newset) tempdeck.newset = process.deck.newset;//신규덱 적용여부
-    //저장 날짜 기록
-    tempdeck.date = thisdate();//함수는 subtool.js 참고
+function deck_save() {
+    //정식 저장: 해당되면 실시
+    if (process.deck.favorite) {
+        //불러오기
+        localforage.getItem("sist_decks")
+        .then(function(decks) {
+            if (!decks) decks = {};
 
+            //기존 덱 없으면 하나 만들기
+            if (Object.keys(decks).indexOf(process.deck.favorite) < 0) {
+                decks[process.deck.favorite] = {};
+                decks[process.deck.favorite].initdate = thisdate();
+            }
+            //저장된 덱 슬롯 있으면 거기에 넣기
+            let tempdate = decks[process.deck.favorite].initdate;
+            decks[process.deck.favorite] = deepCopy(process.deck);
+            decks[process.deck.favorite].initdate = tempdate;
+            decks[process.deck.favorite].date = thisdate();//함수는 subtool.js 참고
+
+            //저장소로 넘기기
+            localforage.setItem("sist_decks",decks);
+        })
+        .catch(function(e) {
+            console.log("기존 덱 정보 불러오기에 실패하였습니다.");
+        })
+    }
+
+    //임시 저장: 반드시 실시
+    let tempdeck = {};
+    tempdeck = deepCopy(process.deck);
+    //날짜
+    tempdeck.date = thisdate();//함수는 subtool.js 참고
     //저장 및 문구 출력
     localforage.setItem("sist_tempdeck",tempdeck)
     .then(function(e) {
@@ -442,7 +524,83 @@ function deck_tempsave() {
         console.log("덱 임시저장에 실패하였습니다.");
     });
 }
+//덱 즐겨찾기 설정/해제
+function deck_favorite(cmd, target) {
+    //Promise
+    return new Promise(function(resolve) {
+        switch (cmd) {
+            case "on":
+                //덱카운트 불러오기
+                localforage.getItem("sist_deckcount")
+                .then(function(num) {
+                    //덱카운트 없으면 "1" 만들기, 이후 적용
+                    if (!num) {
+                        let deckcount = 1;
+                        localforage.setItem("sist_deckcount",deckcount)
+                        .then(function(e) {
+                            //덱 번호 적용
+                            process.deck.favorite = "deck" + deckcount.toString();
+                            console.log("a:" + process.deck.favorite);
+                            //덱 저장
+                            deck_save();
+                            resolve();
+                        })
+                    //있으면 덱카운트 +1, 이후 적용
+                    } else {
+                        num += 1;
+                        localforage.setItem("sist_deckcount",num)
+                        .then(function(e) {
+                            //덱 번호 적용
+                            process.deck.favorite = "deck" + num.toString();
+                            console.log("a:" + process.deck.favorite);
+                            //덱 저장
+                            deck_save();
+                            resolve();
+                        })
+                    }
+                })
+                .catch(function(e) {
+                    console.log("덱 즐겨찾기 설정에 실패하였습니다.");
+                    resolve();
+                })
 
+                break;
+            case "off":
+                //즐겨찾기 해제 대상 선정
+                let favorite = (target !== undefined) ? target : process.deck.favorite;
+                //해당 번호가 있는지 확인
+                localforage.getItem("sist_decks")
+                .then(function(decks) {
+                    //저장된 덱 목록 있으면 지우기
+                    if (decks && Object.keys(decks).indexOf(favorite) >= 0) {
+                        delete decks[favorite];
+                        //덱 목록 적용
+                        localforage.setItem("sist_decks",decks)
+                        .then(function() {
+                            //process.deck.favorite 있으면 지우기
+                            if (process.deck.favorite) {
+                                delete process.deck.favorite;
+                                deck_save();
+                            }
+                            resolve();
+                        })
+                    } else {
+                        //process.deck.favorite 있으면 지우기
+                        if (process.deck.favorite) {
+                            delete process.deck.favorite;
+                            deck_save();
+                        }
+                        resolve();
+                    }
+                })
+                .catch(function(e) {
+                    resolve();
+                })
+
+                break;
+        }
+    })
+}
 //덱 불러오기
 function deck_load() {
 
@@ -472,15 +630,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
           })
         } catch(e) {}
     }
-    //첫 화면 상호작용
+    //기본 화면 상호작용
         //업데이트 화면 공개
         window_shift("init");
-        //window_shift("titlescreen");
 
-        //홈 버튼
-        $("#header_home").onclick = function() {
-            window_shift("titlescreen");
-        }
         //인포 버튼
         $("#header_info").onclick = function() {
             swal({
@@ -515,7 +668,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
             no_data_text: ''
         });
         //덱슬롯 클러스터 생성해두기
-    /*
         clusterize.slot = new Clusterize({
             tag: 'div',
             scrollId: 'decklist_slot',
@@ -523,7 +675,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
             rows_in_block:14,
             no_data_text: ''
         });
-       */
 
         //종료 경고 메시지
         window.onbeforeunload = function() {

@@ -90,11 +90,11 @@ body {
                 width:32px;
                 height:32px;
             }
-            #header_home{
+            #header_back{
                 display:none;
                 left:5px;top:5px;
                 width:60px;}
-                #header_home.show {display:block;}
+                #header_back.show {display:block;}
             #header_info{
                 right:5px;top:5px;
                 width:60px;
@@ -128,7 +128,7 @@ body {
         background:#798689;
         box-sizing: border-box;
         transform:translate(0,-100%);
-        transition:transform 0.5s;
+        transition:transform 0.5s, opacity 0.2s;
         pointer-events: none;
     }
             #header_search.show {
@@ -411,12 +411,38 @@ body {
         background:#798689;
         box-sizing: border-box;
         transform:translate(0,-100%);
-        transition:transform 0.5s;
+        transition:transform 0.5s, opacity 0.2s;
         pointer-events: none;
     }
             #header_deckconfig.show {
                 transform:translate(0,0);
                 pointer-events: auto;
+            }
+        #deckconfig_favoritestate {
+            position:relative;
+            overflow:hidden;
+            float:left;
+            display:none;
+
+            width:50%;
+            height:40px;
+
+            color:yellow;
+            font-size:20px;
+                line-height: 40px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+            #deckconfig_favoritestate.show {
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #deckconfig_favoritestate > img {
+                margin-right:10px;
+                width:30px;
+                height:30px;
             }
         #deckconfig_format {
             position:relative;
@@ -465,13 +491,15 @@ body {
         height:calc(100% - 75px);
 
         background-color:white;
+        opacity:0.5;
+        transition:transform 0.5s, opacity 0.2s;
         pointer-events: none;
     }
             .mainscreen.show {
                 z-index: 2;
 
                 transform:translate(0,0);
-                transition:transform 0.5s;
+                opacity:1;
                 pointer-events: auto;
             }
         .main_both {
@@ -617,7 +645,7 @@ body {
             text-align:center;
             font-weight:bold;
         }
-        #titlescreen_newset {
+        #titlescreen_newset, #titlescreen_newset2 {
             display:none;
             clear:both;
             float:left;
@@ -634,10 +662,25 @@ body {
             border-radius: 10px;
             box-sizing: border-box;
         }
-            #titlescreen_newset.show {
+            #titlescreen_newset.show, #titlescreen_newset2 {
                 display:block;
             }
-            #newset_title_wrapper {
+                #newset2_desc {
+                    display:flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    width:100%;
+                    height:100%;
+
+                    color:white;
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-weight: bold;
+                    font-size:30px;
+                    text-align: center;
+                    word-break: keep-all;
+                }
+            #newset_title_wrapper, #newset_title_wrapper2 {
                 margin:-20px auto;
                 width:100%;
                 height:40px;
@@ -688,17 +731,14 @@ body {
         padding:10px 10px;
         box-sizing: border-box;
     }
-        .decklist_hr {
-            margin:10px 0;
-            border-top:2px #3e40e5 solid;
-        }
         #decklist_temp {
             position:relative;
             overflow:hidden;
+            display:block;
 
+            margin-bottom:10px;
             width:100%;
             height:50px;
-            display:block;
 
             background:#DDDDDD;
 
@@ -712,10 +752,173 @@ body {
         #decklist_slot {
             position:relative;
             overflow-y:scroll;
+            direction:rtl;
 
             width:100%;
-            height:calc(100% - 70px);
+            height:calc(100% - 60px);
+
+            background:#F0F0F0;
+            border:2px #3e40e5 solid;
+            box-sizing: border-box;
         }
+        #decklist_slot_content {
+            position:relative;
+
+            padding:15px 10px 10px 10px;
+            width:100%;
+            height:100%;
+
+            box-sizing: border-box;
+        }
+            .slot_button {
+                position:relative;
+                display:block;
+                direction:ltr;
+
+                margin-bottom:15px;
+                width:100%;
+                height:60px;
+            }
+            .slot_button_number {
+                position:absolute;
+                left:-3px;top:-10px;
+                z-index:2;
+                display:flex;
+                    align-items: center;
+
+                padding:1px 5px;
+                width:auto;
+                height:20px;
+
+                background:orange;
+                border-radius:8px;
+
+                font-weight: 600;
+            }
+            .slot_button_date {
+                position:absolute;
+                right:45px;top:-10px;
+                z-index:2;
+                display:flex;
+                    align-items: center;
+
+                padding:1px 5px;
+                width:auto;
+                height:20px;
+
+                background:rgba(255,255,0,0.7);
+                border-radius:8px;
+            }
+                .slot_button_main {
+                    position:relative;
+                    float:left;
+                    display:block;
+                    overflow:hidden;
+
+                    width:calc(100% - 50px);
+                    height:100%;
+
+                    background-repeat:no-repeat;
+                    background-position:calc(100% + 25px) 50%;
+                    background-size:auto 100%;
+                    border:5px gold outset;
+
+                    cursor:pointer;
+                }
+                .slot_button_mainCover {
+                    position:relative;
+                    display:block;
+                    overflow:hidden;
+
+                    padding:3px 5px;
+                    width:100%;
+                    height:100%;
+
+                    background: linear-gradient(
+                        to right,
+                        rgba(60,60,60,1) 0%,
+                        rgba(60,60,60,1) calc(100% - 190px),
+                        rgba(60,60,60,0) calc(100% - 25px),
+                        rgba(60,60,60,0) 100%);
+                    box-sizing: border-box;
+                    pointer-events: none;
+                }
+                    .slot_button_main:hover .slot_button_mainCover {
+                        background: linear-gradient(
+                            to right,
+                            rgba(135,236,233,1) 0%,
+                            rgba(135,236,233,1) calc(100% - 190px),
+                            rgba(135,236,233,0) calc(100% - 25px),
+                            rgba(135,236,233,0) 100%);
+                    }
+                .slot_button_name {
+                    float:left;
+                    overflow:hidden;
+
+                    width:100%;
+                    height:25px;
+
+                    color:white;
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-weight: bold;
+                    font-size:24px;
+                        line-height: 25px;
+                    text-align:left;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+                .slot_button_format {
+                    clear:both;
+                    float:left;
+
+                    margin-top:4px;
+                    height:15px;
+
+                    font-weight: bold;
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-size:15px;
+                        line-height:15px;
+                }
+                .slot_button_quantity {
+                    float:right;
+
+                    margin-top:4px;
+                    width:auto;
+                    height:15px;
+
+                    color:skyblue;
+                    font-weight: bold;
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-size:15px;
+                        line-height:15px;
+                }
+                    .slot_button_format.standard {
+                        color:lime;
+                    }
+                    .slot_button_format.wild {
+                        color:orange;
+                    }
+                .slot_button_delete {
+                    position:relative;
+                    float:right;
+
+                    width:50px;
+                    height:100%;
+
+                    background-color:transparent;
+                    background-image:url(../images/icon_delete.png);
+                        background-repeat:no-repeat;
+                        background-position:50% 50%;
+                        background-size:40px 40px;
+
+                    cursor:pointer;
+                }
+                    .slot_button_delete:hover {
+                        background-color:orange;
+                    }
+                    .slot_button_delete:active {
+                        background-color:red;
+                    }
 
     /*로딩 화면*/
     #main_loading {/*로딩화면은 화면 전환 효과 없음*/
@@ -1081,7 +1284,7 @@ body {
     background:#3e40e5;
     box-sizing: border-box;
     transform:translate(0,100%);
-    transition:transform 0.5s;
+    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
         #footer_init.show {
@@ -1142,7 +1345,7 @@ body {
     background:#3e40e5;
     box-sizing: border-box;
     transform:translate(0,100%);
-    transition:transform 0.5s;
+    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
         #footer_decklist.show {
@@ -1200,7 +1403,7 @@ body {
     height:75px;
 
     transform:translate(0,100%);
-    transition:transform 0.5s;
+    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
     #footer_collectionNdeck.show {
@@ -1242,7 +1445,7 @@ body {
     background:#3e40e5;
 
     transform:translate(0,100%);
-    transition:transform 0.5s;
+    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
     #footer_collectionNdeck_cardinfo.show {
@@ -1260,7 +1463,7 @@ body {
     background:#3e40e5;
 
     transform:translate(0,100%);
-    transition:transform 0.5s;
+    transition:transform 0.5s, opacity 0.2s;
     pointer-events: none;
 }
     #footer_collectionNdeck_deckbuilding.show {
@@ -1363,59 +1566,91 @@ body {
             #bottom_info > .desktop_only {
                 vertical-align: top;
             }
-#footer_deckconfig {
-    position:absolute;
-        left:0;bottom:0;
-        z-index:2;
-    overflow:hidden;
+    #footer_deckconfig {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+        overflow:hidden;
 
-    padding:5px;
-    width:100%;
-    height:75px;
+        padding:5px;
+        width:100%;
+        height:75px;
 
-    background:#3e40e5;
-    box-sizing: border-box;
-    transform:translate(0,100%);
-    transition:transform 0.5s;
-    pointer-events: none;
-}
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        transition:transform 0.5s, opacity 0.2s;
+        pointer-events: none;
+    }
         #footer_deckconfig.show {
             transform:translate(0,0);
             pointer-events: auto;
         }
-#button_edit {
-    position:relative;
-    float:right;
-    overflow:hidden;
+    .deckconfig_footerbutton {
+        position:relative;
+        overflow:hidden;
 
-    width:100px;
-    height:100%;
+        height:100%;
 
-    background:rgba(255,255,255,0.1);
-    border:2px white solid;
-    border-radius: 10px;
-    box-sizing: border-box;
+        background-color:rgba(255,255,255,0.1);
+            background-repeat:no-repeat;
+            background-position:5px 10px;
+            background-size:40px 40px;
+        border:2px white solid;
+        border-radius: 10px;
+        box-sizing: border-box;
+        cursor:pointer;
 
-    color:white;
-    font-size:22px;
-    letter-spacing: -1px;
-    font-weight:bold;
-    cursor:pointer;
-    white-space: nowrap;
-}
-    #button_edit > img {
+        color:white;
+        font-weight:bold;
+        font-size:22px;
+        letter-spacing: -1px;
+        text-align:center;
+        white-space: nowrap;
+    }
+        #deckconfig_favorite {
+            width:130px;
+            float:left;
+        }
+            #deckconfig_favorite.favorite {
+                background-image:url(../images/icon_favorite.png);
+            }
+            #deckconfig_favorite.delete {
+                background-image:url(../images/icon_delete.png);
+            }
+            #deckconfig_favorite_text {
+                display:flex;
+                align-items: center;
+                float:right;
+
+                width:80px;
+                height:100%;
+
+                color:white;
+                font-weight:bold;
+                font-size:20px;
+                letter-spacing: -1px;
+                text-align:center;
+                line-height:110%;
+                white-space: nowrap;
+            }
+        #deckconfig_edit {
+            width:100px;
+            float:right;
+        }
+    .deckconfig_footerbutton > img {
         vertical-align:middle;
         width:33px;
         height:33px;
     }
-    #button_edit > span {
+    .deckconfig_footerbutton > span {
         vertical-align:middle;
         font-size:inherit;
     }
-    #button_edit:hover {
+    .deckconfig_footerbutton:hover {
         background-color:rgba(255,255,255,0.2);
     }
-    #button_edit:active {
+    .deckconfig_footerbutton:active {
         background-color:rgba(255,255,255,0.4);
     }
 

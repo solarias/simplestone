@@ -25,7 +25,7 @@
 			<!--헤더-->
             <header id="frame_header">
                 <div id="header_top">
-					<button id="header_home" class="header_button" aria-label="HOME"><img src="./images/icon_home.png" alt="HOME"></button>
+					<button id="header_back" class="header_button" aria-label="BACK"><img src="./images/icon_back.png" alt="BACK"></button>
 					<div id="header_status" class="subscreen">심플 스톤</div>
 					<button id="header_info" class="header_button" aria-label="INFO"><img src="./images/icon_info.png" alt="INFO"></button>
 				</div>
@@ -46,6 +46,7 @@
 						</div>
 	                </div>
 	                <div id="header_deckconfig" class="subscreen">
+						<div id="deckconfig_favoritestate"><img src="./images/icon_favorite.png" alt="FAVORITE"> 즐겨찾기 덱</div>
 						<button id="deckconfig_format" aria-label="포맷 전환"></button>
 					</div>
 				</div>
@@ -70,6 +71,7 @@
                         <button id="start_deck" class="titlescreen_button" aria-label="덱 목록"><img src="./images/icon_decklist.png" alt="DECKLIST"></button>
                         <p class="titlescren_desc">덱 목록</p>
                     </div>
+					<!--신규 확장팩 출시 전-->
                     <div id="titlescreen_newset">
 						<div id="newset_title_wrapper">
 							<span id="newset_title">박사 붐의 폭심만만 프로젝트</span>
@@ -77,12 +79,22 @@
 						<button id="newset_cardinfo" class="newset_button" aria-label="새카드 정보">새카드 정보</button>
 						<button id="newset_newdeck" class="newset_button" aria-label="확장팩 덱짜기">확장팩 덱짜기</button>
                     </div>
+					<!--신규 확장팩 출시 직후 (사용하지 않을 땐 주석 처리)-->
+					<div id="titlescreen_newset2">
+						<div id="newset_title_wrapper2">
+							<span id="newset_title">박사 붐의 폭심만만 프로젝트</span>
+						</div>
+						<div id="newset2_desc">
+							신규 확장팩 반영!
+							<br>
+							나만의 덱을 마음껏 짜보세요.
+						</div>
+					</div>
                 </div>
 
 				<!--덱 목록-->
 				<div id="main_decklist" class="mainscreen main_both">
 					<button id="decklist_temp" class="decklist_button" data-name="temp" aria-label="최근 작업 덱"></button>
-					<hr class="decklist_hr">
 					<div id="decklist_slot">
 						<div id="decklist_slot_content"></div>
 					</div>
@@ -95,9 +107,6 @@
 
 				<!--덱 설정-->
 				<div id="main_deckconfig" class="mainscreen main_left">
-					<!--
-					<button id="deckconfig_save" class="deckconfig_button" aria-label="덱 저장">덱 저장</button>
-					-->
 					<button id="deckconfig_name" class="deckconfig_button" aria-label="덱 이름 편집">덱 이름 편집</button>
 					<hr>
 					<button id="deckconfig_deckstring" class="deckconfig_button" aria-label="덱코드 출력">덱코드 출력</button>
@@ -175,7 +184,10 @@
                 </div>
 			</footer>
             <footer id="footer_deckconfig" class="subscreen">
-				<button id="button_edit" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
+				<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="즐겨찾기">
+					<div id="deckconfig_favorite_text"></div>
+				</button>
+				<button id="deckconfig_edit" class="deckconfig_footerbutton" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
 			</footer>
 
 			<!--별도 창 - 카드 필터(모바일)-->

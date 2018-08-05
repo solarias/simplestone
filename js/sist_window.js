@@ -27,6 +27,7 @@ function window_shift(keyword, keyword2) {
             window_clear();
             $("#main_init").classList.add("show");
             $("#footer_init").classList.add("show");
+            $("#header_back").classList.remove("show");
 
             //공지사항 출력
             fetch("./notice.json")
@@ -225,16 +226,15 @@ function window_shift(keyword, keyword2) {
                 session.db.forEach(function(x,index) {
                     session.index[x.dbfid] = index;
                 })
-                //마스터 노드, 마스터 인포 생성
+                //마스터 노드, 마스터 인포, 마스터 슬롯 생성
                 session.masterNode = card_generateMaster();
                 session.masterInfo = cardinfo_generateMaster();
+                session.masterSlot = deckslot_generateMaster();
                 //Fragment 생성
                 session.fragment = [];
                 session.db.forEach(function(info, index) {
                     session.fragment[index] = card_generateFragment(info);
                 })
-                //덱슬롯 생성
-                deckslot_generate();
 
                 //화면 전환
                 window_shift("titlescreen");
@@ -254,7 +254,7 @@ function window_shift(keyword, keyword2) {
                 //창 전환
                 window_clear();
                 $("#main_titlescreen").classList.add("show");
-                $("#header_home").classList.add("show");
+                $("#header_back").classList.remove("show");
 
                 //신규 확장팩 있으면 출력
                 if (DATA.SET.NEW !== undefined &&
@@ -360,29 +360,14 @@ function window_shift(keyword, keyword2) {
                     //강제 화면 전환
                     process_titlescreen();
                 } else {
-                    swal({
-                        type:"warning",
-                        title:"첫 화면으로 돌아가시겠습니까?",
-                        text:"작업중 덱은 '덱 목록'에 자동으로 저장됩니다.",
-                        showCancelButton:true,
-                        confirmButtonText: '확인',
-                        cancelButtonText: '취소',
-                        cancelButtonColor: '#d33'
-                    }).then(function(isConfirm){
-                        if (isConfirm) {
-                            //덱 (있으면) 임시저장
-                            if (process.deck) {
-                                if (process.deck.class && process.deck.format) {
-                                    deck_tempsave();
-                                }
-                            }
-                            //화면 전환
-                            process_titlescreen();
-                        } else {
-                            //취소
-                            return;
+                    //덱 (있으면) 임시저장
+                    if (process.deck) {
+                        if (process.deck.class && process.deck.format) {
+                            deck_save();
                         }
-                    })
+                    }
+                    //화면 전환
+                    process_titlescreen();
                 }
             } else {
                 //화면 전환
@@ -400,6 +385,11 @@ function window_shift(keyword, keyword2) {
             window_clear();
             $("#main_decklist").classList.add("show");
             $("#footer_decklist").classList.add("show");
+            //뒤로 버튼
+            $("#header_back").classList.add("show");
+                $("#header_back").onclick = function() {
+                    window_shift("titlescreen");
+                }
             //덱 설정 초기화
             process.deck = {};
             process.deck.deckcode = "";
@@ -425,54 +415,62 @@ function window_shift(keyword, keyword2) {
                         process.deck = deepCopy(tempdeck);
                         //로딩 개시
                         window_shift("loading","deckconfig");
-                        /*
-                        //의사 물어보기
-                        let html = "";
-                        html +=  "<b>" + tempdeck.name + "</b><br>";
-                        html += "(" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")" + "<br>";
-                        html += "완성도: " + tempdeck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString() + "<br>";
-                        html += "작업일시: " + tempdeck.date;
-                        swal({
-                            imageUrl:HEROURL + DATA.CLASS.ID[tempdeck.class] + ".jpg",
-                            //imageHeight:88,
-                            title:"최근 작업 덱을 불러옵니다.",
-                            html:html,
-                            showCancelButton:true,
-                            confirmButtonText: '확인',
-                            cancelButtonText: '취소',
-                            cancelButtonColor: '#d33'
-                        }).then(function(isConfirm){
-                            if (isConfirm) {
-                                //덱 정보 적용
-                                process.deck = deepCopy(tempdeck);
-                                //로딩 개시
-                                window_shift("loading","deckconfig");
-                            } else {
-                                //취소
-                                return;
-                            }
-                        })
-                        */
                     }
                 }
 
             })
             //==================
-            //※ 저장된 덱 목록 파악
+            //※ 저장된 덱 목록 불러오기, 클릭
             //==================
-            /*
-            localforage.getItem("sist_decks")
-            .then(function(deck) {
-                //저장된 덱이 없으면
-                if (!decks) {
-                    //빈칸 표시
-                //불러올 게 있으면
-                } else {
-                    //저장된 개수만큼 슬롯 표시
-                    //남은 칸만큼 빈칸 표시
+            deckslot_refresh();
+
+            $("#decklist_slot").onclick = function(e) {
+                e = e || event;
+                let target = e.target || e.srcElement;
+                //덱 편집
+                if (target.classList.contains("slot_button_main")) {
+                    localforage.getItem("sist_decks")
+                    .then(function(decks) {
+                        process.deck = deepCopy(decks[target.dataset.id]);
+                        window_shift("loading","deckconfig");
+                    })
+                    .catch(function() {
+                        console.log("덱 불러오기 실패!");
+                    })
                 }
-            })
-            */
+                //덱 삭제
+                if (target.classList.contains("slot_button_delete")) {
+                    let number = target.dataset.number;
+                    //경고창
+                    swal({
+                        imageUrl:"./images/icon_delete.png",
+                        imageHeight:88,
+                        title: number + "번 덱의 즐겨찾기를 해제하시겠습니까?",
+                        text:"즐겨찾기를 해제하면 저정된 덱 정보가 사라집니다.",
+                        showCancelButton:true,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: '해제',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //덱 즐겨찾기 해제
+                            deck_favorite("off", target.dataset.id)
+                            .then(function() {
+                                //안내문구
+                                nativeToast({
+                                    message: '즐겨찾기 해제 완료',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'success',
+                                    closeOnClick: 'true'
+                                });
+                                //덱 목록 다시 불러오기에
+                                deckslot_refresh();
+                            })
+                        }
+                    })
+                }
+            }
             //==================
             //※ 상단 버튼: 덱 정렬
             //==================
@@ -614,17 +612,8 @@ function window_shift(keyword, keyword2) {
             function loading_deckvalidate() {
                 //덱이 있으면 검증
                 if (process.deck) {
-                    //포맷 검증
-                    if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
-                        for (let i = 0;i < process.deck.cards.length;i++) {
-                            if (DATA.SET.FORMAT[session.db[session.index[process.deck.cards[i][0]]].set] === "야생") {
-                                process.deck.format = "야생";
-                                break;
-                            }
-                        }
-                    }
                     //신규 확장팩 검증
-                    if (process.deck.newset && DATA.SET.FORMAT[process.deck.newset] === undefined) {
+                    if (process.deck.newset) {
                         if (DATA.SET.NEW && process.deck.newset === DATA.SET.NEW.id) {
                             nativeToast({
                                 message: '신규 확장팩이 인식되었습니다.',
@@ -634,14 +623,65 @@ function window_shift(keyword, keyword2) {
                                 closeOnClick: 'true'
                             });
                         } else {
-                            nativeToast({
-                                message: '세트를 인식할 수 없는 카드가 있습니다.<br>(이미 출시한 신규 확장팩으로 추정됨)',
-                                position: 'center',
-                                timeout: 2000,
-                                type: 'error',
-                                closeOnClick: 'true'
-                            });
-                            return false;
+                            //해당 세트 정보 불러오기
+                            let newset = process.deck.newset;
+                            fetch("./js_newset/cards_" + newset + ".json")
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .catch(function() {
+                                //문구 출력
+                                nativeToast({
+                                    message: '확장팩 변환 정보를 불러올 수 없습니다.',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'error',
+                                    closeOnClick: 'true'
+                                });
+                                return false;
+                            })
+                            .then(function(newdb) {
+                                //dbfid 교체
+                                process.deck.cards.forEach(function(card) {
+                                    for (let i = 0;i < newdb.length;i++) {
+                                        if (card[0] === newdb[i].dbfid) {
+                                            card[0] = newdb[i].realid.toString();
+                                        }
+                                    }
+                                })
+                                //newset 제거
+                                delete process.deck.newset;
+                                //문구 출력
+                                nativeToast({
+                                    message: '신규 확장팩 카드가 정식 정보로 편입되었습니다.',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'success',
+                                    closeOnClick: 'true'
+                                });
+                                //포맷 검증
+                                if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
+                                    for (let i = 0;i < process.deck.cards.length;i++) {
+                                        if (DATA.SET.FORMAT[session.db[session.index[process.deck.cards[i][0]]].set] === "야생") {
+                                            process.deck.format = "야생";
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                //Fragment 불러오기
+                                window_shift(keyword2);
+                                return false;
+                            })
+                        }
+                    }
+                    //포맷 검증
+                    if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
+                        for (let i = 0;i < process.deck.cards.length;i++) {
+                            if (DATA.SET.FORMAT[session.db[session.index[process.deck.cards[i][0]]].set] === "야생") {
+                                process.deck.format = "야생";
+                                break;
+                            }
                         }
                     }
                 }
@@ -675,6 +715,11 @@ function window_shift(keyword, keyword2) {
             $("#header_search").classList.add("show");
             $("#footer_collectionNdeck").classList.add("show");
             $("#footer_collectionNdeck_cardinfo").classList.add("show");
+            //뒤로 버튼
+            $("#header_back").classList.add("show");
+                $("#header_back").onclick = function() {
+                    window_shift("titlescreen");
+                }
 
             //==================
             //※ 필터 구성
@@ -737,6 +782,11 @@ function window_shift(keyword, keyword2) {
             $("#header_search").classList.add("show");
             $("#footer_collectionNdeck").classList.add("show");
             $("#footer_collectionNdeck_deckbuilding").classList.add("show");
+            //뒤로 버튼
+            $("#header_back").classList.add("show");
+                $("#header_back").onclick = function() {
+                    window_shift("decklist");
+                }
             //로그 초기화
             if (process.log !== undefined)
                 $("#undo_num").innerHTML = process.log.length;
@@ -764,7 +814,7 @@ function window_shift(keyword, keyword2) {
             deck_refresh("init");
 
             //덱 임시저장
-            deck_tempsave();
+            deck_save();
 
             //==================
             //※ 카드정보 구성
@@ -919,6 +969,11 @@ function window_shift(keyword, keyword2) {
             $("#main_deck").classList.add("show");
             $("#header_deckconfig").classList.add("show");
             $("#footer_deckconfig").classList.add("show");
+            //뒤로 버튼
+            $("#header_back").classList.add("show");
+                $("#header_back").onclick = function() {
+                    window_shift("decklist");
+                }
 
             //==================
             //※ 덱 구성
@@ -927,7 +982,7 @@ function window_shift(keyword, keyword2) {
             deck_refresh("init");
 
             //덱 임시저장
-            deck_tempsave();
+            deck_save();
             //==================
             //※ 주 버튼
             //==================
@@ -965,7 +1020,7 @@ function window_shift(keyword, keyword2) {
                         $("#deck_name").innerHTML = process.deck.name;
 
                         //덱 임시저장
-                        deck_tempsave();
+                        deck_save();
                     }
                 })
             }
@@ -1087,6 +1142,8 @@ function window_shift(keyword, keyword2) {
                         type: 'success',
                         closeOnClick: 'true'
                     });
+                    //저장
+                    deck_save();
                 } else if (process.deck.format === "야생") {
                     //덱 포맷 전환
                     process.deck.format = "정규";
@@ -1101,13 +1158,85 @@ function window_shift(keyword, keyword2) {
                         type: 'success',
                         closeOnClick: 'true'
                     });
+                    //저장
+                    deck_save();
                 }
             }
 
             //덱 편집
-            $("#button_edit").onclick = function() {
+            $("#deckconfig_edit").onclick = function() {
                 //덱 편집창으로 전환
                 window_shift("deckbuilding");
+            }
+            //==================
+            //※ 즐겨찾기
+            //==================
+            if (!process.deck.favorite) {
+                //즐겨찾기 표시
+                $("#deckconfig_favoritestate").classList.remove("show");
+                $("#deckconfig_favorite").classList.add("favorite");
+                $("#deckconfig_favorite").classList.remove("delete");
+                $("#deckconfig_favorite_text").innerHTML = "즐겨찾기";
+            } else {
+                //즐겨찾기 OFF 표시
+                $("#deckconfig_favoritestate").classList.add("show");
+                $("#deckconfig_favorite").classList.remove("favorite");
+                $("#deckconfig_favorite").classList.add("delete");
+                $("#deckconfig_favorite_text").innerHTML = "즐겨찾기<br>OFF";
+            }
+            //버튼 클릭
+            $("#deckconfig_favorite").onclick = function() {
+                if (!process.deck.favorite) {
+                    //덱 즐겨찾기
+                    deck_favorite("on")
+                    .then(function() {
+                        //안내문구
+                        nativeToast({
+                            message: '즐겨찾기 설정 완료<br>(이제 덱 목록에서 언제든지 불러올 수 있습니다.)',
+                            position: 'center',
+                            timeout: 2000,
+                            type: 'success',
+                            closeOnClick: 'true'
+                        });
+                        //버튼 변경
+                        $("#deckconfig_favoritestate").classList.add("show");
+                        $("#deckconfig_favorite").classList.remove("favorite");
+                        $("#deckconfig_favorite").classList.add("delete");
+                        $("#deckconfig_favorite_text").innerHTML = "즐겨찾기<br>OFF";
+                    })
+                } else {
+                    //경고창
+                    swal({
+                        imageUrl:"./images/icon_delete.png",
+                        imageHeight:88,
+                        title:"즐겨찾기를 해제하시겠습니까?",
+                        text:"즐겨찾기를 해제한 후 다른 덱을 편집하면, 덱 정보가 사라집니다.",
+                        showCancelButton:true,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: '해제',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //덱 즐겨찾기 해제
+                            deck_favorite("off")
+                            .then(function() {
+                                //안내문구
+                                nativeToast({
+                                    message: '즐겨찾기 해제 완료',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'success',
+                                    closeOnClick: 'true'
+                                });
+                                //버튼 변경
+                                $("#deckconfig_favoritestate").classList.remove("show");
+                                $("#deckconfig_favorite").classList.add("favorite");
+                                $("#deckconfig_favorite").classList.remove("delete");
+                                $("#deckconfig_favorite_text").innerHTML = "즐겨찾기";
+                            })
+                        }
+                    })
+                }
             }
 
             //==================
