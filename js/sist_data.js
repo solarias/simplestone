@@ -12,9 +12,11 @@ let session = {
     fragment:undefined,//프래그먼트
     offline:undefined//오프라인 모드 유무
 };
-const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";
-const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";
-const RENDERURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
+//const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";//HearthstoneJSON에서 이미지 가져오기
+//const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";//HearthstoneJSON에서 이미지 가져오기
+//const RENDERURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
+const TILEURL = "./images/tiles/";
+const PORTRAITURL = "./images/portraits/";
 const HEROURL = "./images/heroes/";
 //클러스터
 let clusterize = {};
@@ -145,51 +147,66 @@ const DATA = {
             "CORE":"기본카드",
             "EXPERT1":"오리지널",
             "HOF":"명예의 전당",
-            "NAXX":"낙스라마스의 저주",//2014↓
+            //2014↓
+            "NAXX":"낙스라마스의 저주",
             "GVG":"고블린 대 노움",
-            "BRM":"검은바위 산",//2015↓
+            //2015↓
+            "BRM":"검은바위 산",
             "TGT":"대 마상시합",
             "LOE":"탐험가 연맹",
-            "OG":"고대신의 속삭임",//2016↓
+            //2016↓
+            "OG":"고대신의 속삭임",
             "KARA":"한여름 밤의 카라잔",
             "GANGS":"비열한 거리의 가젯잔",
-            "UNGORO":"운고로를 향한 여정",//2017↓
+            //2017↓
+            "UNGORO":"운고로를 향한 여정",
             "ICECROWN":"얼어붙은 왕좌의 기사들",
             "LOOTAPALOOZA":"코볼트와 지하 미궁",
-            "GILNEAS":"마녀숲",//2018↓
+            //2018↓
+            "GILNEAS":"마녀숲",
             "BOOMSDAY":"박사 붐의 폭심만만 프로젝트"
         },
         FORMAT:{
             "CORE":"정규",
             "EXPERT1":"정규",
             "HOF":"야생",
-            "NAXX":"야생",//2014↓
+            //2014↓
+            "NAXX":"야생",
             "GVG":"야생",
-            "BRM":"야생",//2015↓
+            //2015↓
+            "BRM":"야생",
             "TGT":"야생",
             "LOE":"야생",
-            "OG":"야생",//2016↓
+            //2016↓
+            "OG":"야생",
             "KARA":"야생",
             "GANGS":"야생",
-            "UNGORO":"정규",//2017↓
+            //2017↓
+            "UNGORO":"정규",
             "ICECROWN":"정규",
             "LOOTAPALOOZA":"정규",
-            "GILNEAS":"정규",//2018↓
+            //2018↓
+            "GILNEAS":"정규",
             "BOOMSDAY":"정규"
         },
         YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
-            "NAXX":"2014",//2014↓
+            //2014↓
+            "NAXX":"2014",
             "GVG":"2014",
-            "BRM":"2015",//2015↓
+            //2015↓
+            "BRM":"2015",
             "TGT":"2015",
             "LOE":"2015",
-            "OG":"2016",//2016↓
+            //2016↓
+            "OG":"2016",
             "KARA":"2016",
             "GANGS":"2016",
-            "UNGORO":"2017",//2017↓
+            //2017↓
+            "UNGORO":"2017",
             "ICECROWN":"2017",
             "LOOTAPALOOZA":"2017",
-            "GILNEAS":"2018",//2018↓
+            //2018↓
+            "GILNEAS":"2018",
             "BOOMSDAY":"2018"
         }
         /*

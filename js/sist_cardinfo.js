@@ -119,7 +119,7 @@ function cardinfo_show(id, info) {
         if (!process.deck.newset || info.set !== DATA.SET.NEW.id) {
             $(".illust",site).classList.remove("show");
             $(".cardcase",site).classList.add("show");
-                image = "url(" + IMAGEURL + info.id + ".jpg)";
+                image = "url(" + PORTRAITURL + info.id + ".jpg)";
                 $(".image",site).style.backgroundImage = image;
                 $(".top",site).classList.remove("offline");
                 $(".image",site).innerHTML = "";
@@ -127,7 +127,7 @@ function cardinfo_show(id, info) {
         } else if (!info.url) {
             $(".illust",site).classList.remove("show");
             $(".cardcase",site).classList.add("show");
-                image = "url(" + IMAGEURL + info.id + ".jpg)";
+                image = "url(" + PORTRAITURL + info.id + ".jpg)";
                 $(".image",site).style.backgroundImage = image;
                 $(".top",site).classList.add("offline");
                 $(".image",site).innerHTML = "이미지 없음";

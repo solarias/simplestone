@@ -1,0 +1,19 @@
+* 확장팩 정보 업데이트 방법
+
+1. JSON 업데이트
+  - https://api.hearthstonejson.com/v1/ 에서 최신 카드정보 찾기
+  - ./js/cards_collectible.json 정보로 적용하기
+
+2. sist_data.js 업데이트
+  (영문 코드명은 JSON 파일에서 신규 카드 set 명칭 확인)
+  - DATA.SET.KR : 신규 확장팩 한글명
+  - DATA.SET.FORMAT : 신규 확장팩 대전방식(정규)
+    - 연도가 넘어가면 2년전 확장팩 대전방식 변경(정규 -> 야생)
+  - DATA.SET.YEAR : 신규 확장팩 연도
+
+3. 이미지 업데이트
+  - simplestone_이미지생성기 폴더 들어가기
+  - cards_collectible.json 최신화 (1번 항목 참고)
+  - run.bat 실행 (잘 안되면 프로그램 껐다 재실행)
+  - ./output 폴더 내 생성된 2개의 폴더 복사
+  - ./images 폴더에 붙여넣기
