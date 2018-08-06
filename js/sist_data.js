@@ -14,7 +14,7 @@ let session = {
 };
 const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";
 const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";
-const PNGURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
+const RENDERURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
 const HEROURL = "./images/heroes/";
 //클러스터
 let clusterize = {};

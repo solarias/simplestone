@@ -656,7 +656,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             scrollId: 'collection_list',
             contentId: 'collection_list_content',
             rows_in_block:14,
-            no_data_text: '결과 없음',
+            no_data_text: '해당 직업 검색결과 없음',
             no_data_class: 'clusterize-no-data'
         });
         //덱 클러스터 생성해두기
@@ -673,7 +673,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             scrollId: 'decklist_slot',
             contentId: 'decklist_slot_content',
             rows_in_block:14,
-            no_data_text: ''
+            no_data_text: '즐겨찾기 덱 없음'
         });
 
         //종료 경고 메시지

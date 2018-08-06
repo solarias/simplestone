@@ -152,12 +152,10 @@ function cardinfo_show(id, info) {
             };
             img.src = info.url;
             //이미지 불러오는 동안 임시 정보 출력
-            if (img.complete === false) {
-                $(".illust",site).classList.remove("show");
-                $(".cardcase",site).classList.add("show");
-                    $(".top",site).classList.remove("offline");
-                    $(".image",site).innerHTML = "";
-            }
+            $(".illust",site).classList.remove("show");
+            $(".cardcase",site).classList.add("show");
+                $(".top",site).classList.remove("offline");
+                $(".image",site).innerHTML = "";
         }
     } else {
         $(".illust",site).classList.remove("show");

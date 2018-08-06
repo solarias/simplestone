@@ -504,7 +504,7 @@ body {
                 opacity:1;
                 pointer-events: auto;
             }
-            .subscreen:not(.show) {
+            .subscreen {
                 opacity:0.01;
                 transition:transform 0.5s, opacity 0.5s;
                 pointer-events: none;
@@ -780,6 +780,8 @@ body {
             height:100%;
 
             box-sizing: border-box;
+
+            text-align:left;
         }
             .slot_button {
                 position:relative;
@@ -978,6 +980,7 @@ body {
             height:100%;
 
             box-sizing: border-box;
+            word-break: keep-all;
         }
     /*카드 커버*/
     #frame_cardcover {
@@ -1430,11 +1433,13 @@ body {
     .footer_desc {
         position:relative;
         float:left;
-        display:none;
+        display:block;
 
         width:50%;
         height:100%;
 
+        transform:translate(0,100%);
+        pointer-events: none;
         box-sizing: border-box;
 
         color:white;
@@ -1442,6 +1447,10 @@ body {
         line-height:25px;
         text-align:center;
     }
+        .footer_desc.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
 #footer_collectionNdeck_cardinfo {
     position:absolute;
         left:0;bottom:0;

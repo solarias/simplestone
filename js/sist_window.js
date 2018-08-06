@@ -14,7 +14,7 @@ function window_clear() {
         target.classList.remove("show");
     })
     $$(".footer_desc").forEach(function(target) {
-        target.style.display = "none";
+        target.classList.remove("show");
     })
 }
 
@@ -708,9 +708,10 @@ function window_shift(keyword, keyword2) {
             window_clear();
             $("#main_collection").classList.add("show");
             $("#main_cardinfo").classList.add("show");
-            $("#footer_name_left").style.display = "block";
+            $("#footer_collectionNdeck_top").classList.add("show");
+            $("#footer_name_left").classList.add("show");
                 $("#footer_name_left").innerHTML = "카드 목록";
-            $("#footer_name_right").style.display = "block";
+            $("#footer_name_right").classList.add("show");
                 $("#footer_name_right").innerHTML = "카드 정보";
             $("#header_search").classList.add("show");
             $("#footer_collectionNdeck").classList.add("show");
@@ -775,9 +776,10 @@ function window_shift(keyword, keyword2) {
             window_clear();
             $("#main_collection").classList.add("show");
             $("#main_deck").classList.add("show");
-            $("#footer_name_left").style.display = "block";
+            $("#footer_collectionNdeck_top").classList.add("show");
+            $("#footer_name_left").classList.add("show");
                 $("#footer_name_left").innerHTML = "카드 목록";
-            $("#footer_name_right").style.display = "block";
+            $("#footer_name_right").classList.add("show");
                 $("#footer_name_right").innerHTML = "덱 구성";
             $("#header_search").classList.add("show");
             $("#footer_collectionNdeck").classList.add("show");
