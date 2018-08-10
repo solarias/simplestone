@@ -482,7 +482,7 @@ function window_shift(keyword, keyword2) {
                 //팝업창 열기
                 swal({
                     title: '덱코드 입력',
-                    input: 'text',
+                    input: 'textarea',
                     text: '덱코드를 분석하여 카드목록을 불러옵니다.',
                     inputPlaceholder: '입력란',
                     allowOutsideClick:false,
@@ -493,13 +493,24 @@ function window_shift(keyword, keyword2) {
                     showCloseButton:true,
                     onOpen: function() {
                         if (process.deck.deckcode)
-                            $(".swal2-input").value = process.deck.deckcode;
-                        $(".swal2-input").select();
+                            $(".swal2-textarea").value = process.deck.deckcode;
+                        $(".swal2-textarea").select();
                     },
                     inputValidator: function(deckcode) {
                         return new Promise(function(resolve, reject) {
                             try {
-                                resolve(deckstrings.decode(deckcode));
+                                let codelist = deckcode.split("\n");
+                                let code = "";
+                                codelist.forEach(function(line) {
+                                    if (line.startsWith("###")) {
+                                        //지금은 아무것도 하지 않음
+                                    } else if (line.startsWith("#")) {
+                                        //아무것도 하지 않음
+                                    } else {
+                                        code = line;
+                                    }
+                                })
+                                resolve(deckstrings.decode(code));
                             } catch(e) {
                                 reject("올바르지 않은 덱코드입니다.");
                             }
@@ -599,10 +610,23 @@ function window_shift(keyword, keyword2) {
             //덱코드 해석
             function loading_deckcode() {
                 //덱코드 분석, 저장
-                decoded = deckcode_decode(process.deck.deckcode);
+                let codelist = process.deck.deckcode.split("\n");
+                let code = "";
+                codelist.forEach(function(line) {
+                    if (line.startsWith("###")) {
+                        process.deck.name = line.replace("###","").trim();
+                    } else if (line.startsWith("#")) {
+                        //아무것도 하지 않음
+                    } else {
+                        code = line;
+                    }
+                })
+                decoded = deckcode_decode(code);
                 process.deck.cards = decoded.cards;
                 process.deck.class = decoded.class;
                 process.deck.format = decoded.format;
+                //저장된 덱코드 제거(향후 덱코드 동기화 방지)
+                delete process.deck.deckcode;
 
                 //있으면 덱 검증
                 loading_deckvalidate();
