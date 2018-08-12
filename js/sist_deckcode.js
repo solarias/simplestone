@@ -164,7 +164,7 @@ function export_text() {
             onOpen: function() {
                 $(".swal2-textarea").style.fontSize = "12px";
                 $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
-                $(".swal2-textarea").scrollTo(0,0);
+                $(".swal2-textarea").scrollTop = 0;
                 $(".swal2-textarea").select();
                 document.execCommand("copy");
             }

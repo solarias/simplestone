@@ -305,13 +305,6 @@ function cluster_update(position, latest, updateCollection) {
             //클러스터 업데이트
             clusterize.deck.update(nodearr);
 
-            //카드 추가 스크롤 이동(차후 구현)
-            /*
-            let firstcard = $$("#deck_list_content .card_" + latest[0])[0];
-            if (firstcard !== undefined) {
-                $("#deck_list").scrollTop = firstcard.offsetTop;
-            */
-
             //덱 상태 최신화
             deck_refresh();
 
