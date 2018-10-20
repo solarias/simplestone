@@ -1063,7 +1063,7 @@ body {
     }
 
     /*덱 리스트*/
-    #main_deck {position: relative;}
+    #main_deck {position: absolute;}
         #deck_hero {
             position: relative;
             width:100%;
