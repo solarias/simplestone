@@ -3,6 +3,7 @@
 1. JSON 업데이트
   - https://api.hearthstonejson.com/v1/ 에서 최신 카드정보 찾기
   - ./js/cards_collectible.json 정보로 적용하기
+  - localhost로 접속하여 정보가 잘 반영되었는지 꼭 확인할 것
 
 2. sist_data.js 업데이트
   (영문 코드명은 JSON 파일에서 신규 카드 set 명칭 확인)
@@ -17,3 +18,6 @@
   - run.bat 실행 (잘 안되면 프로그램 껐다 재실행)
   - ./output 폴더 내 생성된 2개의 폴더 복사
   - ./images 폴더에 붙여넣기
+
+4. 공지사항 업데이트
+  - ./notice.json 편집하기
