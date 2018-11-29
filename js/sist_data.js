@@ -164,7 +164,8 @@ const DATA = {
             "LOOTAPALOOZA":"코볼트와 지하 미궁",
             //2018↓
             "GILNEAS":"마녀숲",
-            "BOOMSDAY":"박사 붐의 폭심만만 프로젝트"
+            "BOOMSDAY":"박사 붐의 폭심만만 프로젝트",
+            "TROLL":"라스타칸의 대난투"
         },
         FORMAT:{
             "CORE":"정규",
@@ -187,7 +188,8 @@ const DATA = {
             "LOOTAPALOOZA":"정규",
             //2018↓
             "GILNEAS":"정규",
-            "BOOMSDAY":"정규"
+            "BOOMSDAY":"정규",
+            "TROLL":"정규"
         },
         YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
             //2014↓
@@ -207,7 +209,8 @@ const DATA = {
             "LOOTAPALOOZA":"2017",
             //2018↓
             "GILNEAS":"2018",
-            "BOOMSDAY":"2018"
+            "BOOMSDAY":"2018",
+            "TROLL":"2018"
         }
         /*
         신규 확장팩을 적용하려면 다음 오브젝트를 추가하세요.
