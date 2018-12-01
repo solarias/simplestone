@@ -283,7 +283,7 @@ function card_setFilter(cmd, isNewset) {
                   '<button id="popup_rarity_FREE" class="popup_button full" data-rarity="기본"><img src="./images/mana_free.png">기본 카드</button>' +
                   '<button id="popup_rarity_COMMON" class="popup_button full" data-rarity="일반"><img src="./images/mana_common.png">일반 카드</button>' +
                   '<button id="popup_rarity_RARE" class="popup_button full" data-rarity="희귀"><img src="./images/mana_rare.png">희귀 카드</button>' +
-                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="영웅"><img src="./images/mana_epic.png">영웅 카드</button>' +
+                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="특급"><img src="./images/mana_epic.png">특급 카드</button>' +
                   '<button id="popup_rarity_LEGENDARY" class="popup_button full" data-rarity="전설"><img src="./images/mana_legendary.png">전설 카드</button>',
                 onOpen:function() {
                     //현재 등급 검색필터 보여주기

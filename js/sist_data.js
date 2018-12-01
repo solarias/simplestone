@@ -76,14 +76,14 @@ const DATA = {
             "기본":"FREE",
             "일반":"COMMON",
             "희귀":"RARE",
-            "영웅":"EPIC",
+            "특급":"EPIC",
             "전설":"LEGENDARY"
         },
         KR:{
             "FREE":"기본",
             "COMMON":"일반",
             "RARE":"희귀",
-            "EPIC":"영웅",
+            "EPIC":"특급",
             "LEGENDARY":"전설"
         },
         DUST:{
