@@ -21,3 +21,9 @@
 
 4. 공지사항 업데이트
   - ./notice.json 편집하기
+
+
+* 작동 테스트 하는 법
+ - 심플스톤 폴더에서 Git bash here
+ - http-server 입력
+ - http://localhost:8080/ 접속
