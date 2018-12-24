@@ -115,6 +115,7 @@
 					<button id="deckconfig_deckstring" class="deckconfig_button" aria-label="덱코드 출력">덱코드 출력</button>
 					<button id="deckconfig_text" class="deckconfig_button" aria-label="텍스트 출력">텍스트 출력</button>
 					<button id="deckconfig_tag" class="deckconfig_button" aria-label="HTML 태그 출력">HTML 태그 출력</button>
+					<button id="deckconfig_image" class="deckconfig_button" aria-label="이미지 출력">이미지 출력</button>
 				</div>
 
 				<!--카드 목록-->
@@ -219,6 +220,16 @@
 				화면을 클릭하면 창이 닫힙니다.
 			</div>
 		</section>
+		<!--별도 창 - 덱 이미지-->
+		<section id="frame_deckimage">
+			<div id="deckimage_top">
+				<img id="deckimage_img">
+			</div>
+			<div id="deckimage_bottom">
+					<a id="button_download" class="deckmiage_botton" aria-label="이미지 다운로드">이미지 다운로드</a>
+					<button id="button_closeimage" class="deckmiage_botton" aria-label="닫기">닫기</button>
+			</div>
+		</section>
 		<!--별도 창 - 카드 정보 (좌측)-->
 		<section id="frame_cardmonitor" class="subscreen"></section>
 
@@ -233,10 +244,10 @@
 			<!-- for IE support -->
 			<script src="./package/sweetalert2/node_modules/es6-promise-polyfill/promise.min.js"></script>
 			<script src="./package/fetch.js"></script>
-		<!--외부 보조 라이브러리123-->
+		<!--외부 보조 라이브러리-->
 
-        <script type="text/javascript" src="./js/deckstrings.js"></script>
-        <script type="text/javascript" src="./js/sist_data.js"></script>
+    <script type="text/javascript" src="./js/deckstrings.js"></script>
+    <script type="text/javascript" src="./js/sist_data.js"></script>
 		<script type="text/javascript" src="./js/sist_icondata.js"></script>
 		<script type="text/javascript" src="./js/sist_filterNsearch.js"></script>
 		<script type="text/javascript" src="./js/sist_cardinfo.js"></script>

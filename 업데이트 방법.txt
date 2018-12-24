@@ -17,7 +17,8 @@
   - cards_collectible.json 최신화 (1번 항목 참고)
   - run.bat 실행 (잘 안되면 프로그램 껐다 재실행)
   - ./output 폴더 내 생성된 2개의 폴더 복사
-  - ./images 폴더에 붙여넣기
+  - 원본 ./images 폴더에 붙여넣기 (portraits, tiles)
+  - ./images/portraits_replace 폴더와 ./images/tiles_replace 폴더의 이미지들을 각각 portraits, tiles 폴더에 붙여넣기 (대체요 이미지)
 
 4. 공지사항 업데이트
   - ./notice.json 편집하기

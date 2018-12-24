@@ -74,10 +74,64 @@ Array.prototype.min = function() {
 };
 
 //=================================================================================================================
-//※ 함수 - 마우스 액션
+//※ 함수 - CANVAS
 //=================================================================================================================
+//캔버스 HIDPI 적용(context, 규격까지 정의 후 사용하기)
+function scaleCanvas(canvas, context, width, height) {
+  // assume the device pixel ratio is 1 if the browser doesn't specify it
+  const devicePixelRatio = window.devicePixelRatio || 1;
 
+  // determine the 'backing store ratio' of the canvas context
+  const backingStoreRatio = (
+    context.webkitBackingStorePixelRatio ||
+    context.mozBackingStorePixelRatio ||
+    context.msBackingStorePixelRatio ||
+    context.oBackingStorePixelRatio ||
+    context.backingStorePixelRatio || 1
+  );
 
+  // determine the actual ratio we want to draw at
+  ratio = 2;
+  //const ratio = devicePixelRatio / backingStoreRatio;
+
+  if (ratio !== 1) {
+  //if (devicePixelRatio !== backingStoreRatio) {
+    // set the 'real' canvas size to the higher width/height
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+
+    // ...then scale it back down with CSS
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+  }
+  else {
+    // this is a normal 1:1 device; just scale it simply
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = '';
+    canvas.style.height = '';
+  }
+
+  // scale the drawing context so everything will work at the higher ratio
+  context.scale(ratio, ratio);
+}
+
+//캔버스 텍스트 ellipsis 적용
+function fittingString(c, str, maxWidth) {
+    var width = c.measureText(str).width;
+    var ellipsis = '…';
+    var ellipsisWidth = c.measureText(ellipsis).width;
+    if (width<=maxWidth || width<=ellipsisWidth) {
+        return str;
+    } else {
+        var len = str.length;
+        while (width>=maxWidth-ellipsisWidth && len-->0) {
+            str = str.substring(0, len);
+            width = c.measureText(str).width;
+        }
+        return str+ellipsis;
+    }
+}
 //=================================================================================================================
 //※ 함수 - DOM 관련
 //=================================================================================================================

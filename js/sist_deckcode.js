@@ -676,3 +676,267 @@ function deckcode_tag() {
 
     return _wrapper.innerHTML;
 }
+
+//덱 이미지 출력
+function export_image() {
+  try {
+    let deckimage = deckcode_image();//텍스트 출력
+    $("#frame_deckimage").classList.add("show");
+
+    $("#deckimage_img").src = deckimage;
+    $("#button_download").href = deckimage;
+    $("#button_download").download = process.deck.name + ".jpg";
+
+    $("#button_closeimage").onclick = function() {
+        $("#frame_deckimage").classList.remove("show");
+    }
+  } catch (e) {
+      //오류창 열기
+      nativeToast({
+          message: '오류 발생 - 이미지를 출력할 수 없습니다.',
+          position: 'center',
+          timeout: 2000,
+          type: 'error',
+          closeOnClick: 'true'
+      });
+  }
+}
+
+//덱 이미지 제작
+function deckcode_image() {
+    //캔버스 준비
+    let deckcanvas = document.createElement("canvas#deckcanvas");
+    let ctx = deckcanvas.getContext("2d");
+
+    //캔버스 부위별 규격 계산
+    let imagesize = {
+      wrapper:{
+        width:300
+      },
+      header:{
+        border:2,
+        padding:5,
+        width:300,
+        height:50,
+        gradient_start:90,
+        gradient_end:240,
+        dust:16,
+        format:16,
+        deckname:24
+      },
+      date:{
+        padding:5,
+        height:26,
+        font:16
+      },
+      card:{
+        width:300,
+        height:40,
+        border:1,
+        gap:5,
+        gradient_start:180,
+        gradient_end:280,
+        cost:{
+          padding:2,
+          width:40,
+          font:30,
+          font_position:20
+        },
+        name:{
+          padding:8,
+          position:5,
+          maxwidth:230,
+          font:20,
+        },
+        quantity:{
+          width:20,
+          padding:10,
+          font:16
+        }
+      },
+      footer:{
+        padding:5,
+        width:300,
+        height:22,
+        font:16
+      }
+    }
+
+    //캔버스 크기 계산
+    deckcanvas.width = imagesize.wrapper.width.toString();
+    deckcanvas.height = (imagesize.header.height
+      + imagesize.date.height
+      + (imagesize.card.gap * (process.deck.cards.length + 1))
+      + (imagesize.card.height * process.deck.cards.length)
+      + imagesize.footer.height).toString();
+    imagesize.wrapper.height = deckcanvas.height;
+    scaleCanvas(deckcanvas, ctx, deckcanvas.width, deckcanvas.height);
+
+    //캔버스 그리기
+      //배경색
+      ctx.fillStyle = "#392C4A";
+      ctx.fillRect(0, 0, deckcanvas.width, deckcanvas.height);
+
+      //헤더
+        //헤더 이미지
+        let heroimg = new Image();
+        heroimg.src = HEROURL + DATA.CLASS.ID[process.deck.class] + ".jpg";
+        heroimg.height = imagesize.header.height;
+        heroimg.width = imagesize.header.height * heroimg.naturalWidth / heroimg.naturalHeight;
+        ctx.drawImage(heroimg, imagesize.wrapper.width - heroimg.width, 0, heroimg.width, heroimg.height);
+
+        //헤더 그라디언트
+        let grd = ctx.createLinearGradient(imagesize.header.gradient_start, 0, imagesize.header.gradient_end, 0);
+        grd.addColorStop(0, "rgb(60,60,60)");
+        grd.addColorStop(1, "transparent");
+        ctx.fillStyle = grd;
+        ctx.fillRect(imagesize.header.gradient_start, 0,imagesize.header.gradient_end, imagesize.header.height);
+        ctx.fillStyle = "rgb(60,60,60)";
+        ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height);
+
+        //테두리
+        ctx.strokeStyle = "gold";
+        ctx.lineWidth = imagesize.header.border;
+        ctx.strokeRect(imagesize.header.border/2, imagesize.header.border/2, imagesize.wrapper.width - imagesize.header.border, imagesize.header.height - imagesize.header.border);
+
+        //가루
+        let dust = new Image(imagesize.header.dust,imagesize.header.dust);
+        dust.src = "./images/icon_dust.png";
+        ctx.drawImage(dust, imagesize.header.padding, imagesize.header.padding, imagesize.header.dust, imagesize.header.dust);
+
+        ctx.fillStyle = 'skyblue';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 0.5;
+        ctx.font = 'bold ' + imagesize.header.dust + 'px sans-serif';
+        ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 1);
+        ctx.strokeText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 1);
+        ctx.fill();
+
+        //덱 이름
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 0.5;
+        ctx.font = 'bold ' + imagesize.header.deckname + 'px sans-serif';
+        ctx.textAlign = "left";
+        ctx.fillText(fittingString(ctx, process.deck.name, imagesize.wrapper.width - imagesize.header.padding*2), imagesize.header.padding, imagesize.header.padding + imagesize.header.dust + imagesize.header.deckname);
+        ctx.strokeText(fittingString(ctx, process.deck.name, imagesize.wrapper.width - imagesize.header.padding*2), imagesize.header.padding, imagesize.header.padding + imagesize.header.dust + imagesize.header.deckname);
+        ctx.fill();
+        ctx.stroke();
+
+      //날짜
+        //배경
+        ctx.fillStyle = "#222222";
+        ctx.fillRect(0, imagesize.header.height, imagesize.wrapper.width, imagesize.date.height);
+
+        //연도
+        ctx.fillStyle = 'white';
+        ctx.font = imagesize.date.font + 'px sans-serif';
+        ctx.textAlign = "left";
+        ctx.fillText(DATA.YEAR, imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
+        ctx.fill();
+
+        //포맷
+        if (process.deck.format === "정규") {
+          ctx.fillStyle = 'lime';
+        } else {
+          ctx.fillStyle = 'orange';
+        }
+
+        ctx.font = 'bold ' + imagesize.header.format + 'px sans-serif';
+        ctx.textAlign = "right";
+        ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
+
+        ctx.fill();
+
+      //카드
+      process.deck.cards.forEach(function(card, i) {
+        //카드정보
+        let info = session.db[session.index[card[0]]];
+        //Y축 시작점
+        let ystart = imagesize.header.height
+         + imagesize.date.height
+         + imagesize.card.gap * (i+1)
+         + imagesize.card.height * i
+        //이미지 변수
+        let cardimg = new Image();
+
+        //이미지
+        cardimg.src = TILEURL + info.id + ".jpg";
+        cardimg.height = imagesize.card.height;
+        cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
+        ctx.drawImage(cardimg, imagesize.wrapper.width - cardimg.width, ystart, cardimg.width, cardimg.height);
+
+        //그라디언트
+        grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
+        grd.addColorStop(0, "rgb(100,100,100)");
+        grd.addColorStop(1, "transparent");
+        ctx.fillStyle = grd;
+        ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
+        ctx.fillStyle = "rgb(100,100,100)";
+        ctx.fillRect(0, ystart, imagesize.card.gradient_start, imagesize.card.height);
+
+        //비용
+        ctx.fillStyle = DATA.RARITY.COLOR[info.rarity];
+        ctx.fillRect(0, ystart, imagesize.card.cost.width, imagesize.card.height);
+
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.texAlign = 'left';
+
+        ctx.font = 'bold ' + imagesize.card.cost.font + 'px sans-serif';
+        ctx.textAlign = "center";
+        ctx.fillText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
+        ctx.strokeText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
+
+        ctx.fill();
+        ctx.stroke();
+
+        //이름
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1;
+        ctx.font = "800 " + imagesize.card.name.font + "px Charcoal";
+        ctx.textAlign = "left";
+        ctx.fillText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
+        ctx.strokeText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
+        ctx.fill();
+        ctx.stroke();
+
+        //수량
+        if (card[1] > 1 || info.rarity === "LEGENDARY") {
+          ctx.fillStyle = "black";
+          ctx.fillRect(imagesize.wrapper.width - imagesize.card.quantity.width, ystart, imagesize.card.quantity.width, imagesize.card.height);
+
+          ctx.fillStyle = 'gold';
+          ctx.font = 'bold ' + imagesize.card.quantity.font + 'px sans-serif';
+          ctx.textAlign = "center";
+          let quantitytext = (info.rarity === "LEGENDARY") ? "★" : card[1].toString();
+          ctx.fillText(quantitytext, imagesize.wrapper.width - imagesize.card.quantity.width / 2, ystart + imagesize.card.quantity.padding + imagesize.card.quantity.font);
+
+          ctx.fill();
+        }
+
+        //테두리
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = imagesize.card.border;
+        ctx.strokeRect(0, ystart, imagesize.wrapper.width, imagesize.card.height);
+
+      })
+
+      //푸터
+        //배경
+        ctx.fillStyle = "#222222";
+        ctx.fillRect(0, imagesize.wrapper.height - imagesize.footer.height, imagesize.wrapper.width, imagesize.footer.height);
+
+        //"심플스톤"
+        ctx.fillStyle = 'white';
+        ctx.font = imagesize.footer.font + 'px sans-serif';
+        ctx.textAlign = "right";
+        ctx.fillText("created at Simplestone", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
+        ctx.fill();
+
+    //확인용 출력
+    let result = deckcanvas.toDataURL("image/jpeg");
+    return result;
+}
