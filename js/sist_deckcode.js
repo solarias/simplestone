@@ -682,6 +682,7 @@ function export_image() {
   try {
     let deckimage = deckcode_image();//텍스트 출력
     $("#frame_deckimage").classList.add("show");
+    $("#deckimage_top").scrollTop = 0;
 
     $("#deckimage_img").src = deckimage;
     $("#button_download").href = deckimage;
@@ -936,7 +937,7 @@ function deckcode_image() {
         ctx.fillText("created at Simplestone", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
         ctx.fill();
 
-    //확인용 출력
+    //덱 이미지 출력
     let result = deckcanvas.toDataURL("image/jpeg");
     return result;
 }
