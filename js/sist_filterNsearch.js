@@ -115,9 +115,7 @@ function card_matchKeyword(target, keyword) {
     let list = ["name","text","race","type"];
     for (let i = 0;i<list.length;i++) {
         if (target[list[i]] !== undefined) {
-            let temptext = searchable(target[list[i]]);
-                keyword = searchable(keyword);
-            if (temptext.indexOf(keyword) >= 0) {
+            if (session.keywords[target.dbfid][list[i]].indexOf(keyword) >= 0) {
                 return true;
             }
         }
@@ -167,8 +165,21 @@ function card_setFilter(cmd, isNewset) {
                       '<button id="popup_class_PRIEST" class="popup_button trisection" data-class="PRIEST">사제</button>' +
                       '<button id="popup_class_NEUTRAL" class="popup_button full" data-class="NEUTRAL">중립</button>',
                     onOpen:function() {
-                        //현재 등급 검색필터 보여주기
+                        //현재 직업 검색필터 보여주기
                         $("#popup_class_" + process.search.class).classList.add("selected");
+                        //검색 결과가 없는 필터 흐릿하게 만들기
+                        let searchArr = process.search.allClassResult;
+                        Object.keys(DATA.CLASS.KR).forEach(function(x) {
+                            let haveCard = 0;
+                            for (let i =0;i < searchArr.length;i++) {
+                                if (session.db[session.index[searchArr[i]]].cardClass === x) {
+                                    haveCard = 1;
+                                    break;
+                                }
+                            }
+                            if (haveCard === 0) $("#popup_class_" + x).classList.add("noCard");
+                        })
+
                         //버튼 상호작용
                         $$(".popup_button").forEach(function(x) {
                             x.onclick = function() {
@@ -557,7 +568,7 @@ function card_setFilter(cmd, isNewset) {
                     $("#keyword_text").innerHTML = text;
                     $("#keyword_text2").innerHTML = text;
                     //검색 개시
-                    card_search();
+                    card_search("keyword");
                 }
             })
         }
@@ -608,21 +619,16 @@ function card_setFilter(cmd, isNewset) {
         })
 }
 
-//카드 검색 및 출력
-function card_search() {
-    //로딩 이미지 출력
-    $("#collection_loading").style.display = "block";
-
-    setTimeout(function() {
-        //0) 로딩 이미지 닫기
-        $("#collection_loading").style.display = "none";
-    },10);
-
-    //1) 출력할 카드 목록 정리
+//필터에 따라 카드 검색
+function card_getSearchResult(className) {
+    //검색 키워드가 있다면 검색용으로 쓸 수 있도록 처리해주기
+    let keyword = "";
+    if (process.search.keyword) keyword = searchable(process.search.keyword);
+    //정해둔 직업으로 카드 검색
     let arr = [];
     session.db.forEach(function(x) {
         if (//직업
-        (x.cardClass === process.search.class &&//검색 직업과 카드 직업은 반드시 맞아야 함
+        (className === "all" || (x.cardClass === className &&//검색 직업과 카드 직업은 반드시 맞아야 함
             (process.deck.class === undefined ||//정해둔 직업 없으면 다 출력
             (process.deck.class !== undefined &&//정해둔 직업 있으면
                 (x.cardClass === process.deck.class ||//현 직업과 맞거나
@@ -633,7 +639,7 @@ function card_search() {
                 )
             )
             )
-        ) &&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
+        )) &&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
         (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format ||//포맷(정규는 무조건 포함)
@@ -641,16 +647,98 @@ function card_search() {
         (process.search.mana === "all" || card_matchMana(x, process.search.mana) === true) &&//마나
         (process.search.rarity === "all" || x.rarity === process.search.rarity) &&//등급
         (process.search.set === "all" || x.set === process.search.set) &&
-        card_matchKeyword(x, process.search.keyword) === true) {
+        card_matchKeyword(x, keyword) === true) {
             arr.push(x.dbfid);
         }
     })
-        //카드 목록 저장
-        process.search.result = arr;
 
-    //2) 카드 목록에 따라 노드 불러오기
+    //검색된 결과 수량 출력
+    return arr;
+}
+
+//카드 검색
+function card_search(action) {
+    //로딩 이미지 출력
+    $("#collection_loading").style.display = "block";
+
+    setTimeout(function() {
+        //0) 로딩 이미지 닫기
+        $("#collection_loading").style.display = "none";
+    },10);
+
+    //검색 결과물 준비
+    let arrResult = [];
+    //키워드 검색 - 각 직업별로 검색
+    if (action === "keyword") {
+        //검색 직업으로 카드 검색
+        arrResult = card_getSearchResult(process.search.class);
+        //검색 결과 있으면
+        if (arrResult.length > 0) {
+            //출력
+            card_showResult(arrResult);
+            return;//종료
+        }
+        //(없으면) 검색 직업 임시저장
+        let firstClass = process.search.class;
+        //최초 검색 임시저장(딥 카피)
+        let firstResuht = deepCopy(arrResult);
+        //직업 목록 불러오기 (cardinfo or deckbuilding)
+        let classArr = [];
+        //"카드 정보 보기"라면
+        if (process.state === "cardinfo") {
+            //(현 직업 빼고) 전 직업 집어넣기
+            Object.keys(DATA.CLASS.KR).forEach(function(x) {
+                if (x !== process.search.class) classArr.push(x);
+            })
+        //"덱 짜기"라면
+        } else if (process.state === "deckbuilding") {
+            //검색 직업이 중립 -
+            if (process.search.class === "NEUTRAL") classArr.push(process.deck.class);
+            else classArr.push("NEUTRAL");
+        }
+        for (let i = 0;i < classArr.length;i++) {
+            //검색 직업 변경 후 검색
+            process.search.class = classArr[i];
+            //결과가 나오면
+                arrResult = card_getSearchResult(process.search.class);
+                if (arrResult.length > 0) {
+                    //상단 직업 버튼 변경
+                    $("#search_class").innerHTML = DATA.CLASS.KR[process.search.class];
+                    //직업 변경 팝업
+                    nativeToast({
+                        message: '키워드 검색 결과에 따른<br>직업 필터링 변경<br>(' + DATA.CLASS.KR[firstClass] + ' -> ' + DATA.CLASS.KR[process.search.class] + ')',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'success',
+                        closeOnClick: 'true'
+                    });
+                    //출력
+                    card_showResult(arrResult);
+                    return;//중단
+                }
+        }
+        //(모든 결과가 없으면) 검색 직업 복원
+        process.search.class = firstClass;
+        //최초 결과로 복원
+        arrResult = firstResuht;
+        //출력
+        card_showResult(arrResult);
+    //그 외 - 현재 직업으로만 검색
+    } else {
+        arrResult = card_getSearchResult(process.search.class);
+        //출력
+        card_showResult(arrResult);
+    }
+}
+
+//카드 출력
+function card_showResult(arr) {
+    //카드 목록 저장
+    process.search.result = arr;
+        //전체 직업 카드 목록 저장(필터링용)
+        process.search.allClassResult = card_getSearchResult("all");
+    //카드 목록에 따라 노드 불러오기
     cluster_update("collection",false);
-
     //검색된 카드 수량 표시
     $("#footer_name_left").innerHTML = "카드 목록(" + arr.length + ")";
 }

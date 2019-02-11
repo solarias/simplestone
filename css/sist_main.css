@@ -259,10 +259,19 @@ body {
                 .popup_button .RARE{color:#315376;font-size:inherit;}
                 .popup_button .EPIC{color:#644c82;font-size:inherit;}
                 .popup_button .LEGENDARY{color:#ffb00d;font-size:inherit;}
-            .popup_button:hover, .popup_button.selected {
+            .popup_button.selected {
                 background:#87ece9;
 
                 color:black;
+            }
+            .popup_button:hover {
+                background:orange;
+
+                color:black;
+            }
+            .popup_button.noCard {
+                opacity:0.3;
+                cursor:not-allowed;
             }
         .popup_title {
             position: relative;

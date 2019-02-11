@@ -235,6 +235,17 @@ function window_shift(keyword, keyword2) {
                 session.db.forEach(function(info, index) {
                     session.fragment[index] = card_generateFragment(info);
                 })
+                //(키워드 검색용) 단어장 구축
+                session.keywords = {};
+                session.db.forEach(function(x) {
+                    session.keywords[x.dbfid] = {};
+                    let wordbook = session.keywords[x.dbfid];
+
+                    let list = ["name","text","race","type"];
+                    for (let i = 0;i<list.length;i++) {
+                        if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
+                    }
+                })
 
                 //화면 전환
                 window_shift("titlescreen");

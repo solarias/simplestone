@@ -59,7 +59,6 @@ const DATA = {
             "PRIEST":813
         },
         KR:{
-            "NEUTRAL":"중립",
             "WARRIOR":"전사",
             "SHAMAN":"주술사",
             "ROGUE":"도적",
@@ -68,7 +67,8 @@ const DATA = {
             "DRUID":"드루이드",
             "WARLOCK":"흑마법사",
             "MAGE":"마법사",
-            "PRIEST":"사제"
+            "PRIEST":"사제",
+            "NEUTRAL":"중립"
         }
     },
     RARITY:{
