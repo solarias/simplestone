@@ -141,7 +141,7 @@ const DATA = {
     DECK_SLOT_LIMIT:5,
     DECK_LIMIT:30,
     //여기서부터 향후 업데이트 시 변경
-    YEAR:"까마귀의 해",
+    YEAR:"용의 해",
     SET:{
         KR:{
             "CORE":"기본카드",
@@ -165,7 +165,9 @@ const DATA = {
             //2018↓
             "GILNEAS":"마녀숲",
             "BOOMSDAY":"박사 붐의 폭심만만 프로젝트",
-            "TROLL":"라스타칸의 대난투"
+            "TROLL":"라스타칸의 대난투",
+            //2019↓
+            "DALARAN":"어둠의 반격"
         },
         FORMAT:{
             "CORE":"정규",
@@ -183,13 +185,15 @@ const DATA = {
             "KARA":"야생",
             "GANGS":"야생",
             //2017↓
-            "UNGORO":"정규",
-            "ICECROWN":"정규",
-            "LOOTAPALOOZA":"정규",
+            "UNGORO":"야생",
+            "ICECROWN":"야생",
+            "LOOTAPALOOZA":"야생",
             //2018↓
             "GILNEAS":"정규",
             "BOOMSDAY":"정규",
-            "TROLL":"정규"
+            "TROLL":"정규",
+            //2019↓
+            "DALARAN":"정규"
         },
         YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
             //2014↓
@@ -210,7 +214,9 @@ const DATA = {
             //2018↓
             "GILNEAS":"2018",
             "BOOMSDAY":"2018",
-            "TROLL":"2018"
+            "TROLL":"2018",
+            //2019↓
+            "DALARAN":"2019"
         }
         /*
         신규 확장팩을 적용하려면 다음 오브젝트를 추가하세요.
