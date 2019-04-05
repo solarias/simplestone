@@ -4,6 +4,7 @@
   - https://api.hearthstonejson.com/v1/ 에서 최신 카드정보 찾기
   - ./js/cards_collectible.json 정보로 적용하기
   - localhost로 접속하여 정보가 잘 반영되었는지 꼭 확인할 것
+  - 텍스트 출력이 잘못된 카드들은 ./js/cards_textreplace.json 파일에 dbfid(텍스트) 기준으로 대체할 텍스트를 등록하기
 
 2. sist_data.js 업데이트
   (영문 코드명은 JSON 파일에서 신규 카드 set 명칭 확인)
