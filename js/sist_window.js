@@ -235,20 +235,32 @@ function window_shift(keyword, keyword2) {
                 session.db.forEach(function(info, index) {
                     session.fragment[index] = card_generateFragment(info);
                 })
-                //(키워드 검색용) 단어장 구축
-                session.keywords = {};
-                session.db.forEach(function(x) {
-                    session.keywords[x.dbfid] = {};
-                    let wordbook = session.keywords[x.dbfid];
-
-                    let list = ["name","text","race","type"];
-                    for (let i = 0;i<list.length;i++) {
-                        if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
-                    }
+                //일부 카드 텍스트 대체(card_textreplace.json 불러와서 참고함)
+                fetch("./js/card_textreplace.json")
+                .then(function(response) {
+                    return response.json();
                 })
+                .then(function(replaceJson) {
+                    session.db.forEach(function(x,index) {
+                        if (replaceJson[x.dbfid] !== undefined) {
+                            session.db[session.index[x.dbfid]].text = replaceJson[x.dbfid];
+                        }
+                    })
+                    //(키워드 검색용) 단어장 구축
+                    session.keywords = {};
+                    session.db.forEach(function(x) {
+                        session.keywords[x.dbfid] = {};
+                        let wordbook = session.keywords[x.dbfid];
 
-                //화면 전환
-                window_shift("titlescreen");
+                        let list = ["name","text","race","type"];
+                        for (let i = 0;i<list.length;i++) {
+                            if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
+                        }
+                    })
+
+                    //화면 전환
+                    window_shift("titlescreen");
+                })
             }
 
             break;
@@ -266,6 +278,9 @@ function window_shift(keyword, keyword2) {
                 window_clear();
                 $("#main_titlescreen").classList.add("show");
                 $("#header_back").classList.remove("show");
+
+                //최신 확장팩 문구 표기
+                $("#newset_title2").innerHTML = "최신 확장팩: " + DATA.SET.KR[DATA.SET.LATEST];
 
                 //신규 확장팩 있으면 출력
                 if (DATA.SET.NEW !== undefined &&

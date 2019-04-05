@@ -143,6 +143,7 @@ const DATA = {
     //여기서부터 향후 업데이트 시 변경
     YEAR:"용의 해",
     SET:{
+        LATEST:"DALARAN",
         KR:{
             "CORE":"기본카드",
             "EXPERT1":"오리지널",

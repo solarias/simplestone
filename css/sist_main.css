@@ -707,13 +707,14 @@ body {
                 height:40px;
                 text-align:center;
             }
-                #newset_title {
+                .newset_title {
                     display:inline-block;
 
-                    padding:5px 10px;
+                    padding:5px 20px;
+                    margin:0px auto;
                     height:40px;
 
-                    background-color:rgba(200,200,200,0.7);
+                    background-color:rgba(62,64,229,0.7);
                     border-radius: 10px;
                     box-sizing: border-box;
 
