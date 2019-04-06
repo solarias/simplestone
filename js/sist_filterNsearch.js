@@ -189,7 +189,6 @@ function card_setFilter(cmd, isNewset) {
                                 //키워드 변경
                                 let krtext = DATA.CLASS.KR[classtext];
                                 $("#search_class").innerHTML = krtext;
-                                $("#mobilefilter_rarity").innerHTML = krtext;
                                 //창 닫기
                                 swal.close();
                                 //검색 개시
