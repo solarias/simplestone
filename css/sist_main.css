@@ -1,10 +1,46 @@
+@font-face {
+    font-family: 'Spoqa Han Sans';
+    font-weight: 700;
+    src: local('Spoqa Han Sans Bold'),
+    url('../package/font/SpoqaHanSansBold.woff2') format('woff2'),
+    url('../package/font/SpoqaHanSansBold.woff') format('woff'),
+    url('../package/font/SpoqaHanSansBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans';
+    font-weight: 400;
+    src: local('Spoqa Han Sans Regular'),
+    url('../package/font/SpoqaHanSansRegular.woff2') format('woff2'),
+    url('../package/font/SpoqaHanSansRegular.woff') format('woff'),
+    url('../package/font/SpoqaHanSansRegular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans';
+    font-weight: 300;
+    src: local('Spoqa Han Sans Light'),
+    url('../package/font/SpoqaHanSansLight.woff2') format('woff2'),
+    url('../package/font/SpoqaHanSansLight.woff') format('woff'),
+    url('../package/font/SpoqaHanSansLight.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans';
+    font-weight: 100;
+    src: local('Spoqa Han Sans Thin'),
+    url('../package/font/SpoqaHanSansThin.woff2') format('woff2'),
+    url('../package/font/SpoqaHanSansThin.woff') format('woff'),
+    url('../package/font/SpoqaHanSansThin.ttf') format('truetype');
+}
+
 * {
     margin:0;
     padding:0;
     border:0;
 
     font-size:16px;
-    font-family:'맑은 고딕','Malgun Gothic',나눔고딕,돋움,Dotum,굴림,Gulim,'Apple SD Gothid Neo',sans-serif;
+    font-family: 'Spoqa Han Sans', 'Sans-serif';
 }
 
 /*=====================================================*/
@@ -557,10 +593,10 @@ body {
     }
 
     /*업데이트 화면*/
-    #main_init {
+    #main_notice {
         transition-property: none;
     }
-        #init_notice {
+        #notice_content {
             position:relative;
             overflow-y:scroll;
 
@@ -568,26 +604,26 @@ body {
             padding:10px;
             width:calc(100% - 200px);
                 min-width:260px;
-            height:calc(100% - 60px - 10px - 90px);
+            height:calc(100% - 10px - 90px);
 
             background:rgba(0,0,0,0.6);
             border-radius:10px;
             box-sizing: border-box;
         }
-            #init_notice p[date] {
+            #notice_content p[date] {
                 width:100%;
                 color:lime;
             }
-            #init_notice p[content] {
+            #notice_content p[content] {
                 margin-left:10px;
                 width:calc(100% - 5px);
                 color:white;
                 word-break: keep-all;
             }
-            #init_notice p[content].last {
+            #notice_content p[content].last {
                 margin-bottom:10px;
             }
-        #init_update {
+        #notice_update {
             position:relative;
 
             margin:20px auto 0 auto;
@@ -604,10 +640,10 @@ body {
             color:white;
             text-align: center;
         }
-            #init_update.show {
-                animation:init_update_scale 0.1s linear 0s forwards;
+            #notice_update.show {
+                animation:notice_update_scale 0.1s linear 0s forwards;
             }
-            @keyframes init_update_scale {
+            @keyframes notice_update_scale {
                 0% {transform:scale(0,1);}
                 1% {transform:scale(0.01,1);}
                 100% {transform:scale(1,1);}
@@ -1388,7 +1424,7 @@ body {
 /*=====================================================*/
 /* 푸터 */
 /*=====================================================*/
-#footer_init {
+#footer_update {
     position:absolute;
         left:0;bottom:0;
         z-index:2;
@@ -1403,11 +1439,11 @@ body {
     transform:translate(0,100%);
     pointer-events: none;
 }
-        #footer_init.show {
+        #footer_update.show {
             transform:translate(0,0);
             pointer-events: auto;
         }
-    .footer_init_button {
+    .footer_update_button {
         position:relative;
         height:100%;
 
@@ -1423,13 +1459,62 @@ body {
         cursor:pointer;
         white-space: nowrap;
     }
-        .footer_init_button:hover {
+        .footer_update_button:hover {
             background-color:rgba(255,255,255,0.2);
         }
-        .footer_init_button:active {
+        .footer_update_button:active {
             background-color:rgba(255,255,255,0.4);
         }
     #button_update {
+        display:block;
+        margin:0 auto;
+        width:90%;
+        border:2px white solid;
+        color:white;
+        word-break: keep-all;
+    }
+#footer_notice {
+    position:absolute;
+        left:0;bottom:0;
+        z-index:2;
+    overflow:hidden;
+
+    padding:5px;
+    width:100%;
+    height:75px;
+
+    background:#3e40e5;
+    box-sizing: border-box;
+    transform:translate(0,100%);
+    pointer-events: none;
+}
+        #footer_notice.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+    .footer_notice_button {
+        position:relative;
+        height:100%;
+
+        background:rgba(255,255,255,0.1);
+        border:2px white solid;
+        border-radius: 10px;
+        box-sizing: border-box;
+
+        color:white;
+        font-size:22px;
+        letter-spacing: -1px;
+        font-weight:bold;
+        cursor:pointer;
+        white-space: nowrap;
+    }
+        .footer_notice_button:hover {
+            background-color:rgba(255,255,255,0.2);
+        }
+        .footer_notice_button:active {
+            background-color:rgba(255,255,255,0.4);
+        }
+    #button_start {
         float:left;
         width:calc(70% - 10px);
         border:2px lime solid;
@@ -1443,7 +1528,7 @@ body {
         color:orange;
         word-break: keep-all;
     }
-        #button_update[disabled], #button_offline[disabled] {
+        #button_start[disabled], #button_offline[disabled] {
             border:2px gray solid;
             color:gray;
             pointer-events: none;

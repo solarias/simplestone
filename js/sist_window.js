@@ -19,53 +19,51 @@ function window_clear() {
 }
 
 //개별 창 설정
-function window_shift(keyword, keyword2) {
+function window_shift(keyword, keyword2, keyword3) {
     switch(keyword) {
-        //메인 창
-        case "init":
+        //업데이트 창
+        case "update":
             //창 전환
             window_clear();
-            $("#main_init").classList.add("show");
-            $("#footer_init").classList.add("show");
-            $("#header_back").classList.remove("show");
+            $("#main_update").classList.add("show");
+            $("#footer_update").classList.add("show");
+
+            break;
+        //공지사항 창
+        case "notice":
+            //창 전환
+            window_clear();
+            $("#main_notice").classList.add("show");
+            $("#footer_notice").classList.add("show");
 
             //공지사항 출력
-            fetch("./notice.json")
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(myJson) {
-                let notice = myJson.notice;
-                let noticeFrag = document.createDocumentFragment();
-                for (let i = 0;i < Math.min(30,notice.length);i++) {//공지는 최대 30개만
-                    let each = notice[i];
-                    //날짜
-                    let date = document.createElement("p[date]");
-                        date.innerHTML = each.date;
-                    noticeFrag.appendChild(date);
-                    //내용
-                    if (typeof each.content === "string") {
-                        let content = document.createElement("p.last[content]");
-                            content.innerHTML = "- " + each.content;
-                        noticeFrag.appendChild(content);
-                    } else {
-                        each.content.forEach(function(p, index) {
-                            let paragraph = document.createElement("p[content]");
-                            if (index == each.content.length - 1)
-                                paragraph.classList.add("last");
-                            paragraph.innerHTML = "- " + p;
-                            noticeFrag.appendChild(paragraph);
-                        })
-                    }
+            let notice = keyword2;
+            let noticeFrag = document.createDocumentFragment();
+            for (let i = 0;i < Math.min(30,notice.length);i++) {//공지는 최대 30개만
+                let each = notice[i];
+                //날짜
+                let date = document.createElement("p[date]");
+                    date.innerHTML = each.date;
+                noticeFrag.appendChild(date);
+                //내용
+                if (typeof each.content === "string") {
+                    let content = document.createElement("p.last[content]");
+                        content.innerHTML = "- " + each.content;
+                    noticeFrag.appendChild(content);
+                } else {
+                    each.content.forEach(function(p, index) {
+                        let paragraph = document.createElement("p[content]");
+                        if (index == each.content.length - 1)
+                            paragraph.classList.add("last");
+                        paragraph.innerHTML = "- " + p;
+                        noticeFrag.appendChild(paragraph);
+                    })
                 }
-                notice.forEach(function(each) {
-                })
-
-                $("#init_notice").appendChild(noticeFrag);
-            })
+            }
+            $("#notice_content").appendChild(noticeFrag);
 
             //상호작용
-            $("#button_update").onclick = function() {
+            $("#button_start").onclick = function() {
                 //의사 물어보기
                 swal({
                     type:"warning",
@@ -110,24 +108,21 @@ function window_shift(keyword, keyword2) {
 
             //1차: DB 업데이트 or 불러오기
             function process_update_former() {
-                //로딩 문구 출력
-                $("#init_update").classList.add("show");
-
                 //업데이트: JSON 불러온 후 로컬에 저장
                 if (session.offline === false) {
                     //시작버튼 비활성화
-                    $("#button_update").disabled = true;
+                    $("#button_start").disabled = true;
                     $("#button_offline").disabled = true;
                     //카드 정보 불러오기
-                    fetch("./js/cards_collectible.json")
+                    fetch("./js/cards.collectible.json")
                     .then(function(response) {
                         return response.json();
                     })
                     .then(function(myJson) {
-                        //혹장팩 정보 (있으면) 불러오기
+                        //확장팩 정보 (있으면)
                         if (DATA.SET.NEW !== undefined &&
                         remaindate(DATA.SET.NEW.duedate, thisdate()) < 0) {
-                            fetch("./js_newset/cards_" + DATA.SET.NEW.id + ".json")
+                            fetch("./js_newset/cards." + DATA.SET.NEW.id + ".json")
                             .then(function(response2) {
                                 return response2.json();
                             })
@@ -140,16 +135,41 @@ function window_shift(keyword, keyword2) {
                                 session.db.forEach(function(x, index) {
                                     if (x.dbfId) x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
                                 })
-                                //카드 정보 저장
+                                //collectionText가 있는 카드들 텍스트 대체
+                                session.db.forEach(function(x,index) {
+                                    if (x.collectionText !== undefined) {
+                                        x.text = x.collectionText;
+                                    }
+                                })
+                                //(키워드 검색용) 단어장 구축
+                                session.keywords = {};
+                                session.db.forEach(function(x) {
+                                    session.keywords[x.dbfid] = {};
+                                    let wordbook = session.keywords[x.dbfid];
+
+                                    let list = ["name","text","race","type"];
+                                    for (let i = 0;i<list.length;i++) {
+                                        if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
+                                    }
+                                })
+                                //DB 저장
                                 localforage.setItem("sist_db",session.db)
                                 .then(function() {
-                                    //카드정보 구축 시작
-                                    process_update_latter();
+                                    //DB 버전 저장
+                                    localforage.setItem("sist_db_version",session.dbVersion)
+                                    .then(function() {
+                                        //카드정보 구축 시작
+                                        process_update_latter();
+                                    }).catch(function() {
+                                        //버전 저장 못해도 '아무튼' 구축 시작
+                                        process_update_latter();
+                                    })
                                 }).catch(function() {
-                                    //저장 못해도 '아무튼' 구축 시작
+                                    //DB 저장 못해도 '아무튼' 구축 시작
                                     process_update_latter();
                                 });
                             })
+                        //확장팩 정보 (없으면)
                         } else {
                             //카드정보 입력
                             session.db = myJson;
@@ -159,13 +179,37 @@ function window_shift(keyword, keyword2) {
                             session.db.forEach(function(x, index) {
                                 x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
                             })
-                            //카드 정보 저장
+                            //collectionText가 있는 카드들은 텍스트 대체
+                            session.db.forEach(function(x,index) {
+                                if (x.collectionText !== undefined) {
+                                    x.text = x.collectionText;
+                                }
+                            })
+                            //(키워드 검색용) 단어장 구축
+                            session.keywords = {};
+                            session.db.forEach(function(x) {
+                                session.keywords[x.dbfid] = {};
+                                let wordbook = session.keywords[x.dbfid];
+
+                                let list = ["name","text","race","type"];
+                                for (let i = 0;i<list.length;i++) {
+                                    if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
+                                }
+                            })
+                            //DB 저장
                             localforage.setItem("sist_db",session.db)
                             .then(function() {
-                                //카드정보 구축 시작
-                                process_update_latter();
+                                //DB 버전 저장
+                                localforage.setItem("sist_db_version",session.dbVersion)
+                                .then(function() {
+                                    //카드정보 구축 시작
+                                    process_update_latter();
+                                }).catch(function() {
+                                    //버전 저장 못해도 '아무튼' 구축 시작
+                                    process_update_latter();
+                                })
                             }).catch(function() {
-                                //저장 못해도 '아무튼' 구축 시작
+                                //DB 저장 못해도 '아무튼' 구축 시작
                                 process_update_latter();
                             });
                         }
@@ -197,7 +241,7 @@ function window_shift(keyword, keyword2) {
                         //있으면 불러오기
                         } else {
                             //시작버튼 비활성화
-                            $("#button_update").disabled = true;
+                            $("#button_start").disabled = true;
                             $("#button_offline").disabled = true;
                             //불러온 정보 적용
                             session.db = deepCopy(db);
@@ -235,32 +279,9 @@ function window_shift(keyword, keyword2) {
                 session.db.forEach(function(info, index) {
                     session.fragment[index] = card_generateFragment(info);
                 })
-                //일부 카드 텍스트 대체(card_textreplace.json 불러와서 참고함)
-                fetch("./js/card_textreplace.json")
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(replaceJson) {
-                    session.db.forEach(function(x,index) {
-                        if (replaceJson[x.dbfid] !== undefined) {
-                            session.db[session.index[x.dbfid]].text = replaceJson[x.dbfid];
-                        }
-                    })
-                    //(키워드 검색용) 단어장 구축
-                    session.keywords = {};
-                    session.db.forEach(function(x) {
-                        session.keywords[x.dbfid] = {};
-                        let wordbook = session.keywords[x.dbfid];
 
-                        let list = ["name","text","race","type"];
-                        for (let i = 0;i<list.length;i++) {
-                            if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
-                        }
-                    })
-
-                    //화면 전환
-                    window_shift("titlescreen");
-                })
+                //화면 전환
+                window_shift("titlescreen");
             }
 
             break;
@@ -675,7 +696,7 @@ function window_shift(keyword, keyword2) {
                         } else {
                             //해당 세트 정보 불러오기
                             let newset = process.deck.newset;
-                            fetch("./js_newset/cards_" + newset + ".json")
+                            fetch("./js_newset/cards." + newset + ".json")
                             .then(function(response) {
                                 return response.json();
                             })

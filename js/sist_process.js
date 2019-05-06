@@ -624,9 +624,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
         } catch(e) {}
     }
     //기본 화면 상호작용
-        //업데이트 화면 공개
-        window_shift("init");
-
         //인포 버튼
         $("#header_info").onclick = function() {
             swal({
@@ -673,6 +670,32 @@ document.addEventListener("DOMContentLoaded", function(e) {
         window.onbeforeunload = function() {
            return "사이트에서 나가시겠습니까?";
         };
+    //공지사항, DB 버전 내려받기
+    fetch("./notice.json")
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(myJson) {
+        let dbinfo = myJson.dbinfo;
+        let notice = myJson.notice;
+        //저장된 DB 버전 확인
+        localforage.getItem("sist_db_version")
+        .then(function(version) {
+            //DB 버전이 없거나 불일치 : 업데이트 페이지 이동
+            if (!version || version !== dbinfo.version) {
+                //window_shift("update", dbinfo, version);
+                window_shift("notice", notice);
+            //DB 버전 일치 : 공지사항 페이지 이동
+            } else {
+                window_shift("notice", notice);
+            }
+        }).catch(function() {
+            //DB 버전 확인 불가 : 업데이트 페이지 이동
+            //window_shift("update");
+            window_shift("notice", notice);
+        })
+    })
+
 });
 //오류 취급 (출처 : http://stackoverflow.com/questions/951791/javascript-global-error-handling)
 //localhost에서는 오류 창 띄우지 않기

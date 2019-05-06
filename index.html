@@ -59,11 +59,27 @@
 			<!--메인창-->
             <section id="frame_main">
 				<!--업데이트 화면-->
-				<div id="main_init" class="mainscreen main_both">
-                    <div class="main_title">공지사항</div>
-					<div id="init_notice"></div>
-					<div id="init_update">카드 정보 불러오는 중...</div>
+				<div id="main_update" class="mainscreen main_both">
+					<div class="main_title">DB 업데이트가 필요합니다.</div>
+					<div id="update_content"></div>
+					<div id="update_message">카드 정보 불러오는 중...</div>
+					<div id="update_progress">
+						<div id="update_progress_bar"></div>
+					</div>
 				</div>
+				<footer id="footer_update" class="subscreen">
+					<button id="button_update" class="footer_update_button" aria-label="업데이트">업데이트 시작</button>
+				</footer>
+
+				<!--공지사항 화면-->
+				<div id="main_notice" class="mainscreen main_both">
+					<div class="main_title">공지사항</div>
+					<div id="notice_content"></div>
+				</div>
+				<footer id="footer_notice" class="subscreen">
+					<button id="button_start" class="footer_notice_button" aria-label="시작하기">시작하기</button>
+					<button id="button_offline" class="footer_notice_button" aria-label="오프라인 모드">오프라인 모드</button>
+				</footer>
 
 				<!--타이틀스크린-->
                 <div id="main_titlescreen" class="mainscreen main_both">
@@ -96,6 +112,10 @@
 						<div id="decklist_slot_content"></div>
 					</div>
 				</div>
+				<footer id="footer_decklist" class="subscreen">
+					<button id="button_readcode" class="footer_decklist_button" aria-label="덱코드 입력"><img src="./images/icon_deckcode.png" alt="덱코드"><span> 덱코드 입력</span></button>
+					<button id="botton_newdeck" class="footer_decklist_button" aria-label="새로운 덱"><img src="./images/icon_newdeck.png" alt="새로운 덱"><span> 새로운 덱</span></button>
+				</footer>
 
 				<!--카드정보 불러오기-->
 				<div id="main_loading" class="mainscreen main_both">
@@ -111,6 +131,12 @@
 					<button id="deckconfig_tag" class="deckconfig_button" aria-label="HTML 태그 출력">HTML 태그 출력</button>
 					<button id="deckconfig_image" class="deckconfig_button" aria-label="이미지 출력">이미지 출력</button>
 				</div>
+	            <footer id="footer_deckconfig" class="subscreen">
+					<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="즐겨찾기">
+						<div id="deckconfig_favorite_text"></div>
+					</button>
+					<button id="deckconfig_edit" class="deckconfig_footerbutton" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
+				</footer>
 
 				<!--카드 목록-->
 				<div id="main_collection" class="mainscreen main_left">
@@ -147,45 +173,32 @@
 						<div id="deck_bottom"></div>
 					</div>
 				</div>
-            </section>
 
-			<!--푸터-->
-			<footer id="footer_init" class="subscreen">
-				<button id="button_update" class="footer_init_button" aria-label="업데이트 및 시작">업데이트 및 시작</button>
-				<button id="button_offline" class="footer_init_button" aria-label="오프라인 모드">오프라인 모드</button>
-			</footer>
-			<footer id="footer_decklist" class="subscreen">
-				<button id="button_readcode" class="footer_decklist_button" aria-label="덱코드 입력"><img src="./images/icon_deckcode.png" alt="덱코드"><span> 덱코드 입력</span></button>
-				<button id="botton_newdeck" class="footer_decklist_button" aria-label="새로운 덱"><img src="./images/icon_newdeck.png" alt="새로운 덱"><span> 새로운 덱</span></button>
-			</footer>
-			<footer id="footer_collectionNdeck" class="subscreen">
-				<div id="footer_collectionNdeck_top" class="subscreen">
-					<div id="footer_name_left" class="footer_desc"></div>
-					<div id="footer_name_right" class="footer_desc"></div>
-				</div>
-                <div id="footer_collectionNdeck_cardinfo" class="subscreen">
-                </div>
-                <div id="footer_collectionNdeck_deckbuilding" class="subscreen">
-					<button id="bottom_undo" class="footer_button disabled" aria-label="취소">
-						<div id="undo_icon" class="log_icon">&#8630;</div>
-						<div id="undo_text" class="log_text desktop_only"> 취소</div>
-						<div id="undo_num" class="log_num">0</div>
-					</button>
-					<button id="bottom_redo" class="footer_button disabled" aria-label="복구">
-						<div id="redo_icon" class="log_icon">&#8631;</div>
-						<div id="redo_text" class="log_text desktop_only">복구 </div>
-						<div id="redo_num" class="log_num">0</div>
-					</button>
-					<button id="bottom_done" class="footer_button" aria-label="완료"><img src="./images/icon_done.png" alt="완료"><span class="desktop_only"> 완료</span></button>
-					<button id="bottom_info" class="footer_button" aria-label="사용방법"><img src="./images/icon_cardinfo.png" alt="사용방법"><span class="mobile_only"> 사용<br>방법</span><span class="desktop_only"> 사용방법</span></button>
-                </div>
-			</footer>
-            <footer id="footer_deckconfig" class="subscreen">
-				<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="즐겨찾기">
-					<div id="deckconfig_favorite_text"></div>
-				</button>
-				<button id="deckconfig_edit" class="deckconfig_footerbutton" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
-			</footer>
+				<!--공용 푸터(카드목록 & 덱목록)-->
+				<footer id="footer_collectionNdeck" class="subscreen">
+					<div id="footer_collectionNdeck_top" class="subscreen">
+						<div id="footer_name_left" class="footer_desc"></div>
+						<div id="footer_name_right" class="footer_desc"></div>
+					</div>
+	                <div id="footer_collectionNdeck_cardinfo" class="subscreen">
+	                </div>
+	                <div id="footer_collectionNdeck_deckbuilding" class="subscreen">
+						<button id="bottom_undo" class="footer_button disabled" aria-label="취소">
+							<div id="undo_icon" class="log_icon">&#8630;</div>
+							<div id="undo_text" class="log_text desktop_only"> 취소</div>
+							<div id="undo_num" class="log_num">0</div>
+						</button>
+						<button id="bottom_redo" class="footer_button disabled" aria-label="복구">
+							<div id="redo_icon" class="log_icon">&#8631;</div>
+							<div id="redo_text" class="log_text desktop_only">복구 </div>
+							<div id="redo_num" class="log_num">0</div>
+						</button>
+						<button id="bottom_done" class="footer_button" aria-label="완료"><img src="./images/icon_done.png" alt="완료"><span class="desktop_only"> 완료</span></button>
+						<button id="bottom_info" class="footer_button" aria-label="사용방법"><img src="./images/icon_cardinfo.png" alt="사용방법"><span class="mobile_only"> 사용<br>방법</span><span class="desktop_only"> 사용방법</span></button>
+	                </div>
+				</footer>
+
+            </section>
 
 			<!--별도 창 - 카드 필터(모바일)-->
 			<section id="frame_mobilefilter" class="">
