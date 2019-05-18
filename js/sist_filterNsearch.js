@@ -115,7 +115,7 @@ function card_matchKeyword(target, keyword) {
     let list = ["name","text","race","type"];
     for (let i = 0;i<list.length;i++) {
         if (target[list[i]] !== undefined) {
-            if (session.keywords[target.dbfid][list[i]].indexOf(keyword) >= 0) {
+            if (session.db[session.index[target.dbfid]].keywords[list[i]].indexOf(keyword) >= 0) {
                 return true;
             }
         }

@@ -670,7 +670,29 @@ document.addEventListener("DOMContentLoaded", function(e) {
         window.onbeforeunload = function() {
            return "사이트에서 나가시겠습니까?";
         };
+
     //공지사항, DB 버전 내려받기
+    fetch("./notice.json")
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(notice) {
+        //URL 분석
+        let url = new URL(window.location.href).searchParams;
+        for (let key of url.keys()) {
+            session.urlParams[key] = url.get(key);
+        }
+        //URL 패러미터에 '덱코드'가 있으면 공지사항 생략
+        if (session.urlParams.length > 0 && session.urlParams.deckcode !== undefined) {
+            window_shift("update", notice);
+        //없으면 업데이트로 곧장 이동
+        } else {
+            window_shift("notice", notice);
+        }
+    })
+
+    //공지사항, DB 버전 내려받기
+    /*
     fetch("./notice.json")
     .then(function(response) {
         return response.json();
@@ -683,18 +705,17 @@ document.addEventListener("DOMContentLoaded", function(e) {
         .then(function(version) {
             //DB 버전이 없거나 불일치 : 업데이트 페이지 이동
             if (!version || version !== dbinfo.version) {
-                //window_shift("update", dbinfo, version);
-                window_shift("notice", notice);
+                window_shift("update", notice);
             //DB 버전 일치 : 공지사항 페이지 이동
             } else {
                 window_shift("notice", notice);
             }
         }).catch(function() {
             //DB 버전 확인 불가 : 업데이트 페이지 이동
-            //window_shift("update");
-            window_shift("notice", notice);
+            window_shift("update", notice);
         })
     })
+    */
 
 });
 //오류 취급 (출처 : http://stackoverflow.com/questions/951791/javascript-global-error-handling)

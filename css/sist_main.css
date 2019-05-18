@@ -1,3 +1,6 @@
+/*=====================================================*/
+/* 폰트 */
+/*=====================================================*/
 @font-face {
     font-family: 'Spoqa Han Sans';
     font-weight: 700;
@@ -592,8 +595,41 @@ body {
         text-align:center;
     }
 
-    /*업데이트 화면*/
-    #main_notice {
+    /*업데이트*/
+    #main_update {}
+        #update_content {
+            position:relative;
+
+            margin:10px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:calc(100% - 10px - 90px - 30px);
+
+            background:rgba(0,0,0,0.6);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+            #update_content p {
+                width:100%;
+                color:white;
+            }
+        #update_progress {
+            position:relative;
+
+            margin:10px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:30px;
+
+            background:rgba(0,0,0,0.6);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+
+    /*공지사항*/
+    #main_notice {/*공지사항은 화면 전환 효과 없음*/
         transition-property: none;
     }
         #notice_content {
@@ -1469,9 +1505,11 @@ body {
         display:block;
         margin:0 auto;
         width:90%;
-        border:2px white solid;
-        color:white;
+        border:2px #a0a0a0 solid;
+        color:#a0a0a0;
         word-break: keep-all;
+
+        pointer-events: none;
     }
 #footer_notice {
     position:absolute;

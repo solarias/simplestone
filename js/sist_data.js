@@ -11,7 +11,7 @@ let session = {
     masterInfo:undefined,//마스터 인포
     masterSlot:undefined,//마스터 슬롯
     fragment:undefined,//프래그먼트
-    url:undefined,//URL 패러미터 정보
+    urlParams:[],//URL 패러미터 정보
     offline:undefined//오프라인 모드 유무
 };
 //const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";//HearthstoneJSON에서 이미지 가져오기

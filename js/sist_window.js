@@ -19,16 +19,8 @@ function window_clear() {
 }
 
 //개별 창 설정
-function window_shift(keyword, keyword2, keyword3) {
+function window_shift(keyword, keyword2) {
     switch(keyword) {
-        //업데이트 창
-        case "update":
-            //창 전환
-            window_clear();
-            $("#main_update").classList.add("show");
-            $("#footer_update").classList.add("show");
-
-            break;
         //공지사항 창
         case "notice":
             //창 전환
@@ -37,7 +29,7 @@ function window_shift(keyword, keyword2, keyword3) {
             $("#footer_notice").classList.add("show");
 
             //공지사항 출력
-            let notice = keyword2;
+            let notice = keyword2.notice;
             let noticeFrag = document.createDocumentFragment();
             for (let i = 0;i < Math.min(30,notice.length);i++) {//공지는 최대 30개만
                 let each = notice[i];
@@ -64,32 +56,17 @@ function window_shift(keyword, keyword2, keyword3) {
 
             //상호작용
             $("#button_start").onclick = function() {
-                //의사 물어보기
-                swal({
-                    type:"warning",
-                    title:"데이터 경고",
-                    text:"카드정보를 불러오는 데 약 1MB의 데이터가 소모됩니다.",
-                    showCancelButton:true,
-                    confirmButtonText: '불러오기',
-                    cancelButtonText: '취소',
-                    cancelButtonColor: '#d33',
-                    showCloseButton:true
-                }).then(function(isConfirm){
-                    if (!isConfirm) {
-                        //거부 시 불러오기 취소
-                        return false;
-                    } else {
-                        session.offline = false;
-                        process_update_former();
-                    }
-                })
+                //오프라인 모드 비활성화
+                session.offline = false;
+                //업데이트 확인
+                window_shift("update", keyword2);
             }
             $("#button_offline").onclick = function() {
-                //의사 물어보기
+                //오프라인 모드 의사 물어보기
                 swal({
                     type:"info",
                     title:"오프라인 모드",
-                    text:"가장 최근에 불러온 카드 정보를 활용하고, 카드 이미지를 불러오지 않습니다.",
+                    text:"카드 이미지를 불러오지 않아 데이터를 절약할 수 있습니다.",
                     showCancelButton:true,
                     confirmButtonText: '시작하기',
                     cancelButtonText: '취소',
@@ -100,96 +77,97 @@ function window_shift(keyword, keyword2, keyword3) {
                         //거부 시 불러오기 취소
                         return false;
                     } else {
+                        //오프라인 모드 활성화
                         session.offline = true;
-                        process_update_former();
+                        //업데이트 확인
+                        window_shift("update", keyword2);
                     }
                 })
             }
 
-            //1차: DB 업데이트 or 불러오기
-            function process_update_former() {
-                //업데이트: JSON 불러온 후 로컬에 저장
-                if (session.offline === false) {
-                    //시작버튼 비활성화
-                    $("#button_start").disabled = true;
-                    $("#button_offline").disabled = true;
-                    //카드 정보 불러오기
-                    fetch("./js/cards.collectible.json")
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(myJson) {
-                        //확장팩 정보 (있으면)
-                        if (DATA.SET.NEW !== undefined &&
-                        remaindate(DATA.SET.NEW.duedate, thisdate()) < 0) {
-                            fetch("./js_newset/cards." + DATA.SET.NEW.id + ".json")
-                            .then(function(response2) {
-                                return response2.json();
-                            })
-                            .then(function(myJson2) {
-                                //카드정보 입력(일반+확장팩)
-                                session.db = myJson.concat(myJson2);
-                                //카드정보 정렬
-                                sort_arr(session.db);
-                                //카드정보 정제
-                                session.db.forEach(function(x, index) {
-                                    if (x.dbfId) x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
-                                })
-                                //collectionText가 있는 카드들 텍스트 대체
-                                session.db.forEach(function(x,index) {
-                                    if (x.collectionText !== undefined) {
-                                        x.text = x.collectionText;
-                                    }
-                                })
-                                //(키워드 검색용) 단어장 구축
-                                session.keywords = {};
-                                session.db.forEach(function(x) {
-                                    session.keywords[x.dbfid] = {};
-                                    let wordbook = session.keywords[x.dbfid];
+            break;
 
-                                    let list = ["name","text","race","type"];
-                                    for (let i = 0;i<list.length;i++) {
-                                        if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
-                                    }
-                                })
-                                //DB 저장
-                                localforage.setItem("sist_db",session.db)
-                                .then(function() {
-                                    //DB 버전 저장
-                                    localforage.setItem("sist_db_version",session.dbVersion)
-                                    .then(function() {
-                                        //카드정보 구축 시작
-                                        process_update_latter();
-                                    }).catch(function() {
-                                        //버전 저장 못해도 '아무튼' 구축 시작
-                                        process_update_latter();
-                                    })
-                                }).catch(function() {
-                                    //DB 저장 못해도 '아무튼' 구축 시작
-                                    process_update_latter();
-                                });
-                            })
-                        //확장팩 정보 (없으면)
-                        } else {
-                            //카드정보 입력
-                            session.db = myJson;
+        //업데이트 창
+        case "update":
+            //최신 DB 버전 확인
+            let dbinfo = keyword2.dbinfo;
+            //저장된 DB 버전 확인
+            localforage.getItem("sist_db_version")
+            .then(function(version) {
+                //DB 버전이 없거나 불일치 : 업데이트 실시
+                if (!version || version !== dbinfo.version) {
+                    process_update_window()
+                //DB 버전 일치 : 저장된 DB 불러오기
+                } else {
+                    process_load()
+                }
+            }).catch(function() {
+                //DB 버전 확인 불가 : 업데이트 실시
+                process_update_window()
+            })
+
+            function process_update_window() {
+                //창 전환
+                window_clear();
+                $("#main_update").classList.add("show");
+                $("#footer_update").classList.add("show");
+
+                //업데이트 창 작성
+                let updateFrag = document.createDocumentFragment();
+                //버전
+                let ver = document.createElement("p");
+                    ver.innerHTML = 'DB 버전 : ' + dbinfo.version;
+                updateFrag.appendChild(ver);
+                //날짜
+                let date = document.createElement("p");
+                    date.innerHTML = 'DB 업데이트 일시 : ' + dbinfo.date;
+                updateFrag.appendChild(date);
+                //내용
+                let desc = document.createElement("p");
+                    desc.innerHTML = '업데이트 내용 : ' + dbinfo.description;
+                updateFrag.appendChild(desc);
+                $("#update_content").appendChild(updateFrag);
+
+                //(1초 후) 업데이트 실시
+                setTimeout(function() {
+                    process_update();
+                }, 1000);
+            }
+            //1-1차 / DB버전 불일치 : DB 업데이트
+            function process_update() {
+                //카드 정보 불러오기
+                fetch("./js/cards.collectible.json")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    //확장팩 정보 (있으면)
+                    if (DATA.SET.NEW !== undefined &&
+                    remaindate(DATA.SET.NEW.duedate, thisdate()) < 0) {
+                        fetch("./js_newset/cards." + DATA.SET.NEW.id + ".json")
+                        .then(function(response2) {
+                            return response2.json();
+                        })
+                        .then(function(myJson2) {
+                            //카드정보 입력(일반+확장팩)
+                            session.db = myJson.concat(myJson2);
                             //카드정보 정렬
                             sort_arr(session.db);
                             //카드정보 정제
                             session.db.forEach(function(x, index) {
-                                x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
+                                if (x.dbfId) x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
                             })
-                            //collectionText가 있는 카드들은 텍스트 대체
+                            //collectionText가 있는 카드들 텍스트 대체
                             session.db.forEach(function(x,index) {
                                 if (x.collectionText !== undefined) {
                                     x.text = x.collectionText;
                                 }
                             })
-                            //(키워드 검색용) 단어장 구축
+                            //검색용 키워드 입력
                             session.keywords = {};
                             session.db.forEach(function(x) {
-                                session.keywords[x.dbfid] = {};
-                                let wordbook = session.keywords[x.dbfid];
+                                x.keywords = {};
+                                let wordbook = x.keywords;
 
                                 let list = ["name","text","race","type"];
                                 for (let i = 0;i<list.length;i++) {
@@ -200,71 +178,93 @@ function window_shift(keyword, keyword2, keyword3) {
                             localforage.setItem("sist_db",session.db)
                             .then(function() {
                                 //DB 버전 저장
-                                localforage.setItem("sist_db_version",session.dbVersion)
+                                localforage.setItem("sist_db_version",dbinfo.version)
                                 .then(function() {
                                     //카드정보 구축 시작
-                                    process_update_latter();
+                                    process_update_finish();
                                 }).catch(function() {
                                     //버전 저장 못해도 '아무튼' 구축 시작
-                                    process_update_latter();
+                                    process_update_finish();
                                 })
                             }).catch(function() {
                                 //DB 저장 못해도 '아무튼' 구축 시작
-                                process_update_latter();
+                                process_update_finish();
                             });
-                        }
-                    });
-                //오프라인: 로컬 불러오기
-                } else if (session.offline === true) {
-                    localforage.getItem("sist_db")
-                    .then(function(db) {
-                        //저장된 DB가 없으면 의사확인 후 업데이트 실시
-                        if (!db) {
-                            swal({
-                                type:"warning",
-                                title:"저장된 카드정보 없음",
-                                text:"업데이트를 1회 실행해야 오프라인 모드를 이용할 수 있습니다.\n(약 1MB 데이터 소모)",
-                                showCancelButton:true,
-                                confirmButtonText: '업데이트',
-                                cancelButtonText: '취소',
-                                cancelButtonColor: '#d33',
-                                showCloseButton:true
-                            }).then(function(isConfirm){
-                                if (!isConfirm) {
-                                    //거부 시 불러오기 취소
-                                    return false;
-                                } else {
-                                    session.offline = false;
-                                    process_update_former();
-                                }
-                            })
-                        //있으면 불러오기
-                        } else {
-                            //시작버튼 비활성화
-                            $("#button_start").disabled = true;
-                            $("#button_offline").disabled = true;
-                            //불러온 정보 적용
-                            session.db = deepCopy(db);
-                            //카드정보 구축 시작
-                            process_update_latter();
-                        }
-                    })
-                    .catch(function(err) {
-                        nativeToast({
-                            message: '오류 발생: 저장된 카드 정보를 불러올 수 없습니다.',
-                            position: 'center',
-                            timeout: 2000,
-                            type: 'error',
-                            closeOnClick: 'true'
-                        });
+                        })
+                    //확장팩 정보 (없으면)
+                    } else {
+                        //카드정보 입력
+                        session.db = myJson;
+                        //카드정보 정렬
+                        sort_arr(session.db);
+                        //카드정보 정제
+                        session.db.forEach(function(x, index) {
+                            x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
+                        })
+                        //collectionText가 있는 카드들은 텍스트 대체
+                        session.db.forEach(function(x,index) {
+                            if (x.collectionText !== undefined) {
+                                x.text = x.collectionText;
+                            }
+                        })
+                        //검색용 키워드 입력
+                        session.keywords = {};
+                        session.db.forEach(function(x) {
+                            x.keywords = {};
+                            let wordbook = x.keywords;
 
-                        return false;
+                            let list = ["name","text","race","type"];
+                            for (let i = 0;i<list.length;i++) {
+                                if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
+                            }
+                        })
+                        //DB 저장
+                        localforage.setItem("sist_db",session.db)
+                        .then(function() {
+                            //DB 버전 저장
+                            localforage.setItem("sist_db_version",dbinfo.version)
+                            .then(function() {
+                                //카드정보 구축 시작
+                                process_update_finish();
+                            }).catch(function() {
+                                //버전 저장 못해도 '아무튼' 구축 시작
+                                process_update_finish();
+                            })
+                        }).catch(function() {
+                            //DB 저장 못해도 '아무튼' 구축 시작
+                            process_update_finish();
+                        });
+                    }
+                });
+            }
+
+            //1-2차 / DB버전 일치 : 저장된 DB 불러오기
+            function process_load() {
+                //DB 불러오기
+                localforage.getItem("sist_db")
+                .then(function(db) {
+                    //불러온 정보 적용
+                    session.db = deepCopy(db);
+                    //카드정보 구축 시작
+                    process_update_finish();
+                })
+                .catch(function(err) {
+                    //불러올 수 없다고 알리기
+                    nativeToast({
+                        message: '저장된 카드 정보를 불러올 수 없습니다. DB 업데이트를 실시합니다.',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
                     });
-                }
+                    //강제 업데이트
+
+                    return false;
+                });
             }
 
             //2차: 카드 정보 구축
-            function process_update_latter() {
+            function process_update_finish() {
                 //인덱스 정보 구축
                 session.index = {};
                 session.db.forEach(function(x,index) {
