@@ -10,7 +10,6 @@ function card_generateMaster() {
         elm_card.dataset.dbfid = "$dbfid";//$dbfid
         elm_card.classList.add("flash_hidden");//flash 대상은 이 클래스 제거
         elm_card.classList.add("unusable_hidden");//이용불가 대상은 이 클래스 제거
-        elm_card.classList.add("newset_hidden");//신규 확장팩 대상은 이 클래스 제거
         //오프라인 모드가 아닐 경우에만 배경이미지 생성
         if (session.offline === false)
             //나머지: 타일 이미지 출력
@@ -38,20 +37,10 @@ function card_generateFragment(info) {
     let fragment = session.masterNode;
     //필요한 정보 설정(수량 제외)
     fragment = fragment.replaceAll("$dbfid",info.dbfid);//인덱스 설정
-    //이미지 설정
-        //신규 확장팩: 통 이미지
-        if (DATA.SET.NEW !== undefined && info.set === DATA.SET.NEW.id) {
-            fragment = fragment.replace("$url",info.url);
-        //그외: 타일 이미지
-        } else {
-            fragment = fragment.replace("$url",TILEURL + info.id + ".jpg");
-        }
+    fragment = fragment.replace("$url",TILEURL + info.id + ".jpg");//이미지 설정: 타일 이미지
     fragment = fragment.replace("$cost",info.cost);//비용 설정
     fragment = fragment.replace("$name",info.name);//이름 설정
     fragment = fragment.replace("$rarity",info.rarity);//등급 설정
-    //확장팩이면 "newset_hidden" 클래스 제거
-    if (DATA.SET.NEW !== undefined && info.set === DATA.SET.NEW.id)
-        fragment = fragment.replace(" newset_hidden","");//등급 설정
     //반환
     return fragment;
 }
@@ -269,7 +258,7 @@ function card_addFragment(pos, dbfid, quantity, show1, flasharr) {
     //샤용불가 정보 입력
     if (pos === "deck") {
         if (process.deck.format === "정규") {
-            if (DATA.SET.FORMAT[session.db[session.index[dbfid]].set] === "야생") {
+            if (DATA.SET[session.db[session.index[dbfid]].set].FORMAT === "야생") {
                 fragment = fragment.replace(" unusable_hidden","");
                 process.deck.unusable += 1;
             }
@@ -627,16 +616,18 @@ document.addEventListener("DOMContentLoaded", function(e) {
         //인포 버튼
         $("#header_info").onclick = function() {
             swal({
-                title:"INFORMATION",
+                title:"심플스톤",
                 imageUrl:"./images/logo.png",
                 imageHeight:88,
-                html:'제작자: 솔라리어스<br>'+
-                    '의견 남기기: ansewo@naver.com,<br>'+
+                html:'<b>제작자</b>: 솔라리어스<br>'+
+                    '<b>의견 남기기</b>: ansewo@naver.com,<br>'+
                     '<a href="https://blog.naver.com/ansewo/221319675157" target="_blank">https://blog.naver.com/ansewo/221319675157</a><br><br>'+
-                    '카드정보 & 카드이미지 출처: <a href="https://hearthstonejson.com/" target="_blank">HearthstoneJSON</a><br>'+
-                    '각종 아이콘 출처: <a href="https://ko.icons8.com/icon" target="_blank">https://ko.icons8.com/icon</a><br><br>'+
+                    '<b>카드정보 & 카드이미지 출처</b>: <a href="https://hearthstonejson.com/" target="_blank">HearthstoneJSON</a><br>'+
+                    '<b>각종 아이콘 출처</b>: <a href="https://ko.icons8.com/icon" target="_blank">https://ko.icons8.com/icon</a><br><br>'+
                     '<b>로고 아이콘 정보</b><br>'+
-                    '<div>Icons made by <a href="http://www.freepik.com" target="_blank" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><br>'
+                    '<div>Icons made by <a href="http://www.freepik.com" target="_blank" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><br>'+
+                    '<b>폰트 정보</b><br>'+
+                    '<div>Spoqa Han Sans<br>'
             })
         }
 
@@ -665,6 +656,14 @@ document.addEventListener("DOMContentLoaded", function(e) {
             rows_in_block:14,
             no_data_text: '즐겨찾기 덱 없음'
         });
+        //메타 덱 클러스터 생성해두기
+        clusterize.meta = new Clusterize({
+            tag: 'div',
+            scrollId: 'metadeck_slot',
+            contentId: 'metadeck_slot_content',
+            rows_in_block:14,
+            no_data_text: '검색 메타 덱 없음'
+        });
 
         //종료 경고 메시지
         window.onbeforeunload = function() {
@@ -683,39 +682,13 @@ document.addEventListener("DOMContentLoaded", function(e) {
             session.urlParams[key] = url.get(key);
         }
         //URL 패러미터에 '덱코드'가 있으면 공지사항 생략
-        if (session.urlParams.length > 0 && session.urlParams.deckcode !== undefined) {
+        if (Object.keys(session.urlParams).length > 0 && session.urlParams.deckcode !== undefined) {
             window_shift("update", notice);
         //없으면 업데이트로 곧장 이동
         } else {
             window_shift("notice", notice);
         }
     })
-
-    //공지사항, DB 버전 내려받기
-    /*
-    fetch("./notice.json")
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(myJson) {
-        let dbinfo = myJson.dbinfo;
-        let notice = myJson.notice;
-        //저장된 DB 버전 확인
-        localforage.getItem("sist_db_version")
-        .then(function(version) {
-            //DB 버전이 없거나 불일치 : 업데이트 페이지 이동
-            if (!version || version !== dbinfo.version) {
-                window_shift("update", notice);
-            //DB 버전 일치 : 공지사항 페이지 이동
-            } else {
-                window_shift("notice", notice);
-            }
-        }).catch(function() {
-            //DB 버전 확인 불가 : 업데이트 페이지 이동
-            window_shift("update", notice);
-        })
-    })
-    */
 
 });
 //오류 취급 (출처 : http://stackoverflow.com/questions/951791/javascript-global-error-handling)

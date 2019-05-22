@@ -58,6 +58,16 @@
 
 			<!--메인창-->
             <section id="frame_main">
+				<!--공지사항 화면-->
+				<div id="main_notice" class="mainscreen main_both">
+					<div class="main_title">공지사항</div>
+					<div id="notice_content"></div>
+				</div>
+				<footer id="footer_notice" class="subscreen">
+					<button id="button_start" class="footer_notice_button" aria-label="시작하기">시작하기</button>
+					<button id="button_offline" class="footer_notice_button" aria-label="오프라인 모드">오프라인 모드</button>
+				</footer>
+
 				<!--업데이트 화면-->
 				<div id="main_update" class="mainscreen main_both">
 					<div class="main_title">DB 업데이트 진행중</div>
@@ -70,38 +80,29 @@
 					<button id="button_update" class="footer_update_button" aria-label="잠시만 기다리세요">잠시만 기다리세요</button>
 				</footer>
 
-				<!--공지사항 화면-->
-				<div id="main_notice" class="mainscreen main_both">
-					<div class="main_title">공지사항</div>
-					<div id="notice_content"></div>
-				</div>
-				<footer id="footer_notice" class="subscreen">
-					<button id="button_start" class="footer_notice_button" aria-label="시작하기">시작하기</button>
-					<button id="button_offline" class="footer_notice_button" aria-label="오프라인 모드">오프라인 모드</button>
-				</footer>
-
 				<!--타이틀스크린-->
                 <div id="main_titlescreen" class="mainscreen main_both">
-                    <div id="titlescreen_card">
+                    <div id="titlescreen_card" class="titlescreen_section">
                         <button id="start_card" class="titlescreen_button" aria-label="카드 정보"><img src="./images/icon_search.png" alt="SEARCH"></button>
-                        <p class="titlescren_desc">카드 정보</p>
+                        <p class="titlescren_desc below">카드 정보</p>
                     </div>
-                    <div id="titlescreen_deck">
+                    <div id="titlescreen_deck" class="titlescreen_section">
                         <button id="start_deck" class="titlescreen_button" aria-label="덱 목록"><img src="./images/icon_decklist.png" alt="DECKLIST"></button>
-                        <p class="titlescren_desc">덱 목록</p>
+                        <p class="titlescren_desc below">덱 목록</p>
                     </div>
-					<!--신규 확장팩 출시 전-->
-                    <div id="titlescreen_newset">
-						<div id="newset_title_wrapper">
-							<span id="newset_title" class="newset_title"></span>
-						</div>
-						<button id="newset_cardinfo" class="newset_button" aria-label="새카드 정보">새카드 정보</button>
-						<button id="newset_newdeck" class="newset_button" aria-label="확장팩 덱짜기">확장팩 덱짜기</button>
-                    </div>
-					<!--신규 확장팩 출시 후 (사용하지 않을 땐 주석 처리)-->
-					<div id="newset_title_wrapper2">
-						<span id="newset_title2" class="newset_title"></span>
+					<!--최신 확장팩 표시-->
+					<div id="titlescreen_latest">
+						<span id="titlescreen_latest_name"></span>
 					</div>
+					<!--부가기능-->
+                    <div id="titlescreen_metadeck" class="titlescreen_section">
+						<p class="titlescren_desc above">메타 덱 정보</p>
+                        <button id="start_metadeck" class="titlescreen_button" aria-label="메타 덱 정보"><img src="./images/icon_metadeck.png" alt="META"></button>
+                    </div>
+                    <div id="titlescreen_etc" class="titlescreen_section">
+						<p class="titlescren_desc above"></p>
+                        <button id="start_etc" class="titlescreen_button" aria-label="ETC"></button>
+                    </div>
                 </div>
 
 				<!--덱 목록-->
@@ -129,6 +130,7 @@
 					<button id="deckconfig_text" class="deckconfig_button" aria-label="텍스트 출력">텍스트 출력</button>
 					<button id="deckconfig_tag" class="deckconfig_button" aria-label="HTML 태그 출력">HTML 태그 출력</button>
 					<button id="deckconfig_image" class="deckconfig_button" aria-label="이미지 출력">이미지 출력</button>
+					<button id="deckconfig_url" class="deckconfig_button" aria-label="덱 URL 공유">URL 출력</button>
 				</div>
 	            <footer id="footer_deckconfig" class="subscreen">
 					<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="즐겨찾기">
@@ -172,6 +174,25 @@
 						<div id="deck_bottom"></div>
 					</div>
 				</div>
+
+				<!--메타 덱-->
+				<div id="main_metadeck" class="mainscreen main_both">
+					<div id="metadeck_slot">
+						<div id="metadeck_slot_content"></div>
+					</div>
+					<div id="metadeck_description">
+						<img src="./images/icon_metadeck_white.png" alt="META">
+						<p>HSReplay에서 지난 30일 동안 가장 승률이 높은 덱을 검색해보세요.</p>
+						<p><span style="color:orange">직업/대전방식을 설정</span>하면 덱 목록을 불러옵니다.</p>
+					</div>
+					<div id="metadeck_loading">
+						<img src="./images/loading_white.svg" alt="META">
+						<p>덱 목록 불러오는 중...</p>
+					</div>
+				</div>
+				<footer id="footer_metadeck" class="subscreen">
+					<button id="button_metadeck_filter" class="footer_metadeck_button init" aria-label="직업 / 대전방식 설정">직업 / 대전방식 설정</button>
+				</footer>
 
 				<!--공용 푸터(카드목록 & 덱목록)-->
 				<footer id="footer_collectionNdeck" class="subscreen">
@@ -238,6 +259,7 @@
 		</section>
 		<!--별도 창 - 카드 정보 (좌측)-->
 		<section id="frame_cardmonitor" class="subscreen"></section>
+
 
 		<!--외부 보조 라이브러리-->
 		<script src="./package/sweetalert2/dist/sweetalert2.min.js"></script>

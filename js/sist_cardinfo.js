@@ -115,48 +115,12 @@ function cardinfo_show(id, info) {
     //이미지(오프라인 모드가 아니라면)
     if (session.offline === false)   {
         let image;
-        //확장팩이 아니면 이미지 출력
-        if (!process.deck.newset || info.set !== DATA.SET.NEW.id) {
-            $(".illust",site).classList.remove("show");
-            $(".cardcase",site).classList.add("show");
-                image = "url(" + PORTRAITURL + info.id + ".jpg)";
-                $(".image",site).style.backgroundImage = image;
-                $(".top",site).classList.remove("offline");
-                $(".image",site).innerHTML = "";
-        //확장팩인데 이미지가 없다면
-        } else if (!info.url) {
-            $(".illust",site).classList.remove("show");
-            $(".cardcase",site).classList.add("show");
-                image = "url(" + PORTRAITURL + info.id + ".jpg)";
-                $(".image",site).style.backgroundImage = image;
-                $(".top",site).classList.add("offline");
-                $(".image",site).innerHTML = "이미지 없음";
-        //확장팩이면 이미지"만" 출력
-        } else {
-            //이미지 로딩 체크, 성공 시 출력, 실패 시 텍스트만 출력
-            let img = document.createElement('img');
-            img.onload = function() {
-                if (info.dbfid === process.showImageDbfid) {
-                    $(".illust",site).classList.add("show");
-                    $(".cardcase",site).classList.remove("show");
-                        image = "url(" + info.url + ")";
-                        $(".illustImage",site).style.backgroundImage = image;
-                        $(".image",site).innerHTML = "";
-                }
-            };
-            img.onerror = function() {
-                $(".illust",site).classList.remove("show");
-                $(".cardcase",site).classList.add("show");
-                    $(".top",site).classList.add("offline");
-                    $(".image",site).innerHTML = "이미지 로딩 실패";
-            };
-            img.src = info.url;
-            //이미지 불러오는 동안 임시 정보 출력
-            $(".illust",site).classList.remove("show");
-            $(".cardcase",site).classList.add("show");
-                $(".top",site).classList.remove("offline");
-                $(".image",site).innerHTML = "";
-        }
+        $(".illust",site).classList.remove("show");
+        $(".cardcase",site).classList.add("show");
+            image = "url(" + PORTRAITURL + info.id + ".jpg)";
+            $(".image",site).style.backgroundImage = image;
+            $(".top",site).classList.remove("offline");
+            $(".image",site).innerHTML = "";
     } else {
         $(".illust",site).classList.remove("show");
         $(".cardcase",site).classList.add("show");
@@ -225,13 +189,7 @@ function cardinfo_show(id, info) {
             $(".text",site).classList.remove("large");
         }
     //세트
-        //확장팩
-    if (process.deck.newset && info.set === DATA.SET.NEW.id) {
-        $(".set",site).innerHTML = DATA.SET.NEW.name;
-        //일반
-    } else {
-        $(".set",site).innerHTML = DATA.SET.KR[info.set];
-    }
+    $(".set",site).innerHTML = DATA.SET[info.set].KR;
     //플레이버 텍스트
     if (info.flavor && info.flavor !== "" && info.flavor.length > 0)
         $(".flavor",site).innerHTML = "<p>" + readable(info.flavor) + "</p>";

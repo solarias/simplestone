@@ -1,6 +1,6 @@
 
 //===============================================================
-//※ 덱코드 디코더
+//※ 덱코드 디코더, 인코드 / 덱 URL 생성
 //===============================================================
 //디코드
 function deckcode_decode(deckcode) {
@@ -28,7 +28,7 @@ function deckcode_decode(deckcode) {
     //포맷(향후 덱 포맷 검증 별도로 함)
     output.format = "정규";
     for (let i = 0;i < output.cards.length;i++) {
-        if (DATA.SET.FORMAT[session.db[session.index[output.cards[i][0]]].set] === "야생") {
+        if (DATA.SET[session.db[session.index[output.cards[i][0]]].set].FORMAT === "야생") {
             output.format = "야생";
             break;
         }
@@ -37,11 +37,7 @@ function deckcode_decode(deckcode) {
     //출력
     return output;
 }
-
-//===============================================================
-//※ 덱코드
-//===============================================================
-//덱코드 인코드
+//인코드
 function deckcode_encode() {
     let output = {};
     //포맷
@@ -61,7 +57,15 @@ function deckcode_encode() {
     let deckcode = deckstrings.encode(output);
     return deckcode;
 }
-//덱코드 출력
+//URL 생성
+function deckcode_toURL() {
+    let deckcode = encodeURIComponent(deckcode_encode());
+    let deckurl = "https://solarias.github.io/simplestone?deckcode=" + deckcode;
+    return deckurl;
+}
+//===============================================================
+//※ 덱코드 출력
+//===============================================================
 function export_deckcode() {
     try {
         let deckcode = deckcode_encode();
@@ -95,14 +99,13 @@ function export_deckcode() {
 }
 
 //===============================================================
-//※ 텍스트
+//※ 텍스트 출력
 //===============================================================
 //텍스트 제작
 function deckcode_text() {
     //(확장팩이 아니라면)덱코드 획득
-    let deckcode;
-    if (!process.deck.newset) deckcode = deckcode_encode();
-        else deckcode = false;
+    let deckcode = deckcode_encode();
+    let deckurl = deckcode_toURL();
 
     //텍스트 작성
     let outputtext = "";
@@ -122,12 +125,7 @@ function deckcode_text() {
         let info = session.db[session.index[card[0]]];
         outputtext += "# " + card[1].toString();
         outputtext += "x (" + info.cost.toString() + ") ";
-        //이름, 확장팩 (신규 확장팩이면 앞에 "*" 표시)
-        if (deckcode || info.set !== DATA.SET.NEW.id) {
-            outputtext += info.name + "\n";
-        } else {
-            outputtext += "*" + info.name + "\n";
-        }
+        outputtext += info.name + "\n";
     });
     outputtext += "#\n";
     //덱코드 & 설명
@@ -135,11 +133,9 @@ function deckcode_text() {
         outputtext += deckcode + "\n";
         outputtext += "#\n";
         outputtext += "# 이 덱을 사용하려면 클립보드에 복사한 후 하스스톤에서 새로운 덱을 만드세요." + "\n";
-    } else {
-        outputtext += "# '" + DATA.SET.NEW.name + "' 미리 덱 짜보기\n";
     }
-    //기타
-    outputtext += "# Created at SimpleStone(https://solarias.github.io/simplestone)";
+    //기타 문구
+    outputtext += "# Created at Simplestone(https://solarias.github.io/simplestone)";
 
     //출력
     return outputtext;
@@ -182,9 +178,8 @@ function export_text() {
 }
 
 //===============================================================
-//※ HTML 태그
+//※ HTML 태그 출력
 //===============================================================
-//HTML 태그 출력
 function export_tag() {
     try {
         //HTML 태그 얻기
@@ -224,13 +219,11 @@ function deckcode_tag() {
     //정보 준비
     let deck = process.deck;
     let deckcode;
-    if (!process.deck.newset) {
-        try {
-            deckcode = deckcode_encode();
-        } catch(e) {
-            deckcode = ""
-        }
-    } else deckcode = "'" + DATA.SET.NEW.name + "' 미리 덱 짜보기";
+    try {
+        deckcode = deckcode_encode();
+    } catch(e) {
+        deckcode = ""
+    }
     //직업별 카드 구분
     let outputCards = {
         class:[],
@@ -422,11 +415,7 @@ function deckcode_tag() {
                             elm_cardsummary.appendChild(elm_card_cost);
                             let elm_card_name = document.createElement("div.card_name");
                                 let raritycolor = DATA.RARITY.COLOR[info.rarity];
-                                if (DATA.SET.NEW && info.set === DATA.SET.NEW.id) {
-                                    elm_card_name.innerHTML = "*" + info.name;
-                                } else {
-                                    elm_card_name.innerHTML = info.name;
-                                }
+                                elm_card_name.innerHTML = info.name;
                                 elm_card_name.setAttribute("style",
                                     "FLOAT:left;"+
                                     "PADDING-LEFT:0.5em;"+
@@ -470,11 +459,7 @@ function deckcode_tag() {
                             }
                             classinfo += "<br>";
                             if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>";
-                            if (!DATA.SET.NEW || info.set !== DATA.SET.NEW.id) {
-                                classinfo += "[" + DATA.SET.KR[info.set] + "]";
-                            } else {
-                                classinfo += "[*" + DATA.SET.NEW.name + "]";
-                            }
+                            classinfo += "[" + DATA.SET[info.set].KR + "]";
                             elm_cardinfo.innerHTML = classinfo;
                             elm_cardinfo.setAttribute("style",
                                 "PADDING:0.2em;"+
@@ -554,11 +539,7 @@ function deckcode_tag() {
                             elm_cardsummary.appendChild(elm_card_cost);
                             let elm_card_name = document.createElement("div.card_name");
                                 let raritycolor = DATA.RARITY.COLOR[info.rarity];
-                                if (DATA.SET.NEW && info.set === DATA.SET.NEW.id) {
-                                    elm_card_name.innerHTML = "*" + info.name;
-                                } else {
-                                    elm_card_name.innerHTML = info.name;
-                                }
+                                elm_card_name.innerHTML = info.name;
                                 elm_card_name.setAttribute("style",
                                     "FLOAT:left;"+
                                     "PADDING-LEFT:0.5em;"+
@@ -602,11 +583,7 @@ function deckcode_tag() {
                             }
                             classinfo += "<br>";
                             if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>";
-                            if (!DATA.SET.NEW || info.set !== DATA.SET.NEW.id) {
-                                classinfo += "[" + DATA.SET.KR[info.set] + "]";
-                            } else {
-                                classinfo += "[*" + DATA.SET.NEW.name + "]";
-                            }
+                            classinfo += "[" + DATA.SET[info.set].KR + "]";
                             elm_cardinfo.innerHTML = classinfo;
                             elm_cardinfo.setAttribute("style",
                                 "PADDING:0.2em;"+
@@ -703,7 +680,9 @@ function export_image() {
   }
 }
 
-//덱 이미지 제작
+//===============================================================
+//※ 이미지 출력
+//===============================================================
 function deckcode_image() {
     //캔버스 준비
     let deckcanvas = document.createElement("canvas#deckcanvas");
@@ -934,10 +913,45 @@ function deckcode_image() {
         ctx.fillStyle = 'white';
         ctx.font = imagesize.footer.font + 'px sans-serif';
         ctx.textAlign = "right";
-        ctx.fillText("created at Simplestone", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
+        ctx.fillText("Created at Simplestone", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
         ctx.fill();
 
     //덱 이미지 출력
     let result = deckcanvas.toDataURL("image/jpeg");
     return result;
+}
+
+//===============================================================
+//※ URL 출력
+//===============================================================
+function export_url() {
+    try {
+        let deckurl = deckcode_toURL();
+        //팝업창 열기
+        swal({
+            title: '덱 URL 공유',
+            text: 'URL이 복사되었습니다!',
+            input: 'text',
+            inputValue: deckurl,
+            allowOutsideClick:false,
+            showConfirmButton:false,
+            showCancelButton:true,
+            cancelButtonText: '닫기',
+            cancelButtonColor: '#d33',
+            showCloseButton:true,
+            onOpen: function() {
+                $(".swal2-input").select();
+                document.execCommand("copy");
+            }
+        })
+    } catch(e) {
+        //오류창 열기
+        nativeToast({
+            message: '오류 발생 - URL을 출력할 수 없습니다.',
+            position: 'center',
+            timeout: 2000,
+            type: 'error',
+            closeOnClick: 'true'
+        });
+    }
 }

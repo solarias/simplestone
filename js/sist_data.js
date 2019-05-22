@@ -10,9 +10,10 @@ let session = {
     masterNode:undefined,//마스터 노드
     masterInfo:undefined,//마스터 인포
     masterSlot:undefined,//마스터 슬롯
+    masterMetaSlot:undefined,//마스터 메타슬롯
     fragment:undefined,//프래그먼트
     urlParams:[],//URL 패러미터 정보
-    offline:undefined//오프라인 모드 유무
+    offline:false//오프라인 모드 유무(디폴트 : 사용안함)
 };
 //const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";//HearthstoneJSON에서 이미지 가져오기
 //const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";//HearthstoneJSON에서 이미지 가져오기
@@ -20,6 +21,10 @@ let session = {
 const TILEURL = "./images/tiles/";
 const PORTRAITURL = "./images/portraits/";
 const HEROURL = "./images/heroes/";
+const METADECKURL = {
+    standard:"https://hsreplay.net/analytics/query/list_decks_by_win_rate/?GameType=RANKED_STANDARD&RankRange=LEGEND_THROUGH_TWENTY&TimeRange=LAST_30_DAYS",
+    wild:"https://hsreplay.net/analytics/query/list_decks_by_win_rate/?GameType=RANKED_WILD&RankRange=LEGEND_THROUGH_TWENTY&TimeRange=LAST_30_DAYS"
+};
 //클러스터
 let clusterize = {};
 //꾹 눌려 카드정보 열람 auto
@@ -145,93 +150,30 @@ const DATA = {
     //여기서부터 향후 업데이트 시 변경
     YEAR:"용의 해",
     SET:{
-        LATEST:"DALARAN",
-        KR:{
-            "CORE":"기본카드",
-            "EXPERT1":"오리지널",
-            "HOF":"명예의 전당",
-            //2014↓
-            "NAXX":"낙스라마스의 저주",
-            "GVG":"고블린 대 노움",
-            //2015↓
-            "BRM":"검은바위 산",
-            "TGT":"대 마상시합",
-            "LOE":"탐험가 연맹",
-            //2016↓
-            "OG":"고대신의 속삭임",
-            "KARA":"한여름 밤의 카라잔",
-            "GANGS":"비열한 거리의 가젯잔",
-            //2017↓
-            "UNGORO":"운고로를 향한 여정",
-            "ICECROWN":"얼어붙은 왕좌의 기사들",
-            "LOOTAPALOOZA":"코볼트와 지하 미궁",
-            //2018↓
-            "GILNEAS":"마녀숲",
-            "BOOMSDAY":"박사 붐의 폭심만만 프로젝트",
-            "TROLL":"라스타칸의 대난투",
-            //2019↓
-            "DALARAN":"어둠의 반격"
-        },
-        FORMAT:{
-            "CORE":"정규",
-            "EXPERT1":"정규",
-            "HOF":"야생",
-            //2014↓
-            "NAXX":"야생",
-            "GVG":"야생",
-            //2015↓
-            "BRM":"야생",
-            "TGT":"야생",
-            "LOE":"야생",
-            //2016↓
-            "OG":"야생",
-            "KARA":"야생",
-            "GANGS":"야생",
-            //2017↓
-            "UNGORO":"야생",
-            "ICECROWN":"야생",
-            "LOOTAPALOOZA":"야생",
-            //2018↓
-            "GILNEAS":"정규",
-            "BOOMSDAY":"정규",
-            "TROLL":"정규",
-            //2019↓
-            "DALARAN":"정규"
-        },
-        YEAR:{//연도가 있는 건 optgroup으로 따로 묶음
-            //2014↓
-            "NAXX":"2014",
-            "GVG":"2014",
-            //2015↓
-            "BRM":"2015",
-            "TGT":"2015",
-            "LOE":"2015",
-            //2016↓
-            "OG":"2016",
-            "KARA":"2016",
-            "GANGS":"2016",
-            //2017↓
-            "UNGORO":"2017",
-            "ICECROWN":"2017",
-            "LOOTAPALOOZA":"2017",
-            //2018↓
-            "GILNEAS":"2018",
-            "BOOMSDAY":"2018",
-            "TROLL":"2018",
-            //2019↓
-            "DALARAN":"2019"
-        }
-        /*
-        신규 확장팩을 적용하려면 다음 오브젝트를 추가하세요.
-        NEW:{
-            "name":"박사 붐의 폭심만만 프로젝트",
-            "id":"BOOMSDAY",
-            "year":"2018",
-            "duedate":"2018-08-08"
-        }
-        */
-
+        "CORE":{KR:"기본카드",FORMAT:"정규"},
+        "EXPERT1":{KR:"오리지널",FORMAT:"정규"},
+        "HOF":{KR:"명예의 전당",FORMAT:"야생"},
+        //2014↓, 연도가 있는 건 optgroup으로 따로 묶음
+        "NAXX":{KR:"낙스라마스의 저주",FORMAT:"야생",YEAR:"2014"},
+        "GVG":{KR:"고블린 대 노움",FORMAT:"야생",YEAR:"2014"},
+        //2015↓
+        "BRM":{KR:"검은바위 산",FORMAT:"야생",YEAR:"2015"},
+        "TGT":{KR:"대 마상시합",FORMAT:"야생",YEAR:"2015"},
+        "LOE":{KR:"탐험가 연맹",FORMAT:"야생",YEAR:"2015"},
+        //2016↓
+        "OG":{KR:"고대신의 속삭임",FORMAT:"야생",YEAR:"2016"},
+        "KARA":{KR:"한여름 밤의 카라잔",FORMAT:"야생",YEAR:"2016"},
+        "GANGS":{KR:"비열한 거리의 가젯잔",FORMAT:"야생",YEAR:"2016"},
+        //2017↓
+        "UNGORO":{KR:"운고로를 향한 여정",FORMAT:"야생",YEAR:"2017"},
+        "ICECROWN":{KR:"얼어붙은 왕좌의 기사들",FORMAT:"야생",YEAR:"2017"},
+        "LOOTAPALOOZA":{KR:"코볼트와 지하 미궁",FORMAT:"야생",YEAR:"2017"},
+        //2018↓
+        "GILNEAS":{KR:"마녀숲",FORMAT:"정규",YEAR:"2018"},
+        "BOOMSDAY":{KR:"박사 붐의 폭심만만 프로젝트",FORMAT:"정규",YEAR:"2018"},
+        "TROLL":{KR:"라스타칸의 대난투",FORMAT:"정규",YEAR:"2018"},
+        //2019↓
+        "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:"2019"}//최신팩
     },
-
-
+    SET_LATEST:"DALARAN"//최신 확장팩 명(영문)을 여기에 기재
 };

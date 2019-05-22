@@ -270,7 +270,7 @@ body {
         }
                 .popup_button.full {
                     margin:0 0 10px 0;
-                    width:100%;
+                    width:calc(100% - 6px);
                 }
                 .popup_button.trisection {
                     margin:0 2px 10px 2px;
@@ -595,39 +595,6 @@ body {
         text-align:center;
     }
 
-    /*업데이트*/
-    #main_update {}
-        #update_content {
-            position:relative;
-
-            margin:10px auto 0 auto;
-            padding:10px;
-            width:calc(100% - 200px);
-                min-width:260px;
-            height:calc(100% - 10px - 90px - 30px);
-
-            background:rgba(0,0,0,0.6);
-            border-radius:10px;
-            box-sizing: border-box;
-        }
-            #update_content p {
-                width:100%;
-                color:white;
-            }
-        #update_progress {
-            position:relative;
-
-            margin:10px auto 0 auto;
-            padding:10px;
-            width:calc(100% - 200px);
-                min-width:260px;
-            height:30px;
-
-            background:rgba(0,0,0,0.6);
-            border-radius:10px;
-            box-sizing: border-box;
-        }
-
     /*공지사항*/
     #main_notice {/*공지사항은 화면 전환 효과 없음*/
         transition-property: none;
@@ -685,6 +652,39 @@ body {
                 100% {transform:scale(1,1);}
             }
 
+    /*업데이트*/
+    #main_update {}
+        #update_content {
+            position:relative;
+
+            margin:10px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:150px;
+
+            background:rgba(0,0,0,0.6);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+            #update_content p {
+                width:100%;
+                color:white;
+            }
+        #update_progress {
+            position:relative;
+
+            margin:10px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:30px;
+
+            background:rgba(0,0,0,0.6);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+
     /*첫 화면*/
     #main_titlescreen {
         display:block;
@@ -693,25 +693,35 @@ body {
         height:100%;
     }
 
-    #titlescreen_card, #titlescreen_deck {
+    .titlescreen_section {
         float:left;
 
         padding:10px 2% 0 2%;
         width:48%;
-        height:280px;
+        height:calc(50% - 25px);
+            max-height:250px;
 
         box-sizing: border-box;
     }
-            #titlescreen_card {
+            #titlescreen_card, #titlescreen_metadeck {
                 margin-left:2%;
                 border-right:1px #ccc solid;
             }
+            #titlescreen_etc {
+                pointer-events: none;
+            }
+            /*메타 덱 기능 잠시 감추기*/
+            #titlescreen_metadeck, #titlescreen_etc {
+                display:none;
+            }
 
         .titlescreen_button {
+            position:relative;
             display:block;
 
             width:100%;
-            height:200px;
+            height:calc(100% - 50px);
+                max-height:200px;
 
             background:#DDDDDD;
 
@@ -723,101 +733,50 @@ body {
             }
             .titlescreen_button img {
                 width:auto;
-                height:100px;
+                height:80%;
+                    max-height:100px;
             }
         .titlescren_desc {
-            margin:10px auto 0 auto;
+            margin:0 auto 0 auto;
             width:80%;
             height:30px;
-
-            border-bottom:1px #ccc solid;
 
             font-size:20px;
                 line-height:30px;
             text-align:center;
             font-weight:bold;
         }
-        #titlescreen_newset, #titlescreen_newset2 {
-            display:none;
+            .titlescren_desc.above {
+                border-top:1px #ccc solid;
+            }
+            .titlescren_desc.below {
+                border-bottom:1px #ccc solid;
+            }
+        #titlescreen_latest {
             clear:both;
-            float:left;
 
-            margin:20px 10px 0 10px;
-            width:calc(100% - 20px);
-            height:160px;
+            width:100%;
+            padding:5px 0;
+            height:40px;
 
-            background-color:purple;
-            /*background-image:url('../images/newset/TROLL.jpg');*/
-                background-repeat: no-repeat;
-                background-position:50% 20%;
-                background-size: cover;
-            border:1px #ccc solid;
-            border-radius: 10px;
-            box-sizing: border-box;
+            text-align: center;
         }
-            #titlescreen_newset.show, #titlescreen_newset2 {
-                display:block;
-            }
-                #newset2_desc {
-                    display:flex;
-                    align-items: center;
-                    justify-content: center;
+            #titlescreen_latest_name {
+                display:inline-block;
+                overflow:hidden;
 
-                    width:100%;
-                    height:100%;
+                width:auto;
+                padding:4px 20px;
+                height:100%;
 
-                    color:white;
-                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
-                    font-weight: bold;
-                    font-size:30px;
-                    text-align: center;
-                    word-break: keep-all;
-                }
-            #newset_title_wrapper, #newset_title_wrapper2 {
-                margin:-20px auto;
-                width:100%;
-                height:40px;
-                text-align:center;
-            }
-                .newset_title {
-                    display:inline-block;
-
-                    padding:5px 20px;
-                    margin:0px auto;
-                    height:40px;
-
-                    background-color:rgba(62,64,229,0.7);
-                    border-radius: 10px;
-                    box-sizing: border-box;
-
-                    font-size:25px;
-                    line-height:30px;
-                    color:white;
-                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
-                }
-            .newset_button {
-                display:block;
-                width:calc(50% - 30px);
-                height:100px;
-
-                background:#DDDDDD;
+                background-color:rgba(62,64,229,0.7);
                 border-radius: 10px;
-                opacity:0.9;
+                box-sizing: border-box;
 
-                font-size:30px;
-                word-break: keep-all;
-                cursor:pointer;
-            }
-                .newset_button:hover {
-                    background:#87ece9;
-                }
-            #newset_cardinfo {
-                float:left;
-                margin:40px 0 0 20px;
-            }
-            #newset_newdeck {
-                float:right;
-                margin:40px 20px 0 0;
+                font-size:25px;
+                line-height:30px;
+                color:white;
+                text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
             }
 
     /*덱 생성*/
@@ -1455,7 +1414,53 @@ body {
                 border:4px #228DFF inset;
             }
 
+    /*메타 덱 정보*/
+    #main_metadeck {
+        background-color:#282C34;
+    }
+        #metadeck_description {
+            display:none;
+            position:absolute;
+                left:0;top:0;
+                z-index:2;
 
+            padding:20px 10px;
+            width:100%;
+            height:100%;
+
+            background-color:#282C34;
+            box-sizing: border-box;
+
+            color:#dddddd;
+            font-weight: bold;
+            text-align:center;
+        }
+            #metadeck_description.show {
+                display:block;
+            }
+        #metadeck_loading {
+            display:none;
+            position:absolute;
+                left:0;top:0;
+                z-index:2;
+
+            padding:20px 10px;
+            width:100%;
+            height:100%;
+
+            background-color:#282C34;
+            box-sizing: border-box;
+
+            color:#dddddd;
+            font-weight: bold;
+            text-align:center;
+        }
+            #metadeck_loading.show {
+                display:block;
+            }
+            #metadeck_loading p {
+                font-size:30px;
+            }
 
 /*=====================================================*/
 /* 푸터 */
@@ -1894,6 +1899,82 @@ body {
         background-color:rgba(255,255,255,0.4);
     }
 
+    /*메타 덱 분석*/
+#metadeck_slot {
+    position:relative;
+        z-index:1;
+    overflow-y:scroll;
+
+    width:100%;
+    height:calc(100% - 10px);
+
+    box-sizing: border-box;
+}
+    #metadeck_slot_content {
+        position:relative;
+
+        padding:15px 10px 10px 10px;
+        width:100%;
+        height:100%;
+
+        box-sizing: border-box;
+    }
+#footer_metadeck {
+    position:absolute;
+        left:0;bottom:0;
+        z-index:2;
+    overflow:hidden;
+
+    padding:5px;
+    width:100%;
+    height:75px;
+
+    background:#3e40e5;
+    box-sizing: border-box;
+    transform:translate(0,100%);
+    pointer-events: none;
+}
+    #footer_metadeck.show {
+        transform:translate(0,0);
+        pointer-events: auto;
+    }
+    .footer_metadeck_button {
+        position:relative;
+        height:100%;
+
+        background:rgba(255,255,255,0.1);
+        border:2px white solid;
+        border-radius: 10px;
+        box-sizing: border-box;
+
+        color:white;
+        font-size:22px;
+        letter-spacing: -1px;
+        font-weight:bold;
+        cursor:pointer;
+        white-space: nowrap;
+    }
+        .footer_metadeck_button:hover {
+            background-color:rgba(255,255,255,0.2);
+        }
+        .footer_metadeck_button:active {
+            background-color:rgba(255,255,255,0.4);
+        }
+        .footer_metadeck_button > img {
+            vertical-align:middle;
+            width:33px;
+            height:33px;
+        }
+        .footer_metadeck_button > span {
+            vertical-align:middle;
+            font-size:inherit;
+        }
+    #button_metadeck_filter {
+        float:left;
+        width:calc(100% - 10px);
+        border:2px lime solid;
+        color:lime;
+    }
 /*=====================================================*/
 /* 모바일 화면조정 */
 /*=====================================================*/
@@ -1931,9 +2012,6 @@ body {
         display:inline;
     }
     /*특정 구도*/
-    #newset_title {
-        font-size:18px;
-    }
     #search_class {
         margin:2px 0;
         width:45%;

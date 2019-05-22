@@ -32,10 +32,6 @@
     cursor:pointer;
     user-select:none;
 }
-    .card:not(.newset_hidden) {
-        background-position:right -40px top -45px;
-        background-size:200px auto;
-    }
     @keyframes add_flash {
         0% {
             filter:brightness(3);
@@ -66,12 +62,6 @@
 }
     .card:not(.unusable_hidden) .card_cost {
         background-color:crimson;
-    }
-    .card:not(.newset_hidden) .card_cost {
-        background-image:url(../images/icon_new2.png);
-        background-repeat:no-repeat;
-        background-size:30px auto;
-        background-position:0% 0%;
     }
 .card_name {
     display:table;

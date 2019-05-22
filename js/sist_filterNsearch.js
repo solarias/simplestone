@@ -125,7 +125,7 @@ function card_matchKeyword(target, keyword) {
 }
 
 //카드 필터 구성
-function card_setFilter(cmd, isNewset) {
+function card_setFilter(cmd) {
     //초기 작업: 검색치 초기화
     if (cmd === "init") {
         //검색 초기치 설정, 필터 활성화
@@ -134,8 +134,6 @@ function card_setFilter(cmd, isNewset) {
         process.search.mana = "all";//마나
         process.search.rarity = "all";//등급
         process.search.set = "all";//세트
-            //신규확장팩이면 검색 세트 강제 설정
-            if (isNewset && process.deck.newset) process.search.set = process.deck.newset;
         process.search.format = process.deck.format;//포맷
         process.search.keyword = "";//키워드
     }
@@ -349,29 +347,20 @@ function card_setFilter(cmd, isNewset) {
                 case "정규":
                     //세트 버튼 구성
                     let text = "";
-                    let setarr = Object.keys(DATA.SET.KR);
+                    let setarr = Object.keys(DATA.SET);
                     setarr.unshift("all");
                     setarr.forEach(function(x,i) {
                         if (x === "all" ||
-                        DATA.SET.FORMAT[x] === "정규" ||
-                        process.deck.format === DATA.SET.FORMAT[x]) {
+                        DATA.SET[x].FORMAT === "정규" ||
+                        process.deck.format === DATA.SET[x].FORMAT) {
                             let btn = document.createElement("button");
                                 btn.id = "popup_set_" + x;
                                 btn.classList.add("popup_button","small");
-                                btn.dataset.set = (DATA.SET.KR[x]) ? DATA.SET.KR[x] : "전체";
-                                btn.innerHTML = (DATA.SET.KR[x]) ? DATA.SET.KR[x] : "전체";
+                                btn.dataset.set = (DATA.SET[x]) ? DATA.SET[x].KR : "전체";
+                                btn.innerHTML = (DATA.SET[x]) ? DATA.SET[x].KR : "전체";
                             text += btn.outerHTML;
                         }
                     });
-                    //확장팩이면 확장팩 세트 추가
-                    if (process.deck.newset) {
-                        let btn = document.createElement("button");
-                            btn.id = "popup_set_" + process.deck.newset;
-                            btn.classList.add("popup_button","small");
-                            btn.dataset.set = DATA.SET.NEW.name;
-                            btn.innerHTML = DATA.SET.NEW.name;
-                        text += btn.outerHTML;
-                    }
                     //팝업창 열기
                     swal({
                         title: '카드 세트 검색',
@@ -421,16 +410,10 @@ function card_setFilter(cmd, isNewset) {
                             select_standard.options[0] = new Option("개별 세트(정규)");
                             select_standard.options[0].disabled = true;
                             //개별 세트
-                            let setarr = Object.keys(DATA.SET.KR);
-                                //확장팩이면 확장팩 세트 추가
-                                if (process.deck.newset) setarr.push(process.deck.newset);
+                            let setarr = Object.keys(DATA.SET);
                             setarr.forEach(function(x,i) {
-                                if (DATA.SET.FORMAT[x] === "정규" || (process.deck.newset && x === process.deck.newset)) {
-                                    if (process.deck.newset && x === process.deck.newset) {
-                                        select_standard.options[select_standard.options.length] = new Option(DATA.SET.NEW.name,process.deck.newset);
-                                    } else {
-                                        select_standard.options[select_standard.options.length] = new Option(DATA.SET.KR[x],x);
-                                    }
+                                if (DATA.SET[x].FORMAT === "정규") {
+                                    select_standard.options[select_standard.options.length] = new Option(DATA.SET[x].KR,x);
                                     //현재 검색필터 세트이면 강조
                                     if (x === process.search.set) {
                                         select_standard.options[select_standard.options.length-1].selected = true;
@@ -442,12 +425,10 @@ function card_setFilter(cmd, isNewset) {
                             select_wild.options[0] = new Option("개별 세트(야생)");
                             select_wild.options[0].disabled = true;
                             //개별 세트
-                            let setarr2 = Object.keys(DATA.SET.KR);
-                                //확장팩이면 확장팩 세트 추가
-                                if (process.deck.newset) setarr2.push(DATA.SET.NEW.id);
+                            let setarr2 = Object.keys(DATA.SET);
                             setarr2.forEach(function(x,i) {
-                                if (DATA.SET.FORMAT[x] === "야생") {
-                                    select_wild.options[select_wild.options.length] = new Option(DATA.SET.KR[x],x);
+                                if (DATA.SET[x].FORMAT === "야생") {
+                                    select_wild.options[select_wild.options.length] = new Option(DATA.SET[x].KR,x);
                                     //현재 검색필터 세트이면 강조
                                     if (x === process.search.set) {
                                         select_wild.options[select_wild.options.length-1].selected = true;
@@ -641,8 +622,7 @@ function card_getSearchResult(className) {
         )) &&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
         (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
         (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
-        (DATA.SET.FORMAT[x.set] === "정규" || DATA.SET.FORMAT[x.set] === process.search.format ||//포맷(정규는 무조건 포함)
-            (process.deck.newset && x.set === DATA.SET.NEW.id)) &&//신규 확장팩은 정규로 취급
+        (DATA.SET[x.set] !== undefined && (DATA.SET[x.set].FORMAT === "정규" || DATA.SET[x.set].FORMAT === process.search.format)) &&//포맷(정규는 무조건 포함)
         (process.search.mana === "all" || card_matchMana(x, process.search.mana) === true) &&//마나
         (process.search.rarity === "all" || x.rarity === process.search.rarity) &&//등급
         (process.search.set === "all" || x.set === process.search.set) &&
