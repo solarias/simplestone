@@ -522,6 +522,29 @@ body {
             #deckconfig_format:active {
                 background-color:rgba(255,255,255,0.4);
             }
+    #header_metadeck {
+        position:absolute;
+            left:0;top:0;
+        z-index:1;
+        overflow:hidden;
+
+        width:100%;
+        height:100%;
+
+        background:#798689;
+        box-sizing: border-box;
+        transform:translate(0,-100%);
+        pointer-events: none;
+
+        color:white;
+        font-size:20px;
+            line-height:40px;
+        text-align:center;
+    }
+            #header_metadeck.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
 
 /*=====================================================*/
 /* 메인 */
@@ -710,10 +733,10 @@ body {
             #titlescreen_etc {
                 pointer-events: none;
             }
-            /*메타 덱 기능 잠시 감추기*/
+            /*메타 덱 기능 잠시 감추기
             #titlescreen_metadeck, #titlescreen_etc {
                 display:none;
-            }
+            }*/
 
         .titlescreen_button {
             position:relative;
@@ -1416,7 +1439,7 @@ body {
 
     /*메타 덱 정보*/
     #main_metadeck {
-        background-color:#282C34;
+        background-color:#3b3b3b;
     }
         #metadeck_description {
             display:none;
@@ -1919,6 +1942,168 @@ body {
 
         box-sizing: border-box;
     }
+    .metadeckslot_button {
+        position:relative;
+        display:block;
+        direction:ltr;
+
+        margin-bottom:15px;
+        width:100%;
+        height:60px;
+    }
+    .metadeckslot_button_number {
+        position:absolute;
+        left:-3px;top:-10px;
+        z-index:2;
+        display:flex;
+            align-items: center;
+
+        padding:1px 5px;
+        width:auto;
+        height:20px;
+
+        background:orange;
+        border-radius:8px;
+
+        font-weight: 600;
+    }
+        .metadeckslot_button_main {
+            position:relative;
+            float:left;
+            display:block;
+            overflow:hidden;
+
+            width:100%;
+            height:100%;
+
+            background-repeat:no-repeat;
+            background-position:calc(100% + 25px) 50%;
+            background-size:auto 100%;
+            /*border:5px gold outset;*/
+
+            cursor:pointer;
+        }
+        .metadeckslot_button_mainCover {
+            position:relative;
+            display:block;
+            overflow:hidden;
+
+            padding:3px 5px;
+            width:100%;
+            height:100%;
+
+            background: linear-gradient(
+                to right,
+                rgba(210,210,210,1) 0%,
+                rgba(210,210,210,1) calc(100% - 190px),
+                rgba(210,210,210,0.4) calc(100% - 25px),
+                rgba(210,210,210,0.4) 100%);
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+            .metadeckslot_button_main:hover .metadeckslot_button_mainCover {
+                background: linear-gradient(
+                    to right,
+                    rgba(135,236,233,1) 0%,
+                    rgba(135,236,233,1) calc(100% - 190px),
+                    rgba(135,236,233,0) calc(100% - 25px),
+                    rgba(135,236,233,0) 100%);
+            }
+        .metadeckslot_button_name {
+            position:absolute;
+                left:5px;top:10px;
+            overflow:hidden;
+
+            width:100%;
+            height:30px;
+
+            color:yellow;
+            /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
+            text-shadow:
+                1px 0 black,
+                1px 1px black,
+                0 1px black;
+            font-weight: bold;
+            font-size:24px;
+                line-height: 24px;
+            text-align:left;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+            .metadeckslot_button_name.WARRIOR {
+                color:red;}
+            .metadeckslot_button_name.SHAMAN {
+                color:blue;}
+            .metadeckslot_button_name.ROGUE {
+                color:navy;}
+            .metadeckslot_button_name.PALADIN {
+                color:orange;}
+            .metadeckslot_button_name.HUNTER {
+                color:green;}
+            .metadeckslot_button_name.DRUID {
+                color:brown;}
+            .metadeckslot_button_name.WARLOCK {
+                color:purple;}
+            .metadeckslot_button_name.MAGE {
+                color:aqua;}
+            .metadeckslot_button_name.PRIEST {
+                color:yellow;}
+        .metadeckslot_button_class {
+            position:absolute;
+                left:5px;bottom:5px;
+
+            margin-top:4px;
+            height:15px;
+
+            color:#303030;
+            font-weight: bold;
+            /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
+            font-size:15px;
+                line-height:15px;
+        }
+        .metadeckslot_button_dust_icon {
+            display:block;
+            position:absolute;
+                left:70px;bottom:5px;
+
+            width:16px;
+            height:16px;
+        }
+        .metadeckslot_button_dust {
+            position:absolute;
+                left:90px;bottom:5px;
+
+            margin-top:4px;
+            width:auto;
+            height:15px;
+
+            color:skyblue;
+            font-weight: bold;
+            text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+            font-size:15px;
+                line-height:15px;
+        }
+        .metadeckslot_button_totalgame {
+            position:absolute;
+                right:5px;top:5px;
+
+            color:#000000;
+            font-weight: bold;
+            text-shadow:0 -1px white,1px -1px white,1px 0 white,1px 1px white,0 1px white,-1px 1px white,-1px 0 white,-1px -1px white;
+            font-size:16px;
+                line-height:16px;
+        }
+        .metadeckslot_button_winrate {
+            position:absolute;
+                right:5px;bottom:5px;
+
+            color:#000000;
+            font-weight: bold;
+            text-shadow:0 -1px white,1px -1px white,1px 0 white,1px 1px white,0 1px white,-1px 1px white,-1px 0 white,-1px -1px white;
+            font-size:16px;
+                line-height:16px;
+        }
+
 #footer_metadeck {
     position:absolute;
         left:0;bottom:0;
@@ -1970,7 +2155,8 @@ body {
             font-size:inherit;
         }
     #button_metadeck_filter {
-        float:left;
+        display:block;
+        margin:0 auto;
         width:calc(100% - 10px);
         border:2px lime solid;
         color:lime;

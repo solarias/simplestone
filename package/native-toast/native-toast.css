@@ -110,8 +110,9 @@
 
 .native-toast-info {
   /*background-color: #5060ba;*/
-  background-color:rgba(80,96,186,0.9);
+  background-color:rgba(80,96,186,0.5);
   color: white;
+  pointer-events: none;
 }
 
 [class^="native-toast-icon-"] {

@@ -21,10 +21,13 @@ let session = {
 const TILEURL = "./images/tiles/";
 const PORTRAITURL = "./images/portraits/";
 const HEROURL = "./images/heroes/";
-const METADECKURL = {
-    standard:"https://hsreplay.net/analytics/query/list_decks_by_win_rate/?GameType=RANKED_STANDARD&RankRange=LEGEND_THROUGH_TWENTY&TimeRange=LAST_30_DAYS",
-    wild:"https://hsreplay.net/analytics/query/list_decks_by_win_rate/?GameType=RANKED_WILD&RankRange=LEGEND_THROUGH_TWENTY&TimeRange=LAST_30_DAYS"
-};
+const METADECKAPI = "https://edcezx7ehb.execute-api.ap-northeast-2.amazonaws.com/production/get/?cmd=";
+const METADECKMAX = 100;//메타덱 출력 최대 순위
+    //메타덱 API는 cmd에 따라 hsreplay에서 데이터를 수집함(AWS Lambda API 설정 참조)
+    //archetype : 덱 아키타입
+    //standard : 정규전 경쟁 덱
+    //wild : 야생전 경쟁 덱
+const REFRESH_HOUR = 6;//6시간마다 메타덱 갱신 가능
 //클러스터
 let clusterize = {};
 //꾹 눌려 카드정보 열람 auto
@@ -75,7 +78,19 @@ const DATA = {
             "WARLOCK":"흑마법사",
             "MAGE":"마법사",
             "PRIEST":"사제",
-            "NEUTRAL":"중립"
+            "NEUTRAL":"중립",
+            "ALL":"모든 직업",
+        },
+        COLOR:{
+            "WARRIOR":"red",
+            "SHAMAN":"blue",
+            "ROGUE":"navy",
+            "PALADIN":"orage",
+            "HUNTER":"gold",
+            "DRUID":"brown",
+            "WARLOCK":"purple",
+            "MAGE":"azure",
+            "PRIEST":"white",
         }
     },
     RARITY:{
@@ -134,7 +149,9 @@ const DATA = {
     FORMAT:{
         CODE:{
             "야생":1,
-            "정규":2
+            "wild":1,//에러 방지
+            "정규":2,
+            "standard":2//에러 방지
         },
         DECODE:{
             "1":"야생",
@@ -143,6 +160,10 @@ const DATA = {
         EN:{
             "야생":"wild",
             "정규":"standard"
+        },
+        KR:{
+            "wild":"야생",
+            "standard":"정규"
         }
     },
     DECK_SLOT_LIMIT:5,

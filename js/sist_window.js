@@ -13,15 +13,20 @@ function window_clear() {
     $$(".subscreen").forEach(function(target) {
         target.classList.remove("show");
     })
+    $$(".mobilescreen").forEach(function(target) {
+        target.classList.remove("show");
+    })
     $$(".footer_desc").forEach(function(target) {
         target.classList.remove("show");
     })
 }
 
 //개별 창 설정
-function window_shift(keyword, keyword2) {
+async function window_shift(keyword, keyword2, keyword3) {
     switch(keyword) {
-        //공지사항 창
+        //===========================================================
+        //※ 공지사항 창
+        //===========================================================
         case "notice":
             //창 전환
             window_clear();
@@ -87,7 +92,9 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //업데이트 창
+        //===========================================================
+        //※ 업데이트 창
+        //===========================================================
         case "update":
             //최신 DB 버전 확인
             let dbinfo = keyword2.dbinfo;
@@ -218,11 +225,12 @@ function window_shift(keyword, keyword2) {
                 session.db.forEach(function(x,index) {
                     session.index[x.dbfid] = index;
                 })
-                //마스터 노드, 마스터 인포, 마스터 슬롯 생성
+                //마스터 노드, 마스터 인포, 마스터 슬롯, 마스터 메타덱 생성
                 session.masterNode = card_generateMaster();
                 session.masterInfo = cardinfo_generateMaster();
                 session.masterSlot = deckslot_generateMaster();
-                //Fragment 생성
+                session.masterMetaSlot = metadeckslot_generateMaster();
+                //카드 Fragment 생성
                 session.fragment = [];
                 session.db.forEach(function(info, index) {
                     session.fragment[index] = card_generateFragment(info);
@@ -259,7 +267,9 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //*메인 창
+        //===========================================================
+        //※ 메인화면 창
+        //===========================================================
         case "titlescreen":
             //공용 함수
             function process_titlescreen() {
@@ -310,7 +320,9 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //*덱 목록
+        //===========================================================
+        //※ 덱목록 창
+        //===========================================================
         case "decklist":
             //진행상태 표시, 기억
             process.state = "decklist";
@@ -531,7 +543,9 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //카드정보 불러오기
+        //===========================================================
+        //※ 카드정보 불러오기
+        //===========================================================
         case "loading":
             //덱코드가 있다면 덱코드 해석
             if (process.deck !== undefined && process.deck.deckcode !== undefined && process.deck.deckcode !== "") {
@@ -582,12 +596,14 @@ function window_shift(keyword, keyword2) {
                 }
 
                 //Fragment 불러오기
-                window_shift(keyword2);
+                window_shift(keyword2, keyword3);
             }
 
             break;
 
-        //*카드 검색
+        //===========================================================
+        //※ 카드검색 창
+        //===========================================================
         case "cardinfo":
             //상태 기억
             process.state = "cardinfo";
@@ -652,7 +668,9 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //*덱 제작
+        //===========================================================
+        //※ 덱 제작 창
+        //===========================================================
         case "deckbuilding":
             //상태 기억
             process.state = "deckbuilding";
@@ -846,11 +864,15 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //*덱 목록
+        //===========================================================
+        //※ 덱 목록 창
+        //===========================================================
         case "deckconfig":
             //상태 기억
             process.state = "deckconfig";
             $("#header_status").innerHTML = "덱 설정";
+                //이전 상태 기억
+                if (keyword2 !== undefined) process.prestate = keyword2;
             //==================
             //※ 화면 구성
             //==================
@@ -863,7 +885,11 @@ function window_shift(keyword, keyword2) {
             //뒤로 버튼
             $("#header_back").classList.add("show");
                 $("#header_back").onclick = function() {
-                    window_shift("decklist");
+                    if (process.prestate) {
+                        window_shift(process.prestate);
+                    } else {
+                        window_shift("decklist");
+                    }
                 }
 
             //==================
@@ -1214,11 +1240,15 @@ function window_shift(keyword, keyword2) {
 
             break;
 
-        //*메타 덱 정보
+        //===========================================================
+        //※ 메타 덱 정보 창
+        //===========================================================
         case "metadeck":
             //창 전환
             window_clear();
             $("#main_metadeck").classList.add("show");
+            $("#header_metadeck").classList.add("show");
+                $("#header_metadeck").innerHTML = "";
             $("#footer_metadeck").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
@@ -1230,10 +1260,31 @@ function window_shift(keyword, keyword2) {
             //제목 표시
             $("#header_status").innerHTML = "메타 덱 정보";
 
-            //메타덱 정보 구축
-            if (!session.metadeck) session.metadeck = {};
-            //기존에 덱 목록을 불러온 적이 없으면 설명문 표시
-            if (!session.metadeck.standard && !session.metadeck.wild) {
+            //디폴트 필터링 세팅
+            if (!session.metadeck) {
+                let filter = await localforage.getItem("sist_metadeck_filter")
+                if (!filter) {
+                    session.metadeck = {
+                        filter:{
+                            class:"ALL",
+                            format:"standard",
+                            totalgame:0
+                        }
+                    }
+                } else {
+                    session.metadeck = {
+                        filter:{
+                            class:filter.class,
+                            format:filter.format,
+                            totalgame:filter.totalgame
+                        }
+                    }
+                }
+            }
+
+            //첫 화면 구성
+            //현재 포맷 덱 정보 없으면 설명문 표시
+            if (!session.metadeck[session.metadeck.filter.format]) {
                 $("#metadeck_description").classList.add("show");
                 $("#metadeck_loading").classList.remove("show");
             } else {
@@ -1241,7 +1292,7 @@ function window_shift(keyword, keyword2) {
                 $("#metadeck_description").classList.remove("show");
                 $("#metadeck_loading").classList.remove("show");
                 //메타 덱 출력
-                metadeck_show();
+                metadeck_load();
             }
 
             //직업 및 포맷 설정
@@ -1249,7 +1300,6 @@ function window_shift(keyword, keyword2) {
                 //설정 팝업창 열기
                 swal({
                     html:
-                      '<span class="popup_title">메타 덱 설정</span>'+
                       '<span class="popup_subtitle">직업 선택</span>'+
                       '<button id="popup_class_ALL" class="popup_button full metadeck_button metadeck_class" data-class="ALL">모든 직업</button>'+
                       '<button id="popup_class_WARRIOR" class="popup_button trisection metadeck_button metadeck_class" data-class="WARRIOR">전사</button>' +
@@ -1262,14 +1312,28 @@ function window_shift(keyword, keyword2) {
                       '<button id="popup_class_MAGE" class="popup_button trisection metadeck_button metadeck_class" data-class="MAGE">마법사</button>' +
                       '<button id="popup_class_PRIEST" class="popup_button trisection metadeck_button metadeck_class" data-class="PRIEST">사제</button>'+
                       '<span class="popup_subtitle">대전방식 선택</span>'+
-                      '<button id="popup_format_standard" class="popup_button metadeck_button metadeck_format" data-format="정규">정규</button>' +
-                      '<button id="popup_format_wild" class="popup_button metadeck_button metadeck_format" data-format="야생">야생</button>',
+                      '<button id="popup_format_standard" class="popup_button metadeck_button metadeck_format" data-format="standard">정규</button>' +
+                      '<button id="popup_format_wild" class="popup_button metadeck_button metadeck_format" data-format="wild">야생</button>'+
+                      '<span class="popup_subtitle">최소 게임횟수</span>'+
+                      '<button id="popup_totalgame_0" class="popup_button metadeck_button metadeck_totalgame" data-totalgame="0">제한없음</button>' +
+                      '<button id="popup_totalgame_1000" class="popup_button metadeck_button metadeck_totalgame" data-totalgame="1000">1,000판 이상</button>',
                     onOpen:function() {
+                        //버튼 디폴트 세팅
+                        if (process.state === "metadeck") {
+                            //직업
+                            $("#popup_class_" + session.metadeck.filter.class).classList.add("selected")
+                            //포맷 디폴트
+                            $("#popup_format_" + session.metadeck.filter.format).classList.add("selected")
+                            //게임횟수 디폴트 : 제한없음
+                            $("#popup_totalgame_" + session.metadeck.filter.totalgame).classList.add("selected")
+                        }
+
+                        //버튼 클릭 시
                         $$(".metadeck_button").forEach(function(target) {
                             target.onclick = function() {
                                 if (target.dataset.class) {
                                     //직업 세팅
-                                    session.metadeck.class = target.dataset.class;
+                                    session.metadeck.filter.class = target.dataset.class;
                                     //버튼 세팅
                                     $$(".metadeck_class").forEach(function(x) {
                                         x.classList.remove("selected");
@@ -1277,9 +1341,17 @@ function window_shift(keyword, keyword2) {
                                     target.classList.add("selected");
                                 } else if (target.dataset.format) {
                                     //대전 방식 세팅
-                                    session.metadeck.format = target.dataset.format;
+                                    session.metadeck.filter.format = target.dataset.format;
                                     //버튼 세팅
                                     $$(".metadeck_format").forEach(function(x) {
+                                        x.classList.remove("selected");
+                                    })
+                                    target.classList.add("selected");
+                                } else if (target.dataset.totalgame) {
+                                    //게임 횟수 세팅
+                                    session.metadeck.filter.totalgame = parseInt(target.dataset.totalgame);
+                                    //버튼 세팅
+                                    $$(".metadeck_totalgame").forEach(function(x) {
                                         x.classList.remove("selected");
                                     })
                                     target.classList.add("selected");
@@ -1289,9 +1361,9 @@ function window_shift(keyword, keyword2) {
                     },
                     preConfirm: function() {
                         return new Promise(function(resolve, reject) {
-                            if (!session.metadeck.class) {
+                            if (!session.metadeck.filter.class) {
                                 reject('직업을 설정해주세요.');
-                            } else if (!session.metadeck.format) {
+                            } else if (!session.metadeck.filter.format) {
                                 reject('대전 방식을 설정해주세요.');
                             } else {
                                 resolve();
@@ -1304,35 +1376,248 @@ function window_shift(keyword, keyword2) {
                     cancelButtonText: '취소',
                     cancelButtonColor: '#d33',
                     showCloseButton:true
-                }).then(function(isConfirm) {
+                }).then(async (isConfirm) => {
                     if (isConfirm) {
-                        if (!session.metadeck.standard && !session.metadeck.wild) {
-                            //메타 덱 목록 없으면 불러오기
-                            metadeck_load();
-                        } else {
-                            //메타 덱 목록 있으면 출력
-                            metadeck_show();
-                        }
+                        //필터 기억
+                        await localforage.setItem("sist_metadeck_filter",session.metadeck.filter);
+                        //메타덱 불러오기
+                        metadeck_load();
                     }
                 })
             }
 
             //메타 덱 목록 불러오기
             function metadeck_load() {
+                //공통 : API 호출
+                async function callAPI(cmd) {
+                    let desc = {
+                        archetype:"덱 유형",
+                        standard:"정규전 덱",
+                        wild:"야생전 덱"
+                    }
+                    //로딩 화면
+                    $("#metadeck_loading_desc").innerHTML = desc[cmd] + " 불러오는 중...";
+                    //API 호출
+                    try {
+                        let response = await fetch(METADECKAPI + cmd);
+                        //성공 시
+                        let resJson = await response.json();
+                        //데이터 정제 후 저장
+                        let output = {}
+                        switch (cmd) {
+                            case "archetype"://아키타입
+                                resJson.forEach((x) => {
+                                    output[x.id.toString()] = x.name;
+                                })
+                                await localforage.setItem("sist_metadecks_archetype", output);
+
+                                break;
+                            default://정규전, 야생전
+                                output = {};
+                                output.ALL = [];//전 직업 카테고리
+                                Object.keys(resJson.series.data).forEach((x) => {
+                                    output[x] = [];
+                                    resJson.series.data[x].forEach((deck) => {
+                                        deck.class = x;//직업
+                                        deck.format = session.metadeck.filter.format;//포맷(덱코드 계산용)
+                                        deck.cards = JSON.parse(deck.deck_list);//덱리스트(문자열이 아닌 배열)
+                                        deck.dust = 0;//가루 계산
+                                        deck.cards.forEach((cardInfo) => {
+                                            deck.dust += DATA.RARITY.DUST[session.db[session.index[cardInfo[0]]].rarity] * cardInfo[1];
+                                        })
+                                        //덱코드 분석
+                                        deck.deckcode = deckcode_encode(deck);
+                                        //저장
+                                        output[x].push(deck);
+                                        output.ALL.push(deck);
+                                    })
+                                })
+                                output.ALL.sort((a,b) => {//전 직업 카테고리 정렬(by 승률)
+                                    return (a.win_rate > b.win_rate) ? -1 : 1;
+                                })
+                                output.time = thisTime();
+                                await localforage.setItem("sist_metadecks_" + cmd, output);
+
+                                break;
+                        }
+                        console.log("API 호출됨 - " + cmd);
+
+                        return output;
+                    //실패 시
+                    } catch(e) {
+                        //실패 메시지
+                        throw(e);
+                        //alert("로딩 실패");
+
+                        return false;
+                    }
+                }
+
                 //로딩 화면 출력
                 $("#metadeck_description").classList.remove("show");
                 $("#metadeck_loading").classList.add("show");
-                //메타 덱 목록 불러오기
-                //불러온 후
-                    //메타 덱 목록 구축
-                    //로딩 화면 제거
-                    //메타 덱 출력
+
+                //덱 목록 세팅
+                //로컬에 해당 포맷 덱 목록 불러오기
+                localforage.getItem("sist_metadecks_" + session.metadeck.filter.format)
+                .then(async (deckInfo) => {
+                    let inputInfo = {};
+                    //불러올 게 없거나, 해당 포맷 없으면
+                    if (!deckInfo) {
+                        //API 호출
+                        inputInfo = await callAPI(session.metadeck.filter.format);
+                    //았으면
+                    } else {
+                        //갱신 시간 점검
+                        let updated = deckInfo.time;
+                        //갱신이 필요하면
+                        let moment = thisTime();
+                        let section = (input) => {
+                            return Math.floor(parseInt(input.split("/")[1].split(":")[0]) / REFRESH_HOUR);
+                        }
+                        if (moment.split("/")[0] !== updated.split("/")[0] ||
+                            section(moment) != section(updated)) {
+                            //API 호출
+                            inputInfo = await callAPI(session.metadeck.filter.format);
+                        //갱신이 필요없으면
+                        } else {
+                            //로컬 활용
+                            inputInfo = deckInfo;
+                        }
+                    }
+                    //정보 반영
+                    session.metadeck[session.metadeck.filter.format] = inputInfo;
+
+                    return;
+
+                //오류 발생 시
+                }).catch(async (error) => {
+                    //에러 호출
+                    throw(error);
+                    //API 호출
+                    inputInfo = await callAPI(session.metadeck.filter.format);
+                    //정보 반영
+                    session.metadeck[session.metadeck.filter.format] = inputInfo;
+
+                    return;
+
+                //아키타입 세팅
+                }).then(async () => {
+                    return new Promise(resolve1 => {
+                        //로컬에 아키타입 불러오기
+                        let inputInfo = {};
+                        let setArchetype = () => {
+                            return new Promise(resolve2 => {
+                                localforage.getItem("sist_metadecks_archetype")
+                                .then(async (archetype) => {
+                                    //아키타입이 없으면
+                                    if (!archetype) {
+                                        //API 호출
+                                        inputInfo = await callAPI("archetype");
+                                    } else {
+                                        inputInfo = archetype;
+                                    }
+                                    //아키타입 대조 및 적용
+                                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(x => {
+                                        if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
+                                            session.metadeck[session.metadeck.filter.format][x].forEach(async (deck) => {
+                                                //음수는 "직업명"이 아키타입
+                                                if (deck.archetype_id < 0) {
+                                                    deck.archetype_name = deck.class;
+                                                //맞는 아키타입이 없으면
+                                                } else if (!inputInfo[deck.archetype_id]) {
+                                                    //API 호출
+                                                    inputInfo = await callAPI("archetype");
+                                                    //재적용
+                                                    deck.archetype_name = inputInfo[deck.archetype_id];
+                                                //있으면
+                                                } else {
+                                                    //적용
+                                                    deck.archetype_name = inputInfo[deck.archetype_id];
+                                                }
+                                            })
+                                        }
+                                    })
+                                    resolve2();
+                                //오류 발생 시
+                                }).catch(async (e) => {
+                                    throw(e);
+                                    //API 호출
+                                    inputInfo = await callAPI("archetype");
+                                    //아키타입 대조 및 적용
+                                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(x => {
+                                        if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
+                                            session.metadeck[session.metadeck.filter.format][x].forEach(deck => {
+                                                //음수는 "직업명"이 아키타입
+                                                if (deck.archetype_id < 0) {
+                                                    deck.archetype_name = deck.class;
+                                                } else {
+                                                    deck.archetype_name = inputInfo[deck.archetype_id];
+                                                }
+                                            })
+                                        }
+                                    })
+                                    resolve2();
+                                })
+                            })
+                        }
+                        setArchetype().then(() => {
+                            resolve1();
+                        })
+                    }).then(() => {})
+                //부가 정보 입력
+                }).then(() => {
+                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(cls => {
+                        if (cls === "ALL" || DATA.CLASS.KR[cls] !== undefined) {
+                            session.metadeck[session.metadeck.filter.format][cls].forEach(deck => {
+                            })
+                        }
+                    })
+                    //클러스터 구성 및 출력
                     metadeck_show();
+                })
             }
 
             //메타 덱 출력
             function metadeck_show() {
+                //메타 덱 목록 구축
+                let metadeckslotArr = []
+                let decks = session.metadeck[session.metadeck.filter.format][session.metadeck.filter.class];
+                let deckRank = 1;
+                for (let i = 0;i < decks.length;i++) {
+                    let oneDeck = decks[i];
+                    if (oneDeck.total_games >= session.metadeck.filter.totalgame) {
+                        metadeckslotArr.push(metadeckslot_generateFragment(oneDeck, deckRank));
+                        deckRank += 1;
+                    }
+                    if (deckRank > METADECKMAX) break;
+                }
+                //클러스터 업데이트
+                clusterize.metadeck.update(metadeckslotArr);
+                //클러스터 스크롤(기억해둔 거 있으면 거기로, 아니면 0 / 이후 초기화)
+                $("#metadeck_slot").scrollTop = session.metadeck.scroll || 0;
+                    session.metadeck.scroll = 0;
+                //상단 문구 출력
+                $("#header_metadeck").innerHTML = DATA.CLASS.KR[session.metadeck.filter.class] + " / " +
+                    DATA.FORMAT.KR[session.metadeck.filter.format] + " / " +
+                    thousand(session.metadeck.filter.totalgame) + "판 이상";
+                //로딩 화면 제거
+                $("#metadeck_loading").classList.remove("show");
 
+                //메타 덱 열람
+                $("#metadeck_slot").onclick = function(e) {
+                    e = e || event;
+                    let target = e.target || e.srcElement;
+                    //현재 스크롤 기억
+                    session.metadeck.scroll = $("#metadeck_slot").scrollTop;
+                    //덱 편집창 열기
+                    if (target.classList.contains("metadeckslot_button_main")) {
+                        if (!process.deck) process.deck = {};
+                        process.deck.name = "[메타" + target.dataset.number + "]" + target.dataset.name;
+                        process.deck.deckcode = target.dataset.deckcode;
+                        window_shift("loading","deckconfig","metadeck");
+                    }
+                }
             }
 
             break;

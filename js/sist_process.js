@@ -2,7 +2,7 @@
 //===========================================================
 //※ 함수 - 기타
 //===========================================================
-//카드 마스터 노드 생성
+//마스터 카드 노드 생성
 function card_generateMaster() {
     //요소 생성
     let elm_card = document.createElement("div.card.selectable");
@@ -92,6 +92,63 @@ function deckslot_generateFragment(deck, number, key) {
     fragment = fragment.replaceAll("$quantity",deck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString());//수량
     fragment = fragment.replaceAll("$formatcolor",DATA.FORMAT.EN[deck.format]);//대전방식 색상
     fragment = fragment.replaceAll("$format",deck.format + "전");//대전방식
+
+    //반환
+    return fragment;
+}
+
+//마스터 메타 덱 슬롯 생성
+function metadeckslot_generateMaster() {
+    //요소 생성
+    let elm_metadeckslot = document.createElement("div.metadeckslot_button");
+        let elm_number = document.createElement("div.metadeckslot_button_number");
+            elm_number.innerHTML = "$number";
+            elm_metadeckslot.appendChild(elm_number);
+    let elm_main = document.createElement("button.metadeckslot_button_main");
+        elm_main.dataset.deckcode = "$deckcode";
+        elm_main.dataset.name = "$name";
+        elm_main.dataset.number = "$number";
+        elm_main.style.backgroundImage = "url($url)";
+    elm_metadeckslot.appendChild(elm_main);
+        let elm_mainCover = document.createElement("div.metadeckslot_button_mainCover");
+        elm_main.appendChild(elm_mainCover);
+            let elm_name = document.createElement("div.metadeckslot_button_name");
+                elm_name.innerHTML = "$name";
+                elm_name.classList.add("$colorClass");
+            elm_mainCover.appendChild(elm_name);
+            let elm_class = document.createElement("div.metadeckslot_button_class");
+                elm_class.innerHTML = "$class";
+            elm_mainCover.appendChild(elm_class);
+            let elm_dust_icon = document.createElement("img.metadeckslot_button_dust_icon");
+                elm_dust_icon.src = "./images/icon_dust_black.png";
+            elm_mainCover.appendChild(elm_dust_icon);
+            let elm_dust = document.createElement("div.metadeckslot_button_dust");
+                elm_dust.innerHTML = "$dust"
+            elm_mainCover.appendChild(elm_dust);
+            let elm_totalgame = document.createElement("div.metadeckslot_button_totalgame");
+                elm_totalgame.innerHTML = "$totalgame";
+            elm_mainCover.appendChild(elm_totalgame);
+            let elm_winrate = document.createElement("div.metadeckslot_button_winrate");
+                elm_winrate.innerHTML = "$winrate";
+            elm_mainCover.appendChild(elm_winrate);
+
+    //텍스트로 반환
+    return elm_metadeckslot.outerHTML;
+}
+//메타 덱 슬롯 개별 요소 생성
+function metadeckslot_generateFragment(deck, number, key) {
+    //마스터 슬롯 복사
+    let fragment = session.masterMetaSlot;
+    //필요한 정보 설정
+    fragment = fragment.replaceAll("$url",HEROURL + DATA.CLASS.ID[deck.class] + ".jpg");//직업 이미지
+    fragment = fragment.replaceAll("$number","#" + number.toString());//순번
+    fragment = fragment.replaceAll("$deckcode",deck.deckcode);//이름
+    fragment = fragment.replaceAll("$name",deck.archetype_name);//덱 이름
+    fragment = fragment.replaceAll("$colorClass",deck.class);//덱 이름
+    fragment = fragment.replaceAll("$class",DATA.CLASS.KR[deck.class]);//덱 이름
+    fragment = fragment.replaceAll("$dust",thousand(deck.dust));//덱 이름
+    fragment = fragment.replaceAll("$winrate","승률 " + (Math.round(deck.win_rate * 10) / 10).toString() + "%");//덱 이름
+    fragment = fragment.replaceAll("$totalgame",thousand(deck.total_games) + "판");//수량
 
     //반환
     return fragment;
@@ -302,6 +359,28 @@ function cluster_update(position, latest, updateCollection) {
                 cluster_update("collection", latest);
             }
 
+
+            break;
+        case "metadeck":
+            /*
+            arr = process.deck.cards;
+            //사용불가 카드 수 계산 준비
+            process.deck.unusable = 0;
+            //클러스터 입력정보 준비
+            arr.forEach(function(x) {
+                nodearr.push(card_addFragment("deck",x[0],x[1],false,latest));
+            })
+            //클러스터 업데이트
+            clusterize.deck.update(nodearr);
+
+            //덱 상태 최신화
+            deck_refresh();
+
+            //카드목록 (해당되면) 클러스터 업데이트
+            if (updateCollection  !== false) {
+                cluster_update("collection", latest);
+            }
+            */
 
             break;
     }
@@ -657,7 +736,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
             no_data_text: '즐겨찾기 덱 없음'
         });
         //메타 덱 클러스터 생성해두기
-        clusterize.meta = new Clusterize({
+        clusterize.metadeck = new Clusterize({
             tag: 'div',
             scrollId: 'metadeck_slot',
             contentId: 'metadeck_slot_content',

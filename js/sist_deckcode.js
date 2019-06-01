@@ -38,15 +38,18 @@ function deckcode_decode(deckcode) {
     return output;
 }
 //인코드
-function deckcode_encode() {
+function deckcode_encode(deckObj) {
     let output = {};
+    let obj = {}
+    if (!deckObj) obj = process.deck
+        else obj = deckObj;
     //포맷
-    output.format = DATA.FORMAT.CODE[process.deck.format];
+    output.format = DATA.FORMAT.CODE[obj.format];
     //직업
-    output.heroes = [DATA.CLASS.DBFID[process.deck.class]];
+    output.heroes = [DATA.CLASS.DBFID[obj.class]];
     //카드
     output.cards = [];
-    process.deck.cards.forEach(function(card) {
+    obj.cards.forEach(function(card) {
         let arr = [];
         arr[0] = parseInt(card[0]);
         arr[1] = card[1];

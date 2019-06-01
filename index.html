@@ -4,7 +4,6 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         <meta charset="utf-8">
 		<title>심플 스톤</title>
-		<meta name="description" content="심플스톤: 하스스톤 최신 카드 정보, 덱 코드 반입, 덱 제작 및 공유 사이트">
 
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
 		<meta name="theme-color" content="#798689">
@@ -13,16 +12,21 @@
 		<script type="text/javascript" src="./package/subtool.js"></script>
 		<script type="text/javascript" src="./package/fastclick.js"></script>
 		<!--IE 11 미만 퇴치용-->
-		<script src="./package/no_ie10.js" type="text/javascript"></script>
+		<script src="./package/no_ie.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			Object.prototype.ToString = function() {console.log('삼성인터넷 Version 7.2 전용 버그')}
 		</script>
 
-		<link rel="stylesheet" type="text/css" href="./css/sist_cardNinfo.css" />
-		<link rel="stylesheet" type="text/css" href="./css/sist_main.css" />
+		<link rel="stylesheet" type="text/css" href="./css/sist_cardNinfo.css">
+		<link rel="stylesheet" type="text/css" href="./css/sist_main.css">
 
+		<meta name="description" content="심플스톤: 하스스톤 최신 카드 정보, 덱 코드 반입, 덱 제작 및 공유 사이트">
 		<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
 		<link rel="manifest" href="./manifest.json">
+
+		<meta property="og:title" content="심플스톤">
+		<meta property="og:description" content="하스스톤 최신 카드 정보, 덱 코드 반입, 덱 제작 및 공유 사이트">
+		<meta property="og:image" content="./images/logo.png">
 	</head>
 	<body>
         <div id="wrapper">
@@ -52,6 +56,9 @@
 	                <div id="header_deckconfig" class="subscreen">
 						<div id="deckconfig_favoritestate"><img src="./images/icon_favorite.png" alt="FAVORITE"> 즐겨찾기 덱</div>
 						<button id="deckconfig_format" aria-label="포맷 전환"></button>
+					</div>
+	                <div id="header_metadeck" class="subscreen">
+						<div id="deckconfig_favoritestate">즐겨찾기 덱</div>
 					</div>
 				</div>
             </header>
@@ -182,16 +189,19 @@
 					</div>
 					<div id="metadeck_description">
 						<img src="./images/icon_metadeck_white.png" alt="META">
-						<p>HSReplay에서 지난 30일 동안 가장 승률이 높은 덱을 검색해보세요.</p>
-						<p><span style="color:orange">직업/대전방식을 설정</span>하면 덱 목록을 불러옵니다.</p>
+						<p>HSReplay에서 지난 30일 동안 가장 승률이 높은 상위 100개의 덱을 검색해보세요.</p>
+						<p><span style="color:orange">필터링 설정</span>을 하면 덱 목록을 불러옵니다.</p>
+						<br>
+						<p>덱 정보는 <span style="color:yellow">6시간마다 갱신</span>할 수 있습니다.</p>
+						<p>(6시, 12시, 18시, 24시 이후 열람 시 자동 갱신)</p>
 					</div>
 					<div id="metadeck_loading">
 						<img src="./images/loading_white.svg" alt="META">
-						<p>덱 목록 불러오는 중...</p>
+						<p id="metadeck_loading_desc">덱 목록 불러오는 중...</p>
 					</div>
 				</div>
 				<footer id="footer_metadeck" class="subscreen">
-					<button id="button_metadeck_filter" class="footer_metadeck_button init" aria-label="직업 / 대전방식 설정">직업 / 대전방식 설정</button>
+					<button id="button_metadeck_filter" class="footer_metadeck_button init" aria-label="직업 / 대전방식 설정">필터링 설정</button>
 				</footer>
 
 				<!--공용 푸터(카드목록 & 덱목록)-->
@@ -221,7 +231,7 @@
             </section>
 
 			<!--별도 창 - 카드 필터(모바일)-->
-			<section id="frame_mobilefilter" class="">
+			<section id="frame_mobilefilter" class="mobilescreen">
 				<div class="mobilefilter_desc top">&#128295; 검색 필터</div>
 				<button class="mobilefilter_close mobilefilter_button" aria-label="필터 닫기">필터 닫기</button>
 

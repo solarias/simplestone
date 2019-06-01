@@ -342,7 +342,18 @@ function isNumber(s) {
 
 //날짜 출력
 function thisdate() {//현재 날짜 출력
-    return new Date().toISOString().substring(0, 10)
+    let time = new Date();
+    return (time.getFullYear()).toString() + "-" +
+        (time.getMonth() + 1).toString() + "-" +
+        (time.getDate()).toString();
+}
+function thisTime() {//현재 시간 출력
+    let time = new Date();
+    return (time.getFullYear()).toString() + "." +
+        (time.getMonth() + 1).toString() + "." +
+        (time.getDate()).toString() + "/" +
+        (time.getHours()).toString() + ":" +
+        (time.getMinutes()).toString();
 }
 function remaindate(a, b) {
     let dateA = parseInt(a.replaceAll("-",""));
