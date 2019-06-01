@@ -107,6 +107,7 @@ function metadeckslot_generateMaster() {
     let elm_main = document.createElement("button.metadeckslot_button_main");
         elm_main.dataset.deckcode = "$deckcode";
         elm_main.dataset.name = "$name";
+        elm_main.dataset.format = "$format";
         elm_main.dataset.number = "$number";
         elm_main.style.backgroundImage = "url($url)";
     elm_metadeckslot.appendChild(elm_main);
@@ -144,6 +145,7 @@ function metadeckslot_generateFragment(deck, number, key) {
     fragment = fragment.replaceAll("$number","#" + number.toString());//순번
     fragment = fragment.replaceAll("$deckcode",deck.deckcode);//이름
     fragment = fragment.replaceAll("$name",deck.archetype_name);//덱 이름
+    fragment = fragment.replaceAll("$format",deck.format);//덱 포맷
     fragment = fragment.replaceAll("$colorClass",deck.class);//덱 이름
     fragment = fragment.replaceAll("$class",DATA.CLASS.KR[deck.class]);//덱 이름
     fragment = fragment.replaceAll("$dust",thousand(deck.dust));//덱 이름

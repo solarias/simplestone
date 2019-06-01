@@ -326,6 +326,7 @@ async function window_shift(keyword, keyword2, keyword3) {
         case "decklist":
             //진행상태 표시, 기억
             process.state = "decklist";
+                process.prestate = undefined;
             $("#header_status").innerHTML = "덱 목록";
             //창 전환
             window_clear();
@@ -694,7 +695,11 @@ async function window_shift(keyword, keyword2, keyword3) {
             //뒤로 버튼
             $("#header_back").classList.add("show");
                 $("#header_back").onclick = function() {
-                    window_shift("decklist");
+                    if (process.prestate) {
+                        window_shift(process.prestate);
+                    } else {
+                        window_shift("decklist");
+                    }
                 }
             //로그 초기화
             if (process.log !== undefined)
@@ -1257,6 +1262,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //상태 기억
             process.state = "metadeck";
+                process.prestate = undefined;//이전 상태를 기억 안해도 됨
             //제목 표시
             $("#header_status").innerHTML = "메타 덱 정보";
 
@@ -1613,7 +1619,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                     //덱 편집창 열기
                     if (target.classList.contains("metadeckslot_button_main")) {
                         if (!process.deck) process.deck = {};
-                        process.deck.name = "[메타" + target.dataset.number + "]" + target.dataset.name;
+                        process.deck.name = "[" + DATA.FORMAT.KR[target.dataset.format] + target.dataset.number + "]" + target.dataset.name;
                         process.deck.deckcode = target.dataset.deckcode;
                         window_shift("loading","deckconfig","metadeck");
                     }
