@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.appmaker.rapuli",
+      "sha256_cert_fingerprints": ["27:E0:D2:52:35:34:A6:90:B2:98:ED:49:99:A2:81:C7:9A:75:60:17:9E:BF:6D:91:AB:0F:76:79:C7:DD:3F:A2"]
+    }
+  }
+]
