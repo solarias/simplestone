@@ -150,8 +150,8 @@ function export_text() {
         let decktext = deckcode_text();
         //팝업창 열기
         swal({
-            title: '텍스트 출력',
-            text: '텍스트이 복사되었습니다!',
+            title: '텍스트 공유',
+            text: '텍스트가 복사되었습니다!',
             input: 'textarea',
             inputValue: decktext,
             allowOutsideClick:false,
@@ -189,7 +189,7 @@ function export_tag() {
         let decktag = deckcode_tag();
         //팝업창 열기
         swal({
-            title: 'HTML 태그 출력',
+            title: 'HTML 태그 공유',
             text: 'HTML 태그가 복사되었습니다!',
             input: 'textarea',
             inputValue: decktag,

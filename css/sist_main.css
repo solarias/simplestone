@@ -1406,11 +1406,11 @@ body {
         box-sizing: border-box;
     }
         #main_deckconfig > hr {
-            margin:15px 0;
+            margin:0 0 8px 0;
             border-top:1px #d0a362 solid;
         }
         .deckconfig_button {
-            margin-bottom:10px;
+            margin-bottom:8px;
             width:100%;
             height:50px;
 
@@ -1426,9 +1426,6 @@ body {
             white-space: nowrap;
             cursor:pointer;
         }
-            #deckconfig_name {
-                margin:0;
-            }
             .deckconfig_button:hover {
                 background:#F7E5CB;
                 color:black;

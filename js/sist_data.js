@@ -46,7 +46,7 @@ let eventObj = {
 //===========================================================
 const DATA = {
     CLASS:{
-        ID:{
+        ID:{//직업명 루프가 필요하면 해당 오브젝트 사용
             "WARRIOR":"HERO_01",
             "SHAMAN":"HERO_02",
             "ROGUE":"HERO_03",
@@ -81,6 +81,16 @@ const DATA = {
             "NEUTRAL":"중립",
             "ALL":"모든 직업",
         },
+        CARDCLASS:[//카드 관련 직업명(루프전용)
+            "WARRIOR","SHAMAN","ROGUE",
+            "PALADIN","HUNTER","DRUID",
+            "WARLOCK","MAGE","PRIEST",
+            "NEUTRAL"],
+        METADECKCLASS:[//메타덱 관련 직업명(루프 전용)
+            "WARRIOR","SHAMAN","ROGUE",
+            "PALADIN","HUNTER","DRUID",
+            "WARLOCK","MAGE","PRIEST",
+            "ALL"],
         COLOR:{
             "WARRIOR":"red",
             "SHAMAN":"blue",

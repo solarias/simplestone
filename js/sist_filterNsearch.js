@@ -167,7 +167,7 @@ function card_setFilter(cmd) {
                         $("#popup_class_" + process.search.class).classList.add("selected");
                         //검색 결과가 없는 필터 흐릿하게 만들기
                         let searchArr = process.search.allClassResult;
-                        Object.keys(DATA.CLASS.KR).forEach(function(x) {
+                        DATA.CLASS.CARDCLASS.forEach(function(x) {
                             let haveCard = 0;
                             for (let i =0;i < searchArr.length;i++) {
                                 if (session.db[session.index[searchArr[i]]].cardClass === x) {
@@ -666,7 +666,7 @@ function card_search(action) {
         //"카드 정보 보기"라면
         if (process.state === "cardinfo") {
             //(현 직업 빼고) 전 직업 집어넣기
-            Object.keys(DATA.CLASS.KR).forEach(function(x) {
+            DATA.CLASS.CARDCLASS.forEach(function(x) {
                 if (x !== process.search.class) classArr.push(x);
             })
         //"덱 짜기"라면

@@ -875,7 +875,7 @@ async function window_shift(keyword, keyword2, keyword3) {
         case "deckconfig":
             //상태 기억
             process.state = "deckconfig";
-            $("#header_status").innerHTML = "덱 설정";
+            $("#header_status").innerHTML = "덱 정보";
                 //이전 상태 기억
                 if (keyword2 !== undefined) process.prestate = keyword2;
             //==================
@@ -1571,14 +1571,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                             resolve1();
                         })
                     }).then(() => {})
-                //부가 정보 입력
                 }).then(() => {
-                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(cls => {
-                        if (cls === "ALL" || DATA.CLASS.KR[cls] !== undefined) {
-                            session.metadeck[session.metadeck.filter.format][cls].forEach(deck => {
-                            })
-                        }
-                    })
                     //클러스터 구성 및 출력
                     metadeck_show();
                 })
