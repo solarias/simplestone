@@ -70,7 +70,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //오프라인 모드 의사 물어보기
                 swal({
                     type:"info",
-                    title:"오프라인 모드",
+                    title:"데이터 절약 모드",
                     text:"카드 이미지를 불러오지 않아 데이터를 절약할 수 있습니다.",
                     showCancelButton:true,
                     confirmButtonText: '시작하기',
@@ -1453,7 +1453,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                     } catch(e) {
                         //실패 메시지
                         throw(e);
-                        //alert("로딩 실패");
 
                         return false;
                     }
@@ -1498,9 +1497,7 @@ async function window_shift(keyword, keyword2, keyword3) {
 
                 //오류 발생 시
                 }).catch(async (error) => {
-                    //에러 호출
-                    throw(error);
-                    //API 호출
+                    //API 강제 호출
                     inputInfo = await callAPI(session.metadeck.filter.format);
                     //정보 반영
                     session.metadeck[session.metadeck.filter.format] = inputInfo;
@@ -1574,6 +1571,70 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }).then(() => {
                     //클러스터 구성 및 출력
                     metadeck_show();
+                }).catch((e) => {
+                    //메타덱 데이터를 불러오는 데 실패했다면
+                    //최근 데이터가 있으면 해당 데이터 사용
+                    localforage.getItem("sist_metadecks_" + session.metadeck.filter.format)
+                    .then(async (deckInfo) => {
+                        if (!deckInfo) {
+                            //불러올 해당 대전유형 정보 없으면 로딩 실패 출력
+                            nativeToast({
+                                message: '메타 덱 정보를 불러올 수 없습니다. 잠시 후에 다시 시도해보거나 제작자 블로그에 문의해주세요.',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'error',
+                                closeOnClick: 'true'
+                            });
+                            $("#metadeck_loading").classList.remove("show");
+                            $("#metadeck_description").classList.add("show");
+                        } else {
+                            localforage.getItem("sist_metadecks_archetype")
+                            .then(async (archetype) => {
+                                if (!archetype) {
+                                    //불러올 아키타입 정보 없으면 로딩 실패 출력
+                                    nativeToast({
+                                        message: '메타 덱 정보를 불러올 수 없습니다. 잠시 후에 다시 시도해보거나 제작자 블로그에 문의해주세요.',
+                                        position: 'center',
+                                        timeout: 2000,
+                                        type: 'error',
+                                        closeOnClick: 'true'
+                                    });
+                                    $("#metadeck_loading").classList.remove("show");
+                                    $("#metadeck_description").classList.add("show");
+                                } else {
+                                    session.metadeck[session.metadeck.filter.format] = inputInfo;
+                                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(x => {
+                                        if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
+                                            session.metadeck[session.metadeck.filter.format][x].forEach(async (deck) => {
+                                                //음수는 "직업명"이 아키타입
+                                                if (deck.archetype_id < 0) {
+                                                    deck.archetype_name = deck.class;
+                                                //맞는 아키타입이 없으면
+                                                } else if (!inputInfo[deck.archetype_id]) {
+                                                    //API 호출
+                                                    inputInfo = await callAPI("archetype");
+                                                    //재적용
+                                                    deck.archetype_name = inputInfo[deck.archetype_id];
+                                                //있으면
+                                                } else {
+                                                    //적용
+                                                    deck.archetype_name = inputInfo[deck.archetype_id];
+                                                }
+                                            })
+                                        }
+                                    })
+                                    nativeToast({
+                                        message: '메타 덱 정보를 불러올 수 없습니다. 가장 최근에 저장된 정보를 불러옵니다.',
+                                        position: 'center',
+                                        timeout: 2000,
+                                        type: 'error',
+                                        closeOnClick: 'true'
+                                    });
+                                    metadeck_show();
+                                }
+                            })
+                        }
+                    })
                 })
             }
 

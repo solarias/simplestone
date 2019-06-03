@@ -363,28 +363,6 @@ function cluster_update(position, latest, updateCollection) {
 
 
             break;
-        case "metadeck":
-            /*
-            arr = process.deck.cards;
-            //사용불가 카드 수 계산 준비
-            process.deck.unusable = 0;
-            //클러스터 입력정보 준비
-            arr.forEach(function(x) {
-                nodearr.push(card_addFragment("deck",x[0],x[1],false,latest));
-            })
-            //클러스터 업데이트
-            clusterize.deck.update(nodearr);
-
-            //덱 상태 최신화
-            deck_refresh();
-
-            //카드목록 (해당되면) 클러스터 업데이트
-            if (updateCollection  !== false) {
-                cluster_update("collection", latest);
-            }
-            */
-
-            break;
     }
 }
 
@@ -679,19 +657,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     })
     //서비스 워커 실행
     if ('serviceWorker' in navigator) {
-        //navigator.serviceWorker.register('./sw.js');
-        try{
-          navigator.serviceWorker.getRegistrations()
-          .then(function(registrations) {
-            if (registrations.length && registrations.length > 0) {
-              for(let registration of registrations) {
-                registration.unregister();
-                alert("현재 페이지에 오류가 있습니다. 페이지 새로고침을 하면 정상적으로 이용할 수 있습니다.");
-                location.reload();
-              }
-            }
-          })
-        } catch(e) {}
+        navigator.serviceWorker.register('./service-worker.js');
     }
     //기본 화면 상호작용
         //인포 버튼

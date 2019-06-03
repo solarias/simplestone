@@ -8,10 +8,11 @@
 
 2. sist_data.js 업데이트
   (영문 코드명은 JSON 파일에서 신규 카드 set 명칭 확인)
-  - DATA.SET.KR : 신규 확장팩 한글명
-  - DATA.SET.FORMAT : 신규 확장팩 대전방식(정규)
-    - 연도가 넘어가면 2년전 확장팩 대전방식 변경(정규 -> 야생)
-  - DATA.SET.YEAR : 신규 확장팩 연도
+  - DATA.SET에 신규 확장팩 등록
+    - KR : 신규 확장팩 한글명
+    - FORMAT : 신규 확장팩 대전방식(정규)
+      - 연도가 넘어가면 2년전 확장팩 대전방식 변경(정규 -> 야생)
+    - YEAR : 신규 확장팩 연도
 
 3. 이미지 업데이트
   - simplestone_이미지생성기 폴더 들어가기
@@ -24,6 +25,10 @@
 4. 공지사항 업데이트
   - ./notice.json 편집하기
 
+5. 서비스워커 업데이트 (업데이트하지 않으면 작동하지 않을 수도 있음)
+ - 심플스톤 폴더에서 Git bash here
+ - workbox generateSW workbox-config.js 입력
+ (html, css, js, json 중 단 하나라도 바뀌었다면 서비스워커 업데이트 실행 후 테스트할 것)
 
 * 작동 테스트 하는 법
  - 심플스톤 폴더에서 Git bash here

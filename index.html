@@ -5,7 +5,7 @@
         <meta charset="utf-8">
 		<title>심플 스톤</title>
 
-		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+		<meta name="viewport" content="width=device-width" />
 		<meta name="theme-color" content="#798689">
 
 		<!--모바일 최적화 : 화면 자동확대, 터치 딜레이 제거-->
@@ -58,7 +58,6 @@
 						<button id="deckconfig_format" aria-label="포맷 전환"></button>
 					</div>
 	                <div id="header_metadeck" class="subscreen">
-						<div id="deckconfig_favoritestate">즐겨찾기 덱</div>
 					</div>
 				</div>
             </header>
@@ -72,7 +71,7 @@
 				</div>
 				<footer id="footer_notice" class="subscreen">
 					<button id="button_start" class="footer_notice_button" aria-label="시작하기">시작하기</button>
-					<button id="button_offline" class="footer_notice_button" aria-label="오프라인 모드">오프라인 모드</button>
+					<button id="button_offline" class="footer_notice_button" aria-label="데이터 절약">데이터 절약</button>
 				</footer>
 
 				<!--업데이트 화면-->
@@ -272,18 +271,14 @@
 		<!--별도 창 - 카드 정보 (좌측)-->
 		<section id="frame_cardmonitor" class="subscreen"></section>
 
-
 		<!--외부 보조 라이브러리-->
-		<script src="./package/sweetalert2/dist/sweetalert2.min.js"></script>
-			<link rel="stylesheet" href="./package/sweetalert2/dist/sweetalert2.css">
+		<script src="./package/sweetalert2.min.js"></script>
+			<link rel="stylesheet" href="./package/sweetalert2.css">
 		<script src="./package/clusterize.min.js"></script>
 			<link href="./package/clusterize.css" rel="stylesheet">
 		<script src="./package/localforage.min.js"></script>
 		<script src="./package/native-toast/native-toast.min.js"></script>
 			<link href="./package/native-toast/native-toast.css" rel="stylesheet">
-			<!-- for IE support -->
-			<script src="./package/sweetalert2/node_modules/es6-promise-polyfill/promise.min.js"></script>
-			<script src="./package/fetch.js"></script>
 		<!--외부 보조 라이브러리-->
 
     <script type="text/javascript" src="./js/deckstrings.js"></script>

@@ -638,7 +638,7 @@ body {
         }
             #notice_content p[date] {
                 width:100%;
-                color:lime;
+                color:#8dff8d;
             }
             #notice_content p[content] {
                 margin-left:10px;
@@ -1587,8 +1587,8 @@ body {
     #button_offline {
         float:right;
         width:calc(30% - 10px);
-        border:2px orange solid;
-        color:orange;
+        border:2px #f8bb86 solid;
+        color:#f8bb86;
         word-break: keep-all;
     }
         #button_start[disabled], #button_offline[disabled] {

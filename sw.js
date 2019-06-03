@@ -1,6 +1,6 @@
 
 //workbox 불러오기
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
 //실행 체크
 if (workbox) {
