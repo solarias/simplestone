@@ -47,7 +47,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/cards.collectible.json",
-    "revision": "9255ca7ca20849f56ee8d5323b0b82a2"
+    "revision": "d9caed79e1bf3833765f8f2d1cdbdd80"
   },
   {
     "url": "js/cards.textreplace.json",
@@ -91,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "52df39c3b5aa487b2e214593109ff8e1"
+    "revision": "d1a69b6e514bf81649c7c02d343c8a42"
   },
   {
     "url": "package/clusterize.css",
