@@ -626,7 +626,7 @@ body {
             position:relative;
             overflow-y:scroll;
 
-            margin:10px auto 0 auto;
+            margin:5px auto 0 auto;
             padding:10px;
             width:calc(100% - 200px);
                 min-width:260px;
@@ -648,31 +648,6 @@ body {
             }
             #notice_content p[content].last {
                 margin-bottom:10px;
-            }
-        #notice_update {
-            position:relative;
-
-            margin:20px auto 0 auto;
-            padding:10px;
-            width:calc(100% - 200px);
-                min-width:260px;
-            height:40px;
-
-            background:rgba(0,0,0,0.6);
-            border-radius:10px;
-            box-sizing: border-box;
-            transform:scale(0,1);
-
-            color:white;
-            text-align: center;
-        }
-            #notice_update.show {
-                animation:notice_update_scale 0.1s linear 0s forwards;
-            }
-            @keyframes notice_update_scale {
-                0% {transform:scale(0,1);}
-                1% {transform:scale(0.01,1);}
-                100% {transform:scale(1,1);}
             }
 
     /*업데이트*/

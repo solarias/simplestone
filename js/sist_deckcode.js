@@ -705,7 +705,7 @@ function deckcode_image() {
         gradient_end:240,
         dust:16,
         format:16,
-        deckname:24
+        deckname:22
       },
       date:{
         padding:5,
@@ -770,11 +770,11 @@ function deckcode_image() {
 
         //헤더 그라디언트
         let grd = ctx.createLinearGradient(imagesize.header.gradient_start, 0, imagesize.header.gradient_end, 0);
-        grd.addColorStop(0, "rgb(60,60,60)");
+        grd.addColorStop(0, "rgb(50,50,50)");
         grd.addColorStop(1, "transparent");
         ctx.fillStyle = grd;
         ctx.fillRect(imagesize.header.gradient_start, 0,imagesize.header.gradient_end, imagesize.header.height);
-        ctx.fillStyle = "rgb(60,60,60)";
+        ctx.fillStyle = "rgb(50,50,50)";
         ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height);
 
         //테두리
@@ -791,9 +791,7 @@ function deckcode_image() {
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 0.5;
         ctx.font = 'bold ' + imagesize.header.dust + 'px sans-serif';
-        ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 1);
-        ctx.strokeText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 1);
-        ctx.fill();
+        ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 3);
 
         //덱 이름
         ctx.fillStyle = 'white';
@@ -801,10 +799,13 @@ function deckcode_image() {
         ctx.lineWidth = 0.5;
         ctx.font = 'bold ' + imagesize.header.deckname + 'px sans-serif';
         ctx.textAlign = "left";
+        ctx.save();
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowColor = "black";
+        ctx.shadowBlur = 10;
         ctx.fillText(fittingString(ctx, process.deck.name, imagesize.wrapper.width - imagesize.header.padding*2), imagesize.header.padding, imagesize.header.padding + imagesize.header.dust + imagesize.header.deckname);
-        ctx.strokeText(fittingString(ctx, process.deck.name, imagesize.wrapper.width - imagesize.header.padding*2), imagesize.header.padding, imagesize.header.padding + imagesize.header.dust + imagesize.header.deckname);
-        ctx.fill();
-        ctx.stroke();
+        ctx.restore();
 
       //날짜
         //배경
@@ -881,10 +882,13 @@ function deckcode_image() {
         ctx.lineWidth = 1;
         ctx.font = "800 " + imagesize.card.name.font + "px Charcoal";
         ctx.textAlign = "left";
+        ctx.save();
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.shadowColor = "black";
+        ctx.shadowBlur = 4;
         ctx.fillText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
-        ctx.strokeText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
-        ctx.fill();
-        ctx.stroke();
+        ctx.restore();
 
         //수량
         if (card[1] > 1 || info.rarity === "LEGENDARY") {

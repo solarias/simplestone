@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "12820547e59112933de24bb942f83e1c"
+    "revision": "93b0c5908b16d3d18b24ef7101561524"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -67,7 +67,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "5fc5fd2e8f69a4830ae36fc658fb4830"
+    "revision": "874548ad4e233aa5e624b8adde3a3c86"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -91,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "d1a69b6e514bf81649c7c02d343c8a42"
+    "revision": "d408e94681aeb3236caebf14c46d78e7"
   },
   {
     "url": "package/clusterize.css",
@@ -104,6 +104,54 @@ self.__precacheManifest = [
   {
     "url": "package/fastclick.js",
     "revision": "1cd0bf8fbcefa34999e025477aeff5a4"
+  },
+  {
+    "url": "package/font/SpoqaHanSansBold.ttf",
+    "revision": "f6e14af67543634042408b4096fe59b2"
+  },
+  {
+    "url": "package/font/SpoqaHanSansBold.woff",
+    "revision": "4ad74ffe34b23dc2e4e4ab8d1e1871c5"
+  },
+  {
+    "url": "package/font/SpoqaHanSansBold.woff2",
+    "revision": "76b8c78aef67207eeb8113597ae6e86b"
+  },
+  {
+    "url": "package/font/SpoqaHanSansLight.ttf",
+    "revision": "8eaaae7e2b62cec82a2fd44de6e7971b"
+  },
+  {
+    "url": "package/font/SpoqaHanSansLight.woff",
+    "revision": "9e83e4227b99ea4cfd8dcf052b6c9a8b"
+  },
+  {
+    "url": "package/font/SpoqaHanSansLight.woff2",
+    "revision": "c41494aac6f4ad8bb82042490366c20f"
+  },
+  {
+    "url": "package/font/SpoqaHanSansRegular.ttf",
+    "revision": "65f1261ac163f9ea841308800fabd5fd"
+  },
+  {
+    "url": "package/font/SpoqaHanSansRegular.woff",
+    "revision": "5ffec7731901dc0b720f9bf1e541abef"
+  },
+  {
+    "url": "package/font/SpoqaHanSansRegular.woff2",
+    "revision": "544112e58f9a0c5e61938c3168e6ef50"
+  },
+  {
+    "url": "package/font/SpoqaHanSansThin.ttf",
+    "revision": "85741cd485c8f9d48eeb55729a4cf84b"
+  },
+  {
+    "url": "package/font/SpoqaHanSansThin.woff",
+    "revision": "a1a1697fa12d14eaee122f2aeed3215c"
+  },
+  {
+    "url": "package/font/SpoqaHanSansThin.woff2",
+    "revision": "366a745dd267f46a795e3235d6da8bb1"
   },
   {
     "url": "package/localforage.min.js",
@@ -134,12 +182,8 @@ self.__precacheManifest = [
     "revision": "87b3922204ec61b7729403723e78f536"
   },
   {
-    "url": "sw.js",
-    "revision": "18302d4ba0758542506bb9f31e251613"
-  },
-  {
     "url": "workbox-config.js",
-    "revision": "b2145e3c504c4491917978099f1ece58"
+    "revision": "5fc9b6582c003449fd02bf1a83f5cdda"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
