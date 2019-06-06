@@ -31,6 +31,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             //창 전환
             window_clear();
             $("#main_notice").classList.add("show");
+            $("#header_notice").classList.add("show");
             $("#footer_notice").classList.add("show");
 
             //공지사항 출력

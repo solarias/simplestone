@@ -29,7 +29,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "3c99b1f8afb21d4146b8ea5f71bfa156"
+    "revision": "2d5a20a39de988265a9d4d24c0a73101"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -37,7 +37,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "c6e3fb94e4f20f72156b72eb995a159c"
+    "revision": "fcac5f7b22e895b684793fd78dfd71dd"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -81,7 +81,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "183de7bb98295f1acf41b6f8d3af6fae"
+    "revision": "48f17c17ebae630508698526e3cf1b07"
   },
   {
     "url": "manifest.json",
