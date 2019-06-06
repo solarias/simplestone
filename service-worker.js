@@ -25,11 +25,11 @@ workbox.core.clientsClaim();
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "439547f721ce257188dec587b12bbd49"
+    "revision": "e403828c65dd4424e53b5ef3d83a0cb1"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "6007b0fd45be23c2401ed45b4db94b4e"
+    "revision": "3c99b1f8afb21d4146b8ea5f71bfa156"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -65,7 +65,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "17dbfbcf72d9ffabed00a40add18fcda"
+    "revision": "fc01437410b95579e9f64a5e1aa9745f"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -89,7 +89,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "033e4ecf06637d8d129e551ae1d63823"
+    "revision": "0933e673f4893650ba70650fe3cb6ed1"
   },
   {
     "url": "package/clusterize.css",

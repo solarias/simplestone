@@ -1103,7 +1103,6 @@ body {
           #deckimage_img {
             width:300px;
             height:auto;
-            background-color:white;
           }
         #deckimage_bottom {
             display:flex;
@@ -1149,6 +1148,12 @@ body {
                 border-color:lime;
                 color:lime;
               }
+                  #button_download.wait {
+                      border-color:gray;
+                      color:gray;
+                      pointer-events: none;
+                      cursor:wait;
+                  }
               #button_closeimage {
                 width:25%;
                 border-color:orange;
