@@ -13,11 +13,9 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
+workbox.core.skipWaiting();
+
+workbox.core.clientsClaim();
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
@@ -31,7 +29,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "93b0c5908b16d3d18b24ef7101561524"
+    "revision": "6007b0fd45be23c2401ed45b4db94b4e"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -63,11 +61,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_data.js",
-    "revision": "d903bfc1e8cd5a161888ee577b2ca894"
+    "revision": "e813989f8d271cc9261909127de54a54"
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "874548ad4e233aa5e624b8adde3a3c86"
+    "revision": "17dbfbcf72d9ffabed00a40add18fcda"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -83,7 +81,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "a5c948d5b17f4e9d8ca6b08fa5897e89"
+    "revision": "183de7bb98295f1acf41b6f8d3af6fae"
   },
   {
     "url": "manifest.json",
@@ -91,7 +89,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "d408e94681aeb3236caebf14c46d78e7"
+    "revision": "033e4ecf06637d8d129e551ae1d63823"
   },
   {
     "url": "package/clusterize.css",
@@ -183,7 +181,7 @@ self.__precacheManifest = [
   },
   {
     "url": "workbox-config.js",
-    "revision": "5fc9b6582c003449fd02bf1a83f5cdda"
+    "revision": "8f0160a6d6dcb6c08b1269219c564750"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

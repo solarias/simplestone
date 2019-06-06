@@ -790,14 +790,14 @@ function deckcode_image() {
         ctx.fillStyle = 'skyblue';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 0.5;
-        ctx.font = 'bold ' + imagesize.header.dust + 'px sans-serif';
+        ctx.font = 'bold ' + imagesize.header.dust + 'px SpoqaHanSans';
         ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 3);
 
         //덱 이름
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 0.5;
-        ctx.font = 'bold ' + imagesize.header.deckname + 'px sans-serif';
+        ctx.font = 'bold ' + imagesize.header.deckname + 'px SpoqaHanSans';
         ctx.textAlign = "left";
         ctx.save();
         ctx.shadowOffsetX = 0;
@@ -814,7 +814,7 @@ function deckcode_image() {
 
         //연도
         ctx.fillStyle = 'white';
-        ctx.font = imagesize.date.font + 'px sans-serif';
+        ctx.font = imagesize.date.font + 'px SpoqaHanSans';
         ctx.textAlign = "left";
         ctx.fillText(DATA.YEAR, imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
         ctx.fill();
@@ -826,7 +826,7 @@ function deckcode_image() {
           ctx.fillStyle = 'orange';
         }
 
-        ctx.font = 'bold ' + imagesize.header.format + 'px sans-serif';
+        ctx.font = 'bold ' + imagesize.header.format + 'px SpoqaHanSans';
         ctx.textAlign = "right";
         ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
 
@@ -868,7 +868,7 @@ function deckcode_image() {
         ctx.lineWidth = 1;
         ctx.texAlign = 'left';
 
-        ctx.font = 'bold ' + imagesize.card.cost.font + 'px sans-serif';
+        ctx.font = 'bold ' + imagesize.card.cost.font + 'px SpoqaHanSans';
         ctx.textAlign = "center";
         ctx.fillText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
         ctx.strokeText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
@@ -880,7 +880,7 @@ function deckcode_image() {
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1;
-        ctx.font = "800 " + imagesize.card.name.font + "px Charcoal";
+        ctx.font = "800 " + imagesize.card.name.font + "px SpoqaHanSans";
         ctx.textAlign = "left";
         ctx.save();
         ctx.shadowOffsetX = 3;
@@ -896,7 +896,7 @@ function deckcode_image() {
           ctx.fillRect(imagesize.wrapper.width - imagesize.card.quantity.width, ystart, imagesize.card.quantity.width, imagesize.card.height);
 
           ctx.fillStyle = 'gold';
-          ctx.font = 'bold ' + imagesize.card.quantity.font + 'px sans-serif';
+          ctx.font = 'bold ' + imagesize.card.quantity.font + 'px SpoqaHanSans';
           ctx.textAlign = "center";
           let quantitytext = (info.rarity === "LEGENDARY") ? "★" : card[1].toString();
           ctx.fillText(quantitytext, imagesize.wrapper.width - imagesize.card.quantity.width / 2, ystart + imagesize.card.quantity.padding + imagesize.card.quantity.font);
@@ -918,7 +918,7 @@ function deckcode_image() {
 
         //"심플스톤"
         ctx.fillStyle = 'white';
-        ctx.font = imagesize.footer.font + 'px sans-serif';
+        ctx.font = imagesize.footer.font + 'px SpoqaHanSans';
         ctx.textAlign = "right";
         ctx.fillText("Created at Simplestone", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
         ctx.fill();

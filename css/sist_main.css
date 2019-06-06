@@ -2,7 +2,7 @@
 /* 폰트 */
 /*=====================================================*/
 @font-face {
-    font-family: 'Spoqa Han Sans';
+    font-family: 'SpoqaHanSans';
     font-weight: 700;
     src: local('Spoqa Han Sans Bold'),
     url('../package/font/SpoqaHanSansBold.woff2') format('woff2'),
@@ -11,7 +11,7 @@
 }
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
+    font-family: 'SpoqaHanSans';
     font-weight: 400;
     src: local('Spoqa Han Sans Regular'),
     url('../package/font/SpoqaHanSansRegular.woff2') format('woff2'),
@@ -20,7 +20,7 @@
 }
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
+    font-family: 'SpoqaHanSans';
     font-weight: 300;
     src: local('Spoqa Han Sans Light'),
     url('../package/font/SpoqaHanSansLight.woff2') format('woff2'),
@@ -29,7 +29,7 @@
 }
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
+    font-family: 'SpoqaHanSans';
     font-weight: 100;
     src: local('Spoqa Han Sans Thin'),
     url('../package/font/SpoqaHanSansThin.woff2') format('woff2'),
@@ -43,7 +43,7 @@
     border:0;
 
     font-size:16px;
-    font-family: 'Spoqa Han Sans', 'Sans-serif';
+    font-family: 'SpoqaHanSans', 'Sans-serif';
 }
 
 /*=====================================================*/

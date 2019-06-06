@@ -658,14 +658,12 @@ async function window_shift(keyword, keyword2, keyword3) {
                 if (target.classList.contains("card")) {
                     let info = session.db[session.index[target.dataset.dbfid]];
                     cardinfo_show("main_cardinfo",info);
-                }
-            }
-            $("#collection_list_content").addEventListener("click",eventObj.collection_list_content.click);
+                }}
+                    $("#collection_list_content").addEventListener("click",eventObj.collection_list_content.click);
             eventObj.collection_list_content.scroll = function(e) {
                 e = e || event;
-                e.preventDefault();
-            }
-            $("#collection_list_content").addEventListener("scroll",eventObj.collection_list_content.scroll);
+                e.preventDefault();}
+                    $("#collection_list_content").addEventListener("scroll",eventObj.collection_list_content.scroll);
 
             break;
 
@@ -766,96 +764,86 @@ async function window_shift(keyword, keyword2, keyword3) {
             //카드 목록 상호작용
             clearAllEvent();//이전 등록된 이벤트 제거
             eventObj.collection_list_content.mouseover = function(e) {
-                interact_infoMonitor(e);
-            }
-            $("#collection_list_content").addEventListener("mouseover",eventObj.collection_list_content.mouseover);
+                interact_infoMonitor(e);}
+                    $("#collection_list_content").addEventListener("mouseover",eventObj.collection_list_content.mouseover);
             eventObj.collection_list_content.mousedown = function(e) {
                 interact_infoCoverWait(e, true);
-                return false;
-            }
-            $("#collection_list_content").addEventListener("mousedown",eventObj.collection_list_content.mousedown);
+                return false;}
+                    $("#collection_list_content").addEventListener("mousedown",eventObj.collection_list_content.mousedown);
             eventObj.collection_list_content.mouseout = function(e) {
                 interact_stopAuto(e);
-                return false;
-            }
-            $("#collection_list_content").addEventListener("mouseout",eventObj.collection_list_content.mouseout);
+                return false;}
+                    $("#collection_list_content").addEventListener("mouseout",eventObj.collection_list_content.mouseout);
             eventObj.collection_list_content.mouseup = function(e) {
                 interact_addCard(e, true);
-                return false;
-            }
-            $("#collection_list_content").addEventListener("mouseup",eventObj.collection_list_content.mouseup);
+                return false;}
+                    $("#collection_list_content").addEventListener("mouseup",eventObj.collection_list_content.mouseup);
             eventObj.collection_list_content.contextmenu = function(e) {
                 interact_infoCoverNow(e);
                 e.preventDefault();
-                return false;
-            }
-            $("#collection_list_content").addEventListener("contextmenu",eventObj.collection_list_content.contextmenu);
+                return false;}
+                    $("#collection_list_content").addEventListener("contextmenu",eventObj.collection_list_content.contextmenu);
                 //터치 기반
                 eventObj.collection_list_content.touchstart = function(e) {
-                    interact_infoCoverWait(e);
-                }
-                $("#collection_list_content").addEventListener("touchstart",eventObj.collection_list_content.touchstart);
+                    interact_infoCoverWait(e);}
+                        $("#collection_list_content").addEventListener("touchstart",eventObj.collection_list_content.touchstart);
                 eventObj.collection_list_content.touchcancel = function(e) {
                     interact_stopAuto(e);
-                    return false;
-                }
-                $("#collection_list_content").addEventListener("touchcancel",eventObj.collection_list_content.touchcancel);
+                    return false;}
+                        $("#collection_list_content").addEventListener("touchcancel",eventObj.collection_list_content.touchcancel);
+                eventObj.collection_list_content.touchmove = function(e) {
+                    interact_stopAuto(e);
+                    return false;}
+                        $("#collection_list_content").addEventListener("touchmove",eventObj.collection_list_content.touchmove);
                 eventObj.collection_list.scroll = function(e) {
                     interact_stopAuto(e);
-                    return false;
-                }
-                $("#collection_list").addEventListener("scroll",eventObj.collection_list.scroll);
+                    return false;}
+                        $("#collection_list").addEventListener("scroll",eventObj.collection_list.scroll);
                 eventObj.collection_list_content.touchend = function(e) {
                     interact_addCard(e);
-                    return false;
-                }
-                $("#collection_list_content").addEventListener("touchend",eventObj.collection_list_content.touchend);
+                    return false;}
+                        $("#collection_list_content").addEventListener("touchend",eventObj.collection_list_content.touchend);
             //덱 목록 상호작용
             eventObj.deck_list_content.mouseover = function(e) {
-                interact_infoMonitor(e);
-            }
-            $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover);
+                interact_infoMonitor(e);}
+                    $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover);
             eventObj.deck_list_content.mousedown = function(e) {
                 interact_infoCoverWait(e, true);
-                return false;
-            }
-            $("#deck_list_content").addEventListener("mousedown",eventObj.deck_list_content.mousedown);
+                return false;}
+                    $("#deck_list_content").addEventListener("mousedown",eventObj.deck_list_content.mousedown);
             eventObj.deck_list_content.mouseout = function(e) {
                 interact_stopAuto(e);
-                return false;
-            }
-            $("#deck_list_content").addEventListener("mouseout",eventObj.deck_list_content.mouseout);
+                return false;}
+                    $("#deck_list_content").addEventListener("mouseout",eventObj.deck_list_content.mouseout);
             eventObj.deck_list_content.mouseup = function(e) {
                 interact_removeCard(e, true);
-                return false;
-            }
-            $("#deck_list_content").addEventListener("mouseup",eventObj.deck_list_content.mouseup);
+                return false;}
+                    $("#deck_list_content").addEventListener("mouseup",eventObj.deck_list_content.mouseup);
             eventObj.deck_list_content.contextmenu = function(e) {
                 interact_infoCoverNow(e);
                 e.preventDefault();
-                return false;
-            }
-            $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu);
+                return false;}
+                    $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu);
                 //터치 기반
                 eventObj.deck_list_content.touchstart = function(e) {
-                    interact_infoCoverWait(e);
-                }
-                $("#deck_list_content").addEventListener("touchstart",eventObj.deck_list_content.touchstart);
+                    interact_infoCoverWait(e);}
+                        $("#deck_list_content").addEventListener("touchstart",eventObj.deck_list_content.touchstart);
                 eventObj.deck_list_content.touchcancel = function(e) {
                     interact_stopAuto(e);
-                    return false;
-                }
-                $("#deck_list_content").addEventListener("touchcancel",eventObj.deck_list_content.touchcancel);
-                eventObj.deck_list.touchstart = function(e) {
+                    return false;}
+                        $("#deck_list_content").addEventListener("touchcancel",eventObj.deck_list_content.touchcancel);
+                eventObj.deck_list_content.touchmove = function(e) {
                     interact_stopAuto(e);
-                    return false;
-                }
-                $("#deck_list").addEventListener("scroll",eventObj.deck_list.touchstart);
+                    return false;}
+                        $("#deck_list_content").addEventListener("touchmove",eventObj.deck_list_content.touchmove);
+                eventObj.deck_list.scroll = function(e) {
+                    interact_stopAuto(e);
+                    return false;}
+                        $("#deck_list").addEventListener("scroll",eventObj.deck_list.scroll);
                 eventObj.deck_list_content.touchend = function(e) {
                     interact_removeCard(e);
-                    return false;
-                }
-                $("#deck_list_content").addEventListener("touchend",eventObj.deck_list_content.touchend);
+                    return false;}
+                        $("#deck_list_content").addEventListener("touchend",eventObj.deck_list_content.touchend);
                 //카드 정보창 닫기
                 $("#frame_cardcover").onclick = function() {
                     $("#frame_cardcover").classList.remove("show");
@@ -1223,21 +1211,18 @@ async function window_shift(keyword, keyword2, keyword3) {
             //이벤트 등록
             clearAllEvent();//이전 등록된 이벤트 제거
             eventObj.deck_list_content.mouseover = function(e) {
-                interact_infoMonitor(e);
-            }
-            $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover);
+                interact_infoMonitor(e);}
+                    $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover);
             eventObj.deck_list_content.click = function(e) {
                 interact_infoCoverNow(e);
                 e.preventDefault();
-                return false;
-            }
-            $("#deck_list_content").addEventListener("click",eventObj.deck_list_content.click);
+                return false;}
+                    $("#deck_list_content").addEventListener("click",eventObj.deck_list_content.click);
             eventObj.deck_list_content.contextmenu = function(e) {
                 interact_infoCoverNow(e);
                 e.preventDefault();
-                return false;
-            }
-            $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu);
+                return false;}
+                    $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu);
             //카드 정보창 닫기
             $("#frame_cardcover").onclick = function() {
                 $("#frame_cardcover").classList.remove("show");
@@ -1702,10 +1687,13 @@ let interact_addCard = function(e, ismouse) {
     clearTimeout(autoInfo);
     //카드 추가
     if (target.classList.contains("card") && target === interact_target) {
-        //상호작용 대상 비우기
-        interact_target = "";
-        card_move("add " + target.dataset.dbfid, true);
-        e.preventDefault();
+        if (cardReady === 1) {//카드 이동 대기중이라면
+            //상호작용 대상 비우기
+            interact_target = "";
+            card_move("add " + target.dataset.dbfid, true);
+            cardReady = 0;//카드 이동 대기 취소
+            e.preventDefault();
+        }
     }
 }
 let interact_removeCard = function(e, ismouse) {
@@ -1715,10 +1703,13 @@ let interact_removeCard = function(e, ismouse) {
     //카드 정보 auto 제거
     clearTimeout(autoInfo);
     if (target.classList.contains("card") && target === interact_target) {
-        //상호작용 대상 비우기
-        interact_target = "";
-        card_move("remove " + target.dataset.dbfid, true);
-        e.preventDefault();
+        if (cardReady === 1) {//카드 이동 대기중이라면
+            //상호작용 대상 비우기
+            interact_target = "";
+            card_move("remove " + target.dataset.dbfid, true);
+            cardReady = 0;//카드 이동 대기 취소
+            e.preventDefault();
+        }
     }
 }
 let interact_infoMonitor = function(e) {
@@ -1740,7 +1731,6 @@ let interact_infoCoverNow = function(e) {//우클릭 전용
         $("#frame_cardcover").classList.add("show");
         cardinfo_setScale($(".cardinfo.wrapper",$("#frame_cardcover")), false);
         cardinfo_show("cardcover_top",info);
-        return false;
     }
     return false;
 }
@@ -1751,6 +1741,8 @@ let interact_infoCoverWait = function(e, ismouse) {
     if (target.classList.contains("card")) {
         //상호작용 대상 등록
         interact_target = target;
+        //카드 이동 대기
+        cardReady = 1;
         //0.5초 지속 : 카드 정보
         autoInfo = setTimeout(function() {
             let info = session.db[session.index[target.dataset.dbfid]];
@@ -1766,6 +1758,8 @@ let interact_infoCoverWait = function(e, ismouse) {
 let interact_stopAuto = function(e) {
     //카드 정보 auto 제거
     clearTimeout(autoInfo);
+    //카드 이동 대기 취소
+    cardReady = 0;
     //상호작용 대상 비우기
     interact_target = "";
 }

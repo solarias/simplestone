@@ -30,8 +30,9 @@ const METADECKMAX = 100;//메타덱 출력 최대 순위
 const REFRESH_HOUR = 6;//6시간마다 메타덱 갱신 가능
 //클러스터
 let clusterize = {};
-//꾹 눌려 카드정보 열람 auto
-let autoInfo;
+//클릭, 터치 이벤트 관련
+let autoInfo;//꾹 눌려 카드정보 열람 auto
+let cardReady = 0;//이 값이 1인 상태에서만 카드 추가 가능
 const AUTOINFOTIME = 500;//누르는 시간: 0.5초
 //이벤트 관리
 let eventObj = {
