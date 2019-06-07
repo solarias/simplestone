@@ -65,7 +65,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "fc01437410b95579e9f64a5e1aa9745f"
+    "revision": "4b9304798384269957e688d6fcb69ff1"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -81,7 +81,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "48f17c17ebae630508698526e3cf1b07"
+    "revision": "cffffa4d3308bee64d42e7006904205e"
   },
   {
     "url": "manifest.json",
@@ -89,7 +89,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "0933e673f4893650ba70650fe3cb6ed1"
+    "revision": "90f36f03ec91af33a4ca482e05c4c4fa"
   },
   {
     "url": "package/clusterize.css",

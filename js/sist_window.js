@@ -1507,9 +1507,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                         inputInfo = archetype;
                                     }
                                     //아키타입 대조 및 적용
-                                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(x => {
+                                    for (x of Object.keys(session.metadeck[session.metadeck.filter.format])) {
                                         if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
-                                            session.metadeck[session.metadeck.filter.format][x].forEach(async (deck) => {
+                                            for (deck of session.metadeck[session.metadeck.filter.format][x]) {
                                                 //음수는 "직업명"이 아키타입
                                                 if (deck.archetype_id < 0) {
                                                     deck.archetype_name = deck.class;
@@ -1524,9 +1524,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                                     //적용
                                                     deck.archetype_name = inputInfo[deck.archetype_id];
                                                 }
-                                            })
+                                            }
                                         }
-                                    })
+                                    }
                                     resolve2();
                                 //오류 발생 시
                                 }).catch(async (e) => {

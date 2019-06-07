@@ -714,6 +714,12 @@ function deckcode_image() {
                             resolve2();
                         }
                     }
+                    imageLoaded[i].onerror = () => {//실패해도 진행
+                        count += 1;
+                        if (count === imageArr.length) {
+                            resolve2();
+                        }
+                    }
                     imageLoaded[i].src = imageArr[i];
                 })
             })
