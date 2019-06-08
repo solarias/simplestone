@@ -1251,6 +1251,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                 process.prestate = undefined;//이전 상태를 기억 안해도 됨
             //제목 표시
             $("#header_status").innerHTML = "메타 덱 정보";
+            //덱 설정 초기화
+            process.deck = {};
+            process.deck.deckcode = "";
 
             //디폴트 필터링 세팅
             if (!session.metadeck) {

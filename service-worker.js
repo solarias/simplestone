@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "10d1532e1c2a41f377c514fbd19b5ea9"
+    "revision": "f70ad08d70bff2cf0efb0af49f62b87c"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "cffffa4d3308bee64d42e7006904205e"
+    "revision": "87b604cb73f2fbaf3d837b5dba9d3418"
   },
   {
     "url": "manifest.json",
@@ -91,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "3991d1857566a577d053d3ef5ef97194"
+    "revision": "2de189077847311c1d203f96c8a2efac"
   },
   {
     "url": "package/clusterize.css",
