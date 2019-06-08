@@ -673,6 +673,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
                                     $("#frame_updatepopup").classList.remove("show");
                                 });
                             }
+                            
                             break;
                     }
                 });
