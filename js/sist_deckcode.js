@@ -755,8 +755,8 @@ function deckcode_image() {
                 height:40,
                 border:1,
                 gap:5,
-                gradient_start:180,
-                gradient_end:280,
+                gradient_start:210,
+                gradient_end:300,
                 cost:{
                   padding:2,
                   width:40,
@@ -765,7 +765,7 @@ function deckcode_image() {
                 },
                 name:{
                   padding:8,
-                  position:5,
+                  position:10,
                   maxwidth:230,
                   font:20,
                 },
@@ -808,11 +808,11 @@ function deckcode_image() {
 
               //헤더 그라디언트
               let grd = ctx.createLinearGradient(imagesize.header.gradient_start, 0, imagesize.header.gradient_end, 0);
-              grd.addColorStop(0, "rgb(50,50,50)");
+              grd.addColorStop(0, "rgb(40,40,40)");
               grd.addColorStop(1, "transparent");
               ctx.fillStyle = grd;
               ctx.fillRect(imagesize.header.gradient_start, 0,imagesize.header.gradient_end, imagesize.header.height);
-              ctx.fillStyle = "rgb(50,50,50)";
+              ctx.fillStyle = "rgb(40,40,40)";
               ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height);
 
               //테두리
@@ -820,20 +820,18 @@ function deckcode_image() {
               ctx.lineWidth = imagesize.header.border;
               ctx.strokeRect(imagesize.header.border/2, imagesize.header.border/2, imagesize.wrapper.width - imagesize.header.border, imagesize.header.height - imagesize.header.border);
 
-              //가루
+              //가루 아이콘
               let dust = new Image(imagesize.header.dust,imagesize.header.dust);
               dust.src = "./images/icon_dust.png";
               ctx.drawImage(dust, imagesize.header.padding, imagesize.header.padding, imagesize.header.dust, imagesize.header.dust);
-
+              //가루
               ctx.fillStyle = 'skyblue';
-              ctx.strokeStyle = 'black';
               ctx.lineWidth = 0.5;
-              ctx.font = 'bold ' + imagesize.header.dust + 'px SpoqaHanSans';
-              ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 3);
+              ctx.font = imagesize.header.dust + 'px SpoqaHanSans';
+              ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 2);
 
               //덱 이름
               ctx.fillStyle = 'white';
-              ctx.strokeStyle = 'black';
               ctx.lineWidth = 0.5;
               ctx.font = 'bold ' + imagesize.header.deckname + 'px SpoqaHanSans';
               ctx.textAlign = "left";
@@ -864,7 +862,7 @@ function deckcode_image() {
                 ctx.fillStyle = 'orange';
               }
 
-              ctx.font = 'bold ' + imagesize.header.format + 'px SpoqaHanSans';
+              ctx.font = '600 ' + imagesize.header.format + 'px SpoqaHanSans';
               ctx.textAlign = "right";
               ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
 
@@ -894,43 +892,38 @@ function deckcode_image() {
 
               //그라디언트
               grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
-              grd.addColorStop(0, "rgb(100,100,100)");
-              grd.addColorStop(1, "transparent");
+              let nameLen = info.name.replaceAll(" ","").length;
+              if (nameLen < 10) {
+                  grd.addColorStop(0, "rgb(40,40,40)");
+                  grd.addColorStop(1, "rgba(40,40,40,0)");
+              } else {
+                  grd.addColorStop(0, "rgb(40,40,40)");
+                  grd.addColorStop(0.7, "rgba(40,40,40,0.8)");
+                  grd.addColorStop(1, "rgba(40,40,40,0)");
+              }
               ctx.fillStyle = grd;
               ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
-              ctx.fillStyle = "rgb(100,100,100)";
+              ctx.fillStyle = "rgb(40,40,40)";
               ctx.fillRect(0, ystart, imagesize.card.gradient_start, imagesize.card.height);
 
               //비용
-              ctx.fillStyle = DATA.RARITY.COLOR[info.rarity];
+              ctx.fillStyle = "#256BB0";
               ctx.fillRect(0, ystart, imagesize.card.cost.width, imagesize.card.height);
 
               ctx.fillStyle = 'white';
-              ctx.strokeStyle = "black";
               ctx.lineWidth = 1;
               ctx.texAlign = 'left';
 
-              ctx.font = 'bold ' + imagesize.card.cost.font + 'px SpoqaHanSans';
+              ctx.font = imagesize.card.cost.font + 'px SpoqaHanSans';
               ctx.textAlign = "center";
               ctx.fillText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
-              ctx.strokeText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
-
-              ctx.fill();
-              ctx.stroke();
 
               //이름
-              ctx.fillStyle = 'white';
-              ctx.strokeStyle = 'black';
+              ctx.fillStyle = DATA.RARITY.COLOR_DECKIMAGE[info.rarity];
               ctx.lineWidth = 1;
-              ctx.font = "800 " + imagesize.card.name.font + "px SpoqaHanSans";
+              ctx.font = imagesize.card.name.font + "px SpoqaHanSans";
               ctx.textAlign = "left";
-              ctx.save();
-              ctx.shadowOffsetX = 3;
-              ctx.shadowOffsetY = 3;
-              ctx.shadowColor = "black";
-              ctx.shadowBlur = 4;
               ctx.fillText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
-              ctx.restore();
 
               //수량
               if (card[1] > 1 || info.rarity === "LEGENDARY") {

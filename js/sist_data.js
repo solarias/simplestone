@@ -132,6 +132,13 @@ const DATA = {
             "RARE":"#44A5FF",
             "EPIC":"#BC81EA",
             "LEGENDARY":"#F07000"
+        },
+        COLOR_DECKIMAGE:{//덱이미지 출력 전용 컬러
+            "FREE":"#B0B0B0",
+            "COMMON":"#FFFFFF",
+            "RARE":"#7AC3FF",
+            "EPIC":"#D06AE2",
+            "LEGENDARY":"#EF892F"
         }
     },
     TYPE:{
