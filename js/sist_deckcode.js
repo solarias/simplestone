@@ -742,13 +742,13 @@ function deckcode_image() {
                 gradient_start:90,
                 gradient_end:240,
                 dust:16,
-                format:16,
+                format:18,
                 deckname:22
               },
               date:{
-                padding:5,
-                height:26,
-                font:16
+                padding:3,
+                height:27,
+                font:18
               },
               card:{
                 width:300,
@@ -828,7 +828,7 @@ function deckcode_image() {
               ctx.fillStyle = 'skyblue';
               ctx.lineWidth = 0.5;
               ctx.font = imagesize.header.dust + 'px SpoqaHanSans';
-              ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 5, imagesize.header.padding + imagesize.header.dust - 2);
+              ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 4, imagesize.header.padding + imagesize.header.dust - 2);
 
               //덱 이름
               ctx.fillStyle = 'white';
@@ -862,7 +862,7 @@ function deckcode_image() {
                 ctx.fillStyle = 'orange';
               }
 
-              ctx.font = '600 ' + imagesize.header.format + 'px SpoqaHanSans';
+              ctx.font = imagesize.header.format + 'px SpoqaHanSans';
               ctx.textAlign = "right";
               ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
 
@@ -914,7 +914,7 @@ function deckcode_image() {
               ctx.lineWidth = 1;
               ctx.texAlign = 'left';
 
-              ctx.font = imagesize.card.cost.font + 'px SpoqaHanSans';
+              ctx.font = 'bold ' + imagesize.card.cost.font + 'px SpoqaHanSans';
               ctx.textAlign = "center";
               ctx.fillText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
 
