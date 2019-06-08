@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "48d6c822586dded95aff2a9f4702c05b"
+    "revision": "a23fce10a08a891d64f40026c39b146a"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
