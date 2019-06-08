@@ -673,7 +673,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
                                     $("#frame_updatepopup").classList.remove("show");
                                 });
                             }
-                            
+
                             break;
                     }
                 });
@@ -741,8 +741,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
         });
 
         //종료 경고 메시지
-        window.onbeforeunload = function() {
-           return "사이트에서 나가시겠습니까?";
+        window.onbeforeunload = function(e) {
+            e.preventDefault();// Cancel the event
+            e.returnValue = '';// Chrome requires returnValue to be set
         };
 
     //공지사항, DB 버전 내려받기
