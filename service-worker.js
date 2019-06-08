@@ -13,9 +13,11 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
-workbox.core.skipWaiting();
-
-workbox.core.clientsClaim();
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
@@ -29,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "2d5a20a39de988265a9d4d24c0a73101"
+    "revision": "10d1532e1c2a41f377c514fbd19b5ea9"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -37,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "fcac5f7b22e895b684793fd78dfd71dd"
+    "revision": "48d6c822586dded95aff2a9f4702c05b"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -77,7 +79,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "eb8f3b7b0752cabf6bd236bf9c7a69eb"
+    "revision": "649831f696e72cbe5d94d366653390d3"
   },
   {
     "url": "js/sist_window.js",
@@ -89,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "90f36f03ec91af33a4ca482e05c4c4fa"
+    "revision": "0bbaeb513c876e6405e0ae78a74375fc"
   },
   {
     "url": "package/clusterize.css",
@@ -181,7 +183,7 @@ self.__precacheManifest = [
   },
   {
     "url": "workbox-config.js",
-    "revision": "8f0160a6d6dcb6c08b1269219c564750"
+    "revision": "a3611699b8991ed91d68e050cb09779a"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

@@ -657,7 +657,34 @@ document.addEventListener("DOMContentLoaded", function(e) {
     })
     //서비스 워커 실행
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js');
+        let newWorker;
+        navigator.serviceWorker.register('./service-worker.js').then(reg => {
+            reg.addEventListener('updatefound', () => {
+                newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                    switch (newWorker.state) {
+                        case 'installed':
+                            if (navigator.serviceWorker.controller) {
+                                $("#frame_updatepopup").classList.add("show");
+                                $("#updatepopup_refresh").addEventListener('click', function(){
+                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                });
+                                $("#updatepopup_cancel").addEventListener('click', function(){
+                                    $("#frame_updatepopup").classList.remove("show");
+                                });
+                            }
+                            break;
+                    }
+                });
+            });
+        });
+
+        let refreshing;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+        });
     }
     //기본 화면 상호작용
         //인포 버튼

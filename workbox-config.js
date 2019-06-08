@@ -4,8 +4,7 @@ module.exports = {
     "**/*.{css,json,html,js,ttf,woff,woff2}"
   ],
   "swDest": "service-worker.js",
-  "skipWaiting": true,
-  "clientsClaim": true,
+  "skipWaiting": false,
 
   "runtimeCaching": [{
     "urlPattern": /\.(?:png|jpg|jpeg|svg)$/,

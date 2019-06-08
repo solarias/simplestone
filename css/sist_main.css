@@ -1063,6 +1063,89 @@ body {
             box-sizing: border-box;
             word-break: keep-all;
         }
+    /*서비스 워커 업데이트*/
+    #frame_updatepopup {
+        display:flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        position:absolute;
+            left:0;right:0;bottom:0;
+            z-index:10;
+
+        margin:0 auto;
+        padding:20px 10px;
+        width:100%;
+        height:auto;
+            min-height:100px;
+
+        background:rgba(0,0,0,0.8);
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        transition:transform 0.3s;
+    }
+            #frame_updatepopup.show {
+                transform:translate(0,0);
+            }
+        #frame_updatepopup_text {
+            columns:2 255px;
+            column-gap:0;
+        }
+        #frame_updatepopup_text p {
+            position:relative;
+            display:block;
+            width:100%;
+            color:white;
+            font-size:20px;
+                line-height:30px;
+            text-align:center;
+        }
+        #frame_updatepopup break{
+          flex-basis: 100%;
+          width: 0px;
+          height: 0px;
+          overflow: hidden;
+        }
+        #updatepopup_refresh {
+            position:relative;
+            display:block;
+
+            margin:15px 20px 0 0;
+            width:60%;
+                max-width:210px;
+            height:40px;
+
+            background-color:#3085D6;
+            border-radius: 3px;
+            -webkit-column-break-inside: avoid;
+
+            color:white;
+            font-size:25px;
+            cursor:pointer;
+        }
+            #updatepopup_refresh:active {
+                background-color:#266AAB;
+            }
+        #updatepopup_cancel {
+            position:relative;
+            display:block;
+
+            margin-top:15px;
+            width:20%;
+                max-width:70px;
+            height:40px;
+
+            background-color:#DD3333;
+            border-radius: 3px;
+            -webkit-column-break-inside: avoid;
+
+            color:white;
+            font-size:25px;
+            cursor:pointer;
+        }
+            #updatepopup_cancel:active {
+                background-color:#B12929;
+                }
     /*카드 커버*/
     #frame_cardcover {
         position:fixed;
