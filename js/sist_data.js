@@ -19,7 +19,9 @@ let session = {
 //const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";//HearthstoneJSON에서 이미지 가져오기
 //const RENDERURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
 const TILEURL = "./images/tiles/";
+    const TILEURL_REPLACE = "./images/tiles_replace/";
 const PORTRAITURL = "./images/portraits/";
+    const PORTRAITURL_REPLACE = "./images/portraits_replace/";
 const HEROURL = "./images/heroes/";
 const METADECKAPI = "https://edcezx7ehb.execute-api.ap-northeast-2.amazonaws.com/production/get/?cmd=";
 const METADECKMAX = 100;//메타덱 출력 최대 순위
@@ -193,26 +195,26 @@ const DATA = {
         "EXPERT1":{KR:"오리지널",FORMAT:"정규"},
         "HOF":{KR:"명예의 전당",FORMAT:"야생"},
         //2014↓, 연도가 있는 건 optgroup으로 따로 묶음
-        "NAXX":{KR:"낙스라마스의 저주",FORMAT:"야생",YEAR:"2014"},
-        "GVG":{KR:"고블린 대 노움",FORMAT:"야생",YEAR:"2014"},
+        "NAXX":{KR:"낙스라마스의 저주",FORMAT:"야생",YEAR:2014},
+        "GVG":{KR:"고블린 대 노움",FORMAT:"야생",YEAR:2014},
         //2015↓
-        "BRM":{KR:"검은바위 산",FORMAT:"야생",YEAR:"2015"},
-        "TGT":{KR:"대 마상시합",FORMAT:"야생",YEAR:"2015"},
-        "LOE":{KR:"탐험가 연맹",FORMAT:"야생",YEAR:"2015"},
+        "BRM":{KR:"검은바위 산",FORMAT:"야생",YEAR:2015},
+        "TGT":{KR:"대 마상시합",FORMAT:"야생",YEAR:2015},
+        "LOE":{KR:"탐험가 연맹",FORMAT:"야생",YEAR:2015},
         //2016↓
-        "OG":{KR:"고대신의 속삭임",FORMAT:"야생",YEAR:"2016"},
-        "KARA":{KR:"한여름 밤의 카라잔",FORMAT:"야생",YEAR:"2016"},
-        "GANGS":{KR:"비열한 거리의 가젯잔",FORMAT:"야생",YEAR:"2016"},
+        "OG":{KR:"고대신의 속삭임",FORMAT:"야생",YEAR:2016},
+        "KARA":{KR:"한여름 밤의 카라잔",FORMAT:"야생",YEAR:2016},
+        "GANGS":{KR:"비열한 거리의 가젯잔",FORMAT:"야생",YEAR:2016},
         //2017↓
-        "UNGORO":{KR:"운고로를 향한 여정",FORMAT:"야생",YEAR:"2017"},
-        "ICECROWN":{KR:"얼어붙은 왕좌의 기사들",FORMAT:"야생",YEAR:"2017"},
-        "LOOTAPALOOZA":{KR:"코볼트와 지하 미궁",FORMAT:"야생",YEAR:"2017"},
+        "UNGORO":{KR:"운고로를 향한 여정",FORMAT:"야생",YEAR:2017},
+        "ICECROWN":{KR:"얼어붙은 왕좌의 기사들",FORMAT:"야생",YEAR:2017},
+        "LOOTAPALOOZA":{KR:"코볼트와 지하 미궁",FORMAT:"야생",YEAR:2017},
         //2018↓
-        "GILNEAS":{KR:"마녀숲",FORMAT:"정규",YEAR:"2018"},
-        "BOOMSDAY":{KR:"박사 붐의 폭심만만 프로젝트",FORMAT:"정규",YEAR:"2018"},
-        "TROLL":{KR:"라스타칸의 대난투",FORMAT:"정규",YEAR:"2018"},
+        "GILNEAS":{KR:"마녀숲",FORMAT:"정규",YEAR:2018},
+        "BOOMSDAY":{KR:"박사 붐의 폭심만만 프로젝트",FORMAT:"정규",YEAR:2018},
+        "TROLL":{KR:"라스타칸의 대난투",FORMAT:"정규",YEAR:2018},
         //2019↓
-        "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:"2019"}//최신팩
+        "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:2019}//최신팩
     },
     SET_LATEST:"DALARAN"//최신 확장팩 명(영문)을 여기에 기재
 };

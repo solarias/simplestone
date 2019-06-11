@@ -155,25 +155,21 @@ async function window_shift(keyword, keyword2, keyword3) {
                     sort_arr(session.db);
                     //카드정보 정제
                     session.db.forEach(function(x, index) {
-                        x.dbfid = x.dbfId.toString();//dbfId대문자 제거 및 문자열로 변환
-                    })
-                    //collectionText가 있는 카드들은 텍스트 대체
-                    session.db.forEach(function(x,index) {
+                        //dbfId대문자 제거 및 문자열로 변환
+                        x.dbfid = x.dbfId.toString();
+                        //collectionText가 있는 카드들은 텍스트 대체
                         if (x.collectionText !== undefined) {
                             x.text = x.collectionText;
                         }
-                    })
-                    //검색용 키워드 입력
-                    session.keywords = {};
-                    session.db.forEach(function(x) {
+                        //검색용 키워드 입력
                         x.keywords = {};
                         let wordbook = x.keywords;
-
                         let list = ["name","text","race","type"];
                         for (let i = 0;i<list.length;i++) {
                             if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
                         }
                     })
+
                     //DB 저장
                     localforage.setItem("sist_db",session.db)
                     .then(function() {
@@ -246,6 +242,14 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //덱코드 기억
                         process.deck = {};
                         process.deck.deckcode = deckcode;
+                        //덱코드 인식했다고 알리기
+                        nativeToast({
+                            message: 'URL에서 덱코드가 인식되었습니다.',
+                            position: 'center',
+                            timeout: 2000,
+                            type: 'success',
+                            closeOnClick: 'true'
+                        });
                         //덱 공개
                         window_shift("loading","deckconfig");
                     } catch(e) {
