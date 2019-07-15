@@ -2265,7 +2265,7 @@ body {
             font-size:inherit;
         }
     #button_metadeck_hot {
-        display:block;
+        display:none;/*오류 해결되면 풀기*/
         float:left;
         margin:0 auto;
         width:calc(50% - 5px);
@@ -2276,7 +2276,7 @@ body {
         display:block;
         float:right;
         margin:0 auto;
-        width:calc(50% - 5px);
+        width:calc(100% - 10px);
         border:2px lime solid;
         color:lime;
     }

@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "c0b5e32d79ca4e1bba71e9777e101fb3"
+    "revision": "6631bc2654a140fe83a5c8049eb0fea2"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "ab48f8e7570f1a86bfa7e65c00d125ba"
+    "revision": "e65105332d0c867525e470255552ea1d"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "9baa7616035ee185a0fe5ff402f7b07d"
+    "revision": "035a75985ba1ff5bb13631bacc871122"
   },
   {
     "url": "manifest.json",
@@ -91,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "39ca047c743ffb8a54f83f80e8368659"
+    "revision": "cc769c13900580765d23611ccd0184fb"
   },
   {
     "url": "package/clusterize.css",
