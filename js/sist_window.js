@@ -327,7 +327,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                     window_shift("decklist");
                 }
                 $("#start_metadeck").onclick = function() {
-                    window_shift("metadeck");
+                    alert("메타덱 탐색 기능이 오류로 인해 잠시 이용이 중단됩니다. 양해바랍니다.");
+                    //window_shift("metadeck");
                 }
                 $("#start_information").onclick = function() {
                     swal({

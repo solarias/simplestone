@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "e65105332d0c867525e470255552ea1d"
+    "revision": "ab48f8e7570f1a86bfa7e65c00d125ba"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "53ae35b58b8265f5ff65ac296fa82bcf"
+    "revision": "5173afc34979473678bbe001083eb6ba"
   },
   {
     "url": "manifest.json",
@@ -91,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "78d8fa07bacad68e86b5b04bdb4700e3"
+    "revision": "39ca047c743ffb8a54f83f80e8368659"
   },
   {
     "url": "package/clusterize.css",
