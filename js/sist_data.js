@@ -23,13 +23,16 @@ const TILEURL = "./images/tiles/";
 const PORTRAITURL = "./images/portraits/";
     const PORTRAITURL_REPLACE = "./images/portraits_replace/";
 const HEROURL = "./images/heroes/";
-const METADECKAPI = "https://edcezx7ehb.execute-api.ap-northeast-2.amazonaws.com/production/get/?cmd=";
+const METADECKAPI = "https://solarias.github.io/simplestone_metadeck/";
 const METADECKMAX = 100;//메타덱 출력 최대 순위
-    //메타덱 API는 cmd에 따라 hsreplay에서 데이터를 수집함(AWS Lambda API 설정 참조)
-    //archetype : 덱 아키타입
-    //standard : 정규전 경쟁 덱
-    //wild : 야생전 경쟁 덱
-const REFRESH_HOUR = 6;//6시간마다 메타덱 갱신 가능
+    //메타덱 API는 hsreplay에서 데이터를 수집하려 파일별로 나눠 보관함
+    //metadeck_archetype.json : 덱 아키타입
+    //metadeck_hot_standard.json : 인기있는 덱 - 정규
+    //metadeck_hot_wild.json : 인기있는 덱 - 야생
+    //metadeck_winrate_standard.json : 승률높은 덱 - 정규
+    //metadeck_winrate_wild.json : 승률높은 덱 - 야생
+    //metadeck_update.json : 메타덱 업데이트 기록
+const REFRESH_HOUR = 1;//1시간마다 메타덱 갱신 가능(서버에서)
 //클러스터
 let clusterize = {};
 //클릭, 터치 이벤트 관련
@@ -43,6 +46,9 @@ let eventObj = {
     "deck_list_content":{},
     "deck_list":{}
 };
+//모바일 종료 관련
+let autoPopstate;//뒤로 가기 방지 히스토리 자동생성용
+let blockBack = 0;//1일 경우 뒤로 히스토리 뒤로 가기 감지
 
 //===========================================================
 //※ 상수 설정

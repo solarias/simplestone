@@ -19,7 +19,12 @@ function window_clear() {
     $$(".footer_desc").forEach(function(target) {
         target.classList.remove("show");
     })
+    $$(".extrascreen").forEach(function(target) {
+        target.classList.remove("show");
+    })
 }
+//뒤로 가기 버튼 - 메뉴마다 별도로 설정
+function window_goback() {};
 
 //개별 창 설정
 async function window_shift(keyword, keyword2, keyword3) {
@@ -287,6 +292,29 @@ async function window_shift(keyword, keyword2, keyword3) {
                 window_clear();
                 $("#main_titlescreen").classList.add("show");
                 $("#header_back").classList.remove("show");
+                    //모바일 한정 - 히스토리 뒤로 가기 시 종료여부 결정
+                    window.onpopstate = () => {
+                        if (blockBack > 0) {
+                            if (swal.isVisible()) {
+                                swal.close();
+                                window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                            } else {
+                                nativeToast({
+                                    message: '심플스톤을 종료하려면 뒤로 버튼을 한 번 더 눌려주세요.',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'close',
+                                    closeOnClick: 'true'
+                                });
+                                clearTimeout(autoPopstate);
+                                autoPopstate = setTimeout(() => {
+                                    window.history.pushState({ noBackExitsApp: true }, 'DEF')
+                                },2000);
+                            }
+                        }
+                    }
+                //이용 정보 표시안함
+                $("#header_info").classList.remove("show");
 
                 //최신 확장팩 문구 표기
                 $("#titlescreen_latest_name").innerHTML = DATA.SET[DATA.SET_LATEST].KR;
@@ -300,6 +328,22 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
                 $("#start_metadeck").onclick = function() {
                     window_shift("metadeck");
+                }
+                $("#start_information").onclick = function() {
+                    swal({
+                        title:"심플스톤",
+                        imageUrl:"./images/logo.png",
+                        imageHeight:88,
+                        html:'<b>제작자</b>: 솔라리어스<br>'+
+                            '<b>의견 남기기</b>: ansewo@naver.com,<br>'+
+                            '<a href="https://blog.naver.com/ansewo/221319675157" target="_blank">https://blog.naver.com/ansewo/221319675157</a><br><br>'+
+                            '<b>카드정보 & 카드이미지 출처</b>: <a href="https://hearthstonejson.com/" target="_blank">HearthstoneJSON</a><br>'+
+                            '<b>각종 아이콘 출처</b>: <a href="https://ko.icons8.com/icon" target="_blank">https://ko.icons8.com/icon</a><br><br>'+
+                            '<b>로고 아이콘 정보</b><br>'+
+                            '<div>Icons made by <a href="http://www.freepik.com" target="_blank" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><br>'+
+                            '<b>폰트 정보</b><br>'+
+                            '<div>Spoqa Han Sans<br>'
+                    })
                 }
             }
 
@@ -339,9 +383,21 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#footer_decklist").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
-                $("#header_back").onclick = function() {
+                window_goback = () => {
                     window_shift("titlescreen");
                 }
+                $("#header_back").onclick = window_goback;
+                //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
+                window.onpopstate = () => {
+                    if (blockBack > 0) {
+                        if (swal.isVisible()) swal.close();
+                            else window_goback();
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                    }
+                }
+            //이용 정보 표시안함
+            $("#header_info").classList.remove("show");
+
             //덱 설정 초기화
             process.deck = {};
             process.deck.deckcode = "";
@@ -397,20 +453,20 @@ async function window_shift(keyword, keyword2, keyword3) {
                     swal({
                         imageUrl:"./images/icon_delete.png",
                         imageHeight:88,
-                        title: number + "번 덱의 즐겨찾기를 해제하시겠습니까?",
-                        text:"즐겨찾기를 해제하면 저정된 덱 정보가 사라집니다.",
+                        title: number + "번 덱을 삭제하시겠습니까?",
+                        text:"저정된 덱 정보가 사라집니다.",
                         showCancelButton:true,
                         confirmButtonColor: '#d33',
                         confirmButtonText: '해제',
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
-                            //덱 즐겨찾기 해제
+                            //덱 삭제
                             deck_favorite("off", target.dataset.id)
                             .then(function() {
                                 //안내문구
                                 nativeToast({
-                                    message: '즐겨찾기 해제 완료',
+                                    message: '덱 삭제 완료',
                                     position: 'center',
                                     timeout: 2000,
                                     type: 'success',
@@ -472,6 +528,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                     if (deckcode) {
                         //덱코드 기억
                         process.deck.deckcode = deckcode;
+                        //덱 등록
+                        deck_favorite("on");
                         //다음 진행
                         window_shift("loading","deckconfig")
                     }
@@ -542,6 +600,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                     showCloseButton:true
                 }).then(function(isConfirm) {
                     if (isConfirm) {
+                        //덱 등록
+                        deck_favorite("on");
+                        //다음 진행
                         window_shift("loading","deckbuilding");
                     }
                 })
@@ -592,11 +653,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                 if (process.deck) {
                     //포맷 검증
                     if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
-                        for (let i = 0;i < process.deck.cards.length;i++) {
-                            if (DATA.SET[session.db[session.index[process.deck.cards[i][0]]].set].FORMAT === "야생") {
-                                process.deck.format = "야생";
-                                break;
-                            }
+                        let standard = isStandard(process.deck.cards);
+                        if (!standard) {
+                            process.deck.format = "야생";
                         }
                     }
                 }
@@ -632,9 +691,20 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#footer_collectionNdeck_cardinfo").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
-                $("#header_back").onclick = function() {
+                window_goback = () => {
                     window_shift("titlescreen");
                 }
+                $("#header_back").onclick = window_goback;
+                //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
+                window.onpopstate = () => {
+                    if (blockBack > 0) {
+                        if (swal.isVisible()) swal.close();
+                            else window_goback();
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                    }
+                }
+            //이용 정보 표시안함
+            $("#header_info").classList.remove("show");
 
             //==================
             //※ 필터 구성
@@ -697,13 +767,42 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#footer_collectionNdeck_deckbuilding").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
-                $("#header_back").onclick = function() {
+                window_goback = () => {
                     if (process.prestate) {
                         window_shift(process.prestate);
                     } else {
                         window_shift("decklist");
                     }
                 }
+                $("#header_back").onclick = window_goback;
+                //모바일 한정 - 히스토리 뒤로 갈 시에도 작동
+                window.onpopstate = () => {
+                    if (blockBack > 0) {
+                        if (swal.isVisible()) swal.close();
+                            else window_goback();
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                    }
+                }
+            //이용 정보 표시
+            $("#header_info").classList.add("show");
+            //==================
+            //※ 카드정보 안내
+            //==================
+            $("#header_info").onclick = function() {
+                swal({
+                    type:"info",
+                    title:"덱 편집기 사용방법",
+                    html:"<h1>덱에 카드 추가/제거하기</h1>"+
+                        "<p>카드 목록에서 카드를 클릭하세요.</p><br>"+
+                        "<h1>카드정보 보기</h1>"+
+                        "<p>카드 목록에서 카드를 우클릭 또는 " + parseFloat(AUTOINFOTIME/1000).toString() + "초간 터치하세요.</p><br>"+
+                        "<h1>취소, 복귀 기능</h1>"+
+                        "<p>'취소'를 누르면 이전에 추가/제거한 카드를 되돌립니다.</p>"+
+                        "<p>'복귀'를 누르면 취소한 작업을 다시 실행합니다.</p>",
+                    confirmButtonText:"확인"
+                })
+            }
+
             //로그 초기화
             if (process.log !== undefined)
                 $("#undo_num").innerHTML = process.log.length;
@@ -741,24 +840,6 @@ async function window_shift(keyword, keyword2, keyword3) {
             //카드정보 노드 설치
                 cardinfo_setup("cardcover_top", false);
                 cardinfo_setup("frame_cardmonitor", false);
-
-            //==================
-            //※ 카드정보 안내
-            //==================
-            $("#bottom_info").onclick = function() {
-                swal({
-                    type:"info",
-                    title:"덱 편집기 사용방법",
-                    html:"<h1>덱에 카드 추가/제거하기</h1>"+
-                        "<p>카드 목록에서 카드를 클릭하세요.</p><br>"+
-                        "<h1>카드정보 보기</h1>"+
-                        "<p>카드 목록에서 카드를 우클릭 또는 " + parseFloat(AUTOINFOTIME/1000).toString() + "초간 터치하세요.</p><br>"+
-                        "<h1>취소, 복귀 기능</h1>"+
-                        "<p>'취소'를 누르면 이전에 추가/제거한 카드를 되돌립니다.</p>"+
-                        "<p>'복귀'를 누르면 취소한 작업을 다시 실행합니다.</p>",
-                    confirmButtonText:"확인"
-                })
-            }
 
             //==================
             //※ 상호작용
@@ -882,13 +963,24 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#footer_deckconfig").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
-                $("#header_back").onclick = function() {
+                window_goback = () => {
                     if (process.prestate) {
                         window_shift(process.prestate);
                     } else {
                         window_shift("decklist");
                     }
                 }
+                $("#header_back").onclick = window_goback;
+                //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
+                window.onpopstate = () => {
+                    if (blockBack > 0) {
+                        if (swal.isVisible()) swal.close();
+                            else window_goback();
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                    }
+                }
+            //이용 정보 표시안함
+            $("#header_info").classList.remove("show");
 
             //==================
             //※ 덱 구성
@@ -1134,30 +1226,30 @@ async function window_shift(keyword, keyword2, keyword3) {
                 window_shift("deckbuilding");
             }
             //==================
-            //※ 즐겨찾기
+            //※ 덱 등록
             //==================
             if (!process.deck.favorite) {
-                //즐겨찾기 표시
+                //덱 등록 표시
                 $("#deckconfig_favoritestate").classList.remove("show");
                 $("#deckconfig_favorite").classList.add("favorite");
                 $("#deckconfig_favorite").classList.remove("delete");
-                $("#deckconfig_favorite_text").innerHTML = "즐겨찾기";
+                $("#deckconfig_favorite_text").innerHTML = "덱 등록";
             } else {
-                //즐겨찾기 OFF 표시
+                //덱 삭제 표시
                 $("#deckconfig_favoritestate").classList.add("show");
                 $("#deckconfig_favorite").classList.remove("favorite");
                 $("#deckconfig_favorite").classList.add("delete");
-                $("#deckconfig_favorite_text").innerHTML = "즐겨찾기<br>OFF";
+                $("#deckconfig_favorite_text").innerHTML = "덱 삭제";
             }
             //버튼 클릭
             $("#deckconfig_favorite").onclick = function() {
                 if (!process.deck.favorite) {
-                    //덱 즐겨찾기
+                    //덱 등록
                     deck_favorite("on")
                     .then(function() {
                         //안내문구
                         nativeToast({
-                            message: '즐겨찾기 설정 완료<br>(이제 덱 목록에서 언제든지 불러올 수 있습니다.)',
+                            message: '덱 등록 완료<br>(이제 덱 목록에서 언제든지 불러올 수 있습니다.)',
                             position: 'center',
                             timeout: 2000,
                             type: 'success',
@@ -1167,27 +1259,27 @@ async function window_shift(keyword, keyword2, keyword3) {
                         $("#deckconfig_favoritestate").classList.add("show");
                         $("#deckconfig_favorite").classList.remove("favorite");
                         $("#deckconfig_favorite").classList.add("delete");
-                        $("#deckconfig_favorite_text").innerHTML = "즐겨찾기<br>OFF";
+                        $("#deckconfig_favorite_text").innerHTML = "덱 삭제";
                     })
                 } else {
                     //경고창
                     swal({
                         imageUrl:"./images/icon_delete.png",
                         imageHeight:88,
-                        title:"즐겨찾기를 해제하시겠습니까?",
-                        text:"즐겨찾기를 해제한 후 다른 덱을 편집하면, 덱 정보가 사라집니다.",
+                        title:"덱을 삭제하시겠습니까?",
+                        text:"저장된 덱 정보가 사라집니다.",
                         showCancelButton:true,
                         confirmButtonColor: '#d33',
                         confirmButtonText: '해제',
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
-                            //덱 즐겨찾기 해제
+                            //덱 삭제
                             deck_favorite("off")
                             .then(function() {
                                 //안내문구
                                 nativeToast({
-                                    message: '즐겨찾기 해제 완료',
+                                    message: '덱 삭제 완료',
                                     position: 'center',
                                     timeout: 2000,
                                     type: 'success',
@@ -1197,7 +1289,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 $("#deckconfig_favoritestate").classList.remove("show");
                                 $("#deckconfig_favorite").classList.add("favorite");
                                 $("#deckconfig_favorite").classList.remove("delete");
-                                $("#deckconfig_favorite_text").innerHTML = "즐겨찾기";
+                                $("#deckconfig_favorite_text").innerHTML = "덱 등록";
                             })
                         }
                     })
@@ -1247,9 +1339,34 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#footer_metadeck").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
-                $("#header_back").onclick = function() {
+                window_goback = () => {
                     window_shift("titlescreen");
                 }
+                $("#header_back").onclick = window_goback;
+                //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
+                window.onpopstate = () => {
+                    if (blockBack > 0) {
+                        if (swal.isVisible()) swal.close();
+                            else window_goback();
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                    }
+                }
+            //이용 정보 표시
+            $("#header_info").classList.add("show");
+            $("#header_info").onclick = function() {
+                swal({
+                    type:"info",
+                    title:"메타 덱 정보",
+                    html:"<p style='word-break: keep-all;'>HSReplay에서 지난 30일 동안 가장 승률이 높은 상위 100개의 덱, "+
+                        "또는 최근 2일간 가장 인기있는 덱을 검색해보세요.</p>"+
+                        "<br>"+
+                        "<p><span style='color:red;font-weight:bold;'>필터링 설정</span>을 하면 덱 목록을 불러옵니다.<p>"+
+                        "<br>"+
+                        "<p>덱 정보는 <span style='color:blue;font-weight:bold;'>1시간마다 갱신</span>할 수 있습니다.<p>",
+                    confirmButtonText:"확인"
+                })
+            }
+
             //상태 기억
             process.state = "metadeck";
                 process.prestate = undefined;//이전 상태를 기억 안해도 됨
@@ -1261,41 +1378,137 @@ async function window_shift(keyword, keyword2, keyword3) {
 
             //디폴트 필터링 세팅
             if (!session.metadeck) {
-                let filter = await localforage.getItem("sist_metadeck_filter")
-                if (!filter) {
-                    session.metadeck = {
-                        filter:{
-                            class:"ALL",
-                            format:"standard",
-                            totalgame:0
-                        }
+                session.metadeck = {
+                    filter:{}
+                }
+                //인기있는 덱 필터링
+                let filter_hot = await localforage.getItem("sist_metadeck_filter_hot")
+                if (!filter_hot) {
+                    session.metadeck.filter.hot = {
+                        class:"ALL",
+                        format:"standard",
+                        totalgame:0
                     }
                 } else {
-                    session.metadeck = {
-                        filter:{
-                            class:filter.class,
-                            format:filter.format,
-                            totalgame:filter.totalgame
-                        }
+                    session.metadeck.filter.hot = {
+                        class:filter_hot.class,
+                        format:filter_hot.format,
+                        totalgame:filter_hot.totalgame
+                    }
+                }
+                //승률높은 덱 필터링
+                let filter_winrate = await localforage.getItem("sist_metadeck_filter_winrate")
+                if (!filter_winrate) {
+                    session.metadeck.filter.winrate = {
+                        class:"ALL",
+                        format:"standard",
+                        totalgame:0
+                    }
+                } else {
+                    session.metadeck.filter.winrate = {
+                        class:filter_winrate.class,
+                        format:filter_winrate.format,
+                        totalgame:filter_winrate.totalgame
                     }
                 }
             }
 
             //첫 화면 구성
-            //현재 포맷 덱 정보 없으면 설명문 표시
-            if (!session.metadeck[session.metadeck.filter.format]) {
+            //최근 열람한 메타덱 타입 불러오기
+            let metadeck_recent = await localforage.getItem("sist_metadeck_recent")
+            //없으면 메타덱 정보 설명문 표시
+            if (!metadeck_recent) {
                 $("#metadeck_description").classList.add("show");
                 $("#metadeck_loading").classList.remove("show");
+            //있으면 그걸로 불러오기
             } else {
-                //아니라면 설명문 제거
+                //설명문 제거
                 $("#metadeck_description").classList.remove("show");
                 $("#metadeck_loading").classList.remove("show");
-                //메타 덱 출력
-                metadeck_load();
+                //메타덱 출력
+                metadeck_load(metadeck_recent);
             }
 
             //직업 및 포맷 설정
-            $("#button_metadeck_filter").onclick = function() {
+            //인기있는 덱
+            $("#button_metadeck_hot").onclick = function() {
+                //설정 팝업창 열기
+                swal({
+                    html:
+                      '<span class="popup_subtitle">직업 선택</span>'+
+                      '<button id="popup_class_ALL" class="popup_button full metadeck_button metadeck_class" data-class="ALL">모든 직업</button>'+
+                      '<button id="popup_class_WARRIOR" class="popup_button trisection metadeck_button metadeck_class" data-class="WARRIOR">전사</button>' +
+                      '<button id="popup_class_SHAMAN" class="popup_button trisection metadeck_button metadeck_class" data-class="SHAMAN">주술사</button>' +
+                      '<button id="popup_class_ROGUE" class="popup_button trisection metadeck_button metadeck_class" data-class="ROGUE">도적</button>' +
+                      '<button id="popup_class_PALADIN" class="popup_button trisection metadeck_button metadeck_class" data-class="PALADIN">성기사</button>' +
+                      '<button id="popup_class_HUNTER" class="popup_button trisection metadeck_button metadeck_class" data-class="HUNTER">사냥꾼</button>' +
+                      '<button id="popup_class_DRUID" class="popup_button trisection metadeck_button metadeck_class" data-class="DRUID">드루이드</button>' +
+                      '<button id="popup_class_WARLOCK" class="popup_button trisection metadeck_button metadeck_class" data-class="WARLOCK">흑마법사</button>' +
+                      '<button id="popup_class_MAGE" class="popup_button trisection metadeck_button metadeck_class" data-class="MAGE">마법사</button>' +
+                      '<button id="popup_class_PRIEST" class="popup_button trisection metadeck_button metadeck_class" data-class="PRIEST">사제</button>'+
+                      '<span class="popup_subtitle">대전방식 선택</span>'+
+                      '<button id="popup_format_standard" class="popup_button metadeck_button metadeck_format" data-format="standard">정규</button>' +
+                      '<button id="popup_format_wild" class="popup_button metadeck_button metadeck_format" data-format="wild">야생</button>',
+                    onOpen:function() {
+                        //버튼 디폴트 세팅
+                        if (process.state === "metadeck") {
+                            //직업
+                            $("#popup_class_" + session.metadeck.filter.hot.class).classList.add("selected")
+                            //포맷 디폴트
+                            $("#popup_format_" + session.metadeck.filter.hot.format).classList.add("selected")
+                        }
+
+                        //버튼 클릭 시
+                        $$(".metadeck_button").forEach(function(target) {
+                            target.onclick = function() {
+                                if (target.dataset.class) {
+                                    //직업 세팅
+                                    session.metadeck.filter.hot.class = target.dataset.class;
+                                    //버튼 세팅
+                                    $$(".metadeck_class").forEach(function(x) {
+                                        x.classList.remove("selected");
+                                    })
+                                    target.classList.add("selected");
+                                } else if (target.dataset.format) {
+                                    //대전 방식 세팅
+                                    session.metadeck.filter.hot.format = target.dataset.format;
+                                    //버튼 세팅
+                                    $$(".metadeck_format").forEach(function(x) {
+                                        x.classList.remove("selected");
+                                    })
+                                    target.classList.add("selected");
+                                }
+                            }
+                        })
+                    },
+                    preConfirm: function() {
+                        return new Promise(function(resolve, reject) {
+                            if (!session.metadeck.filter.hot.class) {
+                                reject('직업을 설정해주세요.');
+                            } else if (!session.metadeck.filter.hot.format) {
+                                reject('대전 방식을 설정해주세요.');
+                            } else {
+                                resolve();
+                            }
+                        })
+                    },
+                    allowOutsideClick:false,
+                    showCancelButton:true,
+                    confirmButtonText: '설정 완료',
+                    cancelButtonText: '취소',
+                    cancelButtonColor: '#d33',
+                    showCloseButton:true
+                }).then(async (isConfirm) => {
+                    if (isConfirm) {
+                        //필터 기억
+                        await localforage.setItem("sist_metadeck_filter_hot",session.metadeck.filter.hot);
+                        //메타덱 불러오기
+                        metadeck_load("hot");
+                    }
+                })
+            }
+            //승률높은 덱
+            $("#button_metadeck_winrate").onclick = function() {
                 //설정 팝업창 열기
                 swal({
                     html:
@@ -1320,11 +1533,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //버튼 디폴트 세팅
                         if (process.state === "metadeck") {
                             //직업
-                            $("#popup_class_" + session.metadeck.filter.class).classList.add("selected")
+                            $("#popup_class_" + session.metadeck.filter.winrate.class).classList.add("selected")
                             //포맷 디폴트
-                            $("#popup_format_" + session.metadeck.filter.format).classList.add("selected")
+                            $("#popup_format_" + session.metadeck.filter.winrate.format).classList.add("selected")
                             //게임횟수 디폴트 : 제한없음
-                            $("#popup_totalgame_" + session.metadeck.filter.totalgame).classList.add("selected")
+                            $("#popup_totalgame_" + session.metadeck.filter.winrate.totalgame).classList.add("selected")
                         }
 
                         //버튼 클릭 시
@@ -1332,7 +1545,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                             target.onclick = function() {
                                 if (target.dataset.class) {
                                     //직업 세팅
-                                    session.metadeck.filter.class = target.dataset.class;
+                                    session.metadeck.filter.winrate.class = target.dataset.class;
                                     //버튼 세팅
                                     $$(".metadeck_class").forEach(function(x) {
                                         x.classList.remove("selected");
@@ -1340,7 +1553,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     target.classList.add("selected");
                                 } else if (target.dataset.format) {
                                     //대전 방식 세팅
-                                    session.metadeck.filter.format = target.dataset.format;
+                                    session.metadeck.filter.winrate.format = target.dataset.format;
                                     //버튼 세팅
                                     $$(".metadeck_format").forEach(function(x) {
                                         x.classList.remove("selected");
@@ -1348,7 +1561,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     target.classList.add("selected");
                                 } else if (target.dataset.totalgame) {
                                     //게임 횟수 세팅
-                                    session.metadeck.filter.totalgame = parseInt(target.dataset.totalgame);
+                                    session.metadeck.filter.winrate.totalgame = parseInt(target.dataset.totalgame);
                                     //버튼 세팅
                                     $$(".metadeck_totalgame").forEach(function(x) {
                                         x.classList.remove("selected");
@@ -1360,9 +1573,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                     },
                     preConfirm: function() {
                         return new Promise(function(resolve, reject) {
-                            if (!session.metadeck.filter.class) {
+                            if (!session.metadeck.filter.winrate.class) {
                                 reject('직업을 설정해주세요.');
-                            } else if (!session.metadeck.filter.format) {
+                            } else if (!session.metadeck.filter.winrate.format) {
                                 reject('대전 방식을 설정해주세요.');
                             } else {
                                 resolve();
@@ -1378,37 +1591,48 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }).then(async (isConfirm) => {
                     if (isConfirm) {
                         //필터 기억
-                        await localforage.setItem("sist_metadeck_filter",session.metadeck.filter);
+                        await localforage.setItem("sist_metadeck_filter_winrate",session.metadeck.filter.winrate);
                         //메타덱 불러오기
-                        metadeck_load();
+                        metadeck_load("winrate");
                     }
                 })
             }
 
             //메타 덱 목록 불러오기
-            function metadeck_load() {
+            async function metadeck_load(metadeck_type) {
                 //공통 : API 호출
                 async function callAPI(cmd) {
                     let desc = {
-                        archetype:"덱 유형",
-                        standard:"정규전 덱",
-                        wild:"야생전 덱"
+                        metadeck_archetype:"덱 유형",
+                        metadeck_hot_standard:"인기있는 덱 - 정규",
+                        metadeck_hot_wild:"인기있는 덱 - 야생",
+                        metadeck_winrate_standard:"승률높은 덱 - 정규",
+                        metadeck_winrate_wild:"승률높은 덱 - 야생",
+                        metadeck_update:"업데이트 기록"
                     }
                     //로딩 화면
                     $("#metadeck_loading_desc").innerHTML = desc[cmd] + " 불러오는 중...";
                     //API 호출
                     try {
-                        let response = await fetch(METADECKAPI + cmd);
+                        let response = await fetch(METADECKAPI + cmd + ".json");
                         //성공 시
                         let resJson = await response.json();
                         //데이터 정제 후 저장
                         let output = {}
                         switch (cmd) {
-                            case "archetype"://아키타입
+                            case "metadeck_archetype"://아키타입
                                 resJson.forEach((x) => {
                                     output[x.id.toString()] = x.name;
                                 })
                                 await localforage.setItem("sist_metadecks_archetype", output);
+
+                                break;
+                            case "metadeck_update"://아키타입
+                                Object.keys(resJson).forEach(key => {
+                                    output[key] = resJson[key];
+                                })
+
+                                await localforage.setItem("sist_metadecks_update", output);
 
                                 break;
                             default://정규전, 야생전
@@ -1418,7 +1642,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     output[x] = [];
                                     resJson.series.data[x].forEach((deck) => {
                                         deck.class = x;//직업
-                                        deck.format = session.metadeck.filter.format;//포맷(덱코드 계산용)
+                                        deck.format = session.metadeck.filter[metadeck_type].format;//포맷(덱코드 계산용)
                                         deck.cards = JSON.parse(deck.deck_list);//덱리스트(문자열이 아닌 배열)
                                         deck.dust = 0;//가루 계산
                                         deck.cards.forEach((cardInfo) => {
@@ -1435,7 +1659,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     return (a.win_rate > b.win_rate) ? -1 : 1;
                                 })
                                 output.time = thisTime();
-                                await localforage.setItem("sist_metadecks_" + cmd, output);
+                                await localforage.setItem("sist_" + cmd, output);
 
                                 break;
                         }
@@ -1454,51 +1678,27 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //로딩 화면 출력
                 $("#metadeck_description").classList.remove("show");
                 $("#metadeck_loading").classList.add("show");
+                //제목 변경
+                switch (metadeck_type) {
+                    case "hot":
+                        $("#header_status").innerHTML = "인기 덱 정보";
+                        break;
+                    case "winrate":
+                        $("#header_status").innerHTML = "고승률 덱 정보";
+                        break;
+                }
 
                 //덱 목록 세팅
-                //로컬에 해당 포맷 덱 목록 불러오기
-                localforage.getItem("sist_metadecks_" + session.metadeck.filter.format)
-                .then(async (deckInfo) => {
-                    let inputInfo = {};
-                    //불러올 게 없거나, 해당 포맷 없으면
-                    if (!deckInfo) {
-                        //API 호출
-                        inputInfo = await callAPI(session.metadeck.filter.format);
-                    //았으면
-                    } else {
-                        //갱신 시간 점검
-                        let updated = deckInfo.time;
-                        //갱신이 필요하면
-                        let moment = thisTime();
-                        let section = (input) => {
-                            return Math.floor(parseInt(input.split("/")[1].split(":")[0]) / REFRESH_HOUR);
-                        }
-                        if (moment.split("/")[0] !== updated.split("/")[0] ||
-                            section(moment) != section(updated)) {
-                            //API 호출
-                            inputInfo = await callAPI(session.metadeck.filter.format);
-                        //갱신이 필요없으면
-                        } else {
-                            //로컬 활용
-                            inputInfo = deckInfo;
-                        }
-                    }
+                try {
+                    //메타덱 API 호출
+                    inputInfo = await callAPI("metadeck_" + metadeck_type + "_" + session.metadeck.filter[metadeck_type].format);
                     //정보 반영
-                    session.metadeck[session.metadeck.filter.format] = inputInfo;
+                    session.metadeck[session.metadeck.filter[metadeck_type].format] = inputInfo;
 
                     return;
 
-                //오류 발생 시
-                }).catch(async (error) => {
-                    //API 강제 호출
-                    inputInfo = await callAPI(session.metadeck.filter.format);
-                    //정보 반영
-                    session.metadeck[session.metadeck.filter.format] = inputInfo;
-
-                    return;
-
-                //아키타입 세팅
-                }).then(async () => {
+                    //아키타입 세팅
+                //}).then(async () => {
                     return new Promise(resolve1 => {
                         //로컬에 아키타입 불러오기
                         let inputInfo = {};
@@ -1514,9 +1714,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                         inputInfo = archetype;
                                     }
                                     //아키타입 대조 및 적용
-                                    for (x of Object.keys(session.metadeck[session.metadeck.filter.format])) {
+                                    for (x of Object.keys(session.metadeck[session.metadeck.filter[metadeck_type].format])) {
                                         if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
-                                            for (deck of session.metadeck[session.metadeck.filter.format][x]) {
+                                            for (deck of session.metadeck[session.metadeck.filter[metadeck_type].format][x]) {
                                                 //음수는 "직업명"이 아키타입
                                                 if (deck.archetype_id < 0) {
                                                     deck.archetype_name = deck.class;
@@ -1541,9 +1741,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     //API 호출
                                     inputInfo = await callAPI("archetype");
                                     //아키타입 대조 및 적용
-                                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(x => {
+                                    Object.keys(session.metadeck[session.metadeck.filter[metadeck_type].format]).forEach(x => {
                                         if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
-                                            session.metadeck[session.metadeck.filter.format][x].forEach(deck => {
+                                            session.metadeck[session.metadeck.filter[metadeck_type].format][x].forEach(deck => {
                                                 //음수는 "직업명"이 아키타입
                                                 if (deck.archetype_id < 0) {
                                                     deck.archetype_name = deck.class;
@@ -1560,14 +1760,15 @@ async function window_shift(keyword, keyword2, keyword3) {
                         setArchetype().then(() => {
                             resolve1();
                         })
-                    }).then(() => {})
-                }).then(() => {
-                    //클러스터 구성 및 출력
-                    metadeck_show();
-                }).catch((e) => {
+                    }).then(() => {
+                        //클러스터 구성 및 출력
+                        metadeck_show(metadeck_type);
+                    })
+                } catch (e) {
+                    console.log(e);
                     //메타덱 데이터를 불러오는 데 실패했다면
                     //최근 데이터가 있으면 해당 데이터 사용
-                    localforage.getItem("sist_metadecks_" + session.metadeck.filter.format)
+                    localforage.getItem("sist_metadecks_" + session.metadeck.filter[metadeck_type].format)
                     .then(async (deckInfo) => {
                         if (!deckInfo) {
                             //불러올 해당 대전유형 정보 없으면 로딩 실패 출력
@@ -1595,10 +1796,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     $("#metadeck_loading").classList.remove("show");
                                     $("#metadeck_description").classList.add("show");
                                 } else {
-                                    session.metadeck[session.metadeck.filter.format] = inputInfo;
-                                    Object.keys(session.metadeck[session.metadeck.filter.format]).forEach(x => {
+                                    session.metadeck[session.metadeck.filter[metadeck_type].format] = inputInfo;
+                                    Object.keys(session.metadeck[session.metadeck.filter[metadeck_type].format]).forEach(x => {
                                         if (x === "ALL" || DATA.CLASS.KR[x] !== undefined) {
-                                            session.metadeck[session.metadeck.filter.format][x].forEach(async (deck) => {
+                                            session.metadeck[session.metadeck.filter[metadeck_type].format][x].forEach(async (deck) => {
                                                 //음수는 "직업명"이 아키타입
                                                 if (deck.archetype_id < 0) {
                                                     deck.archetype_name = deck.class;
@@ -1623,23 +1824,23 @@ async function window_shift(keyword, keyword2, keyword3) {
                                         type: 'error',
                                         closeOnClick: 'true'
                                     });
-                                    metadeck_show();
+                                    metadeck_show(metadeck_type);
                                 }
                             })
                         }
                     })
-                })
+                }
             }
 
             //메타 덱 출력
-            function metadeck_show() {
+            async function metadeck_show(metadeck_type) {
                 //메타 덱 목록 구축
                 let metadeckslotArr = []
-                let decks = session.metadeck[session.metadeck.filter.format][session.metadeck.filter.class];
+                let decks = session.metadeck[session.metadeck.filter[metadeck_type].format][session.metadeck.filter[metadeck_type].class];
                 let deckRank = 1;
                 for (let i = 0;i < decks.length;i++) {
                     let oneDeck = decks[i];
-                    if (oneDeck.total_games >= session.metadeck.filter.totalgame) {
+                    if (oneDeck.total_games >= session.metadeck.filter[metadeck_type].totalgame) {
                         metadeckslotArr.push(metadeckslot_generateFragment(oneDeck, deckRank));
                         deckRank += 1;
                     }
@@ -1650,10 +1851,17 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //클러스터 스크롤(기억해둔 거 있으면 거기로, 아니면 0 / 이후 초기화)
                 $("#metadeck_slot").scrollTop = session.metadeck.scroll || 0;
                     session.metadeck.scroll = 0;
-                //상단 문구 출력
-                $("#header_metadeck").innerHTML = DATA.CLASS.KR[session.metadeck.filter.class] + " / " +
-                    DATA.FORMAT.KR[session.metadeck.filter.format] + " / " +
-                    thousand(session.metadeck.filter.totalgame) + "판 이상";
+                //상단 문구 출력 (업데이트 날짜)
+                try {
+                    let response = await fetch(METADECKAPI + "metadeck_update.json");
+                    //성공 시
+                    let resJson = await response.json();
+
+                    $("#header_metadeck").innerHTML = "업데이트 날짜 : " + resJson["metadeck_" + metadeck_json + "_" + session.metadeck.filter[metadeck_type].format];
+                } catch(e) {
+                    $("#header_metadeck").innerHTML = "";
+                }
+
                 //로딩 화면 제거
                 $("#metadeck_loading").classList.remove("show");
 

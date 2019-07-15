@@ -66,6 +66,21 @@ function deckcode_toURL() {
     let deckurl = "https://solarias.github.io/simplestone?deckcode=" + deckcode;
     return deckurl;
 }
+
+//===============================================================
+//※ 정규 검증
+//===============================================================
+function isStandard(deck) {
+    let result = true;
+    for (let i = 0;i < deck.length;i++) {
+        if (DATA.SET[session.db[session.index[process.deck.cards[i][0]]].set].FORMAT === "야생") {
+            result = false;
+            break;
+        }
+    }
+    return result;
+}
+
 //===============================================================
 //※ 덱코드 출력
 //===============================================================

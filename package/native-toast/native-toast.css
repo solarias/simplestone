@@ -115,6 +115,13 @@
   pointer-events: none;
 }
 
+.native-toast-close {
+  /*background-color: #5060ba;*/
+  background-color:rgba(0,0,0,0.7);
+  color: white;
+  pointer-events: none;
+}
+
 [class^="native-toast-icon-"] {
   vertical-align: middle;
   margin-right: 8px

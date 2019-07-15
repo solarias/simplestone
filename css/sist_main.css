@@ -138,10 +138,29 @@ body {
                 left:5px;top:5px;
                 width:60px;}
                 #header_back.show {display:block;}
-            #header_info{
+            #header_info {
+                display:none;
                 right:5px;top:5px;
-                width:60px;
-                letter-spacing:-1px;}
+
+                padding:0 5px;
+                width:80px;
+                height:40px;
+            }
+                    #header_info.show {
+                        display:block;}
+                #header_info > img {
+                    float:left;
+                    width:30px;
+                    height:30px;
+                }
+                #header_info > p {
+                    float:right;
+                    width:30px;
+                    height:30px;
+
+                    font-size:15px;
+                    line-height:15px;
+                }
             .header_button:hover {
                 background-color:rgba(255,255,255,0.4);
             }
@@ -1158,6 +1177,8 @@ body {
         height:100%;
 
         background:rgba(0,0,0,0.7);
+
+        user-select:none;
     }
             #frame_cardcover.show {
                 display:block;
@@ -1922,21 +1943,6 @@ body {
                 width:40px;
                 height:40px;
             }
-        #bottom_info {
-            float:right;
-
-            margin:5px 10px 5px 0;
-            width:160px;
-            height:40px;
-        }
-            #bottom_info > img {
-                vertical-align: sub;
-                width:30px;
-                height:30px;
-            }
-            #bottom_info > .desktop_only {
-                vertical-align: top;
-            }
     #footer_deckconfig {
         position:absolute;
             left:0;bottom:0;
@@ -1983,14 +1989,15 @@ body {
             float:left;
         }
             #deckconfig_favorite.favorite {
-                background-image:url(../images/icon_favorite.png);
+                background-image:url(../images/icon_favorite2.png);
             }
             #deckconfig_favorite.delete {
                 background-image:url(../images/icon_delete.png);
             }
             #deckconfig_favorite_text {
                 display:flex;
-                align-items: center;
+                    align-items: center;
+                    justify-content: center;
                 float:right;
 
                 width:80px;
@@ -2236,6 +2243,7 @@ body {
 
         color:white;
         font-size:22px;
+            line-height:25px;
         letter-spacing: -1px;
         font-weight:bold;
         cursor:pointer;
@@ -2256,10 +2264,19 @@ body {
             vertical-align:middle;
             font-size:inherit;
         }
-    #button_metadeck_filter {
+    #button_metadeck_hot {
         display:block;
+        float:left;
         margin:0 auto;
-        width:calc(100% - 10px);
+        width:calc(50% - 5px);
+        border:2px #f8bb86 solid;
+        color:#f8bb86;
+    }
+    #button_metadeck_winrate {
+        display:block;
+        float:right;
+        margin:0 auto;
+        width:calc(50% - 5px);
         border:2px lime solid;
         color:lime;
     }
@@ -2311,16 +2328,6 @@ body {
         font-size:16px;
         white-space: normal;
         word-break: keep-all;
-    }
-    #footer_collectionNdeck_deckbuilding #bottom_info {
-        width:90px;
-    }
-    #footer_collectionNdeck_deckbuilding #bottom_info > .mobile_only {
-        display:inline-block;
-        vertical-align: top;
-        margin-left:5px;
-        font-size:16px;
-        line-height:16px;
     }
 }
 

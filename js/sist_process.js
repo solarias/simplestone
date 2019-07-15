@@ -687,25 +687,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
             refreshing = true;
         });
     }
-    //기본 화면 상호작용
-        //인포 버튼
-        $("#header_info").onclick = function() {
-            swal({
-                title:"심플스톤",
-                imageUrl:"./images/logo.png",
-                imageHeight:88,
-                html:'<b>제작자</b>: 솔라리어스<br>'+
-                    '<b>의견 남기기</b>: ansewo@naver.com,<br>'+
-                    '<a href="https://blog.naver.com/ansewo/221319675157" target="_blank">https://blog.naver.com/ansewo/221319675157</a><br><br>'+
-                    '<b>카드정보 & 카드이미지 출처</b>: <a href="https://hearthstonejson.com/" target="_blank">HearthstoneJSON</a><br>'+
-                    '<b>각종 아이콘 출처</b>: <a href="https://ko.icons8.com/icon" target="_blank">https://ko.icons8.com/icon</a><br><br>'+
-                    '<b>로고 아이콘 정보</b><br>'+
-                    '<div>Icons made by <a href="http://www.freepik.com" target="_blank" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><br>'+
-                    '<b>폰트 정보</b><br>'+
-                    '<div>Spoqa Han Sans<br>'
-            })
-        }
-
         //카드 클러스터 생성해두기
         clusterize.collection = new Clusterize({
             tag: 'div',
@@ -741,10 +722,16 @@ document.addEventListener("DOMContentLoaded", function(e) {
         });
 
         //종료 경고 메시지
-        window.onbeforeunload = function(e) {
+        window.onunload = window.onbeforeunload = function(e) {
             e.preventDefault();// Cancel the event
             e.returnValue = '';// Chrome requires returnValue to be set
         };
+        //안드로이드는 뒤로 두번 눌려야 나가지도록
+        let isMobile = mobilecheck();
+        if (isMobile === true) {
+            blockBack = 1;
+            window.history.pushState({ noBackExitsApp: true }, 'ABC')
+        }
 
     //공지사항, DB 버전 내려받기
     fetch("./notice.json")

@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "e403828c65dd4424e53b5ef3d83a0cb1"
+    "revision": "327c202597be8becec48d29d8653afd9"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "f70ad08d70bff2cf0efb0af49f62b87c"
+    "revision": "c0b5e32d79ca4e1bba71e9777e101fb3"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "82c9459e47be1b4957a80fcfedc10b1b"
+    "revision": "e65105332d0c867525e470255552ea1d"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -63,11 +63,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_data.js",
-    "revision": "3eff6c793d912a385326b6e05821ddc0"
+    "revision": "e78dd81bd42a81a1614f9c4caa43b944"
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "f345350e33a2eb1edc6143bef5f1d5f0"
+    "revision": "b6362b0a79858cc8bdbf68a219ed31ef"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "b1ebae61400601481f8023a0ba932667"
+    "revision": "70b29fc1df3d4fb261f6558e6c0c29d0"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "35577fae5c1f6b198c23b1271f3961ef"
+    "revision": "53ae35b58b8265f5ff65ac296fa82bcf"
   },
   {
     "url": "manifest.json",
@@ -91,7 +91,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "1ca2abb86b921b1572cf55e19d2ca0b1"
+    "revision": "78d8fa07bacad68e86b5b04bdb4700e3"
   },
   {
     "url": "package/clusterize.css",
@@ -159,11 +159,11 @@ self.__precacheManifest = [
   },
   {
     "url": "package/native-toast/native-toast.css",
-    "revision": "7f964a320c7e3886f01a442efd692d03"
+    "revision": "bee86d382e21e1978e8b7ebc24458eb1"
   },
   {
     "url": "package/native-toast/native-toast.min.js",
-    "revision": "5d79368048de8a8cc70e9b5175ba5a1b"
+    "revision": "5e39c7cf4faa4a2ae68bc1b2ac0b4979"
   },
   {
     "url": "package/no_ie.js",
@@ -171,7 +171,7 @@ self.__precacheManifest = [
   },
   {
     "url": "package/subtool.js",
-    "revision": "015d1a6b74ecf766b550b8ec2fe910f4"
+    "revision": "2d249f5e5ffade1cecb5fa9f3ce13328"
   },
   {
     "url": "package/sweetalert2.css",

@@ -34,3 +34,8 @@
  - 심플스톤 폴더에서 Git bash here
  - http-server 입력
  - http://localhost:8080/ 접속
+
+* 크롬 개발자 환경 - 리모트 디바이스 인식하도록 하는 방법
+ - 리모트 디바이스 연결
+ - cmd에서 adb start-server 입력
+  (작동하지 않으면 adb kill-server 이후 adb start-server)

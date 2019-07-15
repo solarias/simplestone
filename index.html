@@ -35,7 +35,10 @@
                 <div id="header_top">
 					<button id="header_back" class="header_button" aria-label="BACK"><img src="./images/icon_back.png" alt="BACK"></button>
 					<div id="header_status">심플 스톤</div>
-					<button id="header_info" class="header_button" aria-label="INFO"><img src="./images/icon_info.png" alt="INFO"></button>
+					<button id="header_info" class="header_button" aria-label="사용방법">
+						<img src="./images/icon_information.png" alt="사용방법">
+						<p>사용<br>방법</p>
+					</button>
 				</div>
 				<div id="header_bottom">
 					<div id="header_notice" class="subscreen">
@@ -60,7 +63,7 @@
 						</div>
 	                </div>
 	                <div id="header_deckconfig" class="subscreen">
-						<div id="deckconfig_favoritestate"><img src="./images/icon_favorite.png" alt="FAVORITE"> 즐겨찾기 덱</div>
+						<div id="deckconfig_favoritestate"><img src="./images/icon_favorite2.png" alt="favorite"> 등록된 덱</div>
 						<button id="deckconfig_format" aria-label="포맷 전환"></button>
 					</div>
 	                <div id="header_metadeck" class="subscreen"></div>
@@ -110,9 +113,9 @@
 						<p class="titlescren_desc above">메타 덱 정보</p>
                         <button id="start_metadeck" class="titlescreen_button" aria-label="메타 덱 정보"><img src="./images/icon_metadeck.png" alt="META"></button>
                     </div>
-                    <div id="titlescreen_etc" class="titlescreen_section">
-						<p class="titlescren_desc above"></p>
-                        <button id="start_etc" class="titlescreen_button" aria-label="ETC"></button>
+                    <div id="titlescreen_information" class="titlescreen_section">
+						<p class="titlescren_desc above">사이트 정보</p>
+                        <button id="start_information" class="titlescreen_button" aria-label="사이트 정보"><img src="./images/icon_information.png" alt="INFORMATION"></button>
                     </div>
                 </div>
 
@@ -145,7 +148,7 @@
 					<button id="deckconfig_url" class="deckconfig_button" aria-label="덱 URL 공유">URL 출력</button>
 				</div>
 	            <footer id="footer_deckconfig" class="subscreen">
-					<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="즐겨찾기">
+					<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="등록">
 						<div id="deckconfig_favorite_text"></div>
 					</button>
 					<button id="deckconfig_edit" class="deckconfig_footerbutton" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
@@ -194,11 +197,10 @@
 					</div>
 					<div id="metadeck_description">
 						<img src="./images/icon_metadeck_white.png" alt="META">
-						<p>HSReplay에서 지난 30일 동안 가장 승률이 높은 상위 100개의 덱을 검색해보세요.</p>
+						<p style='word-break: keep-all;'>HSReplay에서 지난 30일 동안 가장 승률이 높은 상위 100개의 덱, 또는 최근 2일간 가장 인기있는 덱을 검색해보세요.</p>
 						<p><span style="color:lime">필터링 설정</span>을 하면 덱 목록을 불러옵니다.</p>
 						<br>
-						<p>덱 정보는 <span style="color:yellow">6시간마다 갱신</span>할 수 있습니다.</p>
-						<p>(6시, 12시, 18시, 24시 이후 열람 시 자동 갱신)</p>
+						<p>덱 정보는 <span style="color:yellow">1시간마다 갱신</span>됩니다.</p>
 					</div>
 					<div id="metadeck_loading">
 						<img src="./images/loading_white.svg" alt="META">
@@ -206,7 +208,8 @@
 					</div>
 				</div>
 				<footer id="footer_metadeck" class="subscreen">
-					<button id="button_metadeck_filter" class="footer_metadeck_button init" aria-label="직업 / 대전방식 설정">필터링 설정</button>
+					<button id="button_metadeck_hot" class="footer_metadeck_button init" aria-label="필터링 설정">인기있는 덱<br>필터링</button>
+					<button id="button_metadeck_winrate" class="footer_metadeck_button init" aria-label="필터링 설정">승률높은 덱<br>필터링</button>
 				</footer>
 
 				<!--공용 푸터(카드목록 & 덱목록)-->
@@ -229,7 +232,6 @@
 							<div id="redo_num" class="log_num">0</div>
 						</button>
 						<button id="bottom_done" class="footer_button" aria-label="완료"><img src="./images/icon_done.png" alt="완료"><span class="desktop_only"> 완료</span></button>
-						<button id="bottom_info" class="footer_button" aria-label="사용방법"><img src="./images/icon_cardinfo.png" alt="사용방법"><span class="mobile_only"> 사용<br>방법</span><span class="desktop_only"> 사용방법</span></button>
 	                </div>
 				</footer>
 
@@ -256,7 +258,7 @@
 			</section>
 
 			<!--서비스 워커 업데이트-->
-			<section id="frame_updatepopup">
+			<section id="frame_updatepopup" class="extrascreen">
 				<div id="frame_updatepopup_text">
 					<p>심플스톤 업데이트가 있습니다.</p>
 					<p>페이지 새로고침을 해주세요.</p>
@@ -267,14 +269,14 @@
 			</section>
         </div>
 		<!--별도 창 - 카드 정보 (커버)-->
-		<section id="frame_cardcover">
+		<section id="frame_cardcover" class="extrascreen">
 			<div id="cardcover_top"></div>
 			<div id="cardcover_desc">
 				화면을 클릭하면 창이 닫힙니다.
 			</div>
 		</section>
 		<!--별도 창 - 덱 이미지-->
-		<section id="frame_deckimage">
+		<section id="frame_deckimage" class="extrascreen">
 			<div id="deckimage_top">
 				<img id="deckimage_img">
 			</div>

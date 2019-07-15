@@ -53,6 +53,7 @@
     height:40px;
 
     pointer-events: none;
+    user-select:none;
 
     color:white;
     text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
@@ -68,6 +69,7 @@
     overflow:hidden;
 
     pointer-events: none;
+    user-select:none;
 
     padding-left:5px;
     width:calc(100% - 50px);
@@ -99,6 +101,7 @@
         height:100%;
 
         pointer-events: none;
+        user-select:none;
 
         font-size:15px;
         vertical-align: middle;
@@ -113,6 +116,7 @@
 
     background-color:black;
     pointer-events: none;
+    user-select:none;
 
     color:gold;
     font-size:16px;
@@ -270,6 +274,8 @@
                 font-size:30px;
                     line-height:50px;
                 text-align:center;
+                pointer-events: none;
+                user-select:none;
             }
             .cardinfo.type {
                 position:absolute;
@@ -290,6 +296,8 @@
                 font-size:20px;
                     line-height:40px;
                 text-align:center;
+                pointer-events: none;
+                user-select:none;
             }
         .cardinfo.name {
             position:relative;
@@ -307,6 +315,8 @@
             text-align:center;
             white-space: nowrap;
             text-overflow: ellipsis;
+            pointer-events: none;
+            user-select:none;
         }
         .cardinfo.rarity {
             position:relative;
@@ -319,6 +329,8 @@
             font-size:16px;
                 line-height:25px;
             text-align:center;
+            pointer-events: none;
+            user-select:none;
         }
             .cardinfo.rarity.rarity_FREE {
                 background-color:white;
@@ -340,6 +352,8 @@
                 line-height:24px;
             text-align:center;
             word-break: keep-all;
+            pointer-events: none;
+            user-select:none;
         }
                 .cardinfo.text.large {
                     height:165px;
@@ -366,6 +380,8 @@
 
             background-color:#41B1E1;
             box-sizing: border-box;
+            pointer-events: none;
+            user-select:none;
         }
             .cardinfo.attack {
                 position:absolute;
@@ -440,6 +456,8 @@
             letter-spacing: -1px;
         font-weight:bold;
         text-align:center;
+        pointer-events: none;
+        user-select:none;
     }
         .cardinfo.set.show {
             display:block;
@@ -457,6 +475,8 @@
         background:#B1986F;
         border-radius:10px;
         box-sizing: border-box;
+        pointer-events: none;
+        user-select:none;
     }
         .simple .cardinfo.flavor {
             display:none;
