@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "5173afc34979473678bbe001083eb6ba"
+    "revision": "9baa7616035ee185a0fe5ff402f7b07d"
   },
   {
     "url": "manifest.json",

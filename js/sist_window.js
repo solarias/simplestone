@@ -1696,8 +1696,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                     //정보 반영
                     session.metadeck[session.metadeck.filter[metadeck_type].format] = inputInfo;
 
-                    return;
-
                     //아키타입 세팅
                 //}).then(async () => {
                     return new Promise(resolve1 => {
