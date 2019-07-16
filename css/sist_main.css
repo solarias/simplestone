@@ -1289,16 +1289,30 @@ body {
               white-space: nowrap;
           }
               #button_download {
+                display:flex;
+                align-items: center;
+                justify-content:center;
+
                 margin-right:10px;
                 width:65%;
                 border-color:lime;
                 color:lime;
               }
-                  #button_download.wait {
-                      border-color:gray;
-                      color:gray;
-                      pointer-events: none;
-                      cursor:wait;
+                      #button_download.wait {
+                          border-color:gray;
+                          color:gray;
+                          pointer-events: none;
+                          cursor:wait;
+                      }
+                  #button_download > img {
+                      margin-right:5px;
+                      width:40px;
+                      height:40px;
+                  }
+                  #button_download > p {
+                      color:lime;
+                      font-size:22px;
+                          line-height:25px;
                   }
               #button_closeimage {
                 width:25%;
@@ -2265,21 +2279,49 @@ body {
             font-size:inherit;
         }
     #button_metadeck_hot {
-        display:none;/*오류 해결되면 풀기*/
+        display:flex;
+        align-items: center;
+        justify-content:center;
         float:left;
+
         margin:0 auto;
         width:calc(50% - 5px);
         border:2px #f8bb86 solid;
-        color:#f8bb86;
     }
+        #button_metadeck_hot > img {
+            margin-right:5px;
+            width:40px;
+            height:40px;
+        }
+        #button_metadeck_hot > p {
+            color:#f8bb86;
+            font-size:22px;
+                line-height:25px;
+        }
     #button_metadeck_winrate {
-        display:block;
+        display:flex;
+        align-items: center;
+        justify-content:center;
         float:right;
+
         margin:0 auto;
-        width:calc(100% - 10px);
+        width:calc(50% - 5px);
         border:2px lime solid;
+
         color:lime;
+        font-size:22px;
+            line-height:25px;
     }
+        #button_metadeck_winrate > img {
+            margin-right:5px;
+            width:40px;
+            height:40px;
+        }
+        #button_metadeck_winrate > p {
+            color:lime;
+            font-size:22px;
+                line-height:25px;
+        }
 /*=====================================================*/
 /* 모바일 화면조정 */
 /*=====================================================*/

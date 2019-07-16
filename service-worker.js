@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "6631bc2654a140fe83a5c8049eb0fea2"
+    "revision": "e3453c4b610b787fbd877e7eb678a7a9"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "e65105332d0c867525e470255552ea1d"
+    "revision": "01a54d9db0b342c1cd1a6d93520e7def"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -63,11 +63,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_data.js",
-    "revision": "e78dd81bd42a81a1614f9c4caa43b944"
+    "revision": "a8d59f7d94ff6e6a2a4fb09e57cf5c45"
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "b6362b0a79858cc8bdbf68a219ed31ef"
+    "revision": "38f28b372d148c15b5c1c30125799e56"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -83,7 +83,31 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "035a75985ba1ff5bb13631bacc871122"
+    "revision": "d6a9e38a0c77fac81538512b1bfc82e3"
+  },
+  {
+    "url": "localtest/metadeck_archetype.json",
+    "revision": "6194a6e87d36e738f1ad6e358608e5fc"
+  },
+  {
+    "url": "localtest/metadeck_hot_standard.json",
+    "revision": "9bae4aa7642802d89aff3d97f02fd028"
+  },
+  {
+    "url": "localtest/metadeck_hot_wild.json",
+    "revision": "8650951207413a8d86f9009511089d8f"
+  },
+  {
+    "url": "localtest/metadeck_update.json",
+    "revision": "001139bfe890e655ce6875b77f942c82"
+  },
+  {
+    "url": "localtest/metadeck_winrate_standard.json",
+    "revision": "85d06075040413817dd698b339b2a4de"
+  },
+  {
+    "url": "localtest/metadeck_winrate_wild.json",
+    "revision": "e8fb4e8fb9526855349199184caf2887"
   },
   {
     "url": "manifest.json",
@@ -91,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "cc769c13900580765d23611ccd0184fb"
+    "revision": "68381d2ca95b1ad5fbd131c38da85c35"
   },
   {
     "url": "package/clusterize.css",

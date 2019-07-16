@@ -200,7 +200,7 @@
 						<p style='word-break: keep-all;'>HSReplay에서 지난 30일 동안 가장 승률이 높은 상위 100개의 덱, 또는 최근 2일간 가장 인기있는 덱을 검색해보세요.</p>
 						<p><span style="color:lime">필터링 설정</span>을 하면 덱 목록을 불러옵니다.</p>
 						<br>
-						<p>덱 정보는 <span style="color:yellow">1시간마다 갱신</span>됩니다.</p>
+						<p>덱 정보는 <span style="color:yellow">1시간 단위로 갱신</span>됩니다.</p>
 					</div>
 					<div id="metadeck_loading">
 						<img src="./images/loading_white.svg" alt="META">
@@ -208,8 +208,8 @@
 					</div>
 				</div>
 				<footer id="footer_metadeck" class="subscreen">
-					<button id="button_metadeck_hot" class="footer_metadeck_button init" aria-label="필터링 설정">인기있는 덱<br>필터링</button>
-					<button id="button_metadeck_winrate" class="footer_metadeck_button init" aria-label="필터링 설정">승률높은 덱<br>필터링</button>
+					<button id="button_metadeck_hot" class="footer_metadeck_button init" aria-label="필터링 설정"><img src="./images/icon_metadeck_hot.png" alt="HOT"><p>인기있는 덱<br>필터링</p></button>
+					<button id="button_metadeck_winrate" class="footer_metadeck_button init" aria-label="필터링 설정"><img src="./images/icon_metadeck_winrate.png" alt="WINRATE"><p>승률높은 덱<br>필터링</p></button>
 				</footer>
 
 				<!--공용 푸터(카드목록 & 덱목록)-->
@@ -258,7 +258,7 @@
 			</section>
 
 			<!--서비스 워커 업데이트-->
-			<section id="frame_updatepopup" class="extrascreen">
+			<section id="frame_updatepopup">
 				<div id="frame_updatepopup_text">
 					<p>심플스톤 업데이트가 있습니다.</p>
 					<p>페이지 새로고침을 해주세요.</p>
@@ -281,7 +281,7 @@
 				<img id="deckimage_img">
 			</div>
 			<div id="deckimage_bottom">
-					<a id="button_download" class="deckmiage_botton" aria-label="이미지 다운로드">이미지 다운로드</a>
+					<a id="button_download" class="deckmiage_botton" aria-label="이미지 다운로드"><img src="./images/icon_download.png" alt="DOWNLOAD"><P>이미지 다운로드</P></a>
 					<button id="button_closeimage" class="deckmiage_botton" aria-label="닫기">닫기</button>
 			</div>
 		</section>

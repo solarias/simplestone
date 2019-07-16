@@ -23,7 +23,10 @@ const TILEURL = "./images/tiles/";
 const PORTRAITURL = "./images/portraits/";
     const PORTRAITURL_REPLACE = "./images/portraits_replace/";
 const HEROURL = "./images/heroes/";
-const METADECKAPI = "https://solarias.github.io/simplestone_metadeck/";
+const METADECKAPI = {
+    "solarias.github.io":"https://solarias.github.io/simplestone_metadeck/",
+    "localhost":"./localtest/",
+}
 const METADECKMAX = 100;//메타덱 출력 최대 순위
     //메타덱 API는 hsreplay에서 데이터를 수집하려 파일별로 나눠 보관함
     //metadeck_archetype.json : 덱 아키타입

@@ -70,10 +70,10 @@ function deckcode_toURL() {
 //===============================================================
 //※ 정규 검증
 //===============================================================
-function isStandard(deck) {
+function isStandard(deckinput) {
     let result = true;
-    for (let i = 0;i < deck.length;i++) {
-        if (DATA.SET[session.db[session.index[process.deck.cards[i][0]]].set].FORMAT === "야생") {
+    for (let i = 0;i < deckinput.length;i++) {
+        if (DATA.SET[session.db[session.index[deckinput[i][0].toString()]].set].FORMAT === "야생") {
             result = false;
             break;
         }
