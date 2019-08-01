@@ -223,7 +223,8 @@ const DATA = {
         "BOOMSDAY":{KR:"박사 붐의 폭심만만 프로젝트",FORMAT:"정규",YEAR:2018},
         "TROLL":{KR:"라스타칸의 대난투",FORMAT:"정규",YEAR:2018},
         //2019↓
-        "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:2019}//최신팩
+        "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:2019},
+        "ULDUM":{KR:"울둠의 구원자",FORMAT:"정규",YEAR:2019}//최신팩
     },
-    SET_LATEST:"DALARAN"//최신 확장팩 명(영문)을 여기에 기재
+    SET_LATEST:"ULDUM"//최신 확장팩 명(영문)을 여기에 기재
 };
