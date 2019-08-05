@@ -79,7 +79,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "cf3f10426031bcb5c6b14fad693e8e9e"
+    "revision": "524b9d663d2a7ebc7fc4b765ce117688"
   },
   {
     "url": "js/sist_window.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "184d2b557866a9c8f95cbae5dd409a52"
+    "revision": "953513e7262ca197c97c6172334cdb95"
   },
   {
     "url": "package/clusterize.css",
@@ -183,11 +183,11 @@ self.__precacheManifest = [
   },
   {
     "url": "package/native-toast/native-toast.css",
-    "revision": "bee86d382e21e1978e8b7ebc24458eb1"
+    "revision": "91ec17ec74c5df53a24dcd3b874e27a2"
   },
   {
     "url": "package/native-toast/native-toast.min.js",
-    "revision": "5e39c7cf4faa4a2ae68bc1b2ac0b4979"
+    "revision": "5cfd539c0e3711b7ffe864b4f29bea97"
   },
   {
     "url": "package/no_ie.js",

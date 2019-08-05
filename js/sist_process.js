@@ -535,6 +535,13 @@ async function deck_save(cmd) {
         localforage.setItem("sist_tempdeck",tempdeck)
         .then(async function(e) {
             console.log("saved(temp)");
+            nativeToast({
+                message: '최근 덱 저장 완료',
+                position: 'south-east',
+                timeout: 1000,
+                type: 'success',
+                closeOnClick: 'true'
+            });
             //정식 저장: 해당되면 실시
             if (process.deck.favorite) {
                 //불러오기
@@ -557,6 +564,13 @@ async function deck_save(cmd) {
                     try {
                         await localforage.setItem("sist_decks",decks);
                         console.log("saved(favorite)");
+                        nativeToast({
+                            message: '등록된 덱 저장 완료',
+                            position: 'south-east',
+                            timeout: 1000,
+                            type: 'success',
+                            closeOnClick: 'true'
+                        });
                         resolve();
                     } catch(e) {
                         nativeToast({
