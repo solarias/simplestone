@@ -579,6 +579,9 @@ async function deck_save(cmd) {
                     });
                     resolve();
                 })
+            } else {
+                //해당하는 거 없으면 그냥 나가기
+                resolve();
             }
         })
         .catch(function(e) {
