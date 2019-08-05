@@ -507,20 +507,40 @@ function deckslot_refresh() {
     let slotarr = []
     localforage.getItem("sist_decks")
     .then(function(decks) {
-        //저장된 덱이 있으면 불러오기
-        if (decks) {
-            let keys = Object.keys(decks);
-            keys.sort(function(a,b) {
-                return parseInt(a.replace("deck","")) - parseInt(b.replace("deck",""));
-            })
-            keys.forEach(function(key, index) {
-                slotarr.push(deckslot_generateFragment(decks[key], index+1, key));
-            })
-        }
-        //불러온 덱 목록 관리
+        try {
+            //저장된 덱이 있으면 불러오기
+            if (decks) {
+                let keys = Object.keys(decks);
+                keys.sort(function(a,b) {
+                    return parseInt(a.replace("deck","")) - parseInt(b.replace("deck",""));
+                })
+                keys.forEach(function(key, index) {
+                    slotarr.push(deckslot_generateFragment(decks[key], index+1, key));
+                })
+            }
 
-        //클러스터 업데이트
-        clusterize.slot.update(slotarr);
+            //클러스터 업데이트
+            clusterize.slot.update(slotarr);
+        } catch(e) {
+            nativeToast({
+                message: '덱 목록을 불러오는데 문제가 발생하였습니다.',
+                position: 'center',
+                timeout: 2000,
+                type: 'error',
+                closeOnClick: 'true'
+            });
+
+            //클러스터 업데이트
+            clusterize.slot.update(slotarr);
+        }
+    }).catch(function(e) {
+        nativeToast({
+            message: '등록된 덱을 불러오지 못했습니다.',
+            position: 'center',
+            timeout: 2000,
+            type: 'error',
+            closeOnClick: 'true'
+        });
     })
 }
 //덱 임시저장
@@ -535,13 +555,6 @@ async function deck_save(cmd) {
         localforage.setItem("sist_tempdeck",tempdeck)
         .then(async function(e) {
             console.log("saved(temp)");
-            nativeToast({
-                message: '최근 덱 저장 완료',
-                position: 'south-east',
-                timeout: 1000,
-                type: 'success',
-                closeOnClick: 'true'
-            });
             //정식 저장: 해당되면 실시
             if (process.deck.favorite) {
                 //불러오기
@@ -564,13 +577,6 @@ async function deck_save(cmd) {
                     try {
                         await localforage.setItem("sist_decks",decks);
                         console.log("saved(favorite)");
-                        nativeToast({
-                            message: '등록된 덱 저장 완료',
-                            position: 'south-east',
-                            timeout: 1000,
-                            type: 'success',
-                            closeOnClick: 'true'
-                        });
                         resolve();
                     } catch(e) {
                         nativeToast({
