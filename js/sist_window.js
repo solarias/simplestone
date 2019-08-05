@@ -353,14 +353,21 @@ async function window_shift(keyword, keyword2, keyword3) {
                     //강제 화면 전환
                     process_titlescreen();
                 } else {
-                    //덱 (있으면) 임시저장
+                    //덱 (있으면)
                     if (process.deck) {
                         if (process.deck.class && process.deck.format) {
-                            deck_save();
+                            //덱 저장 후 화면전환
+                            deck_save().then(() => {
+                                process_titlescreen();
+                            });
+                        } else {
+                            //없으면 그냥 화면전환
+                            process_titlescreen();
                         }
+                    } else {
+                        //없으면 그냥 화면전환
+                        process_titlescreen();
                     }
-                    //화면 전환
-                    process_titlescreen();
                 }
             } else {
                 //화면 전환
@@ -528,10 +535,12 @@ async function window_shift(keyword, keyword2, keyword3) {
                     if (deckcode) {
                         //덱코드 기억
                         process.deck.deckcode = deckcode;
-                        //덱 등록
-                        deck_favorite("on");
-                        //다음 진행
-                        window_shift("loading","deckconfig")
+                        //덱 사전 등록
+                        deck_favorite("on")
+                        .then(() => {
+                            //다음 진행
+                            window_shift("loading","deckconfig")
+                        });
                     }
                 })
             }
@@ -600,10 +609,12 @@ async function window_shift(keyword, keyword2, keyword3) {
                     showCloseButton:true
                 }).then(function(isConfirm) {
                     if (isConfirm) {
-                        //덱 등록
-                        deck_favorite("on");
-                        //다음 진행
-                        window_shift("loading","deckbuilding");
+                        //덱 사전 등록
+                        deck_favorite("on")
+                        .then(() => {
+                            //다음 진행
+                            window_shift("loading","deckbuilding");
+                        });
                     }
                 })
             }
@@ -768,11 +779,14 @@ async function window_shift(keyword, keyword2, keyword3) {
             //뒤로 버튼
             $("#header_back").classList.add("show");
                 window_goback = () => {
-                    if (process.prestate) {
-                        window_shift(process.prestate);
-                    } else {
-                        window_shift("decklist");
-                    }
+                    //뒤로가기 전 덱 저장
+                    deck_save().then(() => {
+                        if (process.prestate) {
+                            window_shift(process.prestate);
+                        } else {
+                            window_shift("decklist");
+                        }
+                    })
                 }
                 $("#header_back").onclick = window_goback;
                 //모바일 한정 - 히스토리 뒤로 갈 시에도 작동
@@ -830,7 +844,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             deck_refresh("init");
 
             //덱 임시저장
-            deck_save();
+            await deck_save();
 
             //==================
             //※ 카드정보 구성
@@ -937,8 +951,11 @@ async function window_shift(keyword, keyword2, keyword3) {
 
             //덱 완료
             $("#bottom_done").onclick = function() {
-                //다음 진행
-                window_shift("deckconfig")
+                //우선 덱 저장
+                deck_save().then(() => {
+                    //다음 진행
+                    window_shift("deckconfig")
+                })
             }
 
             break;
@@ -989,7 +1006,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             deck_refresh("init");
 
             //덱 임시저장
-            deck_save();
+            await deck_save();
             //==================
             //※ 주 버튼
             //==================
@@ -1020,14 +1037,14 @@ async function window_shift(keyword, keyword2, keyword3) {
                             }
                         })
                     }
-                }).then(function(name) {
+                }).then(async function(name) {
                     if (name) {
                         //덱이름 기억
                         process.deck.name = name;
                         $("#deck_name").innerHTML = process.deck.name;
 
                         //덱 임시저장
-                        deck_save();
+                        await deck_save();
                     }
                 })
             }
@@ -1184,7 +1201,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             } else {
                 $("#deckconfig_format").innerHTML = "\"정규\"로 전환";
             }
-            $("#deckconfig_format").onclick = function() {
+            $("#deckconfig_format").onclick = async () => {
                 if (process.deck.format === "정규") {
                     //덱 포맷 전환
                     process.deck.format = "야생";
@@ -1200,7 +1217,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         closeOnClick: 'true'
                     });
                     //저장
-                    deck_save();
+                    await deck_save();
                 } else if (process.deck.format === "야생") {
                     //덱 포맷 전환
                     process.deck.format = "정규";
@@ -1216,7 +1233,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         closeOnClick: 'true'
                     });
                     //저장
-                    deck_save();
+                    await deck_save();
                 }
             }
 
@@ -1247,6 +1264,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                     //덱 등록
                     deck_favorite("on")
                     .then(function() {
+                        //덱 등록여부 저장
+                        deck_save()
+                    }).then(function() {
                         //안내문구
                         nativeToast({
                             message: '덱 등록 완료<br>(이제 덱 목록에서 언제든지 불러올 수 있습니다.)',
@@ -1277,6 +1297,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                             //덱 삭제
                             deck_favorite("off")
                             .then(function() {
+                                //덱 삭제여부 저장
+                                deck_save()
+                            }).then(function() {
                                 //안내문구
                                 nativeToast({
                                     message: '덱 삭제 완료',

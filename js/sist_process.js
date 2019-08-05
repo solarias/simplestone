@@ -286,8 +286,8 @@ function card_move(cmd, log) {
             break;
     }
 
-    //덱 임시저장
-    deck_save();
+    //덱 임시저장 - 덱 편집창을 벗어날 때 저장하는 걸로 대신함
+    //deck_save();
 }
 
 //카드 최종 정보 생성
@@ -524,46 +524,74 @@ function deckslot_refresh() {
     })
 }
 //덱 임시저장
-function deck_save() {
-    //정식 저장: 해당되면 실시
-    if (process.deck.favorite) {
-        //불러오기
-        localforage.getItem("sist_decks")
-        .then(function(decks) {
-            if (!decks) decks = {};
+async function deck_save(cmd) {
+    return new Promise(resolve => {
+        //임시 저장: 반드시 실시
+        let tempdeck = {};
+        tempdeck = deepCopy(process.deck);
+        //날짜
+        tempdeck.date = thisdate();//함수는 subtool.js 참고
+        //저장 및 문구 출력
+        localforage.setItem("sist_tempdeck",tempdeck)
+        .then(async function(e) {
+            console.log("saved(temp)");
+            //정식 저장: 해당되면 실시
+            if (process.deck.favorite) {
+                //불러오기
+                localforage.getItem("sist_decks")
+                .then(async function(decks) {
+                    if (!decks) decks = {};
 
-            //기존 덱 없으면 하나 만들기
-            if (Object.keys(decks).indexOf(process.deck.favorite) < 0) {
-                decks[process.deck.favorite] = {};
-                decks[process.deck.favorite].initdate = thisdate();
+                    //기존 덱 없으면 하나 만들기
+                    if (Object.keys(decks).indexOf(process.deck.favorite) < 0) {
+                        decks[process.deck.favorite] = {};
+                        decks[process.deck.favorite].initdate = thisdate();
+                    }
+                    //저장된 덱 슬롯 있으면 거기에 넣기
+                    let tempdate = decks[process.deck.favorite].initdate;
+                    decks[process.deck.favorite] = deepCopy(process.deck);
+                    decks[process.deck.favorite].initdate = tempdate;
+                    decks[process.deck.favorite].date = thisdate();//함수는 subtool.js 참고
+
+                    //저장소로 넘기기
+                    try {
+                        await localforage.setItem("sist_decks",decks);
+                        console.log("saved(favorite)");
+                        resolve();
+                    } catch(e) {
+                        nativeToast({
+                            message: '등록된 덱 저장에 실패하였습니다.',
+                            position: 'center',
+                            timeout: 2000,
+                            type: 'error',
+                            closeOnClick: 'true'
+                        });
+                        resolve();
+                    }
+                })
+                .catch(async function(e) {
+                    nativeToast({
+                        message: '기존에 등록된 덱을 불러오는 데 실패하였습니다.',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                    resolve();
+                })
             }
-            //저장된 덱 슬롯 있으면 거기에 넣기
-            let tempdate = decks[process.deck.favorite].initdate;
-            decks[process.deck.favorite] = deepCopy(process.deck);
-            decks[process.deck.favorite].initdate = tempdate;
-            decks[process.deck.favorite].date = thisdate();//함수는 subtool.js 참고
-
-            //저장소로 넘기기
-            localforage.setItem("sist_decks",decks);
         })
         .catch(function(e) {
-            console.log("기존 덱 정보 불러오기에 실패하였습니다.");
-        })
-    }
-
-    //임시 저장: 반드시 실시
-    let tempdeck = {};
-    tempdeck = deepCopy(process.deck);
-    //날짜
-    tempdeck.date = thisdate();//함수는 subtool.js 참고
-    //저장 및 문구 출력
-    localforage.setItem("sist_tempdeck",tempdeck)
-    .then(function(e) {
-        console.log("saved(temp)");
+            nativeToast({
+                message: '덱 임시저장에 실패하였습니다.',
+                position: 'center',
+                timeout: 2000,
+                type: 'error',
+                closeOnClick: 'true'
+            });
+            resolve();
+        });
     })
-    .catch(function(e) {
-        console.log("덱 임시저장에 실패하였습니다.");
-    });
 }
 //덱 즐겨찾기 설정/해제
 function deck_favorite(cmd, target) {
@@ -581,9 +609,7 @@ function deck_favorite(cmd, target) {
                         .then(function(e) {
                             //덱 번호 적용
                             process.deck.favorite = "deck" + deckcount.toString();
-                            console.log("a:" + process.deck.favorite);
-                            //덱 저장
-                            deck_save();
+                            //덱 저장 : 외부에서 처리
                             resolve();
                         })
                     //있으면 덱카운트 +1, 이후 적용
@@ -593,9 +619,7 @@ function deck_favorite(cmd, target) {
                         .then(function(e) {
                             //덱 번호 적용
                             process.deck.favorite = "deck" + num.toString();
-                            console.log("a:" + process.deck.favorite);
-                            //덱 저장
-                            deck_save();
+                            //덱 저장 : 외부에서 처리
                             resolve();
                         })
                     }
@@ -621,17 +645,21 @@ function deck_favorite(cmd, target) {
                             //process.deck.favorite 있으면 지우기
                             if (process.deck.favorite) {
                                 delete process.deck.favorite;
-                                deck_save();
+                                //덱 저장 : 외부에서 처리
+                                resolve();
+                            } else {
+                                resolve();
                             }
-                            resolve();
                         })
                     } else {
                         //process.deck.favorite 있으면 지우기
                         if (process.deck.favorite) {
                             delete process.deck.favorite;
-                            deck_save();
+                            //덱 저장 : 외부에서 처리
+                            resolve();
+                        } else {
+                            resolve();
                         }
-                        resolve();
                     }
                 })
                 .catch(function(e) {
