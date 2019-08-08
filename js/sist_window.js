@@ -144,7 +144,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //(1초 후) 업데이트 실시
                 setTimeout(function() {
                     process_update();
-                }, 1000);
+                }, 500);
             }
             //1-1차 / DB버전 불일치 : DB 업데이트
             function process_update() {
@@ -152,6 +152,15 @@ async function window_shift(keyword, keyword2, keyword3) {
                 fetch("./js/cards.collectible.json")
                 .then(function(response) {
                     return response.json();
+                })
+                .catch(function(e) {
+                    nativeToast({
+                        message: '카드 정보를 불러올 수 없습니다. 제작자에게 문의해주세요.<br>(https://blog.naver.com/ansewo/221319675157)<br>('+e+')',
+                        position: 'center',
+                        timeout: 3000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
                 })
                 .then(function(myJson) {
                     //카드정보 입력
@@ -191,7 +200,16 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //DB 저장 못해도 '아무튼' 구축 시작
                         process_update_finish();
                     });
-                });
+                })
+                .catch(function(e) {
+                    nativeToast({
+                        message: '카드 정보를 처리할 수 없습니다. 제작자에게 문의해주세요.<br>(https://blog.naver.com/ansewo/221319675157)<br>('+e+')',
+                        position: 'center',
+                        timeout: 3000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                })
             }
 
             //1-2차 / DB버전 일치 : 저장된 DB 불러오기
