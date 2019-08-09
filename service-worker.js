@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "1381e4706989702d89f99d6b3dde92f0"
+    "revision": "1c50fa7c069e0c0a9b306a300c122cc4"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "b784e86e15eb3f4edcfeec4a2e869dfe"
+    "revision": "48b2cd458d159de8701bb5350f998bb6"
   },
   {
     "url": "package/clusterize.css",

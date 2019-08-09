@@ -1665,7 +1665,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                     $("#metadeck_loading_desc").innerHTML = desc[cmd] + " 불러오는 중...";
                     //API 호출
                     try {
-                        let response = await fetch(METADECKAPI[window.location.hostname] + cmd + ".json");
+                        let response = await fetch(METADECKAPI[window.location.hostname] + cmd + ".json",{'pragma':'no-cache','cache-control':'no-cache'});
                         //성공 시
                         let resJson = await response.json();
                         //데이터 정제 후 저장
@@ -1740,7 +1740,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 try {
                     //업데이트 날짜 기록
                     try {
-                        let response = await fetch(METADECKAPI[window.location.hostname] + "metadeck_update.json");
+                        let response = await fetch(METADECKAPI[window.location.hostname] + "metadeck_update.json",{'pragma':'no-cache','cache-control':'no-cache'});
                         //성공 시
                         let resJson = await response.json();
                         let time = resJson["metadeck_" + metadeck_type + "_" + session.metadeck.filter[metadeck_type].format];
