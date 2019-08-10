@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "48b2cd458d159de8701bb5350f998bb6"
+    "revision": "91e7baf0ddceef91404006cacd4b52d8"
   },
   {
     "url": "package/clusterize.css",
