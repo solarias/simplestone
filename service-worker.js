@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "586da328e5053c2952a18fb33a632580"
+    "revision": "02a77233b6d34c3425fa44d04b722147"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "eec30198525d26a36646f0d772b9c8ca"
+    "revision": "6cfcf12e8a805608ea11207e9cb0835f"
   },
   {
     "url": "package/Chart.min.js",
