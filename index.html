@@ -33,7 +33,12 @@
 			<!--헤더-->
             <header id="frame_header">
                 <div id="header_top">
-					<button id="header_back" class="header_button" aria-label="BACK"><img src="./images/icon_back.png" alt="BACK"></button>
+					<button id="header_back" class="header_button" aria-label="BACK">
+						<img src="./images/icon_back.png" alt="BACK">
+					</button>
+					<div id="header_save" aria-label="save">
+						<span id="header_save_text">저장</span>
+					</div>
 					<div id="header_status">심플 스톤</div>
 					<button id="header_info" class="header_button" aria-label="사용방법">
 						<img src="./images/icon_information.png" alt="사용방법">
@@ -136,24 +141,6 @@
                     <div id="main_loading_title" class="main_title">카드정보 불러오는 중</div>
 				</div>
 
-				<!--덱 설정-->
-				<div id="main_deckconfig" class="mainscreen main_left">
-					<button id="deckconfig_name" class="deckconfig_button" aria-label="덱 이름 편집">덱 이름 편집</button>
-					<hr>
-					<button id="deckconfig_deckstring" class="deckconfig_button" aria-label="덱코드 출력">덱코드 출력</button>
-					<hr>
-					<button id="deckconfig_text" class="deckconfig_button" aria-label="텍스트 공유">텍스트 공유</button>
-					<button id="deckconfig_tag" class="deckconfig_button" aria-label="HTML 태그 공유">HTML 태그 공유</button>
-					<button id="deckconfig_image" class="deckconfig_button" aria-label="이미지 공유">이미지 공유</button>
-					<button id="deckconfig_url" class="deckconfig_button" aria-label="덱 URL 공유">URL 출력</button>
-				</div>
-	            <footer id="footer_deckconfig" class="subscreen">
-					<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="등록">
-						<div id="deckconfig_favorite_text"></div>
-					</button>
-					<button id="deckconfig_edit" class="deckconfig_footerbutton" aria-label="덱 편집"><img src="./images/icon_edit.png" alt="편집"><span> 편집</span></button>
-				</footer>
-
 				<!--카드 목록-->
 				<div id="main_collection" class="mainscreen main_left">
 					<div id="collection_loading">
@@ -166,6 +153,8 @@
 
 				<!--카드 정보-->
 				<div id="main_cardinfo" class="mainscreen main_right"></div>
+				<footer id="footer_cardinfo" class="subscreen">
+				</footer>
 
 				<!--덱 목록-->
 				<div id="main_deck" class="mainscreen main_right">
@@ -185,10 +174,64 @@
 							<div id="deck_list_content" class="clusterize-content"></div>
 						</div>
 					</div>
-					<div id="deck_bottom_cover">
+					<div id="deck_bottom">
 						<div id="deck_bottom"></div>
 					</div>
 				</div>
+
+				<!--덱 편집 (푸터)-->
+                <footer id="footer_deckbuilding" class="subscreen">
+					<button id="deckbuilding_undo" class="footer_button mobile_small disabled" aria-label="취소">
+						<div id="undo_icon" class="log_icon">&#8630;</div>
+						<div id="undo_text" class="log_text desktop_only"> 취소</div>
+						<div id="undo_num" class="log_num">0</div>
+					</button>
+					<button id="deckbuilding_redo" class="footer_button mobile_small disabled" aria-label="복구">
+						<div id="redo_icon" class="log_icon">&#8631;</div>
+						<div id="redo_text" class="log_text desktop_only">복구 </div>
+						<div id="redo_num" class="log_num">0</div>
+					</button>
+					<button id="deckbuilding_done" class="footer_button" aria-label="완료">
+						<img src="./images/icon_done.png" alt="완료">
+						<span> 완료</span>
+					</button>
+					<button id="deckbuilding_chart" class="footer_button" aria-label="차트">
+						<span id="deckbuilding_chart_text">차트</span>
+					</button>
+                </footer>
+
+				<!--덱 차트-->
+				<div id="main_deckchart" class="subscreen">
+					<div id="deckchart_container_mana" class="deckchart_container">
+						<canvas id="deckchart_mana" class="deckchart_chart"></canvas>
+					</div>
+					<div id="deckchart_container_type" class="deckchart_container">
+						<canvas id="deckchart_type" class="deckchart_chart"></canvas>
+					</div>
+				</div>
+
+				<!--덱 설정-->
+				<div id="main_deckconfig" class="mainscreen main_left">
+					<button id="deckconfig_name" class="deckconfig_button" aria-label="덱 이름 편집">덱 이름 편집</button>
+					<hr>
+					<button id="deckconfig_deckstring" class="deckconfig_button" aria-label="덱코드 출력">덱코드 출력</button>
+					<hr>
+					<button id="deckconfig_text" class="deckconfig_button" aria-label="텍스트 공유">텍스트 공유</button>
+					<button id="deckconfig_tag" class="deckconfig_button" aria-label="HTML 태그 공유">HTML 태그 공유</button>
+					<button id="deckconfig_image" class="deckconfig_button" aria-label="이미지 공유">이미지 공유</button>
+					<button id="deckconfig_url" class="deckconfig_button" aria-label="덱 URL 공유">URL 출력</button>
+				</div>
+	            <footer id="footer_deckconfig" class="subscreen">
+					<button id="deckconfig_favorite" class="deckconfig_footerbutton" aria-label="등록">
+						<div id="deckconfig_favorite_text"></div>
+					</button>
+					<button id="deckconfig_edit" class="deckconfig_footerbutton" aria-label="덱 편집">
+						<span> 편집</span>
+					</button>
+					<button id="deckconfig_chart" class="deckconfig_footerbutton" aria-label="차트">
+						<span id="deckconfig_chart_text">차트</span>
+					</button>
+				</footer>
 
 				<!--메타 덱-->
 				<div id="main_metadeck" class="mainscreen main_both">
@@ -210,29 +253,6 @@
 				<footer id="footer_metadeck" class="subscreen">
 					<button id="button_metadeck_hot" class="footer_metadeck_button init" aria-label="필터링 설정"><img src="./images/icon_metadeck_hot.png" alt="HOT"><p>인기있는 덱<br>필터링</p></button>
 					<button id="button_metadeck_winrate" class="footer_metadeck_button init" aria-label="필터링 설정"><img src="./images/icon_metadeck_winrate.png" alt="WINRATE"><p>승률높은 덱<br>필터링</p></button>
-				</footer>
-
-				<!--공용 푸터(카드목록 & 덱목록)-->
-				<footer id="footer_collectionNdeck" class="subscreen">
-					<div id="footer_collectionNdeck_top" class="subscreen">
-						<div id="footer_name_left" class="footer_desc"></div>
-						<div id="footer_name_right" class="footer_desc"></div>
-					</div>
-	                <div id="footer_collectionNdeck_cardinfo" class="subscreen">
-	                </div>
-	                <div id="footer_collectionNdeck_deckbuilding" class="subscreen">
-						<button id="bottom_undo" class="footer_button disabled" aria-label="취소">
-							<div id="undo_icon" class="log_icon">&#8630;</div>
-							<div id="undo_text" class="log_text desktop_only"> 취소</div>
-							<div id="undo_num" class="log_num">0</div>
-						</button>
-						<button id="bottom_redo" class="footer_button disabled" aria-label="복구">
-							<div id="redo_icon" class="log_icon">&#8631;</div>
-							<div id="redo_text" class="log_text desktop_only">복구 </div>
-							<div id="redo_num" class="log_num">0</div>
-						</button>
-						<button id="bottom_done" class="footer_button" aria-label="완료"><img src="./images/icon_done.png" alt="완료"><span class="desktop_only"> 완료</span></button>
-	                </div>
 				</footer>
 
             </section>
@@ -285,10 +305,22 @@
 					<button id="button_closeimage" class="deckmiage_botton" aria-label="닫기">닫기</button>
 			</div>
 		</section>
+
+		<!--별도 창 - 덱 선택-->
+
 		<!--별도 창 - 덱 비교-->
 
 		<!--별도 창 - 카드 정보 (좌측)-->
 		<section id="frame_cardmonitor" class="subscreen"></section>
+		<!--별도 창 - 덱 차트 (우측)-->
+		<section id="frame_deckchartmonitor" class="subscreen">
+			<div id="deckchartmonitor_container_mana" class="deckchartmonitor_container">
+				<canvas id="deckchartmonitor_mana" class="deckchartmonitor_chart"></canvas>
+			</div>
+			<div id="deckchartmonitor_container_type" class="deckchartmonitor_container">
+				<canvas id="deckchartmonitor_type" class="deckchartmonitor_chart"></canvas>
+			</div>
+		</section>
 
 		<!--외부 보조 라이브러리-->
 		<script src="./package/sweetalert2.min.js"></script>
@@ -298,6 +330,7 @@
 		<script src="./package/localforage.min.js"></script>
 		<script src="./package/native-toast/native-toast.min.js"></script>
 			<link href="./package/native-toast/native-toast.css" rel="stylesheet">
+		<script src="./package/Chart.min.js"></script>
 		<!--외부 보조 라이브러리-->
 
     <script type="text/javascript" src="./js/deckstrings.js"></script>

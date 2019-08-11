@@ -220,7 +220,10 @@ function card_move(cmd, log) {
                 }
             })
             //카드 목록에 따라 노드 불러오기
-            if (movednum > 0) cluster_update("deck",deckarr);
+            if (movednum > 0) {
+                cluster_update("deck",deckarr);
+                setChart("update");
+            }
 
             break;
         //카드 제거
@@ -252,6 +255,7 @@ function card_move(cmd, log) {
             })
             //카드 목록에 따라 노드 불러오기
             cluster_update("deck",deckarr);
+            setChart("update");
 
             break;
         //카드 적용 : 우선 남겨둠
@@ -373,14 +377,14 @@ function log_record(cmd) {
     process.log.push(cmd);//로그 입력
     $("#undo_num").innerHTML = thousand(process.log.length);//로그 횟수 표기
     //취소버튼 활성화
-    $("#bottom_undo").onclick = log_undo;
-    $("#bottom_undo").classList.remove("disabled");
+    $("#deckbuilding_undo").onclick = log_undo;
+    $("#deckbuilding_undo").classList.remove("disabled");
     //복구 로그 비우기
     process.redo = [];
     $("#redo_num").innerHTML = thousand(process.redo.length);
     //복구버튼 비활성화
-    $("#bottom_redo").onclick = "";
-    $("#bottom_redo").classList.add("disabled");
+    $("#deckbuilding_redo").onclick = "";
+    $("#deckbuilding_redo").classList.add("disabled");
 }
 //실행 취소
 function log_undo() {
@@ -407,12 +411,12 @@ function log_undo() {
     $("#redo_num").innerHTML = thousand(process.redo.length);
     //이제 로그가 없으면 취소버튼 비활성화
     if (process.log.length <= 0) {
-        $("#bottom_undo").onclick = "";
-        $("#bottom_undo").classList.add("disabled");
+        $("#deckbuilding_undo").onclick = "";
+        $("#deckbuilding_undo").classList.add("disabled");
     }
     //복구 버튼 활성화
-    $("#bottom_redo").onclick = log_redo;
-    $("#bottom_redo").classList.remove("disabled");
+    $("#deckbuilding_redo").onclick = log_redo;
+    $("#deckbuilding_redo").classList.remove("disabled");
 }
 //취소 복구
 function log_redo() {
@@ -438,12 +442,12 @@ function log_redo() {
     $("#undo_num").innerHTML = thousand(process.log.length);
     //이제 로그가 없으면 취소버튼 비활성화
     if (process.redo.length <= 0) {
-        $("#bottom_redo").onclick = "";
-        $("#bottom_redo").classList.add("disabled");
+        $("#deckbuilding_redo").onclick = "";
+        $("#deckbuilding_redo").classList.add("disabled");
     }
     //복구 버튼 활성화
-    $("#bottom_undo").onclick = log_undo;
-    $("#bottom_undo").classList.remove("disabled");
+    $("#deckbuilding_undo").onclick = log_undo;
+    $("#deckbuilding_undo").classList.remove("disabled");
 }
 
 //덱 리프레시
@@ -496,6 +500,296 @@ function deck_refresh(cmd) {
         $("#deck_list_cover_overlay").classList.add("complete");
     } else {
         $("#deck_list_cover_overlay").classList.remove("complete");
+    }
+}
+
+//차트 그리기, 반영
+function setChart(cmd) {
+    switch (cmd) {
+        case "init":
+            if (session.chart.init === false) {
+                session.chart.init = true;
+                //차트 출력 준비 - 마나
+                let chartManaOption = {
+                    type: 'bar',
+                    data: {
+                        labels: ['0','1','2','3','4','5','6','7+'],
+                        datasets: [{
+                            data: [0,0,0,0,0,0,0,0],
+                            backgroundColor: '#5e9dff'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio:false,
+                        layout: {
+                            padding: {
+                                top: 18,
+                                bottom: -7,
+                                left: -10,
+                            }
+                        },
+                        events:[],
+                        legend: {display: false},
+                        animation: {
+                            duration: 1,
+                            onComplete: function() {
+                                var chartInstance = this.chart,
+                                ctx = chartInstance.ctx;
+
+                                ctx.font = "bold 15px " + Chart.defaults.global.defaultFontFamily;
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+
+                                this.data.datasets.forEach(function(dataset, i) {
+                                    var meta = chartInstance.controller.getDatasetMeta(i);
+                                    meta.data.forEach(function(bar, index) {
+                                        var data = dataset.data[index];
+                                        ctx.fillStyle = "white";
+                                        ctx.fillText(data, bar._model.x, bar._model.y - 1);
+                                    });
+                                });
+                          }
+                        },
+                        scales: {
+                            xAxes: [{
+                                barPercentage: 1,
+                                categoryPercentage:0.9,
+                                ticks: {
+                                    padding:-6,
+                                    lineHeight:1,
+                                    fontStyle: "bold",
+                                    fontSize: 15,
+                                    fontColor:"white"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    color: "white"
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    beginAtZero: true
+                                },
+                                gridLines: {
+                                  display: false
+                                }
+                            }]
+                        }
+                    }
+                };
+                let context_mana = $("#deckchart_mana").getContext('2d');
+                let context_mana_monitor = $("#deckchartmonitor_mana").getContext('2d');
+                session.chart.mana = new Chart(context_mana,chartManaOption);
+                session.chart.mana_monitor = new Chart(context_mana_monitor,chartManaOption);
+
+                //차트 출력 준비 - 타입
+                let chartTypeOption = {
+                    type: 'bar',
+                    data: {
+                        labels: ['하수','주문','무기','기타'],
+                        datasets: [{
+                            data: [0,0,0,0],
+                            backgroundColor: 'orange'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio:false,
+                        layout: {
+                            padding: {
+                                top: 18,
+                                bottom: -7,
+                                left: -10,
+                            }
+                        },
+                        events:[],
+                        legend: {display: false},
+                        animation: {
+                            duration: 1,
+                            onComplete: function() {
+                                var chartInstance = this.chart,
+                                ctx = chartInstance.ctx;
+
+                                ctx.font = "bold 15px " + Chart.defaults.global.defaultFontFamily;
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+
+                                this.data.datasets.forEach(function(dataset, i) {
+                                    var meta = chartInstance.controller.getDatasetMeta(i);
+                                    meta.data.forEach(function(bar, index) {
+                                        var data = dataset.data[index];
+                                        ctx.fillStyle = "white";
+                                        ctx.fillText(data, bar._model.x, bar._model.y - 1);
+                                    });
+                                });
+                          }
+                        },
+                        scales: {
+                            xAxes: [{
+                                barPercentage: 1,
+                                categoryPercentage:0.9,
+                                ticks: {
+                                    padding:-5,
+                                    lineHeight:1.25,
+                                    fontStyle: "bold",
+                                    fontSize: 12,
+                                    fontColor:"white"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    color: "white"
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    beginAtZero: true
+                                },
+                                gridLines: {
+                                  display: false
+                                }
+                            }]
+                        }
+                    }
+                };
+                let context_type = $("#deckchart_type").getContext('2d');
+                let context_type_monitor = $("#deckchartmonitor_type").getContext('2d');
+                session.chart.type = new Chart(context_type,chartTypeOption);
+                session.chart.type_monitor = new Chart(context_type_monitor,chartTypeOption);
+                //차트 출력 여부 로벌에서 확인
+                localforage.getItem("sist_chart")
+                .then(function(showChart) {
+                    if (!showChart) {
+                        //저장된 게 없음 - 디폴트값 이용
+                    } else {
+                        //불러오기
+                        session.chart.show = showChart;
+                    }
+                }).catch(function(e) {
+                    //불러올 수 없음 - 오류 출력 후 디폴트값 이용
+                    if (!isError.chartLoad) {
+                        isError.chartLoad = 1;
+                        nativeToast({
+                            message: '차트 출력여부 값을 로컬에서 불러올 수 없습니다.<br>' + e,
+                            position: 'center',
+                            timeout: 3000,
+                            type: 'error',
+                            closeOnClick: 'true'
+                        });
+                    }
+                })
+            }
+            //차트 출력 여부 결정
+            if (session.chart.show === true) {
+                setChart("on");
+            } else {
+                setChart("off");
+            }
+            //차트 업데이트
+            setChart("update");
+
+            break;
+        case "on":
+            //차트
+            $("#main_deckchart").classList.add("show");
+            //메인스크린
+            $("#main_collection").classList.add("below_chart");
+                $("#main_collection").classList.remove("below_footer","below_none");
+            $("#main_deck").classList.add("below_chart");
+                $("#main_deck").classList.remove("below_footer","below_none");
+            $("#main_deckconfig").classList.add("below_chart");
+                $("#main_deckconfig").classList.remove("below_footer","below_none");
+            //버튼
+            $("#deckbuilding_chart").classList.add("off")
+                $("#deckbuilding_chart").classList.remove("on")
+            $("#deckconfig_chart").classList.add("off")
+                $("#deckconfig_chart").classList.remove("on")
+
+            break;
+        case "off":
+            //차트
+            $("#main_deckchart").classList.remove("show");
+            //메인스크린
+            $("#main_collection").classList.add("below_footer");
+                $("#main_collection").classList.remove("below_chart","below_none");
+            $("#main_deck").classList.add("below_footer");
+                $("#main_deck").classList.remove("below_chart","below_none");
+            $("#main_deckconfig").classList.add("below_footer");
+                $("#main_deckconfig").classList.remove("below_chart","below_none");
+            //버튼
+            $("#deckbuilding_chart").classList.add("on")
+                $("#deckbuilding_chart").classList.remove("off")
+            $("#deckconfig_chart").classList.add("on")
+                $("#deckconfig_chart").classList.remove("off")
+
+            break;
+        case "toggle":
+            if (session.chart.show === true) {
+                session.chart.show = false;
+                setChart("off");
+            } else {
+                session.chart.show = true;
+                setChart("on");
+            }
+            //차트 출력여부 저장
+            localforage.setItem("sist_chart",session.chart.show)
+            .then(function() {
+                //do nothing
+            }).catch(function(e) {
+                if (!isError.chartSave) {
+                    isError.chartSave = 1;
+                    nativeToast({
+                        message: '차트 출력여부 값을 저장할 수 없습니다.<br>' + e,
+                        position: 'center',
+                        timeout: 3000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                }
+            })
+
+            break;
+        case "update":
+            //데이터 수집 준비
+            let chartdate = {
+                mana:[0,0,0,0,0,0,0,0],
+                type:[0,0,0,0]
+            }
+            //덱 조사
+            if (process.deck.cards !== undefined) {
+                process.deck.cards.forEach(function(card) {
+                    let info = session.db[session.index[card[0]]];
+                    chartdate.mana[Math.min(info.cost,7)] += card[1];
+                    switch (info.type) {
+                        case "MINION":
+                            chartdate.type[0] += card[1];
+                            break;
+                        case "SPELL":
+                            chartdate.type[1] += card[1];
+                            break;
+                        case "WEAPON":
+                            chartdate.type[2] += card[1];
+                            break;
+                        default:
+                            chartdate.type[3] += card[1];
+                            break;
+                    }
+                })
+            }
+            //차트에 반영
+                //하단부
+                session.chart.mana.data.datasets[0].data = chartdate.mana;
+                session.chart.type.data.datasets[0].data = chartdate.type;
+                session.chart.mana.update();
+                session.chart.type.update();
+                //모니터
+                session.chart.mana_monitor.data.datasets[0].data = chartdate.mana;
+                session.chart.type_monitor.data.datasets[0].data = chartdate.type;
+                session.chart.mana_monitor.update();
+                session.chart.type_monitor.update();
+            break;
+        default:
+            break;
     }
 }
 
@@ -577,6 +871,10 @@ async function deck_save(cmd) {
                     try {
                         await localforage.setItem("sist_decks",decks);
                         console.log("saved(favorite)");
+                        //저장 성공 아이콘 출력
+                        $("#header_save").classList.remove("saved");
+                        $("#header_save").offsetWidth = $("#header_save").offsetWidth;
+                        $("#header_save").classList.add("saved");
                         resolve();
                     } catch(e) {
                         nativeToast({
@@ -586,6 +884,10 @@ async function deck_save(cmd) {
                             type: 'error',
                             closeOnClick: 'true'
                         });
+                        //저장 실패 아이콘 출력
+                        $("#header_save").classList.remove("error");
+                        $("#header_save").offsetWidth = $("#header_save").offsetWidth;
+                        $("#header_save").classList.add("error");
                         resolve();
                     }
                 })
@@ -597,6 +899,10 @@ async function deck_save(cmd) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
+                    //저장 실패 아이콘 출력
+                    $("#header_save").classList.remove("error");
+                    $("#header_save").offsetWidth = $("#header_save").offsetWidth;
+                    $("#header_save").classList.add("error");
                     resolve();
                 })
             } else {

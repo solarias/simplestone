@@ -134,10 +134,51 @@ body {
                 height:32px;
             }
             #header_back{
-                display:none;
                 left:5px;top:5px;
+                display:none;
                 width:60px;}
                 #header_back.show {display:block;}
+            #header_save {
+                position:absolute;
+                    left:75px;top:5px;
+
+                width:30px;
+                height:40px;
+
+                background-repeat:no-repeat;
+                background-size:30px 30px;
+                background-position:center 0;
+                box-sizing: border-box;
+                opacity:0;
+            }
+                #header_save.saved {
+                    background-image:url(../images/icon_saved.png);
+                    animation:flicker 0.8s;
+                }
+                #header_save.error {
+                    background-image:url(../images/icon_error.png);
+                    animation:flicker 0.8s;
+                }
+                    @keyframes flicker{
+                        0% {opacity:0.1;}
+                        40% {opacity:1;}
+                        60% {opacity:1;}
+                        100% {opacity:0;}}
+                #header_save_text {
+                    position:absolute;
+                        left:0;bottom:0;
+
+                    width:100%;
+                    height:10px;
+
+                    color:white;
+                    font-size:10px;
+                        line-height:10px;
+                    letter-spacing:2px;
+                    text-indent: 2px;
+                    font-weight: bold;
+                    text-align:center;
+                }
             #header_info {
                 display:none;
                 right:5px;top:5px;
@@ -625,7 +666,7 @@ body {
 
         background-color:white;
         opacity:0.01;
-        transition:transform 0.5s, opacity 0.5s;
+        transition:transform 0.5s, opacity 0.5s, height 0.5s;
         pointer-events: none;
     }
             .mainscreen.show {
@@ -637,7 +678,7 @@ body {
             }
             .subscreen {
                 opacity:0.01;
-                transition:transform 0.5s, opacity 0.5s;
+                transition:transform 0.5s, opacity 0.5s, height 0.5s;
                 pointer-events: none;
             }
             .subscreen.show {
@@ -678,7 +719,9 @@ body {
         text-align:center;
     }
 
-    /*공지사항*/
+    /*=====================================================*/
+    /* 공지사항 */
+    /*=====================================================*/
     #main_notice {/*공지사항은 화면 전환 효과 없음*/
         transition-property: none;
     }
@@ -709,8 +752,69 @@ body {
             #notice_content p[content].last {
                 margin-bottom:10px;
             }
+    #footer_notice {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+        overflow:hidden;
 
-    /*업데이트*/
+        padding:5px;
+        width:100%;
+        height:75px;
+
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        pointer-events: none;
+    }
+            #footer_notice.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        .footer_notice_button {
+            position:relative;
+            height:100%;
+
+            background:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:22px;
+            letter-spacing: -1px;
+            font-weight:bold;
+            cursor:pointer;
+            white-space: nowrap;
+        }
+            .footer_notice_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .footer_notice_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+        #button_start {
+            float:left;
+            width:calc(70% - 10px);
+            border:2px lime solid;
+            color:lime;
+            word-break: keep-all;
+        }
+        #button_offline {
+            float:right;
+            width:calc(30% - 10px);
+            border:2px #f8bb86 solid;
+            color:#f8bb86;
+            word-break: keep-all;
+        }
+            #button_start[disabled], #button_offline[disabled] {
+                border:2px gray solid;
+                color:gray;
+                pointer-events: none;
+            }
+    /*=====================================================*/
+    /* 업데이트 */
+    /*=====================================================*/
     #main_update {}
         #update_content {
             position:relative;
@@ -742,8 +846,60 @@ body {
             border-radius:10px;
             box-sizing: border-box;
         }
+    #footer_update {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+        overflow:hidden;
 
-    /*첫 화면*/
+        padding:5px;
+        width:100%;
+        height:75px;
+
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        pointer-events: none;
+    }
+            #footer_update.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        .footer_update_button {
+            position:relative;
+            height:100%;
+
+            background:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:22px;
+            letter-spacing: -1px;
+            font-weight:bold;
+            cursor:pointer;
+            white-space: nowrap;
+        }
+            .footer_update_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .footer_update_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+        #button_update {
+            display:block;
+            margin:0 auto;
+            width:90%;
+            border:2px #a0a0a0 solid;
+            color:#a0a0a0;
+            word-break: keep-all;
+
+            pointer-events: none;
+        }
+    /*=====================================================*/
+    /* 타이틀스크린 */
+    /*=====================================================*/
     #main_titlescreen {
         display:block;
         overflow-y:auto;
@@ -768,10 +924,6 @@ body {
             #titlescreen_etc {
                 pointer-events: none;
             }
-            /*메타 덱 기능 잠시 감추기
-            #titlescreen_metadeck, #titlescreen_etc {
-                display:none;
-            }*/
 
         .titlescreen_button {
             position:relative;
@@ -837,7 +989,9 @@ body {
                 text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
             }
 
-    /*덱 생성*/
+    /*=====================================================*/
+    /* 덱 목록 */
+    /*=====================================================*/
     #main_decklist {
         padding:10px 10px;
         box-sizing: border-box;
@@ -1033,8 +1187,69 @@ body {
                     .slot_button_delete:active {
                         background-color:red;
                     }
+    #footer_decklist {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+        overflow:hidden;
 
-    /*로딩 화면*/
+        padding:5px;
+        width:100%;
+        height:75px;
+
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        pointer-events: none;
+    }
+            #footer_decklist.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        .footer_decklist_button {
+            position:relative;
+            height:100%;
+
+            background:rgba(255,255,255,0.1);
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            font-size:22px;
+            letter-spacing: -1px;
+            font-weight:bold;
+            cursor:pointer;
+            white-space: nowrap;
+        }
+            .footer_decklist_button > img {
+                vertical-align:middle;
+                width:33px;
+                height:33px;
+            }
+            .footer_decklist_button > span {
+                vertical-align:middle;
+                font-size:inherit;
+            }
+            .footer_decklist_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .footer_decklist_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+        #button_readcode {
+            float:left;
+            width:calc(40% - 10px);
+            border:2px orange solid;
+            color:orange;
+        }
+        #botton_newdeck {
+            float:right;
+            width:calc(60% - 10px);
+            border:2px lime solid;
+            color:lime;
+        }
+    /*=====================================================*/
+    /* 로딩 화면 */
+    /*=====================================================*/
     #main_loading {/*로딩화면은 화면 전환 효과 없음*/
         transition-property: none;
 
@@ -1049,10 +1264,15 @@ body {
         height:auto;
     }
 
-    /*카드 목록*/
+    /*=====================================================*/
+    /* 카드 목록 */
+    /*=====================================================*/
     #main_collection {
         position:relative;
     }
+            #main_collection.below_chart {height:calc(100% - 130px);}
+            #main_collection.below_footer {height:calc(100% - 50px);}
+            #main_collection.below_none {height:calc(100%);}
         #collection_loading {
             position:absolute;
                 left:0;top:0;
@@ -1083,274 +1303,6 @@ body {
             box-sizing: border-box;
             word-break: keep-all;
         }
-    /*서비스 워커 업데이트*/
-    #frame_updatepopup {
-        display:flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-        position:absolute;
-            left:0;right:0;bottom:0;
-            z-index:10;
-
-        margin:0 auto;
-        padding:20px 10px;
-        width:100%;
-        height:auto;
-            min-height:100px;
-
-        background:rgba(0,0,0,0.8);
-        box-sizing: border-box;
-        transform:translate(0,100%);
-        transition:transform 0.3s;
-    }
-            #frame_updatepopup.show {
-                transform:translate(0,0);
-            }
-        #frame_updatepopup_text {
-            columns:2 255px;
-            column-gap:0;
-        }
-        #frame_updatepopup_text p {
-            position:relative;
-            display:block;
-            width:100%;
-            color:white;
-            font-size:20px;
-                line-height:30px;
-            text-align:center;
-        }
-        #frame_updatepopup break{
-          flex-basis: 100%;
-          width: 0px;
-          height: 0px;
-          overflow: hidden;
-        }
-        #updatepopup_refresh {
-            position:relative;
-            display:block;
-
-            margin:15px 20px 0 0;
-            width:60%;
-                max-width:210px;
-            height:40px;
-
-            background-color:#3085D6;
-            border-radius: 3px;
-            -webkit-column-break-inside: avoid;
-
-            color:white;
-            font-size:25px;
-            cursor:pointer;
-        }
-            #updatepopup_refresh:active {
-                background-color:#266AAB;
-            }
-        #updatepopup_cancel {
-            position:relative;
-            display:block;
-
-            margin-top:15px;
-            width:20%;
-                max-width:70px;
-            height:40px;
-
-            background-color:#DD3333;
-            border-radius: 3px;
-            -webkit-column-break-inside: avoid;
-
-            color:white;
-            font-size:25px;
-            cursor:pointer;
-        }
-            #updatepopup_cancel:active {
-                background-color:#B12929;
-                }
-    /*카드 커버*/
-    #frame_cardcover {
-        position:fixed;
-            left:0;top:0;
-        z-index:10;
-        display:none;
-
-        width:100%;
-        height:100%;
-
-        background:rgba(0,0,0,0.7);
-
-        user-select:none;
-    }
-            #frame_cardcover.show {
-                display:block;
-                animation:cardcover_show 0.2s;
-            }
-            @keyframes cardcover_show {
-                0% {opacity:0;}
-                1% {opacity:0.01;}
-                100% {opacity:1;}
-            }
-        #cardcover_top {
-            position:relative;
-
-            padding:10px;
-            width:100%;
-            height:calc(100% - 50px);
-
-            box-sizing: border-box;
-            pointer-events: none;
-        }
-        #cardcover_desc {
-            position:absolute;
-                left:0;bottom:0;
-
-            width:100%;
-            height:50px;
-
-            background:rgba(255,255,255,0.1);
-
-            color:white;
-            font-size:20px;
-            line-height:50px;
-            text-align: center;
-            pointer-events: none;
-        }
-    /*덱 이미지*/
-    #frame_deckimage {
-        position:fixed;
-            left:0;top:0;
-        z-index:10;
-        display:none;
-
-        width:100%;
-        height:100%;
-
-        background:rgba(0,0,0,0.7);
-    }
-            #frame_deckimage.show {
-                display:block;
-                animation:deckimage_show 0.2s;
-            }
-            @keyframes deckimage_show {
-                0% {opacity:0;}
-                1% {opacity:0.01;}
-                100% {opacity:1;}
-            }
-        #deckimage_top {
-            position:relative;
-            overflow-y:scroll;
-
-            padding:20px;
-            width:100%;
-            height:calc(100% - 75px);
-
-            box-sizing: border-box;
-            text-align:center;
-        }
-          #deckimage_img {
-            width:300px;
-            height:auto;
-          }
-        #deckimage_bottom {
-            display:flex;
-            align-items: center;
-            justify-content: center;
-            position:absolute;
-                left:0;bottom:0;
-
-            padding:5px;
-            width:100%;
-            height:75px;
-
-            background:#3e40e5;
-
-            color:white;
-            font-size:20px;
-            line-height:50px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-          .deckmiage_botton {
-              position:relative;
-              display:block;
-              height:65px;
-
-              background:rgba(255,255,255,0.1);
-              border:2px white solid;
-              border-radius: 10px;
-              box-sizing: border-box;
-
-              color:white;
-              font-size:22px;
-              line-height:60px;
-              letter-spacing: -1px;
-              font-weight:bold;
-              text-decoration: none;
-              cursor:pointer;
-              white-space: nowrap;
-          }
-              #button_download {
-                display:flex;
-                align-items: center;
-                justify-content:center;
-
-                margin-right:10px;
-                width:65%;
-                border-color:lime;
-                color:lime;
-              }
-                      #button_download.wait {
-                          border-color:gray;
-                          color:gray;
-                          pointer-events: none;
-                          cursor:wait;
-                      }
-                  #button_download > img {
-                      margin-right:5px;
-                      width:40px;
-                      height:40px;
-                  }
-                  #button_download > p {
-                      color:lime;
-                      font-size:22px;
-                          line-height:25px;
-                  }
-              #button_closeimage {
-                width:25%;
-                border-color:orange;
-                color:orange;
-              }
-              .deckmiage_botton:hover {
-                  background-color:rgba(255,255,255,0.2);
-              }
-              .deckmiage_botton:active {
-                  background-color:rgba(255,255,255,0.4);
-              }
-    /*카드 모니터*/
-    #frame_cardmonitor {
-        position:absolute;
-            left:calc((100vw - 800px) / 2 - 260px);top:90px;
-        overflow:hidden;
-        display:none;
-
-        width:260px;
-        height:460px;
-
-        background-color:#3e40e5;
-        border-top-left-radius:10px;
-        border-bottom-left-radius:10px;
-    }
-            #frame_cardmonitor.show {
-                display:block
-            }
-        @media (max-width: 1320px) {
-            #frame_cardmonitor {
-                left:0;
-                width:calc((100vw - 800px) / 2);
-            }
-        }
-        @media (max-width: 1120px) {
-            #frame_cardmonitor, #frame_cardmonitor.show {display:none;}
-        }
     /*카드 정보*/
     #main_cardinfo {
         background-color:#392C4A;
@@ -1358,9 +1310,35 @@ body {
             background-size:contain;
         box-sizing: border-box;
     }
+        #main_cardinfo.below_chart {height:calc(100% - 130px);}
+        #main_cardinfo.below_footer {height:calc(100% - 50px);}
+        #main_cardinfo.below_none {height:calc(100%);}
+    #footer_cardinfo {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+        overflow:hidden;
 
-    /*덱 리스트*/
+        width:100%;
+        height:50px;
+
+        background:#3e40e5;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        pointer-events: none;
+    }
+        #footer_cardinfo.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+
+    /*=====================================================*/
+    /* 덱 정보 */
+    /*=====================================================*/
     #main_deck {position: absolute;}
+            #main_deck.below_chart {height:calc(100% - 130px);}
+            #main_deck.below_footer {height:calc(100% - 50px);}
+            #main_deck.below_none {height:calc(100%);}
         #deck_hero {
             position: relative;
             width:100%;
@@ -1451,7 +1429,7 @@ body {
         #deck_list_cover {
             position: relative;
 
-            height:calc(100% - 85px);
+            height:calc(100% - 75px);
         }
             #deck_list_cover_overlay {
                 position:absolute;
@@ -1503,39 +1481,223 @@ body {
                 width:100%;
                 height:100%;
             }
-        #deck_bottom_cover {
+        #deck_bottom {
             position: relative;
 
-            padding:5px 10px 5px 5px;
+            padding:0;
             width:100%;
-            height:35px;
+            height:25px;
 
             border-top:2px #7B573F inset;
             background-color:#463325;
             box-sizing: border-box;
+
+            color:white;
+            font-size:15px;
+                line-height:21px;
+            text-align:center;
         }
-            #deck_bottom {
-                position: relative;
-                overflow:hidden;
+    /*=====================================================*/
+    /* 덱 편집 푸터 */
+    /*=====================================================*/
+    #footer_deckbuilding {
+        position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+        overflow:hidden;
 
-                width:100%;
-                height:100%;
+        width:100%;
+        height:50px;
 
-                background-color:#392C4A;
-                border:2px #303030 inset;
-                border-radius:10px;
-                box-sizing: border-box;
+        background:#3e40e5;
+
+        transform:translate(0,100%);
+        pointer-events: none;
+    }
+        #footer_deckbuilding.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+        .footer_button {
+            position:relative;
+
+            margin:5px 0px;
+            width:110px;
+            height:40px;
+
+            background:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            color:white;
+            font-size:25px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+                .footer_button:hover {
+                    background-color:rgba(255,255,255,0.2);
+                }
+                .footer_button:active {
+                    background-color:rgba(255,255,255,0.4);
+                }
+            #deckbuilding_undo, #deckbuilding_redo {
+                float:left;
+
+                margin:5px 0px 5px 5px;
+                width:110px;
+                height:40px;
+
+                font-size:22px;
+                user-select:none;
+                pointer-events: auto;
+            }
+                #deckbuilding_redo {margin-right:0;}
+                #deckbuilding_undo.disabled, #deckbuilding_redo.disabled {
+                    border:2px gray solid;
+                    color:gray;
+                    pointer-events: none;
+                }
+                    .log_icon {
+                        position:relative;
+                        width:56px;
+                        height:24px;
+                        font-size:24px;
+                        line-height:24px;
+                        text-align:center;
+                    }
+                        #undo_icon {float:left;}
+                        #redo_icon {float:right;}
+                    .log_num {
+                        position:relative;
+                        width:56px;
+                        height:12px;
+                        color:yellow;
+                        font-size:12px;
+                        line-height:12px;
+                        text-align:center;
+                    }
+                        #undo_num {clear:left;float:left;}
+                        #redo_num {clear:right;float:right;}
+                    .log_text {
+                        position:relative;
+                        width:50px;
+                        height:36px;
+                        line-height:36px;
+                    }
+                        #undo_text {float:right;text-align:left;}
+                        #redo_text {float:left;text-align:right;}
+            #deckbuilding_done {
+                float:right;
+
+                margin-right:5px;
+                width:100px;
+                height:40px;
 
                 color:white;
-                text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
-                font-size:15px;
-                    line-height:20px;
+                font-weight:bold;
+                font-size:22px;
+                letter-spacing: -1px;
                 text-align:center;
+                white-space: nowrap;
             }
+                #deckbuilding_done > img {
+                    vertical-align:middle;
+                    width:33px;
+                    height:33px;
+                }
+                #deckbuilding_done > span {
+                    vertical-align:middle;
+                    font-size:inherit;
+                }
+            #deckbuilding_chart {
+                float:right;
 
-    /*덱 설정*/
+                margin:5px;
+                width:100px;
+                height:40px;
+
+                background-repeat:no-repeat;
+                background-position:10px 0px;
+                background-size:35px 35px;
+
+                color:white;
+                font-weight:bold;
+                font-size:22px;
+                letter-spacing: -1px;
+                text-align:center;
+                white-space: nowrap;
+            }
+                    #deckbuilding_chart.on {
+                        background-image:url('../images/icon_chart_on.png');
+                    }
+                    #deckbuilding_chart.off {
+                        background-image:url('../images/icon_chart_off.png');
+                    }
+                #deckbuilding_chart > span {
+                    display:flex;
+                        align-items: center;
+                        justify-content: center;
+                    float:right;
+
+                    width:50px;
+                    height:100%;
+
+                    color:white;
+                    font-weight:bold;
+                    font-size:20px;
+                    letter-spacing: -1px;
+                    text-align:center;
+                    line-height:110%;
+                    white-space: nowrap;
+                }
+    /*=====================================================*/
+    /* 덱 차트 */
+    /*=====================================================*/
+    #main_deckchart {
+        display:flex;
+            justify-content: center;
+        position:absolute;
+            left:0;bottom:50px;
+            z-index:1;
+
+        width:100%;
+        height:80px;
+
+        background:#303030;
+        box-sizing: border-box;
+        transform:translate(0,100%);
+        pointer-events: none;
+    }
+        #main_deckchart.show {
+            transform:translate(0,0);
+            pointer-events: auto;
+        }
+    .deckchart_container {
+        position:relative;
+        overflow:hidden;
+        height:80px;
+    }
+    #deckchart_container_mana {
+        margin-right:15px;
+        width:calc((100% - 5px) * (3 / 5));
+            max-width:360px;
+    }
+    #deckchart_container_type {
+        width:calc((100% - 5px) * (2 / 5));
+            max-width:240px;
+    }
+    .deckchart_chart {
+        position:relative;
+        width:100%;
+        height:100%;
+    }
+    /*=====================================================*/
+    /* 덱 설정 */
+    /*=====================================================*/
     #main_deckconfig {
         position:absolute;
+        overflow-y:scroll;
 
         padding:10px;
 
@@ -1545,6 +1707,9 @@ body {
             #AF7A41 100%);
         box-sizing: border-box;
     }
+            #main_deckconfig.below_chart {height:calc(100% - 130px);}
+            #main_deckconfig.below_footer {height:calc(100% - 50px);}
+            #main_deckconfig.below_none {height:calc(100%);}
         #main_deckconfig > hr {
             margin:0 0 8px 0;
             border-top:1px #d0a362 solid;
@@ -1574,7 +1739,126 @@ body {
                 border:4px #228DFF inset;
             }
 
-    /*메타 덱 정보*/
+        #footer_deckconfig {
+            position:absolute;
+            left:0;bottom:0;
+            z-index:2;
+            overflow:hidden;
+
+            padding:5px;
+            width:100%;
+            height:50px;
+
+            background:#3e40e5;
+            box-sizing: border-box;
+            transform:translate(0,100%);
+            pointer-events: none;
+        }
+                #footer_deckconfig.show {
+                    transform:translate(0,0);
+                    pointer-events: auto;
+                }
+            .deckconfig_footerbutton {
+                position:relative;
+                overflow:hidden;
+
+                height:100%;
+
+                background-color:rgba(255,255,255,0.1);
+                background-repeat:no-repeat;
+                background-position:10px 0px;
+                background-size:33px 33px;
+                border:2px white solid;
+                border-radius: 10px;
+                box-sizing: border-box;
+                cursor:pointer;
+
+                color:white;
+                font-weight:bold;
+                font-size:22px;
+                letter-spacing: -1px;
+                text-align:center;
+                white-space: nowrap;
+            }
+        #deckconfig_favorite {
+            width:130px;
+            float:left;
+        }
+            #deckconfig_favorite.favorite {
+                background-image:url(../images/icon_favorite2.png);
+            }
+            #deckconfig_favorite.delete {
+                background-image:url(../images/icon_delete.png);
+            }
+            #deckconfig_favorite_text {
+                display:flex;
+                    align-items: center;
+                    justify-content: center;
+                float:right;
+
+                width:80px;
+                height:100%;
+
+                color:white;
+                font-weight:bold;
+                font-size:20px;
+                letter-spacing: -1px;
+                text-align:center;
+                line-height:110%;
+                white-space: nowrap;
+            }
+        #deckconfig_edit {
+            float:right;
+
+            width:100px;
+
+            background-image:url('../images/icon_edit.png');
+            background-repeat:no-repeat;
+            background-position:10px 0px;
+            background-size:35px 35px;
+        }
+        #deckconfig_chart {
+            float:right;
+
+            margin-right:5px;
+            width:100px;
+
+            background-repeat:no-repeat;
+            background-position:10px 0px;
+            background-size:35px 35px;
+        }
+            #deckconfig_chart.on {
+                background-image:url('../images/icon_chart_on.png');
+            }
+            #deckconfig_chart.off {
+                background-image:url('../images/icon_chart_off.png');
+            }
+        .deckconfig_footerbutton > span {
+            display:flex;
+                align-items: center;
+                justify-content: center;
+            float:right;
+
+            width:50px;
+            height:100%;
+
+            color:white;
+            font-weight:bold;
+            font-size:20px;
+            letter-spacing: -1px;
+            text-align:center;
+            line-height:110%;
+            white-space: nowrap;
+        }
+        .deckconfig_footerbutton:hover {
+            background-color:rgba(255,255,255,0.2);
+        }
+        .deckconfig_footerbutton:active {
+            background-color:rgba(255,255,255,0.4);
+        }
+    /*=====================================================*/
+    /* 메타 덱 정보 */
+    /*=====================================================*/
     #main_metadeck {
         background-color:#3b3b3b;
     }
@@ -1621,343 +1905,187 @@ body {
             #metadeck_loading p {
                 font-size:30px;
             }
+        #metadeck_slot {
+            position:relative;
+                z-index:1;
+            overflow-y:scroll;
 
-/*=====================================================*/
-/* 푸터 */
-/*=====================================================*/
-#footer_update {
-    position:absolute;
-        left:0;bottom:0;
-        z-index:2;
-    overflow:hidden;
+            width:100%;
+            height:calc(100% - 10px);
 
-    padding:5px;
-    width:100%;
-    height:75px;
-
-    background:#3e40e5;
-    box-sizing: border-box;
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-        #footer_update.show {
-            transform:translate(0,0);
-            pointer-events: auto;
+            box-sizing: border-box;
         }
-    .footer_update_button {
-        position:relative;
-        height:100%;
-
-        background:rgba(255,255,255,0.1);
-        border:2px white solid;
-        border-radius: 10px;
-        box-sizing: border-box;
-
-        color:white;
-        font-size:22px;
-        letter-spacing: -1px;
-        font-weight:bold;
-        cursor:pointer;
-        white-space: nowrap;
-    }
-        .footer_update_button:hover {
-            background-color:rgba(255,255,255,0.2);
-        }
-        .footer_update_button:active {
-            background-color:rgba(255,255,255,0.4);
-        }
-    #button_update {
-        display:block;
-        margin:0 auto;
-        width:90%;
-        border:2px #a0a0a0 solid;
-        color:#a0a0a0;
-        word-break: keep-all;
-
-        pointer-events: none;
-    }
-#footer_notice {
-    position:absolute;
-        left:0;bottom:0;
-        z-index:2;
-    overflow:hidden;
-
-    padding:5px;
-    width:100%;
-    height:75px;
-
-    background:#3e40e5;
-    box-sizing: border-box;
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-        #footer_notice.show {
-            transform:translate(0,0);
-            pointer-events: auto;
-        }
-    .footer_notice_button {
-        position:relative;
-        height:100%;
-
-        background:rgba(255,255,255,0.1);
-        border:2px white solid;
-        border-radius: 10px;
-        box-sizing: border-box;
-
-        color:white;
-        font-size:22px;
-        letter-spacing: -1px;
-        font-weight:bold;
-        cursor:pointer;
-        white-space: nowrap;
-    }
-        .footer_notice_button:hover {
-            background-color:rgba(255,255,255,0.2);
-        }
-        .footer_notice_button:active {
-            background-color:rgba(255,255,255,0.4);
-        }
-    #button_start {
-        float:left;
-        width:calc(70% - 10px);
-        border:2px lime solid;
-        color:lime;
-        word-break: keep-all;
-    }
-    #button_offline {
-        float:right;
-        width:calc(30% - 10px);
-        border:2px #f8bb86 solid;
-        color:#f8bb86;
-        word-break: keep-all;
-    }
-        #button_start[disabled], #button_offline[disabled] {
-            border:2px gray solid;
-            color:gray;
-            pointer-events: none;
-        }
-#footer_decklist {
-    position:absolute;
-        left:0;bottom:0;
-        z-index:2;
-    overflow:hidden;
-
-    padding:5px;
-    width:100%;
-    height:75px;
-
-    background:#3e40e5;
-    box-sizing: border-box;
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-        #footer_decklist.show {
-            transform:translate(0,0);
-            pointer-events: auto;
-        }
-    .footer_decklist_button {
-        position:relative;
-        height:100%;
-
-        background:rgba(255,255,255,0.1);
-        border-radius: 10px;
-        box-sizing: border-box;
-
-        font-size:22px;
-        letter-spacing: -1px;
-        font-weight:bold;
-        cursor:pointer;
-        white-space: nowrap;
-    }
-        .footer_decklist_button > img {
-            vertical-align:middle;
-            width:33px;
-            height:33px;
-        }
-        .footer_decklist_button > span {
-            vertical-align:middle;
-            font-size:inherit;
-        }
-        .footer_decklist_button:hover {
-            background-color:rgba(255,255,255,0.2);
-        }
-        .footer_decklist_button:active {
-            background-color:rgba(255,255,255,0.4);
-        }
-    #button_readcode {
-        float:left;
-        width:calc(40% - 10px);
-        border:2px orange solid;
-        color:orange;
-    }
-    #botton_newdeck {
-        float:right;
-        width:calc(60% - 10px);
-        border:2px lime solid;
-        color:lime;
-    }
-#footer_collectionNdeck {
-    position:absolute;
-        left:0;bottom:0;
-        z-index:2;
-    overflow:hidden;
-
-    width:100%;
-    height:75px;
-
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-    #footer_collectionNdeck.show {
-        transform:translate(0,0);
-        pointer-events: auto;
-    }
-#footer_collectionNdeck_top {
-    position:absolute;
-        left:0;top:0;
-
-    width:100%;
-    height:25px;
-
-    background-color:#798689;
-}
-    .footer_desc {
-        position:relative;
-        float:left;
-        display:block;
-
-        width:50%;
-        height:100%;
-
-        transform:translate(0,100%);
-        pointer-events: none;
-        box-sizing: border-box;
-
-        color:white;
-        font-size:16px;
-        line-height:25px;
-        text-align:center;
-    }
-        .footer_desc.show {
-            transform:translate(0,0);
-            pointer-events: auto;
-        }
-#footer_collectionNdeck_cardinfo {
-    position:absolute;
-        left:0;bottom:0;
-    overflow:hidden;
-
-    width:100%;
-    height:50px;
-
-    background:#3e40e5;
-
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-    #footer_collectionNdeck_cardinfo.show {
-        transform:translate(0,0);
-        pointer-events: auto;
-    }
-#footer_collectionNdeck_deckbuilding {
-    position:absolute;
-        left:0;bottom:0;
-    overflow:hidden;
-
-    width:100%;
-    height:50px;
-
-    background:#3e40e5;
-
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-    #footer_collectionNdeck_deckbuilding.show {
-        transform:translate(0,0);
-        pointer-events: auto;
-    }
-    .footer_button {
-        position:relative;
-
-        margin:5px 0px 5px 5px;
-        width:110px;
-        height:40px;
-
-        background:rgba(255,255,255,0.1);
-        border:2px white solid;
-        border-radius: 10px;
-        box-sizing: border-box;
-
-        color:white;
-        font-size:25px;
-        font-weight:bold;
-        cursor:pointer;
-    }
-            .footer_button:hover {
-                background-color:rgba(255,255,255,0.2);
-            }
-            .footer_button:active {
-                background-color:rgba(255,255,255,0.4);
-            }
-        #bottom_undo, #bottom_redo {
-            float:left;
-
-            margin:5px 0px 5px 5px;
-            width:110px;
-            height:40px;
-
-            font-size:22px;
-            user-select:none;
-            pointer-events: auto;
-        }
-            #bottom_redo {margin-right:0;}
-            #bottom_undo.disabled, #bottom_redo.disabled {
-                border:2px gray solid;
-                color:gray;
-                pointer-events: none;
-            }
-            .log_icon {
+            #metadeck_slot_content {
                 position:relative;
-                width:56px;
-                height:24px;
-                font-size:24px;
-                line-height:24px;
-                text-align:center;
-            }
-                #undo_icon {float:left;}
-                #redo_icon {float:right;}
-            .log_num {
-                position:relative;
-                width:56px;
-                height:12px;
-                color:yellow;
-                font-size:12px;
-                line-height:12px;
-                text-align:center;
-            }
-                #undo_num {clear:left;float:left;}
-                #redo_num {clear:right;float:right;}
-            .log_text {
-                position:relative;
-                width:50px;
-                height:36px;
-                line-height:36px;
-            }
-                #undo_text {float:right;text-align:left;}
-                #redo_text {float:left;text-align:right;}
-        #bottom_done {
-            float:right;
 
-            margin:5px;
-            width:120px;
-            height:40px;
-        }
-            #bottom_done > img {
-                vertical-align: middle;
-                width:40px;
-                height:40px;
+                padding:15px 10px 10px 10px;
+                width:100%;
+                height:100%;
+
+                box-sizing: border-box;
             }
-    #footer_deckconfig {
+            .metadeckslot_button {
+                position:relative;
+                display:block;
+                direction:ltr;
+
+                margin-bottom:15px;
+                width:100%;
+                height:60px;
+            }
+            .metadeckslot_button_number {
+                position:absolute;
+                left:-3px;top:-10px;
+                z-index:2;
+                display:flex;
+                    align-items: center;
+
+                padding:1px 5px;
+                width:auto;
+                height:20px;
+
+                background:orange;
+                border-radius:8px;
+
+                font-weight: 600;
+            }
+                .metadeckslot_button_main {
+                    position:relative;
+                    float:left;
+                    display:block;
+                    overflow:hidden;
+
+                    width:100%;
+                    height:100%;
+
+                    background-repeat:no-repeat;
+                    background-position:calc(100% + 25px) 50%;
+                    background-size:auto 100%;
+                    /*border:5px gold outset;*/
+
+                    cursor:pointer;
+                }
+                .metadeckslot_button_mainCover {
+                    position:relative;
+                    display:block;
+                    overflow:hidden;
+
+                    padding:3px 5px;
+                    width:100%;
+                    height:100%;
+
+                    background: linear-gradient(
+                        to right,
+                        rgba(210,210,210,1) 0%,
+                        rgba(210,210,210,1) calc(100% - 190px),
+                        rgba(210,210,210,0.4) calc(100% - 25px),
+                        rgba(210,210,210,0.4) 100%);
+                    box-sizing: border-box;
+                    pointer-events: none;
+                }
+                    .metadeckslot_button_main:hover .metadeckslot_button_mainCover {
+                        background: linear-gradient(
+                            to right,
+                            rgba(135,236,233,1) 0%,
+                            rgba(135,236,233,1) calc(100% - 190px),
+                            rgba(135,236,233,0) calc(100% - 25px),
+                            rgba(135,236,233,0) 100%);
+                    }
+                .metadeckslot_button_name {
+                    position:absolute;
+                        left:5px;top:10px;
+                    overflow:hidden;
+
+                    width:100%;
+                    height:30px;
+
+                    color:yellow;
+                    /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
+                    text-shadow:
+                        1px 0 black,
+                        1px 1px black,
+                        0 1px black;
+                    font-weight: bold;
+                    font-size:24px;
+                        line-height: 24px;
+                    text-align:left;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+                    .metadeckslot_button_name.WARRIOR {
+                        color:red;}
+                    .metadeckslot_button_name.SHAMAN {
+                        color:blue;}
+                    .metadeckslot_button_name.ROGUE {
+                        color:navy;}
+                    .metadeckslot_button_name.PALADIN {
+                        color:orange;}
+                    .metadeckslot_button_name.HUNTER {
+                        color:green;}
+                    .metadeckslot_button_name.DRUID {
+                        color:brown;}
+                    .metadeckslot_button_name.WARLOCK {
+                        color:purple;}
+                    .metadeckslot_button_name.MAGE {
+                        color:aqua;}
+                    .metadeckslot_button_name.PRIEST {
+                        color:yellow;}
+                .metadeckslot_button_class {
+                    position:absolute;
+                        left:5px;bottom:5px;
+
+                    margin-top:4px;
+                    height:15px;
+
+                    color:#303030;
+                    font-weight: bold;
+                    /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
+                    font-size:15px;
+                        line-height:15px;
+                }
+                .metadeckslot_button_dust_icon {
+                    display:block;
+                    position:absolute;
+                        left:70px;bottom:5px;
+
+                    width:16px;
+                    height:16px;
+                }
+                .metadeckslot_button_dust {
+                    position:absolute;
+                        left:90px;bottom:5px;
+
+                    margin-top:4px;
+                    width:auto;
+                    height:15px;
+
+                    color:skyblue;
+                    font-weight: bold;
+                    text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
+                    font-size:15px;
+                        line-height:15px;
+                }
+                .metadeckslot_button_totalgame {
+                    position:absolute;
+                        right:5px;top:5px;
+
+                    color:#000000;
+                    font-weight: bold;
+                    text-shadow:0 -1px white,1px -1px white,1px 0 white,1px 1px white,0 1px white,-1px 1px white,-1px 0 white,-1px -1px white;
+                    font-size:16px;
+                        line-height:16px;
+                }
+                .metadeckslot_button_winrate {
+                    position:absolute;
+                        right:5px;bottom:5px;
+
+                    color:#000000;
+                    font-weight: bold;
+                    text-shadow:0 -1px white,1px -1px white,1px 0 white,1px 1px white,0 1px white,-1px 1px white,-1px 0 white,-1px -1px white;
+                    font-size:16px;
+                        line-height:16px;
+                }
+    #footer_metadeck {
         position:absolute;
             left:0;bottom:0;
             z-index:2;
@@ -1972,356 +2100,413 @@ body {
         transform:translate(0,100%);
         pointer-events: none;
     }
-        #footer_deckconfig.show {
+        #footer_metadeck.show {
             transform:translate(0,0);
             pointer-events: auto;
         }
-    .deckconfig_footerbutton {
-        position:relative;
-        overflow:hidden;
-
-        height:100%;
-
-        background-color:rgba(255,255,255,0.1);
-            background-repeat:no-repeat;
-            background-position:5px 10px;
-            background-size:40px 40px;
-        border:2px white solid;
-        border-radius: 10px;
-        box-sizing: border-box;
-        cursor:pointer;
-
-        color:white;
-        font-weight:bold;
-        font-size:22px;
-        letter-spacing: -1px;
-        text-align:center;
-        white-space: nowrap;
-    }
-        #deckconfig_favorite {
-            width:130px;
-            float:left;
-        }
-            #deckconfig_favorite.favorite {
-                background-image:url(../images/icon_favorite2.png);
-            }
-            #deckconfig_favorite.delete {
-                background-image:url(../images/icon_delete.png);
-            }
-            #deckconfig_favorite_text {
-                display:flex;
-                    align-items: center;
-                    justify-content: center;
-                float:right;
-
-                width:80px;
-                height:100%;
-
-                color:white;
-                font-weight:bold;
-                font-size:20px;
-                letter-spacing: -1px;
-                text-align:center;
-                line-height:110%;
-                white-space: nowrap;
-            }
-        #deckconfig_edit {
-            width:100px;
-            float:right;
-        }
-    .deckconfig_footerbutton > img {
-        vertical-align:middle;
-        width:33px;
-        height:33px;
-    }
-    .deckconfig_footerbutton > span {
-        vertical-align:middle;
-        font-size:inherit;
-    }
-    .deckconfig_footerbutton:hover {
-        background-color:rgba(255,255,255,0.2);
-    }
-    .deckconfig_footerbutton:active {
-        background-color:rgba(255,255,255,0.4);
-    }
-
-    /*메타 덱 분석*/
-#metadeck_slot {
-    position:relative;
-        z-index:1;
-    overflow-y:scroll;
-
-    width:100%;
-    height:calc(100% - 10px);
-
-    box-sizing: border-box;
-}
-    #metadeck_slot_content {
-        position:relative;
-
-        padding:15px 10px 10px 10px;
-        width:100%;
-        height:100%;
-
-        box-sizing: border-box;
-    }
-    .metadeckslot_button {
-        position:relative;
-        display:block;
-        direction:ltr;
-
-        margin-bottom:15px;
-        width:100%;
-        height:60px;
-    }
-    .metadeckslot_button_number {
-        position:absolute;
-        left:-3px;top:-10px;
-        z-index:2;
-        display:flex;
-            align-items: center;
-
-        padding:1px 5px;
-        width:auto;
-        height:20px;
-
-        background:orange;
-        border-radius:8px;
-
-        font-weight: 600;
-    }
-        .metadeckslot_button_main {
+        .footer_metadeck_button {
             position:relative;
-            float:left;
-            display:block;
-            overflow:hidden;
-
-            width:100%;
             height:100%;
 
-            background-repeat:no-repeat;
-            background-position:calc(100% + 25px) 50%;
-            background-size:auto 100%;
-            /*border:5px gold outset;*/
-
-            cursor:pointer;
-        }
-        .metadeckslot_button_mainCover {
-            position:relative;
-            display:block;
-            overflow:hidden;
-
-            padding:3px 5px;
-            width:100%;
-            height:100%;
-
-            background: linear-gradient(
-                to right,
-                rgba(210,210,210,1) 0%,
-                rgba(210,210,210,1) calc(100% - 190px),
-                rgba(210,210,210,0.4) calc(100% - 25px),
-                rgba(210,210,210,0.4) 100%);
+            background:rgba(255,255,255,0.1);
+            border:2px white solid;
+            border-radius: 10px;
             box-sizing: border-box;
-            pointer-events: none;
-        }
-            .metadeckslot_button_main:hover .metadeckslot_button_mainCover {
-                background: linear-gradient(
-                    to right,
-                    rgba(135,236,233,1) 0%,
-                    rgba(135,236,233,1) calc(100% - 190px),
-                    rgba(135,236,233,0) calc(100% - 25px),
-                    rgba(135,236,233,0) 100%);
-            }
-        .metadeckslot_button_name {
-            position:absolute;
-                left:5px;top:10px;
-            overflow:hidden;
 
-            width:100%;
-            height:30px;
-
-            color:yellow;
-            /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
-            text-shadow:
-                1px 0 black,
-                1px 1px black,
-                0 1px black;
-            font-weight: bold;
-            font-size:24px;
-                line-height: 24px;
-            text-align:left;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-            .metadeckslot_button_name.WARRIOR {
-                color:red;}
-            .metadeckslot_button_name.SHAMAN {
-                color:blue;}
-            .metadeckslot_button_name.ROGUE {
-                color:navy;}
-            .metadeckslot_button_name.PALADIN {
-                color:orange;}
-            .metadeckslot_button_name.HUNTER {
-                color:green;}
-            .metadeckslot_button_name.DRUID {
-                color:brown;}
-            .metadeckslot_button_name.WARLOCK {
-                color:purple;}
-            .metadeckslot_button_name.MAGE {
-                color:aqua;}
-            .metadeckslot_button_name.PRIEST {
-                color:yellow;}
-        .metadeckslot_button_class {
-            position:absolute;
-                left:5px;bottom:5px;
-
-            margin-top:4px;
-            height:15px;
-
-            color:#303030;
-            font-weight: bold;
-            /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
-            font-size:15px;
-                line-height:15px;
-        }
-        .metadeckslot_button_dust_icon {
-            display:block;
-            position:absolute;
-                left:70px;bottom:5px;
-
-            width:16px;
-            height:16px;
-        }
-        .metadeckslot_button_dust {
-            position:absolute;
-                left:90px;bottom:5px;
-
-            margin-top:4px;
-            width:auto;
-            height:15px;
-
-            color:skyblue;
-            font-weight: bold;
-            text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;
-            font-size:15px;
-                line-height:15px;
-        }
-        .metadeckslot_button_totalgame {
-            position:absolute;
-                right:5px;top:5px;
-
-            color:#000000;
-            font-weight: bold;
-            text-shadow:0 -1px white,1px -1px white,1px 0 white,1px 1px white,0 1px white,-1px 1px white,-1px 0 white,-1px -1px white;
-            font-size:16px;
-                line-height:16px;
-        }
-        .metadeckslot_button_winrate {
-            position:absolute;
-                right:5px;bottom:5px;
-
-            color:#000000;
-            font-weight: bold;
-            text-shadow:0 -1px white,1px -1px white,1px 0 white,1px 1px white,0 1px white,-1px 1px white,-1px 0 white,-1px -1px white;
-            font-size:16px;
-                line-height:16px;
-        }
-
-#footer_metadeck {
-    position:absolute;
-        left:0;bottom:0;
-        z-index:2;
-    overflow:hidden;
-
-    padding:5px;
-    width:100%;
-    height:75px;
-
-    background:#3e40e5;
-    box-sizing: border-box;
-    transform:translate(0,100%);
-    pointer-events: none;
-}
-    #footer_metadeck.show {
-        transform:translate(0,0);
-        pointer-events: auto;
-    }
-    .footer_metadeck_button {
-        position:relative;
-        height:100%;
-
-        background:rgba(255,255,255,0.1);
-        border:2px white solid;
-        border-radius: 10px;
-        box-sizing: border-box;
-
-        color:white;
-        font-size:22px;
-            line-height:25px;
-        letter-spacing: -1px;
-        font-weight:bold;
-        cursor:pointer;
-        white-space: nowrap;
-    }
-        .footer_metadeck_button:hover {
-            background-color:rgba(255,255,255,0.2);
-        }
-        .footer_metadeck_button:active {
-            background-color:rgba(255,255,255,0.4);
-        }
-        .footer_metadeck_button > img {
-            vertical-align:middle;
-            width:33px;
-            height:33px;
-        }
-        .footer_metadeck_button > span {
-            vertical-align:middle;
-            font-size:inherit;
-        }
-    #button_metadeck_hot {
-        display:flex;
-        align-items: center;
-        justify-content:center;
-        float:left;
-
-        margin:0 auto;
-        width:calc(50% - 5px);
-        border:2px #f8bb86 solid;
-    }
-        #button_metadeck_hot > img {
-            margin-right:5px;
-            width:40px;
-            height:40px;
-        }
-        #button_metadeck_hot > p {
-            color:#f8bb86;
+            color:white;
             font-size:22px;
                 line-height:25px;
+            letter-spacing: -1px;
+            font-weight:bold;
+            cursor:pointer;
+            white-space: nowrap;
         }
-    #button_metadeck_winrate {
-        display:flex;
-        align-items: center;
-        justify-content:center;
-        float:right;
+            .footer_metadeck_button:hover {
+                background-color:rgba(255,255,255,0.2);
+            }
+            .footer_metadeck_button:active {
+                background-color:rgba(255,255,255,0.4);
+            }
+            .footer_metadeck_button > img {
+                vertical-align:middle;
+                width:33px;
+                height:33px;
+            }
+            .footer_metadeck_button > span {
+                vertical-align:middle;
+                font-size:inherit;
+            }
+        #button_metadeck_hot {
+            display:flex;
+            align-items: center;
+            justify-content:center;
+            float:left;
 
-        margin:0 auto;
-        width:calc(50% - 5px);
-        border:2px lime solid;
-
-        color:lime;
-        font-size:22px;
-            line-height:25px;
-    }
-        #button_metadeck_winrate > img {
-            margin-right:5px;
-            width:40px;
-            height:40px;
+            margin:0 auto;
+            width:calc(50% - 5px);
+            border:2px #f8bb86 solid;
         }
-        #button_metadeck_winrate > p {
+            #button_metadeck_hot > img {
+                margin-right:5px;
+                width:40px;
+                height:40px;
+            }
+            #button_metadeck_hot > p {
+                color:#f8bb86;
+                font-size:22px;
+                    line-height:25px;
+            }
+        #button_metadeck_winrate {
+            display:flex;
+            align-items: center;
+            justify-content:center;
+            float:right;
+
+            margin:0 auto;
+            width:calc(50% - 5px);
+            border:2px lime solid;
+
             color:lime;
             font-size:22px;
                 line-height:25px;
         }
+            #button_metadeck_winrate > img {
+                margin-right:5px;
+                width:40px;
+                height:40px;
+            }
+            #button_metadeck_winrate > p {
+                color:lime;
+                font-size:22px;
+                    line-height:25px;
+            }
+/*=====================================================*/
+/* 별도 창 - 카드커버 */
+/*=====================================================*/
+#frame_cardcover {
+    position:fixed;
+        left:0;top:0;
+    z-index:10;
+    display:none;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.7);
+
+    user-select:none;
+}
+        #frame_cardcover.show {
+            display:block;
+            animation:cardcover_show 0.2s;
+        }
+        @keyframes cardcover_show {
+            0% {opacity:0;}
+            1% {opacity:0.01;}
+            100% {opacity:1;}
+        }
+    #cardcover_top {
+        position:relative;
+
+        padding:10px;
+        width:100%;
+        height:calc(100% - 50px);
+
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+    #cardcover_desc {
+        position:absolute;
+            left:0;bottom:0;
+
+        width:100%;
+        height:50px;
+
+        background:rgba(255,255,255,0.1);
+
+        color:white;
+        font-size:20px;
+        line-height:50px;
+        text-align: center;
+        pointer-events: none;
+    }
+/*=====================================================*/
+/* 별도 창 - 덱 이미지 */
+/*=====================================================*/
+#frame_deckimage {
+    position:fixed;
+        left:0;top:0;
+    z-index:10;
+    display:none;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.7);
+}
+        #frame_deckimage.show {
+            display:block;
+            animation:deckimage_show 0.2s;
+        }
+        @keyframes deckimage_show {
+            0% {opacity:0;}
+            1% {opacity:0.01;}
+            100% {opacity:1;}
+        }
+    #deckimage_top {
+        position:relative;
+        overflow-y:scroll;
+
+        padding:20px;
+        width:100%;
+        height:calc(100% - 75px);
+
+        box-sizing: border-box;
+        text-align:center;
+    }
+      #deckimage_img {
+        width:300px;
+        height:auto;
+      }
+    #deckimage_bottom {
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        position:absolute;
+            left:0;bottom:0;
+
+        padding:5px;
+        width:100%;
+        height:75px;
+
+        background:#3e40e5;
+
+        color:white;
+        font-size:20px;
+        line-height:50px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+      .deckmiage_botton {
+          position:relative;
+          display:block;
+          height:65px;
+
+          background:rgba(255,255,255,0.1);
+          border:2px white solid;
+          border-radius: 10px;
+          box-sizing: border-box;
+
+          color:white;
+          font-size:22px;
+          line-height:60px;
+          letter-spacing: -1px;
+          font-weight:bold;
+          text-decoration: none;
+          cursor:pointer;
+          white-space: nowrap;
+      }
+          #button_download {
+            display:flex;
+            align-items: center;
+            justify-content:center;
+
+            margin-right:10px;
+            width:65%;
+            border-color:lime;
+            color:lime;
+          }
+                  #button_download.wait {
+                      border-color:gray;
+                      color:gray;
+                      pointer-events: none;
+                      cursor:wait;
+                  }
+              #button_download > img {
+                  margin-right:5px;
+                  width:40px;
+                  height:40px;
+              }
+              #button_download > p {
+                  color:lime;
+                  font-size:22px;
+                      line-height:25px;
+              }
+          #button_closeimage {
+            width:25%;
+            border-color:orange;
+            color:orange;
+          }
+          .deckmiage_botton:hover {
+              background-color:rgba(255,255,255,0.2);
+          }
+          .deckmiage_botton:active {
+              background-color:rgba(255,255,255,0.4);
+          }
+/*=====================================================*/
+/* 별도 창 - 카드 모니터 */
+/*=====================================================*/
+#frame_cardmonitor {
+    position:absolute;
+        left:calc((100vw - 800px) / 2 - 260px);top:90px;
+    overflow:hidden;
+    display:none;
+
+    width:260px;
+    height:460px;
+
+    background-color:#3e40e5;
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
+}
+        #frame_cardmonitor.show {
+            display:block
+        }
+    @media (max-width: 1320px) {
+        #frame_cardmonitor {
+            left:0;
+            width:calc((100vw - 800px) / 2);
+        }
+    }
+    @media (max-width: 1120px) {
+        #frame_cardmonitor, #frame_cardmonitor.show {display:none;}
+    }
+/*=====================================================*/
+/* 별도 창 - 덱 차트 */
+/*=====================================================*/
+#frame_deckchartmonitor {
+    position:absolute;
+        right:calc((100vw - 800px) / 2 - 260px);top:90px;
+    overflow:hidden;
+    display:none;
+
+    padding:5px;
+    width:260px;
+    height:290px;
+
+    background-color:#303030;
+    border-top-right-radius:10px;
+    border-bottom-right-radius:10px;
+    box-sizing: border-box;
+}
+        #frame_deckchartmonitor.show {
+            display:block
+        }
+    .deckchartmonitor_container {
+        position:relative;
+        overflow:hidden;
+        width:100%;
+        height:135px;
+    }
+    #deckchartmonitor_container_type {
+        margin-top:10px;
+    }
+    .deckchartmonitor_chart {
+        position:relative;
+        width:100%;
+        height:100%;
+    }
+    /*와이드 스크린 : 덱 차트 모니터만 출력*/
+    @media (min-width: 1319px) {
+        #main_deckchart {
+            display:none;
+        }
+        #deckbuilding_chart, #deckconfig_chart {
+            display:none;
+        }
+        #main_collection, #main_deck, #main_deckconfig {
+            height:calc(100% - 50px) !important;
+        }
+    }
+    /*소형 스크린 : 하단 덱 차트만 출력*/
+    @media (max-width: 1320px) {
+        #frame_deckchartmonitor, #frame_deckchartmonitor.show {display:none;}
+    }
+/*=====================================================*/
+/* 별도 창 - 서비스워커 업데이트 */
+/*=====================================================*/
+#frame_updatepopup {
+    display:flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    position:absolute;
+        left:0;right:0;bottom:0;
+        z-index:10;
+
+    margin:0 auto;
+    padding:20px 10px;
+    width:100%;
+    height:auto;
+        min-height:100px;
+
+    background:rgba(0,0,0,0.8);
+    box-sizing: border-box;
+    transform:translate(0,100%);
+    transition:transform 0.3s;
+}
+        #frame_updatepopup.show {
+            transform:translate(0,0);
+        }
+    #frame_updatepopup_text {
+        columns:2 255px;
+        column-gap:0;
+    }
+    #frame_updatepopup_text p {
+        position:relative;
+        display:block;
+        width:100%;
+        color:white;
+        font-size:20px;
+            line-height:30px;
+        text-align:center;
+    }
+    #frame_updatepopup break{
+      flex-basis: 100%;
+      width: 0px;
+      height: 0px;
+      overflow: hidden;
+    }
+    #updatepopup_refresh {
+        position:relative;
+        display:block;
+
+        margin:15px 20px 0 0;
+        width:60%;
+            max-width:210px;
+        height:40px;
+
+        background-color:#3085D6;
+        border-radius: 3px;
+        -webkit-column-break-inside: avoid;
+
+        color:white;
+        font-size:25px;
+        cursor:pointer;
+    }
+        #updatepopup_refresh:active {
+            background-color:#266AAB;
+        }
+    #updatepopup_cancel {
+        position:relative;
+        display:block;
+
+        margin-top:15px;
+        width:20%;
+            max-width:70px;
+        height:40px;
+
+        background-color:#DD3333;
+        border-radius: 3px;
+        -webkit-column-break-inside: avoid;
+
+        color:white;
+        font-size:25px;
+        cursor:pointer;
+    }
+        #updatepopup_cancel:active {
+            background-color:#B12929;
+            }
 /*=====================================================*/
 /* 모바일 화면조정 */
 /*=====================================================*/
@@ -2363,7 +2548,7 @@ body {
         margin:2px 0;
         width:45%;
     }
-    #footer_collectionNdeck_deckbuilding .footer_button {
+    #footer_deckbuilding .mobile_small {
         width:60px;
     }
     .footer_init_button, .footer_decklist_button {
@@ -2372,6 +2557,14 @@ body {
         word-break: keep-all;
     }
 }
+/*초소형 모바일 모드*/
+@media (max-width: 345px) {
+    #deckbuilding_chart, #deckconfig_chart {
+        width:60px;
+    }
+    #deckbuilding_chart_text, #deckconfig_chart_text {
+        display:none !important;
+    }
 
 
 

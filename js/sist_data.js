@@ -13,8 +13,17 @@ let session = {
     masterMetaSlot:undefined,//마스터 메타슬롯
     fragment:undefined,//프래그먼트
     urlParams:[],//URL 패러미터 정보
-    offline:false//오프라인 모드 유무(디폴트 : 사용안함)
+    offline:false,//오프라인 모드 유무(디폴트 : 사용안함)
+    chart:{
+        init:false,//차트 초기화여부
+        show:false,//차트 출력여부(디폴트 : 출력안함)
+        mana:undefined,//차트 - 마나커브
+        mana_monitor:undefined,//차트 - 마나커브
+        type:undefined,//차트 - 타입
+        type_monitor:undefined//차트 - 타입
+    }
 };
+let isError = {}//에러 발생 시 1회에 한해 출력
 //const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";//HearthstoneJSON에서 이미지 가져오기
 //const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";//HearthstoneJSON에서 이미지 가져오기
 //const RENDERURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";

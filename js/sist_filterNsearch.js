@@ -718,6 +718,4 @@ function card_showResult(arr) {
         process.search.allClassResult = card_getSearchResult("all");
     //카드 목록에 따라 노드 불러오기
     cluster_update("collection",false);
-    //검색된 카드 수량 표시
-    $("#footer_name_left").innerHTML = "카드 목록(" + arr.length + ")";
 }

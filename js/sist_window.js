@@ -482,7 +482,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         text:"저정된 덱 정보가 사라집니다.",
                         showCancelButton:true,
                         confirmButtonColor: '#d33',
-                        confirmButtonText: '해제',
+                        confirmButtonText: '삭제',
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
@@ -708,16 +708,13 @@ async function window_shift(keyword, keyword2, keyword3) {
             //==================
             //화면 출력
             window_clear();
-            $("#main_collection").classList.add("show");
-            $("#main_cardinfo").classList.add("show");
-            $("#footer_collectionNdeck_top").classList.add("show");
-            $("#footer_name_left").classList.add("show");
-                $("#footer_name_left").innerHTML = "카드 목록";
-            $("#footer_name_right").classList.add("show");
-                $("#footer_name_right").innerHTML = "카드 정보";
             $("#header_search").classList.add("show");
-            $("#footer_collectionNdeck").classList.add("show");
-            $("#footer_collectionNdeck_cardinfo").classList.add("show");
+            $("#main_collection").classList.add("show","below_footer");
+                $("#main_collection").classList.remove("below_chart","below_none");
+            $("#main_cardinfo").classList.add("show","below_footer");
+                $("#main_cardinfo").classList.remove("below_chart","below_none");
+
+            $("#footer_cardinfo").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
                 window_goback = () => {
@@ -784,19 +781,18 @@ async function window_shift(keyword, keyword2, keyword3) {
             //==================
             //화면 출력
             window_clear();
+            $("#header_search").classList.add("show");
             $("#main_collection").classList.add("show");
             $("#main_deck").classList.add("show");
-            $("#footer_collectionNdeck_top").classList.add("show");
-            $("#footer_name_left").classList.add("show");
-                $("#footer_name_left").innerHTML = "카드 목록";
-            $("#footer_name_right").classList.add("show");
-                $("#footer_name_right").innerHTML = "덱 구성";
-            $("#header_search").classList.add("show");
-            $("#footer_collectionNdeck").classList.add("show");
-            $("#footer_collectionNdeck_deckbuilding").classList.add("show");
+            $("#footer_deckbuilding").classList.add("show");
+            $("#main_deckchart").classList.add("show");
+
             //뒤로 버튼
             $("#header_back").classList.add("show");
                 window_goback = () => {
+                    //로그 삭제
+                    process.log = undefined;
+                    process.redo = undefined;
                     //뒤로가기 전 덱 저장
                     deck_save().then(() => {
                         if (process.prestate) {
@@ -817,6 +813,15 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //이용 정보 표시
             $("#header_info").classList.add("show");
+
+            //차트 준비
+            setChart("init");
+            $("#deckbuilding_chart").onclick = function() {
+                setChart("toggle");
+            }
+            //덱 차트 모니터 설치
+            $("#frame_deckchartmonitor").classList.add("show");
+
             //==================
             //※ 카드정보 안내
             //==================
@@ -840,13 +845,13 @@ async function window_shift(keyword, keyword2, keyword3) {
                 $("#undo_num").innerHTML = process.log.length;
             else {
                 $("#undo_num").innerHTML = "0";
-                $("#bottom_undo").classList.add("disabled");
+                $("#deckbuilding_undo").classList.add("disabled");
             }
             if (process.redo !== undefined)
                 $("#redo_num").innerHTML = process.redo.length;
             else {
                 $("#redo_num").innerHTML = "0";
-                $("#bottom_redo").classList.add("disabled");
+                $("#deckbuilding_redo").classList.add("disabled");
             }
 
             //==================
@@ -968,12 +973,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
 
             //덱 완료
-            $("#bottom_done").onclick = function() {
-                //우선 덱 저장
-                deck_save().then(() => {
-                    //다음 진행
-                    window_shift("deckconfig")
-                })
+            $("#deckbuilding_done").onclick = function() {
+                //다음 진행
+                window_shift("deckconfig")
+                //저장은 deckconfig 진입하면서 실시
             }
 
             break;
@@ -992,13 +995,16 @@ async function window_shift(keyword, keyword2, keyword3) {
             //==================
             //화면 출력
             window_clear();
+            $("#header_deckconfig").classList.add("show");
             $("#main_deckconfig").classList.add("show");
             $("#main_deck").classList.add("show");
-            $("#header_deckconfig").classList.add("show");
             $("#footer_deckconfig").classList.add("show");
             //뒤로 버튼
             $("#header_back").classList.add("show");
                 window_goback = () => {
+                    //로그 삭제
+                    process.log = undefined;
+                    process.redo = undefined;
                     if (process.prestate) {
                         window_shift(process.prestate);
                     } else {
@@ -1016,6 +1022,14 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //이용 정보 표시안함
             $("#header_info").classList.remove("show");
+
+            //차트 준비
+            setChart("init");
+            $("#deckconfig_chart").onclick = function() {
+                setChart("toggle");
+            }
+            //덱 차트 모니터 설치
+            $("#frame_deckchartmonitor").classList.add("show");
 
             //==================
             //※ 덱 구성
@@ -1308,7 +1322,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         text:"저장된 덱 정보가 사라집니다.",
                         showCancelButton:true,
                         confirmButtonColor: '#d33',
-                        confirmButtonText: '해제',
+                        confirmButtonText: '삭제',
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
