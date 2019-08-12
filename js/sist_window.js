@@ -1676,7 +1676,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         metadeck_update:"업데이트 기록"
                     }
                     //로딩 화면
-                    $("#metadeck_loading_desc").innerHTML = desc[cmd] + " 불러오는 중...";
+                    $("#metadeck_loading_desc").innerHTML = desc[cmd] + "<br>불러오는 중...";
                     //API 호출
                     try {
                         let response = await fetch(METADECKAPI[window.location.hostname] + cmd + ".json",{'pragma':'no-cache','cache-control':'no-cache'});

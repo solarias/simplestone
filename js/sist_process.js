@@ -656,37 +656,47 @@ function setChart(cmd) {
                 let context_type_monitor = $("#deckchartmonitor_type").getContext('2d');
                 session.chart.type = new Chart(context_type,chartTypeOption);
                 session.chart.type_monitor = new Chart(context_type_monitor,chartTypeOption);
-                //차트 출력 여부 로벌에서 확인
-                localforage.getItem("sist_chart")
-                .then(function(showChart) {
-                    if (!showChart) {
-                        //저장된 게 없음 - 디폴트값 이용
-                    } else {
-                        //불러오기
-                        session.chart.show = showChart;
-                    }
-                }).catch(function(e) {
-                    //불러올 수 없음 - 오류 출력 후 디폴트값 이용
-                    if (!isError.chartLoad) {
-                        isError.chartLoad = 1;
-                        nativeToast({
-                            message: '차트 출력여부 값을 로컬에서 불러올 수 없습니다.<br>' + e,
-                            position: 'center',
-                            timeout: 3000,
-                            type: 'error',
-                            closeOnClick: 'true'
-                        });
-                    }
-                })
             }
-            //차트 출력 여부 결정
-            if (session.chart.show === true) {
-                setChart("on");
-            } else {
-                setChart("off");
-            }
-            //차트 업데이트
-            setChart("update");
+            //차트 출력 여부 로벌에서 확인
+            localforage.getItem("sist_chart")
+            .then(function(showChart) {
+                if (!showChart) {
+                    //저장된 게 없음 - 디폴트값 이용
+                } else {
+                    //불러오기
+                    session.chart.show = showChart;
+                }
+
+                //차트 출력 여부 결정
+                if (session.chart.show === true) {
+                    setChart("on");
+                } else {
+                    setChart("off");
+                }
+                //차트 업데이트
+                setChart("update");
+            }).catch(function(e) {
+                //불러올 수 없음 - 오류 출력 후 디폴트값 이용
+                if (!isError.chartLoad) {
+                    isError.chartLoad = 1;
+                    nativeToast({
+                        message: '차트 출력여부 값을 로컬에서 불러올 수 없습니다.<br>' + e,
+                        position: 'center',
+                        timeout: 3000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                }
+
+                //차트 출력 여부 결정
+                if (session.chart.show === true) {
+                    setChart("on");
+                } else {
+                    setChart("off");
+                }
+                //차트 업데이트
+                setChart("update");
+            })
 
             break;
         case "on":
