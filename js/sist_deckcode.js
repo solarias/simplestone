@@ -153,7 +153,7 @@ function deckcode_text() {
         outputtext += "# 이 덱을 사용하려면 클립보드에 복사한 후 하스스톤에서 새로운 덱을 만드세요." + "\n";
     }
     //기타 문구
-    outputtext += "# Created at Simplestone(https://solarias.github.io/simplestone)";
+    outputtext += "# Created at 심플스톤(https://solarias.github.io/simplestone)";
 
     //출력
     return outputtext;
@@ -747,10 +747,10 @@ function deckcode_image() {
             //캔버스 부위별 규격 계산
             let imagesize = {
               wrapper:{
-                width:300
+                width:280
               },
               header:{
-                border:2,
+                border:1,
                 padding:5,
                 width:300,
                 height:50,
@@ -767,26 +767,27 @@ function deckcode_image() {
               },
               card:{
                 width:300,
-                height:40,
+                height:30,
+                padding:5,
                 border:1,
                 gap:5,
-                gradient_start:210,
-                gradient_end:300,
+                gradient_start:180,
+                gradient_end:280,
                 cost:{
-                  padding:2,
-                  width:40,
-                  font:30,
-                  font_position:20
+                  padding:-1,
+                  width:36,
+                  font:26,
+                  font_position:18
                 },
                 name:{
-                  padding:8,
-                  position:10,
+                  padding:4,
+                  position:6,
                   maxwidth:230,
-                  font:20,
+                  font:18,
                 },
                 quantity:{
                   width:20,
-                  padding:10,
+                  padding:5,
                   font:16
                 }
               },
@@ -831,7 +832,7 @@ function deckcode_image() {
               ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height);
 
               //테두리
-              ctx.strokeStyle = "gold";
+              ctx.strokeStyle = "black";
               ctx.lineWidth = imagesize.header.border;
               ctx.strokeRect(imagesize.header.border/2, imagesize.header.border/2, imagesize.wrapper.width - imagesize.header.border, imagesize.header.height - imagesize.header.border);
 
@@ -901,13 +902,19 @@ function deckcode_image() {
               } else {
                   cardimg.src = "";
               }
-              cardimg.height = imagesize.card.height;
-              cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
-              ctx.drawImage(cardimg, imagesize.wrapper.width - cardimg.width, ystart, cardimg.width, cardimg.height);
+              //cardimg.height = imagesize.card.height;
+              //cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
+              let imageWidth = cardimg.width * imagesize.card.height / cardimg.height;
+              let imagePadding = cardimg.height * imagesize.card.padding / imagesize.card.height;
+              ctx.drawImage(cardimg,
+                  0,imagePadding,
+                  cardimg.width,cardimg.height-(imagePadding*2),
+                  imagesize.wrapper.width - imageWidth, ystart,
+                  imageWidth, imagesize.card.height);
 
               //그라디언트
               grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
-              let nameLen = info.name.replaceAll(" ","").length;
+              let nameLen = info.name.replaceAll(" ","").replaceAll(".","").length;
               if (nameLen < 10) {
                   grd.addColorStop(0, "rgb(40,40,40)");
                   grd.addColorStop(1, "rgba(40,40,40,0)");
@@ -970,7 +977,7 @@ function deckcode_image() {
               ctx.fillStyle = 'white';
               ctx.font = imagesize.footer.font + 'px SpoqaHanSans';
               ctx.textAlign = "right";
-              ctx.fillText("Created at Simplestone", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
+              ctx.fillText("Created at 심플스톤", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
               ctx.fill();
 
           //덱 이미지 출력
