@@ -648,7 +648,7 @@ function deckcode_tag() {
             )
         _wrapper.appendChild(_deckcode);
         let _domain = document.createElement("div.simplestone_domain");
-            _domain.innerHTML = "Created at SimpleStone(https://solarias.github.io/simplestone)";
+            _domain.innerHTML = "Created at 심플스톤(https://solarias.github.io/simplestone)";
             _domain.setAttribute("style",
                 "PADDING:0.2em 0.5em;"+
                 "WIDTH:100%;"+
@@ -770,7 +770,7 @@ function deckcode_image() {
                 height:30,
                 padding:5,
                 border:1,
-                gap:5,
+                gap:3,
                 gradient_start:180,
                 gradient_end:280,
                 cost:{
@@ -792,6 +792,7 @@ function deckcode_image() {
                 }
               },
               footer:{
+                border:1,
                 padding:5,
                 width:300,
                 height:22,
@@ -811,7 +812,8 @@ function deckcode_image() {
 
             //캔버스 그리기
             //배경색
-            ctx.fillStyle = "#392C4A";
+            ctx.fillStyle = "#DDDDDD";
+            //ctx.fillStyle = "#705791";
             ctx.fillRect(0, 0, deckcanvas.width, deckcanvas.height);
 
             //헤더
@@ -824,11 +826,11 @@ function deckcode_image() {
 
               //헤더 그라디언트
               let grd = ctx.createLinearGradient(imagesize.header.gradient_start, 0, imagesize.header.gradient_end, 0);
-              grd.addColorStop(0, "rgb(40,40,40)");
+              grd.addColorStop(0, "rgb(34,34,34)");
               grd.addColorStop(1, "transparent");
               ctx.fillStyle = grd;
               ctx.fillRect(imagesize.header.gradient_start, 0,imagesize.header.gradient_end, imagesize.header.height);
-              ctx.fillStyle = "rgb(40,40,40)";
+              ctx.fillStyle = "rgb(34,34,34)";
               ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height);
 
               //테두리
@@ -881,8 +883,15 @@ function deckcode_image() {
               ctx.font = imagesize.header.format + 'px SpoqaHanSans';
               ctx.textAlign = "right";
               ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
-
               ctx.fill();
+
+              //하단 테두리
+              ctx.strokeStyle = "black";
+              ctx.lineWidth = imagesize.header.border;
+              ctx.beginPath();
+              ctx.moveTo(0, imagesize.header.height + imagesize.date.height);
+              ctx.lineTo(imagesize.header.width, imagesize.header.height + imagesize.date.height);
+              ctx.stroke();
 
             //카드
             process.deck.cards.forEach(function(card, i) {
@@ -916,16 +925,16 @@ function deckcode_image() {
               grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
               let nameLen = info.name.replaceAll(" ","").replaceAll(".","").length;
               if (nameLen < 10) {
-                  grd.addColorStop(0, "rgb(40,40,40)");
-                  grd.addColorStop(1, "rgba(40,40,40,0)");
+                  grd.addColorStop(0, "rgb(34,34,34)");
+                  grd.addColorStop(1, "rgba(34,34,34,0)");
               } else {
-                  grd.addColorStop(0, "rgb(40,40,40)");
-                  grd.addColorStop(0.7, "rgba(40,40,40,0.8)");
-                  grd.addColorStop(1, "rgba(40,40,40,0)");
+                  grd.addColorStop(0, "rgb(34,34,34)");
+                  grd.addColorStop(0.7, "rgba(34,34,34,0.8)");
+                  grd.addColorStop(1, "rgba(34,34,34,0)");
               }
               ctx.fillStyle = grd;
               ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
-              ctx.fillStyle = "rgb(40,40,40)";
+              ctx.fillStyle = "rgb(34,34,34)";
               ctx.fillRect(0, ystart, imagesize.card.gradient_start, imagesize.card.height);
 
               //비용
@@ -972,6 +981,14 @@ function deckcode_image() {
               //배경
               ctx.fillStyle = "#222222";
               ctx.fillRect(0, imagesize.wrapper.height - imagesize.footer.height, imagesize.wrapper.width, imagesize.footer.height);
+
+              //상단단 테두리
+              ctx.strokeStyle = "black";
+              ctx.lineWidth = imagesize.footer.border;
+              ctx.beginPath();
+              ctx.moveTo(0, imagesize.wrapper.height - imagesize.footer.height);
+              ctx.lineTo(imagesize.header.width, imagesize.wrapper.height - imagesize.footer.height);
+              ctx.stroke();
 
               //"심플스톤"
               ctx.fillStyle = 'white';
