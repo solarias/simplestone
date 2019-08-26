@@ -47,7 +47,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/cards.collectible.json",
-    "revision": "4aa2f5a36055dccffb2263571a9fffc3"
+    "revision": "f4c9b98e3792350a9dfe281725e43851"
   },
   {
     "url": "js/cards.textreplace.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "4316074ca09ecb8a660c4b54decfdcbb"
+    "revision": "72fbfe05a8d7f6d6efe3628e41bff1b7"
   },
   {
     "url": "package/Chart.min.js",
