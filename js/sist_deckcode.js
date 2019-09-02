@@ -811,10 +811,11 @@ function deckcode_image() {
             scaleCanvas(deckcanvas, ctx, deckcanvas.width, deckcanvas.height);
 
             //캔버스 그리기
-            //배경색
-            ctx.fillStyle = "#DDDDDD";
-            //ctx.fillStyle = "#705791";
+            //배경색 - 그리지 않음(투명 처리)
+            /*
+            ctx.fillStyle = "yellow";
             ctx.fillRect(0, 0, deckcanvas.width, deckcanvas.height);
+            */
 
             //헤더
               //헤더 이미지
@@ -998,7 +999,7 @@ function deckcode_image() {
               ctx.fill();
 
           //덱 이미지 출력
-          let result = deckcanvas.toDataURL("image/jpeg");
+          let result = deckcanvas.toDataURL("image/png");
           resolve1(result);
         })
     })
