@@ -112,7 +112,7 @@ body {
             line-height:50px;
             text-align:center;
         }
-        .header_button {
+        .header_button_left {
             position:absolute;
             z-index:2;
             display:block;
@@ -129,7 +129,7 @@ body {
             font-size:23px;
             cursor:pointer;
         }
-            .header_button img {
+            .header_button_left img {
                 width:32px;
                 height:32px;
             }
@@ -179,28 +179,60 @@ body {
                     font-weight: bold;
                     text-align:center;
                 }
-            #header_info {
+            .header_button_right {
+                position:absolute;
+                    right:5px;top:5px;
+                z-index:2;
                 display:none;
-                right:5px;top:5px;
 
                 padding:0 5px;
                 width:80px;
                 height:40px;
+
+                background-color:rgba(255,255,255,0.2);
+                border:2px white solid;
+                border-radius: 5px;
+                box-sizing: border-box;
+
+                color:white;
+                font-size:23px;
+                cursor:pointer;
             }
-                    #header_info.show {
+            #header_sort {
+                background-image:url(../images/icon_sort.png);
+                    background-repeat:no-repeat;
+                    background-position:15% 50%;
+                    background-size:25px 28px;
+                pointer-events: auto;
+            }
+                    .header_button_right.show {
                         display:block;}
-                #header_info > img {
+                    #header_sort.disabled {
+                        background-image:url(../images/icon_sort_disabled.png);
+                        border:gray;
+                        color:gray;
+                        pointer-events: none;
+                    }
+                #header_info img {
                     float:left;
-                    width:30px;
-                    height:30px;
+                    width:25px;
+                    height:25px;
                 }
-                #header_info > p {
+                #header_info p {
                     float:right;
                     width:30px;
                     height:30px;
 
                     font-size:15px;
                     line-height:15px;
+                }
+                #header_sort p {
+                    float:right;
+                    width:40px;
+                    height:30px;
+
+                    font-size:20px;
+                    line-height:28px;
                 }
             .header_button:hover {
                 background-color:rgba(255,255,255,0.4);

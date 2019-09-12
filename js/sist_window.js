@@ -333,6 +333,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }
                 //이용 정보 표시안함
                 $("#header_info").classList.remove("show");
+                $("#header_sort").classList.remove("show");
 
                 //최신 확장팩 문구 표기
                 $("#titlescreen_latest_name").innerHTML = DATA.SET[DATA.SET_LATEST].KR;
@@ -422,6 +423,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //이용 정보 표시안함
             $("#header_info").classList.remove("show");
+            $("#header_sort").classList.remove("show");
 
             //덱 설정 초기화
             process.deck = {};
@@ -731,6 +733,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //이용 정보 표시안함
             $("#header_info").classList.remove("show");
+            $("#header_sort").classList.remove("show");
 
             //==================
             //※ 필터 구성
@@ -813,6 +816,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //이용 정보 표시
             $("#header_info").classList.add("show");
+            $("#header_sort").classList.remove("show");
 
             //차트 준비
             setChart("init");
@@ -1022,6 +1026,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //이용 정보 표시안함
             $("#header_info").classList.remove("show");
+            $("#header_sort").classList.remove("show");
 
             //차트 준비
             setChart("init");
@@ -1406,21 +1411,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                         window.history.pushState({ noBackExitsApp: true }, 'DEF');
                     }
                 }
-            //이용 정보 표시
-            $("#header_info").classList.add("show");
-            $("#header_info").onclick = function() {
-                swal({
-                    type:"info",
-                    title:"메타 덱 정보",
-                    html:"<p style='word-break: keep-all;'>HSReplay에서 지난 30일 동안 가장 승률이 높은 상위 100개의 덱, "+
-                        "또는 최근 2일간 가장 인기있는 덱을 검색해보세요.</p>"+
-                        "<br>"+
-                        "<p><span style='color:red;font-weight:bold;'>필터링 설정</span>을 하면 덱 목록을 불러옵니다.<p>"+
-                        "<br>"+
-                        "<p>덱 정보는 <span style='color:blue;font-weight:bold;'>1시간 단위로 갱신</span>됩니다.<p>",
-                    confirmButtonText:"확인"
-                })
-            }
+            //메타 덱 정렬 버튼 비활성화
+            $("#header_sort").classList.add("disabled");
 
             //상태 기억
             process.state = "metadeck";
@@ -1465,6 +1457,19 @@ async function window_shift(keyword, keyword2, keyword3) {
                         class:filter_winrate.class,
                         format:filter_winrate.format,
                         totalgame:filter_winrate.totalgame
+                    }
+                }
+                //덱 정렬
+                let filter_sort = await localforage.getItem("sist_metadeck_filter_sort")
+                if (!filter_sort) {
+                    session.metadeck.filter.sort = {
+                        category:"winrate",
+                        order:"asc"
+                    }
+                } else {
+                    session.metadeck.filter.sort = {
+                        category:filter_sort.category,
+                        order:filter_sort.order
                     }
                 }
             }
@@ -1663,6 +1668,52 @@ async function window_shift(keyword, keyword2, keyword3) {
                 })
             }
 
+            //메타 덱 정렬 기능
+            $("#header_sort").classList.add("show");
+            $("#header_sort").onclick = function() {
+                swal({
+                    title:"메타 덱 정렬",
+                    html:'<div id="modalContentId" class="swal2-content" style="display: block;margin-bottom:10px;">조건을 충족하는 상위 100개의 덱 출력</div>'+
+                        '<button id="popup_metadeck_filter_sort_winrate_asc" class="popup_button sort_button" data-sort="winrate_asc"><img src="./images/icon_sort_1.png">승률 높은순</button>'+
+                        '<button id="popup_metadeck_filter_sort_winrate_desc" class="popup_button sort_button" data-sort="winrate_desc"><img src="./images/icon_sort_2.png">승률 낮은순</button>'+
+                        '<button id="popup_metadeck_filter_sort_dust_asc" class="popup_button sort_button" data-sort="dust_asc"><img src="./images/icon_sort_3.png">가루 높은순</button>'+
+                        '<button id="popup_metadeck_filter_sort_dust_desc" class="popup_button sort_button" data-sort="dust_desc"><img src="./images/icon_sort_4.png">가루 낮은순</button>'+
+                        '<button id="popup_metadeck_filter_sort_totalgame_asc" class="popup_button sort_button" data-sort="totalgame_asc"><img src="./images/icon_sort_5.png">횟수 높은순</button>'+
+                        '<button id="popup_metadeck_filter_sort_totalgame_desc" class="popup_button sort_button" data-sort="totalgame_desc"><img src="./images/icon_sort_6.png">횟수 낮은순</button>',
+                    confirmButtonText:"취소",
+                    onOpen:function() {
+                        //버튼 디폴트 세팅
+                        if (process.state === "metadeck") {
+                            //직업
+                            $("#popup_metadeck_filter_sort_" + session.metadeck.filter.sort.category + "_" + session.metadeck.filter.sort.order).classList.add("selected")
+                        }
+
+                        //버튼 클릭 시
+                        $$(".sort_button").forEach(function(target) {
+                            target.onclick = function() {
+                                //카테고리 세팅
+                                session.metadeck.filter.sort.category = target.dataset.sort.split("_")[0];
+                                //오름/내림 세팅
+                                session.metadeck.filter.sort.order = target.dataset.sort.split("_")[1];
+                                //버튼 세팅
+                                $$(".sort_button").forEach(function(x) {
+                                    x.classList.remove("selected");
+                                })
+                                target.classList.add("selected");
+
+                                //창 닫기
+                                swal.close();
+                                //출력 개시
+                                metadeck_load(session.metadeck.recent);
+                            }
+                        })
+                    },
+                    allowOutsideClick:false,
+                    confirmButtonText: '취소',
+                    confirmButtonColor: '#d33',
+                })
+            }
+
             //메타 덱 목록 불러오기
             async function metadeck_load(metadeck_type) {
                 //공통 : API 호출
@@ -1723,12 +1774,52 @@ async function window_shift(keyword, keyword2, keyword3) {
                                             output.ALL.push(deck);
                                         }
                                     })
-                                    output[x].sort((a,b) => {//각 직업 카테고리 정렬(by 승률)
-                                        return (a.win_rate > b.win_rate) ? -1 : 1;
+                                    output[x].sort((a,b) => {//각 직업 카테고리 정렬
+                                        //설정된 조건에 따라 정렬
+                                        switch (session.metadeck.filter.sort.category) {
+                                            case "winrate":
+                                                if (session.metadeck.filter.sort.order === "asc")
+                                                    return (a.win_rate > b.win_rate) ? -1 : 1;
+                                                else
+                                                    return (a.win_rate < b.win_rate) ? -1 : 1;
+                                                break;
+                                            case "dust":
+                                                if (session.metadeck.filter.sort.order === "asc")
+                                                    return (a.dust > b.dust) ? -1 : 1;
+                                                else
+                                                    return (a.dust < b.dust) ? -1 : 1;
+                                                break;
+                                            case "totalgame":
+                                                if (session.metadeck.filter.sort.order === "asc")
+                                                    return (a.total_games > b.total_games) ? -1 : 1;
+                                                else
+                                                    return (a.total_games < b.total_games) ? -1 : 1;
+                                                break;
+                                        }
                                     })
                                 })
-                                output.ALL.sort((a,b) => {//전 직업 카테고리 정렬(by 승률)
-                                    return (a.win_rate > b.win_rate) ? -1 : 1;
+                                output.ALL.sort((a,b) => {//전 직업 카테고리 정렬
+                                    //설정된 조건에 따라 정렬
+                                    switch (session.metadeck.filter.sort.category) {
+                                        case "winrate":
+                                            if (session.metadeck.filter.sort.order === "asc")
+                                                return (a.win_rate > b.win_rate) ? -1 : 1;
+                                            else
+                                                return (a.win_rate < b.win_rate) ? -1 : 1;
+                                            break;
+                                        case "dust":
+                                            if (session.metadeck.filter.sort.order === "asc")
+                                                return (a.dust > b.dust) ? -1 : 1;
+                                            else
+                                                return (a.dust < b.dust) ? -1 : 1;
+                                            break;
+                                        case "totalgame":
+                                            if (session.metadeck.filter.sort.order === "asc")
+                                                return (a.total_games > b.total_games) ? -1 : 1;
+                                            else
+                                                return (a.total_games < b.total_games) ? -1 : 1;
+                                            break;
+                                    }
                                 })
                                 await localforage.setItem("sist_" + cmd, output);
 
@@ -1886,7 +1977,13 @@ async function window_shift(keyword, keyword2, keyword3) {
                 $("#header_metadeck").innerHTML = "업데이트 날짜 : " + session.metadeck[metadeck_type].update;
                 //최근에 불러온 타입 기억
                 session.metadeck.recent = metadeck_type;
-                await localforage.setItem("sist_metadeck_recent", session.metadeck.recent);
+                try {
+                    await localforage.setItem("sist_metadeck_recent", session.metadeck.recent);
+                    //메타 덱 정렬 조건 기억
+                    await localforage.setItem("sist_metadeck_filter_sort", session.metadeck.filter.sort);
+                } catch(e) {
+                    //오류가 나도 무시하고 진행
+                }
 
                 //로딩 화면 제거
                 $("#metadeck_loading").classList.remove("show");
@@ -1899,6 +1996,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                         $("#header_status").innerHTML = "고승률 덱 정보";
                         break;
                 }
+
+                //메타 덱 정렬 버튼 활성화
+                $("#header_sort").classList.remove("disabled");
 
                 //메타 덱 열람
                 $("#metadeck_slot").onclick = function(e) {

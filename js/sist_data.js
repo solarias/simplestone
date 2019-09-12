@@ -34,7 +34,8 @@ const PORTRAITURL = "./images/portraits/";
 const HEROURL = "./images/heroes/";
 const METADECKAPI = {
     "solarias.github.io":"https://solarias.github.io/simplestone_metadeck/",
-    "localhost":"./localtest/",
+    //"localhost":"./localtest/",
+    "localhost":"https://solarias.github.io/simplestone_metadeck/"
 }
 const METADECKMAX = 100;//메타덱 출력 최대 순위
     //메타덱 API는 hsreplay에서 데이터를 수집하려 파일별로 나눠 보관함
