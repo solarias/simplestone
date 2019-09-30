@@ -670,7 +670,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                 decoded = deckcode_decode(code);
                 process.deck.cards = decoded.cards;
                 process.deck.class = decoded.class;
-                process.deck.format = decoded.format;
+                //기존 포맷 정보가 없으면 덱코드에서 해석한 걸 사용
+                if (!process.deck.format) {
+                    process.deck.format = decoded.format;
+                }
+
                 //저장된 덱코드 제거(향후 덱코드 동기화 방지)
                 delete process.deck.deckcode;
 
@@ -2011,6 +2015,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         if (!process.deck) process.deck = {};
                         process.deck.name = "[" + DATA.FORMAT.KR[target.dataset.format] + target.dataset.number + "]" + target.dataset.name;
                         process.deck.deckcode = target.dataset.deckcode;
+                        process.deck.format = DATA.FORMAT.KR[target.dataset.format];
                         window_shift("loading","deckconfig","metadeck");
                     }
                 }
