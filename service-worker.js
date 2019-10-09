@@ -47,7 +47,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/cards.collectible.json",
-    "revision": "f4c9b98e3792350a9dfe281725e43851"
+    "revision": "f85707ec2fd7c51a0dc561207695404e"
   },
   {
     "url": "js/cards.textreplace.json",
@@ -63,7 +63,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_data.js",
-    "revision": "e6a561e189a259e426d81760cec364b2"
+    "revision": "f35a7f8e1ee47a6e3dbaa30ec85493f2"
   },
   {
     "url": "js/sist_deckcode.js",
@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "7a8c62ff5f6c80996faf5272df968d09"
+    "revision": "d75364bc0d5bc50b463b55377bc1f713"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "79c6212c99d5d5aa96aecafb09ddeb44"
+    "revision": "6603f16c6403eb0ae34ce9a4e3da8d89"
   },
   {
     "url": "package/Chart.min.js",

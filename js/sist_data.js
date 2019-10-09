@@ -234,7 +234,8 @@ const DATA = {
         "TROLL":{KR:"라스타칸의 대난투",FORMAT:"정규",YEAR:2018},
         //2019↓
         "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:2019},
-        "ULDUM":{KR:"울둠의 구원자",FORMAT:"정규",YEAR:2019}//최신팩
+        "ULDUM":{KR:"울둠의 구원자",FORMAT:"정규",YEAR:2019},//최신팩
+        "WILD_EVENT":{KR:"야생 이벤트",FORMAT:"정규",YEAR:2019, EVENT:true}//이벤트
     },
     SET_LATEST:"ULDUM"//최신 확장팩 명(영문)을 여기에 기재
 };

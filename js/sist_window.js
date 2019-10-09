@@ -175,6 +175,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         if (x.collectionText !== undefined) {
                             x.text = x.collectionText;
                         }
+                        //이벤트 세트일 경우 이름 앞에 "*" 표시
+                        if (DATA.SET[x.set] !== undefined && DATA.SET[x.set].EVENT === true) {
+                            x.name = "*" + x.name + "*";
+                        }
                         //검색용 키워드 입력
                         x.keywords = {};
                         let wordbook = x.keywords;
