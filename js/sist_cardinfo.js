@@ -57,12 +57,12 @@ function cardinfo_setup(id, showflavor) {
         //재설치
         site.appendChild(session.masterInfo.cloneNode(true));
         //사이즈 조절
-        cardinfo_setScale($(".cardinfo.wrapper",site));
+        cardinfo_setScale($(".cardinfo.wrapper",site), showflavor);
     } else {
         //설치
         site.appendChild(session.masterInfo.cloneNode(true));
         //사이즈 조절
-        cardinfo_setScale($(".cardinfo.wrapper",site));
+        cardinfo_setScale($(".cardinfo.wrapper",site), showflavor);
         //화면 크기 변경 시 사이즈 재조절
         window.addEventListener("resize",function(e) {
             cardinfo_setScale($(".cardinfo.wrapper",site), showflavor);
