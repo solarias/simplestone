@@ -235,7 +235,7 @@ const DATA = {
         //2019↓
         "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:2019},
         "ULDUM":{KR:"울둠의 구원자",FORMAT:"정규",YEAR:2019},
-        "WILD_EVENT":{KR:"야생 이벤트",FORMAT:"야생",YEAR:2019, EVENT:true},//이벤트
+        "WILD_EVENT":{KR:"야생 이벤트(2019)",FORMAT:"야생",YEAR:2019, EVENT:true},//이벤트
         "DRAGONS":{KR:"용의 강림",FORMAT:"정규",YEAR:2019},//최신팩
     },
     SET_LATEST:"DRAGONS"//최신 확장팩 명(영문)을 여기에 기재
