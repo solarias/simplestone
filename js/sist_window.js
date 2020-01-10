@@ -172,7 +172,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //dbfId대문자 제거 및 문자열로 변환
                         x.dbfid = x.dbfId.toString();
                         //collectionText가 있는 카드들은 텍스트 대체
-                        if (x.collectionText !== undefined) {
+                        if (x.collectionText !== undefined && x.collectionText.length >= 10) {
                             x.text = x.collectionText;
                         }
                         //이벤트 세트일 경우 이름 앞에 "*" 표시

@@ -47,7 +47,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/cards.collectible.json",
-    "revision": "984b71f97e9bb37be82908530c73595b"
+    "revision": "54115fae5f636a2dd4d46c56c59b6004"
   },
   {
     "url": "js/cards.textreplace.json",
@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "d75364bc0d5bc50b463b55377bc1f713"
+    "revision": "a1a2d621ba458a19dcfdd810921ef2af"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "9d2a34703ab8d458d3ab6e6c41226954"
+    "revision": "f2e72395c16d672d0bde28dbf90b6817"
   },
   {
     "url": "package/Chart.min.js",
