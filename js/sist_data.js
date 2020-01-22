@@ -236,7 +236,8 @@ const DATA = {
         "DALARAN":{KR:"어둠의 반격",FORMAT:"정규",YEAR:2019},
         "ULDUM":{KR:"울둠의 구원자",FORMAT:"정규",YEAR:2019},
         "WILD_EVENT":{KR:"야생 이벤트(2019)",FORMAT:"야생",YEAR:2019, EVENT:true},//이벤트
-        "DRAGONS":{KR:"용의 강림",FORMAT:"정규",YEAR:2019},//최신팩
+        "DRAGONS":{KR:"용의 강림",FORMAT:"정규",YEAR:2019},
+        "YEAR_OF_THE_DRAGON":{KR:"갈라크론드의 부활",FORMAT:"정규",YEAR:2019},//최신팩
     },
-    SET_LATEST:"DRAGONS"//최신 확장팩 명(영문)을 여기에 기재
+    SET_LATEST:"YEAR_OF_THE_DRAGON"//최신 확장팩 명(영문)을 여기에 기재
 };
