@@ -4,9 +4,11 @@
 //===========================================================
 let process = {};//임시 정보
 let session = {
-    dbVersion:undefined,//카드 DB 버전 (업데이트 확인용)
+    serverVersion:undefined,//서버 버전 (업데이트 확인용)
+    metadata:undefined,//메타데이터('직업', '종족', '세트', '등급', '종류' 정보)
     db:undefined,//카드 DB (비용, 이름에 따라 정렬)
-    index:{},//dbfid로 카드 DB 검색하기 위해 사용
+    dbIndex:{},//카드 탐색용 오브젝트(By ID) - 가장 빠른 방법
+    classInfo:{},//직업 탐색용 오브젝트(By slug)
     masterNode:undefined,//마스터 노드
     masterInfo:undefined,//마스터 인포
     masterSlot:undefined,//마스터 슬롯
@@ -27,11 +29,13 @@ let isError = {}//에러 발생 시 1회에 한해 출력
 //const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";//HearthstoneJSON에서 이미지 가져오기
 //const IMAGEURL = "https://art.hearthstonejson.com/v1/256x/";//HearthstoneJSON에서 이미지 가져오기
 //const RENDERURL = "https://art.hearthstonejson.com/v1/render/latest/koKR/256x/";
-const TILEURL = "./images/tiles/";
-    const TILEURL_REPLACE = "./images/tiles_replace/";
-const PORTRAITURL = "./images/portraits/";
-    const PORTRAITURL_REPLACE = "./images/portraits_replace/";
-const HEROURL = "./images/heroes/";
+const DATAURL = "https://solarias.github.io/simplestone_database/json/"
+const TILEURL = "https://solarias.github.io/simplestone_database/tile/tile_"
+//const TILEURL = "./tile/tile_"//localhost에서 테스트 시 활용
+const PORTRAITURL = "./images/portraits/"
+    /*const TILEURL_REPLACE = "./images/tiles_replace/"
+    const PORTRAITURL_REPLACE = "./images/portraits_replace/"*/
+const HEROURL = "./images/heroes/"
 const METADECKAPI = {
     "solarias.github.io":"https://solarias.github.io/simplestone_metadeck/",
     //"localhost":"./localtest/",
@@ -51,7 +55,7 @@ let clusterize = {};
 //클릭, 터치 이벤트 관련
 let autoInfo;//꾹 눌려 카드정보 열람 auto
 let cardReady = 0;//이 값이 1인 상태에서만 카드 추가 가능
-const AUTOINFOTIME = 500;//누르는 시간: 0.5초
+const AUTOINFOTIME = 500;//카드 정보를 보기 위해 누르는 시간: 0.5초
 //이벤트 관리
 let eventObj = {
     "collection_list_content":{},

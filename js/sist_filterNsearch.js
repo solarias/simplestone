@@ -5,117 +5,105 @@
 
 //카드 정렬 - 배열(비용, 이름 순)
 function sort_arr(arr) {
-    let setZero = [NaN, null, undefined, Infinity];
+    let setZero = [NaN, null, undefined, Infinity]
     arr.sort(function(x,y) {
-        if (setZero.indexOf(x.cost) >= 0 ) x.cost = -1;
-        if (setZero.indexOf(y.cost) >= 0 ) y.cost = -1;
+        if (setZero.indexOf(x.cost) >= 0 ) x.cost = -1
+        if (setZero.indexOf(y.cost) >= 0 ) y.cost = -1
         if (x.cost !== y.cost) {
-            return x.cost - y.cost;
+            return x.cost - y.cost
         } else {
-            let order = [x.name,y.name];
-            order.sort();
+            let order = [x.name,y.name]
+            order.sort()
             if (x.name === order[0]) {
-                return -1;
+                return -1
             } else {
-                return 1;
+                return 1
             }
-        };
+        }
     })
 
-    return arr;
+    return arr
 }
 
 //키워드 검색 가능하도록 정리
 function searchable(keyword) {
-    let text = keyword;
-    //분류 한글화
-    Object.keys(DATA.TYPE.KR).forEach(function(x) {
-        text = text.replaceAll(x,DATA.TYPE.KR[x]);
-    })
-    //종족명 한글화
-    Object.keys(DATA.RACE.KR).forEach(function(x) {
-        text = text.replaceAll(x,DATA.RACE.KR[x]);
-    })
+    let text = keyword
     //불필요 기호 제거
     //text = text.replace(/\s|<b>|<\/b>|\n|\[x\]|\$|#|<i>|<\/i>|@|\.|,|(|)|:/g,"");
-    let unseable = [" ", "<b>", "</b>", "\n", "[x]", "$", "#", "<i>", "</i>", "@", ".", ",", "/", "(", ")", ":", "{0} "];
+    let unseable = [" ", "<b>", "</b>", "\n", "<i>", "</i>", ".", ",", "/", "(", ")", ":", "( 남음!)", "(달성!)"]
     unseable.forEach(function(x) {
-        text = text.replaceAll(x,"");
+        text = text.replaceAll(x,"")
     })
     //소문자화
-    text = text.toLowerCase();
+    text = text.toLowerCase()
     //반환
-    return text;
+    return text
 }
 //텍스트 읽을 수 있도록 정리
 function readable(text) {
-    let unseable = ["[x]", "$", "#", "@", "{0} "];
-    let replacable = ["\n"];
-    unseable.forEach(function(x) {
-        text = text.replaceAll(x,"");
+    let replacable = ["\n"]
+    replacable.forEach(x => {
+        text = text.replaceAll(x,"<br>")
     })
-    replacable.forEach(function(x) {
-        text = text.replaceAll(x,"<br>");
+    let unusable = ["( 남음!)", "(달성!)"]
+    unusable.forEach(x => {
+        text = text.replaceAll(x,"")
     })
     //반환
-    return text;
+    return text
 }
 //텍스트 타이틀 변환
 function titletext(text) {
-    let unseeable = ["[x]", "$", "#", "@", "{0} "];
-    let replacable = ["\n"];
-    unseeable.forEach(function(x) {
-        text = text.replaceAll(x,"");
-    })
+    let replacable = ["\n"]
     replacable.forEach(function(x) {
-        text = text.replaceAll(x," ");
+        text = text.replaceAll(x," ")
     })
     //반환
-    return text;
+    return text
 }
 
-//카드 마나 맞춰보기
-function card_matchMana(target, mana) {
-    switch (mana) {
+//카드 비용 맞춰보기
+function card_matchCost(target, cost) {
+    switch (cost) {
         case "all"://전체: 무조건 통과
-            return true;
-            break;
-            case "0"://마나 = 0
-            case "1"://마나 = 1
-            case "2"://마나 = 2
-            case "3"://마나 = 3
-            case "4"://마나 = 4
-            case "5"://마나 = 5
-            case "6"://마나 = 6
-            if (target.cost === parseInt(mana)) return true;
-            break;
-        case "7"://마나 = 7 이상
-            if (target.cost >= 7) return true;
-            break;
+            return true
+            break
+        case "0"://비용 = 0
+        case "1"://비용 = 1
+        case "2"://비용 = 2
+        case "3"://비용 = 3
+        case "4"://비용 = 4
+        case "5"://비용 = 5
+        case "6"://비용 = 6
+            if (target.cost === parseInt(cost)) return true
+            break
+        case "7"://비용 = 7 이상
+            if (target.cost >= 7) return true
+            break
         case "odd"://홀수
-            if (target.cost % 2 === 1) return true;
-            break;
+            if (target.cost % 2 === 1) return true
+            break
         case "even"://짝수
-            if (target.cost % 2 === 0) return true;
-            break;
+            if (target.cost % 2 === 0) return true
+            break
         default://오류 방지 - 통과
-            return true;
-            break;
+            return true
+            break
     }
 
     //통과 못하면 제외
-    return false;
+    return false
 }
 
 //카드 키워드 맞춰보기
 function card_matchKeyword(target, keyword) {
     //필터가 비었으면 통과
-    if (!keyword || keyword === "") return true;
+    if (!keyword || keyword === "") return true
     //필터 분류(공백)
-    let list = ["name","text","race","type"];
+    let list = ["name","text","minionType","cardType"]
     for (let i = 0;i<list.length;i++) {
         if (target[list[i]] !== undefined) {
-            if (session.db[session.index[target.dbfid]].keywords[list[i]].indexOf(keyword) >= 0) {
+            if (target.keywords[list[i]].indexOf(keyword) >= 0) {
                 return true;
             }
         }
@@ -125,17 +113,17 @@ function card_matchKeyword(target, keyword) {
 }
 
 //카드 필터 구성
-function card_setFilter(cmd) {
+function card_cardSetFilter(cmd) {
     //초기 작업: 검색치 초기화
     if (cmd === "init") {
         //검색 초기치 설정, 필터 활성화
         if (!process.search) process.search = {};
-        process.search.class = (process.deck.class) ? process.deck.class : "WARRIOR";//직업
-        process.search.mana = "all";//마나
-        process.search.rarity = "all";//등급
-        process.search.set = "all";//세트
-        process.search.format = process.deck.format;//포맷
-        process.search.keyword = "";//키워드
+        process.search.class = (process.deck.class) ? process.deck.class : "WARRIOR"//직업
+        process.search.cost = "all"//비용
+        process.search.rarity = "all"//등급
+        process.search.set = "all"//세트
+        process.search.format = process.deck.format//포맷
+        process.search.keyword = ""//키워드
     }
 
     //직업
@@ -143,7 +131,7 @@ function card_setFilter(cmd) {
         //초기"글자" 설정
         if (text === "init") {
             //검색버튼 키워드 변경
-            $("#search_class").innerHTML = DATA.CLASS.KR[process.search.class];
+            $("#search_class").innerHTML = session.classInfo[process.search.class].name
         //버튼 클릭
         } else {
             //카드 정보
@@ -167,30 +155,32 @@ function card_setFilter(cmd) {
                         $("#popup_class_" + process.search.class).classList.add("selected");
                         //검색 결과가 없는 필터 흐릿하게 만들기
                         let searchArr = process.search.allClassResult;
-                        DATA.CLASS.CARDCLASS.forEach(function(x) {
-                            let haveCard = 0;
-                            for (let i =0;i < searchArr.length;i++) {
-                                if (session.db[session.index[searchArr[i]]].cardClass === x) {
-                                    haveCard = 1;
-                                    break;
+                        session.metadata.classes.forEach(x => {
+                            if (x.slug !== "ALL") {
+                                let haveCard = 0;
+                                for (let i =0;i < searchArr.length;i++) {
+                                    if (session.db[session.dbIndex[searchArr[i].toString()]].class.slug === x.slug) {
+                                        haveCard = 1;
+                                        break;
+                                    }
                                 }
+                                if (haveCard === 0) $("#popup_class_" + x.slug).classList.add("noCard");
                             }
-                            if (haveCard === 0) $("#popup_class_" + x).classList.add("noCard");
                         })
 
                         //버튼 상호작용
-                        $$(".popup_button").forEach(function(x) {
+                        $$(".popup_button").forEach(x => {
                             x.onclick = function() {
                                 //직업 필터 변경
-                                let classtext = x.dataset.class;
-                                process.search.class = classtext;
+                                let classtext = x.dataset.class
+                                process.search.class = classtext
                                 //키워드 변경
-                                let krtext = DATA.CLASS.KR[classtext];
-                                $("#search_class").innerHTML = krtext;
+                                let krtext = session.classInfo[classtext].name
+                                $("#search_class").innerHTML = krtext
                                 //창 닫기
-                                swal.close();
+                                swal.close()
                                 //검색 개시
-                                card_search();
+                                card_search()
                             }
                         })
                     },
@@ -204,9 +194,9 @@ function card_setFilter(cmd) {
                 //검색 직업 변경
                 process.search.class = (process.search.class === "NEUTRAL" ? process.deck.class : "NEUTRAL")
                 //검색버튼 키워드 변경
-                $("#search_class").innerHTML = DATA.CLASS.KR[process.search.class];
+                $("#search_class").innerHTML = session.classInfo[process.search.class].name
                 //재검색
-                card_search();
+                card_search()
             }
 
         }
@@ -218,42 +208,42 @@ function card_setFilter(cmd) {
             filter_class();
         }
 
-    //마나
-    function filter_mana(text) {
+    //비용
+    function filter_cost(text) {
         //초기"글자" 설정
         if (text === "init") {
             //"전체" 키워드
-            let text = "마나 : 전체";
-            $("#search_mana").innerHTML = text;
-            $("#mobilefilter_mana").innerHTML = text;
+            let text = "비용 : 전체";
+            $("#search_cost").innerHTML = text;
+            $("#mobilefilter_cost").innerHTML = text;
         } else {
             //팝업창 열기
             swal({
-                title: '카드 마나 검색',
+                title: '카드 비용 검색',
                 html:
-                  '<button id="popup_mana_all" class="popup_button full" data-mana="전체">전체</button>' +
-                  '<button id="popup_mana_0" class="popup_button" data-mana="0"><img src="./images/mana_blue.png">0</button>' +
-                  '<button id="popup_mana_1" class="popup_button" data-mana="1"><img src="./images/mana_blue.png">1</button>' +
-                  '<button id="popup_mana_2" class="popup_button" data-mana="2"><img src="./images/mana_blue.png">2</button>' +
-                  '<button id="popup_mana_3" class="popup_button" data-mana="3"><img src="./images/mana_blue.png">3</button>' +
-                  '<button id="popup_mana_4" class="popup_button" data-mana="4"><img src="./images/mana_blue.png">4</button>' +
-                  '<button id="popup_mana_5" class="popup_button" data-mana="5"><img src="./images/mana_blue.png">5</button>' +
-                  '<button id="popup_mana_6" class="popup_button" data-mana="6"><img src="./images/mana_blue.png">6</button>' +
-                  '<button id="popup_mana_7" class="popup_button" data-mana="7"><img src="./images/mana_blue.png">7+</button>' +
-                  '<button id="popup_mana_odd" class="popup_button" data-mana="홀수">홀수</button>' +
-                  '<button id="popup_mana_even" class="popup_button" data-mana="짝수">짝수</button>',
+                  '<button id="popup_cost_all" class="popup_button full" data-cost="전체">전체</button>' +
+                  '<button id="popup_cost_0" class="popup_button" data-cost="0"><img src="./images/cost_blue.png">0</button>' +
+                  '<button id="popup_cost_1" class="popup_button" data-cost="1"><img src="./images/cost_blue.png">1</button>' +
+                  '<button id="popup_cost_2" class="popup_button" data-cost="2"><img src="./images/cost_blue.png">2</button>' +
+                  '<button id="popup_cost_3" class="popup_button" data-cost="3"><img src="./images/cost_blue.png">3</button>' +
+                  '<button id="popup_cost_4" class="popup_button" data-cost="4"><img src="./images/cost_blue.png">4</button>' +
+                  '<button id="popup_cost_5" class="popup_button" data-cost="5"><img src="./images/cost_blue.png">5</button>' +
+                  '<button id="popup_cost_6" class="popup_button" data-cost="6"><img src="./images/cost_blue.png">6</button>' +
+                  '<button id="popup_cost_7" class="popup_button" data-cost="7"><img src="./images/cost_blue.png">7+</button>' +
+                  '<button id="popup_cost_odd" class="popup_button" data-cost="홀수">홀수</button>' +
+                  '<button id="popup_cost_even" class="popup_button" data-cost="짝수">짝수</button>',
                 onOpen:function() {
-                    //현재 마나 검색필터 보여주기
-                    $("#popup_mana_" + process.search.mana).classList.add("selected");
+                    //현재 비용 검색필터 보여주기
+                    $("#popup_cost_" + process.search.cost).classList.add("selected");
                     //버튼 상호작용
                     $$(".popup_button").forEach(function(x) {
                         x.onclick = function() {
-                            //마나 필터 변경
-                            process.search.mana = x.id.replace("popup_mana_","");
+                            //비용 필터 변경
+                            process.search.cost = x.id.replace("popup_cost_","");
                             //키워드 변경
-                            let text = "마나 : " + x.dataset.mana;
-                            $("#search_mana").innerHTML = text;
-                            $("#mobilefilter_mana").innerHTML = text;
+                            let text = "비용 : " + x.dataset.cost;
+                            $("#search_cost").innerHTML = text;
+                            $("#mobilefilter_cost").innerHTML = text;
                             //창 닫기
                             swal.close();
                             //검색 개시
@@ -269,10 +259,10 @@ function card_setFilter(cmd) {
         }
     }
         //직업 필터 작동
-        filter_mana("init");
+        filter_cost("init");
         //직업 필터 상호작용
-        $("#search_mana").onclick = filter_mana;
-        $("#mobilefilter_mana").onclick = filter_mana;
+        $("#search_cost").onclick = filter_cost;
+        $("#mobilefilter_cost").onclick = filter_cost;
 
     //등급
     function filter_rarity(text) {
@@ -288,11 +278,11 @@ function card_setFilter(cmd) {
                 title: '카드 등급 검색',
                 html:
                   '<button id="popup_rarity_all" class="popup_button full" data-rarity="전체">전체</button>' +
-                  '<button id="popup_rarity_FREE" class="popup_button full" data-rarity="기본"><img src="./images/mana_free.png">기본 카드</button>' +
-                  '<button id="popup_rarity_COMMON" class="popup_button full" data-rarity="일반"><img src="./images/mana_common.png">일반 카드</button>' +
-                  '<button id="popup_rarity_RARE" class="popup_button full" data-rarity="희귀"><img src="./images/mana_rare.png">희귀 카드</button>' +
-                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="특급"><img src="./images/mana_epic.png">특급 카드</button>' +
-                  '<button id="popup_rarity_LEGENDARY" class="popup_button full" data-rarity="전설"><img src="./images/mana_legendary.png">전설 카드</button>',
+                  '<button id="popup_rarity_FREE" class="popup_button full" data-rarity="기본"><img src="./images/cost_free.png">기본 카드</button>' +
+                  '<button id="popup_rarity_COMMON" class="popup_button full" data-rarity="일반"><img src="./images/cost_common.png">일반 카드</button>' +
+                  '<button id="popup_rarity_RARE" class="popup_button full" data-rarity="희귀"><img src="./images/cost_rare.png">희귀 카드</button>' +
+                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="특급"><img src="./images/cost_epic.png">특급 카드</button>' +
+                  '<button id="popup_rarity_LEGENDARY" class="popup_button full" data-rarity="전설"><img src="./images/cost_legendary.png">전설 카드</button>',
                 onOpen:function() {
                     //현재 등급 검색필터 보여주기
                     $("#popup_rarity_" + process.search.rarity).classList.add("selected");
@@ -326,7 +316,7 @@ function card_setFilter(cmd) {
         $("#mobilefilter_rarity").onclick = filter_rarity;
 
     //세트
-    function filter_set(text) {
+    function filter_cardSet(text) {
         //초기"글자" 설정
         if (text === "init") {
             //"전체" 키워드
@@ -339,44 +329,49 @@ function card_setFilter(cmd) {
                     formattext = "세트／포맷";
                     break;
             }
-            $("#search_set").innerHTML = formattext;
-            $("#mobilefilter_set").innerHTML = formattext;
+            $("#search_cardSet").innerHTML = formattext
+            $("#mobilefilter_cardSet").innerHTML = formattext
         } else {
             //정규전: button형, 야생전: select형
             switch (process.deck.format) {
                 case "정규":
                     //세트 버튼 구성
-                    let text = "";
-                    let setarr = Object.keys(DATA.SET);
-                    setarr.unshift("all");
-                    setarr.forEach(function(x,i) {
-                        if (x === "all" ||
-                        DATA.SET[x].FORMAT === "정규" ||
-                        process.deck.format === DATA.SET[x].FORMAT) {
-                            let btn = document.createElement("button");
-                                btn.id = "popup_set_" + x;
-                                btn.classList.add("popup_button","small");
-                                btn.dataset.set = (DATA.SET[x]) ? DATA.SET[x].KR : "전체";
-                                btn.innerHTML = (DATA.SET[x]) ? DATA.SET[x].KR : "전체";
-                            text += btn.outerHTML;
+                    let text = ""
+                    //"전체" 세트 추가
+                    let btn1 = document.createElement("button")
+                        btn1.slug = "popup_cardSet_all"
+                        btn1.classList.add("popup_button","small")
+                        btn1.dataset.set = "전체"
+                        btn1.innerHTML = "전체"
+                    text += btn1.outerHTML
+                    //개별 세트 추가
+                    let setarr = session.metadata.sets
+                    setarr.forEach(set => {
+                        if (set.format === "정규") {
+                            let btn2 = document.createElement("button")
+                                btn2.slug = "popup_cardSet_" + set.slug
+                                btn2.classList.add("popup_button","small")
+                                btn2.dataset.set = set.name
+                                btn2.innerHTML = s.name
+                            text += btn2.outerHTML
                         }
-                    });
+                    })
                     //팝업창 열기
                     swal({
                         title: '카드 세트 검색',
                         html:text,
                         onOpen:function() {
                             //현재 세트 검색필터 보여주기
-                            $("#popup_set_" + process.search.set).classList.add("selected");
+                            $("#popup_cardSet_" + process.search.set).classList.add("selected");
                             //버튼 상호작용
-                            $$(".popup_button").forEach(function(x) {
+                            $$(".popup_button").forEach(x => {
                                 x.onclick = function() {
                                     //세트 필터 변경
-                                    process.search.set = x.id.replace("popup_set_","");
+                                    process.search.set = x.slug.replace("popup_cardSet_","");
                                     //키워드 변경
                                     let text = x.dataset.set;
-                                    $("#search_set").innerHTML = text;
-                                    $("#mobilefilter_set").innerHTML = text;
+                                    $("#search_cardSet").innerHTML = text;
+                                    $("#mobilefilter_cardSet").innerHTML = text;
                                     //창 닫기
                                     swal.close();
                                     //검색 개시
@@ -403,38 +398,38 @@ function card_setFilter(cmd) {
                       '<select id="popup_select_wild" class="popup_select swal2-select" style="display: block;"></select>',
                     onOpen:function() {
                         //선택창 구성
-                        let select_standard = $("#popup_select_standard");
+                        let select_standard = $("#popup_select_standard")
                         let select_wild = $("#popup_select_wild")
                         //정규 세트
                             //"타이틀" 추가
-                            select_standard.options[0] = new Option("개별 세트(정규)");
-                            select_standard.options[0].disabled = true;
+                            select_standard.options[0] = new Option("개별 세트(정규)")
+                            select_standard.options[0].disabled = true
                             //개별 세트
-                            let setarr = Object.keys(DATA.SET);
-                            setarr.forEach(function(x,i) {
-                                if (DATA.SET[x].FORMAT === "정규") {
-                                    select_standard.options[select_standard.options.length] = new Option(DATA.SET[x].KR,x);
+                            let setarr = session.metadata.sets
+                            setarr.forEach(set => {
+                                if (set.format === "정규") {
+                                    select_standard.options[select_standard.options.length] = new Option(set.name,set.slug)
                                     //현재 검색필터 세트이면 강조
-                                    if (x === process.search.set) {
-                                        select_standard.options[select_standard.options.length-1].selected = true;
+                                    if (set.slug === process.search.set) {
+                                        select_standard.options[select_standard.options.length-1].selected = true
                                     }
                                 }
-                            });
+                            })
                         //야생 세트
                             //"타이틀" 추가
-                            select_wild.options[0] = new Option("개별 세트(야생)");
-                            select_wild.options[0].disabled = true;
+                            select_wild.options[0] = new Option("개별 세트(야생)")
+                            select_wild.options[0].disabled = true
                             //개별 세트
-                            let setarr2 = Object.keys(DATA.SET);
-                            setarr2.forEach(function(x,i) {
-                                if (DATA.SET[x].FORMAT === "야생") {
-                                    select_wild.options[select_wild.options.length] = new Option(DATA.SET[x].KR,x);
+                            let setarr2 = session.metadata.sets
+                            setarr2.forEach(set => {
+                                if (set.format === "야생") {
+                                    select_wild.options[select_wild.options.length] = new Option(set.name,set.slug)
                                     //현재 검색필터 세트이면 강조
-                                    if (x === process.search.set) {
-                                        select_wild.options[select_wild.options.length-1].selected = true;
+                                    if (set.slug === process.search.set) {
+                                        select_wild.options[select_wild.options.length-1].selected = true
                                     }
                                 }
-                            });
+                            })
                         //버튼 상호작용
                         if (process.search.format === "정규" && process.search.set === "all") {
                             $("#popup_standrad").classList.add("selected");
@@ -447,8 +442,8 @@ function card_setFilter(cmd) {
                             process.search.set = "all";
                             //키워드 변경
                             let text = "정규 전체";
-                            $("#search_set").innerHTML = text;
-                            $("#mobilefilter_set").innerHTML = text;
+                            $("#search_cardSet").innerHTML = text;
+                            $("#mobilefilter_cardSet").innerHTML = text;
                             //창 닫기
                             swal.close();
                             //검색 개시
@@ -460,8 +455,8 @@ function card_setFilter(cmd) {
                             process.search.set = "all";
                             //키워드 변경
                             let text = "야생 전체";
-                            $("#search_set").innerHTML = text;
-                            $("#mobilefilter_set").innerHTML = text;
+                            $("#search_cardSet").innerHTML = text;
+                            $("#mobilefilter_cardSet").innerHTML = text;
                             //창 닫기
                             swal.close();
                             //검색 개시
@@ -474,8 +469,8 @@ function card_setFilter(cmd) {
                             process.search.set = select_standard.value;
                             //키워드 변경
                             let text = select_standard.options[select_standard.selectedIndex].text;
-                            $("#search_set").innerHTML = text;
-                            $("#mobilefilter_set").innerHTML = text;
+                            $("#search_cardSet").innerHTML = text;
+                            $("#mobilefilter_cardSet").innerHTML = text;
                             //창 닫기
                             swal.close();
                             //검색 개시
@@ -487,8 +482,8 @@ function card_setFilter(cmd) {
                             process.search.set = select_wild.value;
                             //키워드 변경
                             let text = select_wild.options[select_wild.selectedIndex].text;
-                            $("#search_set").innerHTML = text;
-                            $("#mobilefilter_set").innerHTML = text;
+                            $("#search_cardSet").innerHTML = text;
+                            $("#mobilefilter_cardSet").innerHTML = text;
                             //창 닫기
                             swal.close();
                             //검색 개시
@@ -507,24 +502,24 @@ function card_setFilter(cmd) {
         }
     }
         //직업 필터 작동
-        filter_set("init");
+        filter_cardSet("init");
         //직업 필터 상호작용
-        $("#search_set").onclick = filter_set;
-        $("#mobilefilter_set").onclick = filter_set;
+        $("#search_cardSet").onclick = filter_cardSet;
+        $("#mobilefilter_cardSet").onclick = filter_cardSet;
 
     //검색어
     function filter_keyword(text) {
         //초기"글자" 설정
         if (text === "init") {
             //키워드 초기화
-            process.search.keyword = "";
+            process.search.keyword = ""
             //형광색 초기화
-            $("#search_keyword").classList.remove("activate");
-            $("#mobilefilter_keyword").classList.remove("activate");
+            $("#search_keyword").classList.remove("activate")
+            $("#mobilefilter_keyword").classList.remove("activate")
             //"기본" 키워드
-            let text = "검색어";
-            $("#keyword_text").innerHTML = text;
-            $("#keyword_text2").innerHTML = text;
+            let text = "검색어"
+            $("#keyword_text").innerHTML = text
+            $("#keyword_text2").innerHTML = text
         } else {
             //팝업창 열기
             swal({
@@ -539,22 +534,22 @@ function card_setFilter(cmd) {
             }).then(function(result) {
                 if (result) {
                     //검색 필터 변경
-                    process.search.keyword = result;
+                    process.search.keyword = result
                     //형광색 표시
-                    $("#search_keyword").classList.add("activate");
-                    $("#mobilefilter_keyword").classList.add("activate");
+                    $("#search_keyword").classList.add("activate")
+                    $("#mobilefilter_keyword").classList.add("activate")
                     //키워드 변경
-                    let text = result;
-                    $("#keyword_text").innerHTML = text;
-                    $("#keyword_text2").innerHTML = text;
+                    let text = result
+                    $("#keyword_text").innerHTML = text
+                    $("#keyword_text2").innerHTML = text
                     //검색 개시
-                    card_search("keyword");
+                    card_search("keyword")
                 }
             })
         }
     }
         //직업 필터 작동
-        filter_keyword("init");
+        filter_keyword("init")
         //직업 필터 상호작용
         function searchclick() {
             if (process.search.keyword === "") {
@@ -572,12 +567,12 @@ function card_setFilter(cmd) {
         //검색 초기치 설정, 필터 활성화
         if (!process.search) process.search = {};
         //process.search.class = process.deck.class; //직업은 초기화하지 않음
-        process.search.mana = "all";//마나
-        process.search.rarity = "all";//등급
-        process.search.set = "all";//세트
-        process.search.format = process.deck.format;//포맷
-        process.search.keyword = "";//키워드
-        card_setFilter();//필터 다시 활성화
+        process.search.cost = "all"//비용
+        process.search.rarity = "all"//등급
+        process.search.set = "all"//세트
+        process.search.format = process.deck.format//포맷
+        process.search.keyword = ""//키워드
+        card_cardSetFilter()//필터 다시 활성화
 
         //검색 초기치에 따라 검색결과 출력(최초 검색)
         card_search();
@@ -605,34 +600,37 @@ function card_getSearchResult(className) {
     let keyword = "";
     if (process.search.keyword) keyword = searchable(process.search.keyword);
     //정해둔 직업으로 카드 검색
-    let arr = [];
-    session.db.forEach(function(x) {
-        if (//직업
-        (className === "all" || (x.cardClass === className &&//검색 직업과 카드 직업은 반드시 맞아야 함
+    let arr = []
+    session.db.forEach(function(card) {
+        if (card.collectible === 1 &&//수집가능한 카드만 검색 가능
+        //직업
+        (className === "all" || (card.class.slug === className &&//검색 직업과 카드 직업은 반드시 맞아야 함
             (process.deck.class === undefined ||//정해둔 직업 없으면 다 출력
             (process.deck.class !== undefined &&//정해둔 직업 있으면
-                (x.cardClass === process.deck.class ||//현 직업과 맞거나
-                x.classes === undefined ||//다중직업이 없거나
-                (x.classes !== undefined &&//다중직업 중 하나에 속하거나
-                    x.classes.indexOf(process.deck.class)>= 0
+                (card.class.slug === process.deck.class ||//현 직업과 맞거나
+                card.multiClass.length === 0 ||//다중직업이 없거나
+                (card.multiClass.length > 0 &&//다중직업 중 하나에 속하거나
+                    card.multiClass.indexOf(process.deck.class)>= 0
                 )
                 )
             )
             )
         )) &&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
-        (x.rarity !== "FREE" || x.type !== "HERO") &&//기본 영웅 제외
-        (x.rarity !== "HERO_SKIN" || x.type !== "HERO") &&//스킨 영웅 제외
-        (DATA.SET[x.set] !== undefined && (DATA.SET[x.set].FORMAT === "정규" || DATA.SET[x.set].FORMAT === process.search.format)) &&//포맷(정규는 무조건 포함)
-        (process.search.mana === "all" || card_matchMana(x, process.search.mana) === true) &&//마나
-        (process.search.rarity === "all" || x.rarity === process.search.rarity) &&//등급
-        (process.search.set === "all" || x.set === process.search.set) &&
-        card_matchKeyword(x, keyword) === true) {
-            arr.push(x.dbfid);
+        (card.cardType.slug !== "HERO" || card.rarity.slug !== "FREE") &&//기본 영웅 제외
+        (card.cardType.slug !== "HERO" || card.cardSet.slug !== "ETC") &&//스킨 영웅 제외 : "알 수 없는 세트(17) 소속 카드"
+        (card.cardSet.slug !== "ETC" &&
+            (card.cardSet.format === "정규" ||
+            card.cardSet.format === process.search.format)) &&//포맷(정규는 무조건 포함)
+        (process.search.cost === "all" || card_matchCost(card, process.search.cost) === true) &&//비용
+        (process.search.rarity === "all" || card.rarity.slug === process.search.rarity) &&//등급
+        (process.search.set === "all" || card.cardSet.slug === process.search.set) &&
+        card_matchKeyword(card, keyword) === true) {
+            arr.push(card.id)
         }
     })
 
     //검색된 결과 수량 출력
-    return arr;
+    return arr
 }
 
 //카드 검색
@@ -655,67 +653,69 @@ function card_search(action) {
         if (arrResult.length > 0) {
             //출력
             card_showResult(arrResult);
-            return;//종료
+            return//종료
         }
         //(없으면) 검색 직업 임시저장
-        let firstClass = process.search.class;
+        let firstClass = process.search.class
         //최초 검색 임시저장(딥 카피)
-        let firstResuht = deepCopy(arrResult);
+        let firstResuht = deepCopy(arrResult)
         //직업 목록 불러오기 (cardinfo or deckbuilding)
-        let classArr = [];
+        let classArr = []
         //"카드 정보 보기"라면
         if (process.state === "cardinfo") {
             //(현 직업 빼고) 전 직업 집어넣기
-            DATA.CLASS.CARDCLASS.forEach(function(x) {
-                if (x !== process.search.class) classArr.push(x);
+            session.metadata.classes.forEach(x => {
+                if (x.slug !== "ALL") {
+                    if (x.name !== process.search.class) classArr.push(x.slug)
+                }
             })
         //"덱 짜기"라면
         } else if (process.state === "deckbuilding") {
             //검색 직업이 중립 -
-            if (process.search.class === "NEUTRAL") classArr.push(process.deck.class);
-            else classArr.push("NEUTRAL");
+            if (process.search.class === "NEUTRAL") classArr.push(process.deck.class)
+            else classArr.push("NEUTRAL")
         }
         for (let i = 0;i < classArr.length;i++) {
             //검색 직업 변경 후 검색
-            process.search.class = classArr[i];
+            process.search.class = classArr[i]
             //결과가 나오면
-                arrResult = card_getSearchResult(process.search.class);
+                arrResult = card_getSearchResult(process.search.class)
                 if (arrResult.length > 0) {
                     //상단 직업 버튼 변경
-                    $("#search_class").innerHTML = DATA.CLASS.KR[process.search.class];
+                    $("#search_class").innerHTML = session.classInfo[process.search.class].name
                     //직업 변경 팝업
                     nativeToast({
-                        message: '키워드 검색 결과에 따른<br>직업 필터링 변경<br>(' + DATA.CLASS.KR[firstClass] + ' -> ' + DATA.CLASS.KR[process.search.class] + ')',
+                        message: '키워드 검색 결과에 따른<br>직업 필터링 변경<br>(' + session.classInfo[firstClass].name + ' -> ' + session.classInfo[process.search.class].name + ')',
                         position: 'center',
                         timeout: 2000,
                         type: 'success',
                         closeOnClick: 'true'
-                    });
+                    })
                     //출력
-                    card_showResult(arrResult);
-                    return;//중단
+                    card_showResult(arrResult)
+                    return//중단
                 }
         }
         //(모든 결과가 없으면) 검색 직업 복원
-        process.search.class = firstClass;
+        process.search.class = firstClass
         //최초 결과로 복원
-        arrResult = firstResuht;
+        arrResult = firstResuht
         //출력
-        card_showResult(arrResult);
+        card_showResult(arrResult)
     //그 외 - 현재 직업으로만 검색
     } else {
-        arrResult = card_getSearchResult(process.search.class);
+        arrResult = card_getSearchResult(process.search.class)
         //출력
-        card_showResult(arrResult);
+        card_showResult(arrResult)
     }
 }
 
 //카드 출력
 function card_showResult(arr) {
     //카드 목록 저장
-    process.search.result = arr;
+    process.search.result = arr
         //전체 직업 카드 목록 저장(필터링용)
-        process.search.allClassResult = card_getSearchResult("all");
+        process.search.allClassResult = card_getSearchResult("all")
     //카드 목록에 따라 노드 불러오기
-    cluster_update("collection",false);
+    cluster_update("collection",false)
 }

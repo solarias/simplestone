@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "327c202597be8becec48d29d8653afd9"
+    "revision": "2c421a4c83b34da326a655bdd8360062"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "8b73ff9e38d0ae317f2f1e53ec98bcd3"
+    "revision": "d5a31807d12703a74b7676110036bd61"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "d51e700d98236733c9257319e8c8c1c5"
+    "revision": "ad653f2d8c33a907b02e9d65016a5b74"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -59,19 +59,19 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_cardinfo.js",
-    "revision": "12c938867640e247c23c2c164fc237e0"
+    "revision": "0da32f7a5886213e23487d955c44b0d8"
   },
   {
     "url": "js/sist_data.js",
-    "revision": "6c619af929ca4cdf9a70f148f6eee581"
+    "revision": "5eed408ad64de0bd171c59fbbc9ea46c"
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "7b077d3a5b9aa0741275daba8c416fd3"
+    "revision": "21e9995993b9aed4fe5b1dd26b642c64"
   },
   {
     "url": "js/sist_filterNsearch.js",
-    "revision": "131c7839578d200ce59d5d27f4dffe0f"
+    "revision": "8b81014025b409bdde080400a089e3f3"
   },
   {
     "url": "js/sist_icondata.js",
@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "ec89da53c57d22a87316fe2fb211ded3"
+    "revision": "e08418659c59ca4f25be9353d608c9cd"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "a1a2d621ba458a19dcfdd810921ef2af"
+    "revision": "1008c9cfe2f998cb80993284c3db2759"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "55f1c909fc911c4817c64f97bae6f5fc"
+    "revision": "07497a4456bbd9d50da72663d943b0d9"
   },
   {
     "url": "package/Chart.min.js",

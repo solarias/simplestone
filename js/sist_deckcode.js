@@ -5,66 +5,66 @@
 //디코드
 function deckcode_decode(deckcode) {
     //(검증된) 덱코드 해석
-    let input = deckstrings.decode(deckcode);
-    let output = {};
+    let input = deckstrings.decode(deckcode)
+    let output = {}
     //카드
-    output.cards = [];
-    input.cards.forEach(function(card) {
-        let arr = [];
-        arr[0] = card[0].toString();
-        arr[1] = card[1];
-        output.cards.push(arr);
+    output.cards = []
+    input.cards.forEach(card => {
+        let arr = []
+        arr[0] = card[0]
+        arr[1] = card[1]
+        output.cards.push(arr)
     })
     output.cards.sort(function(a, b) {
-        return (parseInt(session.index[a[0]]) < parseInt(session.index[b[0]])) ? -1 : 1;
-    });
+        let aIndex = session.dbIndex[a[0].toString()]
+        let bIndex = session.dbIndex[b[0].toString()]
+        return (aIndex < bIndex) ? -1 : 1
+    })
     //직업
-    for (let i = 0;i < session.db.length;i++) {
-        if (session.db[i].dbfid === input.heroes[0].toString()) {
-            output.class = session.db[i].cardClass;
-            break;
-        }
-    }
+    output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
     //포맷(향후 덱 포맷 검증 별도로 함)
-    output.format = "정규";
+    output.format = "정규"
     for (let i = 0;i < output.cards.length;i++) {
-        if (DATA.SET[session.db[session.index[output.cards[i][0]]].set].FORMAT === "야생") {
-            output.format = "야생";
-            break;
+        if (session.db[session.dbIndex[output.cards[i][0].toString()]].cardSet.format === "야생") {
+            output.format = "야생"
+            break
         }
     }
-    //output.format = DATA.FORMAT.DECODE[input.format.toString()];
+    //output.format = DATA.FORMAT.DECODE[input.format.toString()]
     //출력
-    return output;
+    return output
 }
 //인코드
 function deckcode_encode(deckObj) {
-    let output = {};
+    let output = {}
     let obj = {}
     if (!deckObj) obj = process.deck
-        else obj = deckObj;
+        else obj = deckObj
     //포맷
-    output.format = DATA.FORMAT.CODE[obj.format];
+    output.format = DATA.FORMAT.CODE[obj.format]
     //직업
-    output.heroes = [DATA.CLASS.DBFID[obj.class]];
+    output.heroes = []
+    output.heroes.push(session.classInfo[obj.class].cardId)
     //카드
-    output.cards = [];
+    output.cards = []
     obj.cards.forEach(function(card) {
-        let arr = [];
-        arr[0] = parseInt(card[0]);
-        arr[1] = card[1];
-        output.cards.push(arr);
+        let arr = []
+        arr[0] = card[0]
+        arr[1] = card[1]
+        output.cards.push(arr)
     })
 
     //출력
-    let deckcode = deckstrings.encode(output);
-    return deckcode;
+    console.log(typeof output)
+    console.log(output)
+    let deckcode = deckstrings.encode(output)
+    return deckcode
 }
 //URL 생성
 function deckcode_toURL() {
-    let deckcode = encodeURIComponent(deckcode_encode());
-    let deckurl = "https://solarias.github.io/simplestone?deckcode=" + deckcode;
-    return deckurl;
+    let deckcode = encodeURIComponent(deckcode_encode())
+    let deckurl = "https://solarias.github.io/simplestone?deckcode=" + deckcode
+    return deckurl
 }
 
 //===============================================================
@@ -73,9 +73,9 @@ function deckcode_toURL() {
 function isStandard(deckinput) {
     let result = true;
     for (let i = 0;i < deckinput.length;i++) {
-        if (DATA.SET[session.db[session.index[deckinput[i][0].toString()]].set].FORMAT === "야생") {
+        if (session.db[session.dbIndex[deckinput[i][0].toString()]].cardSet.format === "야생") {
             result = false;
-            break;
+            break
         }
     }
     return result;
@@ -106,6 +106,7 @@ function export_deckcode() {
         })
     } catch(e) {
         //오류창 열기
+        console.log(e)
         nativeToast({
             message: '오류 발생 - 덱코드를 출력할 수 없습니다.',
             position: 'center',
@@ -130,18 +131,18 @@ function deckcode_text() {
     //덱 이름
     outputtext += "### " + process.deck.name + "\n";
     //직업
-    outputtext += "# 직업 : " + DATA.CLASS.KR[process.deck.class] + "\n";
+    outputtext += "# 직업 : " + session.classInfo[process.deck.class].name + "\n";
     //포맷
     outputtext += "# 대전방식 : " + process.deck.format + "\n";
     //연도
-    outputtext += "# " + DATA.YEAR + "\n";
+    outputtext += "# " + session.metadata.year + "\n";
     //가루
     outputtext += "# 가루 : " + thousand(process.deck.dust) + "\n";
     outputtext += "#\n";
     //카드
     process.deck.cards.forEach(function(card) {
-        let info = session.db[session.index[card[0]]];
-        outputtext += "# " + card[1].toString();
+        let info = session.db[session.dbIndex[card[0].toString()]];
+        outputtext += "# " + card[1].toString()
         outputtext += "x (" + info.cost.toString() + ") ";
         outputtext += info.name + "\n";
     });
@@ -248,7 +249,7 @@ function deckcode_tag() {
         neutral:[]
     };
     process.deck.cards.forEach(function(card) {
-        if (session.db[session.index[card[0]]].cardClass !== "NEUTRAL") {
+        if (session.db[session.dbIndex[card[0].toString()]].class.slug !== "NEUTRAL") {
             outputCards.class.push(card);
         } else {
             outputCards.neutral.push(card);
@@ -256,12 +257,12 @@ function deckcode_tag() {
     })
 
     //출력물 제작
-    let _wrapper= document.createElement("div");
+    let _wrapper= document.createElement("div")
         //상단 공백
-        let p = document.createElement("p");
-            p.innerHTML = "<br>";
+        let p = document.createElement("p")
+            p.innerHTML = "<br>"
         _wrapper.appendChild(p);
-        let _header = document.createElement("div.simplestone_header");
+        let _header = document.createElement("div.simplestone_header")
             _header.setAttribute("style",
                 "PADDING:0.5em;"+
                 "WIDTH:100%;"+
@@ -272,10 +273,10 @@ function deckcode_tag() {
                 "FONT-FAMILY:Gothic;"+
                 "FONT-WEIGHT:bold;"
             )
-        _wrapper.appendChild(_header);
-            let _icon = document.createElement("img.simplestone_icon");
-                _icon.src = ICONDATA[deck.class];
-                _icon.alt = DATA.CLASS.KR[deck.class];
+        _wrapper.appendChild(_header)
+            let _icon = document.createElement("img.simplestone_icon")
+                _icon.src = ICONDATA[deck.class]
+                _icon.alt = session.classInfo[deck.class].name
                 _icon.setAttribute("style",
                     "FLOAT:left;"+
                     "DISPLAY:block;"+
@@ -307,9 +308,9 @@ function deckcode_tag() {
                         "TEXT-OVERFLOW:ellipsis;"
                     )
                 _headercenter.appendChild(_deckname);
-                let _dusticon = document.createElement("img.simplestone_dusticon");
-                    _dusticon.src = ICONDATA.DUST;
-                    _dusticon.alt = "가루";
+                let _dusticon = document.createElement("img.simplestone_dusticon")
+                    _dusticon.src = ICONDATA.DUST
+                    _dusticon.alt = "가루"
                     _dusticon.setAttribute("style",
                         "CLEAR:both;FLOAT:left;"+
                         "MARGIN-TOP:0.2em;"+
@@ -317,8 +318,8 @@ function deckcode_tag() {
                         "HEIGHT:1em;"
                     )
                 _headercenter.appendChild(_dusticon);
-                let _dust = document.createElement("div.simplestone_dust");
-                    _dust.innerHTML = thousand(deck.dust);
+                let _dust = document.createElement("div.simplestone_dust")
+                    _dust.innerHTML = thousand(deck.dust)
                     _dust.setAttribute("style",
                         "FLOAT:left;"+
                         "MARGIN:0.2em 0 0 0.2em;"+
@@ -327,16 +328,16 @@ function deckcode_tag() {
                         "TEXT-SHADOW:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;"+
                         "LINE-HEIGHT:1em;"
                     )
-                _headercenter.appendChild(_dust);
-            let _headerlight = document.createElement("div.simplestone_headerlight");
+                _headercenter.appendChild(_dust)
+            let _headerlight = document.createElement("div.simplestone_headerlight")
                 _headerlight.setAttribute("style",
                     "FLOAT:right;"+
                     "WIDTH:5em;"+
                     "HEIGHT:3em;"
                 )
             _header.appendChild(_headerlight);
-                let _classname = document.createElement("div.simplestone_classname");
-                    _classname.innerHTML = DATA.CLASS.KR[deck.class];
+                let _classname = document.createElement("div.simplestone_classname")
+                    _classname.innerHTML = session.classInfo[deck.class].name
                     _classname.setAttribute("style",
                         "FLOAT:right;"+
                         "HEIGHT:1em;"+
@@ -384,7 +385,7 @@ function deckcode_tag() {
                     outputCards.class.forEach(function(card) {
                         classCount += card[1];
                     })
-                    _classheader.innerHTML = DATA.CLASS.KR[deck.class] + " 카드 (" + classCount.toString() + "장)";
+                    _classheader.innerHTML = session.classInfo[deck.class].name + " 카드 (" + classCount.toString() + "장)";
                     _classheader.setAttribute("style",
                         "MARGIN-BOTTOM:0.2em;"+
                         "WIDTH:100%;"+
@@ -396,11 +397,11 @@ function deckcode_tag() {
                         "COLOR:white;"+
                         "LINE-HEIGHT:2em;"
                     )
-                _classcard.appendChild(_classheader);
+                _classcard.appendChild(_classheader)
                 //직업카드 목록
                 outputCards.class.forEach(function(card) {
-                    let info = session.db[session.index[card[0]]];
-                    let elm_card = document.createElement("details.card");
+                    let info = session.db[session.dbIndex[card[0].toString()]]
+                    let elm_card = document.createElement("details.card")
                         elm_card.setAttribute("style",
                             "DISPLAY:block;"+
                             "MARGIN-BOTTOM:0.2em;"+
@@ -409,18 +410,18 @@ function deckcode_tag() {
                             "BACKGROUND:#444;"+
                             "COLOR:transparent;"
                         )
-                    _classcard.appendChild(elm_card);
-                        let elm_cardsummary = document.createElement("summary.cardinfo");
-                            elm_cardsummary.title = "카드를 클릭하면 세부정보를 볼 수 있습니다.";
+                    _classcard.appendChild(elm_card)
+                        let elm_cardsummary = document.createElement("summary.cardinfo")
+                            elm_cardsummary.title = "카드를 클릭하면 세부정보를 볼 수 있습니다."
                             elm_cardsummary.setAttribute("style",
                                 "DISPLAY:block;"+
                                 "WIDTH:100%;"+
                                 "HEIGHT:2em;"+
                                 "CURSOR:help;"
                             )
-                        elm_card.appendChild(elm_cardsummary);
-                            let elm_card_cost = document.createElement("div.card_cost");
-                                elm_card_cost.innerHTML = info.cost;
+                        elm_card.appendChild(elm_cardsummary)
+                            let elm_card_cost = document.createElement("div.card_cost")
+                                elm_card_cost.innerHTML = info.cost
                                 elm_card_cost.setAttribute("style",
                                     "FLOAT:left;"+
                                     "WIDTH:2em;"+
@@ -430,10 +431,10 @@ function deckcode_tag() {
                                     "LINE-HEIGHT:2em;"+
                                     "TEXT-ALIGN:center;"
                                 )
-                            elm_cardsummary.appendChild(elm_card_cost);
-                            let elm_card_name = document.createElement("div.card_name");
-                                let raritycolor = DATA.RARITY.COLOR[info.rarity];
-                                elm_card_name.innerHTML = info.name;
+                            elm_cardsummary.appendChild(elm_card_cost)
+                            let elm_card_name = document.createElement("div.card_name")
+                                let raritycolor = DATA.RARITY.COLOR[info.rarity.slug]
+                                elm_card_name.innerHTML = info.name
                                 elm_card_name.setAttribute("style",
                                     "FLOAT:left;"+
                                     "PADDING-LEFT:0.5em;"+
@@ -447,9 +448,9 @@ function deckcode_tag() {
                                     "WHITE-SPACE:nowrap;"+
                                     "TEXT-OVERFLOW:ellipsis;"
                                 )
-                            elm_cardsummary.appendChild(elm_card_name);
-                            let elm_card_quantity = document.createElement("div.card_quantity");
-                                elm_card_quantity.innerHTML = "× " + card[1].toString();
+                            elm_cardsummary.appendChild(elm_card_name)
+                            let elm_card_quantity = document.createElement("div.card_quantity")
+                                elm_card_quantity.innerHTML = "× " + card[1].toString()
                                 elm_card_quantity.setAttribute("style",
                                     "FLOAT:left;"+
                                     "WIDTH:2.5em;"+
@@ -458,27 +459,27 @@ function deckcode_tag() {
                                     "LINE-HEIGHT:2em;"+
                                     "TEXT-ALIGN:center;"
                                 )
-                            elm_cardsummary.appendChild(elm_card_quantity);
-                        let elm_cardinfo = document.createElement("div.cardinfo");
+                            elm_cardsummary.appendChild(elm_card_quantity)
+                        let elm_cardinfo = document.createElement("div.cardinfo")
                             //title 생성
-                            let classinfo = "";
-                            classinfo += "(" + DATA.TYPE.KR[info.type] + ")";
-                            switch (info.type) {
+                            let classinfo = ""
+                            classinfo += "(" + info.cardType.name + ")";
+                            switch (info.cardType.slug) {
                                 case "MINION":
-                                    classinfo += " " + info.attack.toString() + "/" + info.health.toString();
-                                    if (info.race) classinfo += ", " + DATA.RACE.KR[info.race];
-                                    break;
+                                    classinfo += " " + info.attack.toString() + "/" + info.health.toString()
+                                    if (info.minionType !== undefined) classinfo += ", " + info.minionType.name
+                                    break
                                 case "WEAPON":
-                                    classinfo += " " + info.attack.toString() + "/" + info.durability.toString();
-                                    break;
+                                    classinfo += " " + info.attack.toString() + "/" + info.durability.toString()
+                                    break
                                 case "HERO":
-                                    classinfo += " 방어도 " + info.armor.toString();
-                                    break;
+                                    classinfo += " 방어도 " + info.armor.toString()
+                                    break
                             }
-                            classinfo += "<br>";
-                            if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>";
-                            classinfo += "[" + DATA.SET[info.set].KR + "]";
-                            elm_cardinfo.innerHTML = classinfo;
+                            classinfo += "<br>"
+                            if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>"
+                            classinfo += "[" + info.cardSet.name + "]"
+                            elm_cardinfo.innerHTML = classinfo
                             elm_cardinfo.setAttribute("style",
                                 "PADDING:0.2em;"+
                                 "WIDTH:100%;"+
@@ -523,7 +524,7 @@ function deckcode_tag() {
                 _neutralcard.appendChild(_neutralheader);
                 //중립카드 목록
                 outputCards.neutral.forEach(function(card) {
-                    let info = session.db[session.index[card[0]]];
+                    let info = session.db[session.dbIndex[card[0].toString()]];
                     let elm_card = document.createElement("details.card");
                         elm_card.setAttribute("style",
                             "DISPLAY:block;"+
@@ -556,7 +557,7 @@ function deckcode_tag() {
                                 )
                             elm_cardsummary.appendChild(elm_card_cost);
                             let elm_card_name = document.createElement("div.card_name");
-                                let raritycolor = DATA.RARITY.COLOR[info.rarity];
+                                let raritycolor = DATA.RARITY.COLOR[info.rarity.slug];
                                 elm_card_name.innerHTML = info.name;
                                 elm_card_name.setAttribute("style",
                                     "FLOAT:left;"+
@@ -571,9 +572,9 @@ function deckcode_tag() {
                                     "WHITE-SPACE:nowrap;"+
                                     "TEXT-OVERFLOW:ellipsis;"
                                 )
-                            elm_cardsummary.appendChild(elm_card_name);
-                            let elm_card_quantity = document.createElement("div.card_quantity");
-                                elm_card_quantity.innerHTML = "× " + card[1].toString();
+                            elm_cardsummary.appendChild(elm_card_name)
+                            let elm_card_quantity = document.createElement("div.card_quantity")
+                                elm_card_quantity.innerHTML = "× " + card[1].toString()
                                 elm_card_quantity.setAttribute("style",
                                     "FLOAT:left;"+
                                     "WIDTH:2.5em;"+
@@ -582,27 +583,27 @@ function deckcode_tag() {
                                     "LINE-HEIGHT:2em;"+
                                     "TEXT-ALIGN:center;"
                                 )
-                            elm_cardsummary.appendChild(elm_card_quantity);
-                        let elm_cardinfo = document.createElement("div.cardinfo");
+                            elm_cardsummary.appendChild(elm_card_quantity)
+                        let elm_cardinfo = document.createElement("div.cardinfo")
                             //title 생성
-                            let classinfo = "";
-                            classinfo += "(" + DATA.TYPE.KR[info.type] + ")";
-                            switch (info.type) {
+                            let classinfo = ""
+                            classinfo += "(" + info.cardType.name + ")"
+                            switch (info.cardType.slug) {
                                 case "MINION":
-                                    classinfo += " " + info.attack.toString() + "/" + info.health.toString();
-                                    if (info.race) classinfo += ", " + DATA.RACE.KR[info.race];
-                                    break;
+                                    classinfo += " " + info.attack.toString() + "/" + info.health.toString()
+                                    if (info.minionType !== undefined) classinfo += ", " + info.minionType.name
+                                    break
                                 case "WEAPON":
-                                    classinfo += " " + info.attack.toString() + "/" + info.durability.toString();
-                                    break;
+                                    classinfo += " " + info.attack.toString() + "/" + info.durability.toString()
+                                    break
                                 case "HERO":
-                                    classinfo += " 방어도 " + info.armor.toString();
-                                    break;
+                                    classinfo += " 방어도 " + info.armor.toString()
+                                    break
                             }
-                            classinfo += "<br>";
-                            if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>";
-                            classinfo += "[" + DATA.SET[info.set].KR + "]";
-                            elm_cardinfo.innerHTML = classinfo;
+                            classinfo += "<br>"
+                            if (info.text && info.text.length > 0) classinfo += titletext(info.text) + "<br>"
+                            classinfo += "[" + info.cardSet.name + "]"
+                            elm_cardinfo.innerHTML = classinfo
                             elm_cardinfo.setAttribute("style",
                                 "PADDING:0.2em;"+
                                 "WIDTH:100%;"+
@@ -666,7 +667,7 @@ function deckcode_tag() {
         _wrapper.appendChild(_domain);
         //하단 공백
         let p2 = document.createElement("p");
-            p2.innerHTML = "<br>";
+            p2.innerHTML = "<br>"
         _wrapper.appendChild(p2);
 
     return _wrapper.innerHTML;
@@ -674,35 +675,36 @@ function deckcode_tag() {
 
 //덱 이미지 출력
 async function export_image() {
-  try {
-    //이미지 제작 중 - 대기 이미지
-    $("#frame_deckimage").classList.add("show");
-    $("#deckimage_top").scrollTop = 0;
-
-    $("#deckimage_img").src = "./images/loading_white.svg";
-    $("#button_download").classList.add("wait");
-
-    //이미지 제작 완료 - 출력
-    let deckimage = await deckcode_image();//텍스트 출력
-    $("#deckimage_img").src = deckimage;
-
-    $("#button_download").classList.remove("wait");
-    $("#button_download").href = deckimage;
-    $("#button_download").download = process.deck.name + ".jpg";
-
     $("#button_closeimage").onclick = function() {
         $("#frame_deckimage").classList.remove("show");
     }
-  } catch (e) {
-      //오류창 열기
-      nativeToast({
-          message: '오류 발생 - 이미지를 출력할 수 없습니다.',
-          position: 'center',
-          timeout: 2000,
-          type: 'error',
-          closeOnClick: 'true'
-      });
-  }
+    try {
+        //이미지 제작 중 - 대기 이미지
+        $("#frame_deckimage").classList.add("show");
+        $("#deckimage_top").scrollTop = 0;
+
+        $("#deckimage_img").src = "./images/loading_white.svg";
+        $("#button_download").classList.add("wait");
+
+        //이미지 제작 완료 - 출력
+        let deckimage = await deckcode_image();//텍스트 출력
+        if (deckimage !== false) {
+            $("#deckimage_img").src = deckimage;
+
+            $("#button_download").classList.remove("wait");
+            $("#button_download").href = deckimage;
+            $("#button_download").download = process.deck.name + ".jpg";
+        }
+    } catch (e) {
+        //오류창 열기
+        nativeToast({
+            message: '오류 발생 - 이미지를 출력할 수 없습니다.<br>(' + e + ')',
+            position: 'center',
+            timeout: 2000,
+            type: 'error',
+            closeOnClick: 'true'
+        });
+    }
 }
 
 //===============================================================
@@ -714,28 +716,28 @@ function deckcode_image() {
         let imageArr = [], imageLoaded = [], count = 0;
         (() => {
             return new Promise((resolve2) => {
-                imageArr.push(HEROURL + DATA.CLASS.ID[process.deck.class] + ".jpg");//헤더 이미지
-                imageArr.push("./images/icon_dust.png");//가루
-                if (session.offline === false) {
+                imageArr.push(HEROURL + session.classInfo[process.deck.class].slug + ".jpg")//헤더 이미지
+                imageArr.push("./images/icon_dust.png")//가루
+                //if (session.offline === false) {
                     process.deck.cards.forEach(function(card) {
-                        imageArr.push(TILEURL + session.db[session.index[card[0]]].id + ".jpg");//덱에 있는 카드 이미지
+                        imageArr.push(TILEURL + session.db[session.dbIndex[card[0].toString()]].id + ".jpg")//덱에 있는 카드 이미지
                     })
-                }
+                //}
                 imageArr.forEach((url, i) => {
-                    imageLoaded[i] = new Image();
+                    imageLoaded[i] = new Image()
                     imageLoaded[i].onload = () => {
-                        count += 1;
+                        count += 1
                         if (count === imageArr.length) {
-                            resolve2();
+                            resolve2()
                         }
                     }
                     imageLoaded[i].onerror = () => {//실패해도 진행
-                        count += 1;
+                        count += 1
                         if (count === imageArr.length) {
-                            resolve2();
+                            resolve2()
                         }
                     }
-                    imageLoaded[i].src = imageArr[i];
+                    imageLoaded[i].src = imageArr[i]
                 })
             })
         //다 불렀으면
@@ -761,9 +763,9 @@ function deckcode_image() {
                 deckname:22
               },
               date:{
-                padding:3,
+                padding:4,
                 height:27,
-                font:18
+                font:16
               },
               card:{
                 width:300,
@@ -801,12 +803,12 @@ function deckcode_image() {
             }
 
             //캔버스 크기 계산
-            deckcanvas.width = imagesize.wrapper.width.toString();
+            deckcanvas.width = imagesize.wrapper.width.toString()
             deckcanvas.height = (imagesize.header.height
               + imagesize.date.height
               + (imagesize.card.gap * (process.deck.cards.length + 1))
               + (imagesize.card.height * process.deck.cards.length)
-              + imagesize.footer.height).toString();
+              + imagesize.footer.height).toString()
             imagesize.wrapper.height = deckcanvas.height;
             scaleCanvas(deckcanvas, ctx, deckcanvas.width, deckcanvas.height);
 
@@ -817,190 +819,203 @@ function deckcode_image() {
             ctx.fillRect(0, 0, deckcanvas.width, deckcanvas.height);
             */
 
-            //헤더
-              //헤더 이미지
-              let heroimg = new Image();
-              heroimg.src = HEROURL + DATA.CLASS.ID[process.deck.class] + ".jpg";
-              heroimg.height = imagesize.header.height;
-              heroimg.width = imagesize.header.height * heroimg.naturalWidth / heroimg.naturalHeight;
-              ctx.drawImage(heroimg, imagesize.wrapper.width - heroimg.width, 0, heroimg.width, heroimg.height);
+        //헤더
+            //헤더 이미지
+            let heroimg = new Image()
+            heroimg.src = HEROURL + session.classInfo[process.deck.class].slug + ".jpg"
+            heroimg.height = imagesize.header.height
+            heroimg.width = imagesize.header.height * heroimg.naturalWidth / heroimg.naturalHeight
+            ctx.drawImage(heroimg, imagesize.wrapper.width - heroimg.width, 0, heroimg.width, heroimg.height)
 
-              //헤더 그라디언트
-              let grd = ctx.createLinearGradient(imagesize.header.gradient_start, 0, imagesize.header.gradient_end, 0);
-              grd.addColorStop(0, "rgb(34,34,34)");
-              grd.addColorStop(1, "transparent");
-              ctx.fillStyle = grd;
-              ctx.fillRect(imagesize.header.gradient_start, 0,imagesize.header.gradient_end, imagesize.header.height);
-              ctx.fillStyle = "rgb(34,34,34)";
-              ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height);
+            //헤더 그라디언트
+            let grd = ctx.createLinearGradient(imagesize.header.gradient_start, 0, imagesize.header.gradient_end, 0)
+            grd.addColorStop(0, "rgb(34,34,34)")
+            grd.addColorStop(1, "transparent")
+            ctx.fillStyle = grd
+            ctx.fillRect(imagesize.header.gradient_start, 0,imagesize.header.gradient_end, imagesize.header.height)
+            ctx.fillStyle = "rgb(34,34,34)"
+            ctx.fillRect(0, 0, imagesize.header.gradient_start, imagesize.header.height)
 
-              //테두리
-              ctx.strokeStyle = "black";
-              ctx.lineWidth = imagesize.header.border;
-              ctx.strokeRect(imagesize.header.border/2, imagesize.header.border/2, imagesize.wrapper.width - imagesize.header.border, imagesize.header.height - imagesize.header.border);
+            //테두리
+            ctx.strokeStyle = "black"
+            ctx.lineWidth = imagesize.header.border
+            ctx.strokeRect(imagesize.header.border/2, imagesize.header.border/2, imagesize.wrapper.width - imagesize.header.border, imagesize.header.height - imagesize.header.border)
 
-              //가루 아이콘
-              let dust = new Image(imagesize.header.dust,imagesize.header.dust);
-              dust.src = "./images/icon_dust.png";
-              ctx.drawImage(dust, imagesize.header.padding, imagesize.header.padding, imagesize.header.dust, imagesize.header.dust);
-              //가루
-              ctx.fillStyle = 'skyblue';
-              ctx.lineWidth = 0.5;
-              ctx.font = imagesize.header.dust + 'px SpoqaHanSans';
-              ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 4, imagesize.header.padding + imagesize.header.dust - 2);
+            //가루 아이콘
+            let dust = new Image(imagesize.header.dust,imagesize.header.dust)
+            dust.src = "./images/icon_dust.png"
+            ctx.drawImage(dust, imagesize.header.padding, imagesize.header.padding, imagesize.header.dust, imagesize.header.dust)
+            //가루
+            ctx.fillStyle = 'skyblue'
+            ctx.lineWidth = 0.5
+            ctx.font = imagesize.header.dust + 'px SpoqaHanSans'
+            ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 4, imagesize.header.padding + imagesize.header.dust - 2)
 
-              //덱 이름
-              ctx.fillStyle = 'white';
-              ctx.lineWidth = 0.5;
-              ctx.font = 'bold ' + imagesize.header.deckname + 'px SpoqaHanSans';
-              ctx.textAlign = "left";
-              ctx.save();
-              ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 0;
-              ctx.shadowColor = "black";
-              ctx.shadowBlur = 10;
-              ctx.fillText(fittingString(ctx, process.deck.name, imagesize.wrapper.width - imagesize.header.padding*2), imagesize.header.padding, imagesize.header.padding + imagesize.header.dust + imagesize.header.deckname);
-              ctx.restore();
+            //덱 이름
+            ctx.fillStyle = 'white';
+            ctx.lineWidth = 0.5;
+            ctx.font = 'bold ' + imagesize.header.deckname + 'px SpoqaHanSans';
+            ctx.textAlign = "left";
+            ctx.save();
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            ctx.shadowColor = "black";
+            ctx.shadowBlur = 10;
+            ctx.fillText(fittingString(ctx, process.deck.name, imagesize.wrapper.width - imagesize.header.padding*2), imagesize.header.padding, imagesize.header.padding + imagesize.header.dust + imagesize.header.deckname);
+            ctx.restore();
 
-            //날짜
-              //배경
-              ctx.fillStyle = "#222222";
-              ctx.fillRect(0, imagesize.header.height, imagesize.wrapper.width, imagesize.date.height);
+        //날짜
+            //배경
+            ctx.fillStyle = "#222222";
+            ctx.fillRect(0, imagesize.header.height, imagesize.wrapper.width, imagesize.date.height);
 
-              //연도
-              ctx.fillStyle = 'white';
-              ctx.font = imagesize.date.font + 'px SpoqaHanSans';
-              ctx.textAlign = "left";
-              ctx.fillText(DATA.YEAR, imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
-              ctx.fill();
+            //연도
+            ctx.fillStyle = 'white';
+            ctx.font = imagesize.date.font + 'px SpoqaHanSans';
+            ctx.textAlign = "left";
+            ctx.fillText(session.metadata.year, imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
+            ctx.fill();
 
-              //포맷
-              if (process.deck.format === "정규") {
+            //포맷
+            if (process.deck.format === "정규") {
                 ctx.fillStyle = 'lime';
-              } else {
+            } else {
                 ctx.fillStyle = 'orange';
-              }
+            }
 
-              ctx.font = imagesize.header.format + 'px SpoqaHanSans';
-              ctx.textAlign = "right";
-              ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
-              ctx.fill();
+            ctx.font = imagesize.header.format + 'px SpoqaHanSans';
+            ctx.textAlign = "right";
+            ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
+            ctx.fill();
 
-              //하단 테두리
-              ctx.strokeStyle = "black";
-              ctx.lineWidth = imagesize.header.border;
-              ctx.beginPath();
-              ctx.moveTo(0, imagesize.header.height + imagesize.date.height);
-              ctx.lineTo(imagesize.header.width, imagesize.header.height + imagesize.date.height);
-              ctx.stroke();
+          //하단 테두리
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = imagesize.header.border;
+            ctx.beginPath();
+            ctx.moveTo(0, imagesize.header.height + imagesize.date.height);
+            ctx.lineTo(imagesize.header.width, imagesize.header.height + imagesize.date.height);
+            ctx.stroke();
 
             //카드
             process.deck.cards.forEach(function(card, i) {
-              //카드정보
-              let info = session.db[session.index[card[0]]];
-              //Y축 시작점
-              let ystart = imagesize.header.height
-               + imagesize.date.height
-               + imagesize.card.gap * (i+1)
-               + imagesize.card.height * i
-              //이미지 변수
-              let cardimg = new Image();
+                //카드정보
+                let info = session.db[session.dbIndex[card[0].toString()]]
+                //Y축 시작점
+                let ystart = imagesize.header.height
+                 + imagesize.date.height
+                 + imagesize.card.gap * (i+1)
+                 + imagesize.card.height * i
+                //이미지 변수
+                let cardimg = new Image()
 
-              //이미지
-              if (session.offline === false) {
-                  cardimg.src = TILEURL + info.id + ".jpg";
-              } else {
-                  cardimg.src = "";
-              }
-              //cardimg.height = imagesize.card.height;
-              //cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
-              let imageWidth = cardimg.width * imagesize.card.height / cardimg.height;
-              let imagePadding = cardimg.height * imagesize.card.padding / imagesize.card.height;
-              ctx.drawImage(cardimg,
-                  0,imagePadding,
-                  cardimg.width,cardimg.height-(imagePadding*2),
-                  imagesize.wrapper.width - imageWidth, ystart,
-                  imageWidth, imagesize.card.height);
+                //이미지
+                /*
+                if (session.offline === false) {
+                    cardimg.src = TILEURL + info.id + ".jpg"
+                } else {
+                    cardimg.src = ""
+                }
+                */
+                cardimg.src = TILEURL + info.id + ".jpg"
+                //cardimg.height = imagesize.card.height;
+                //cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
+                let imageWidth = cardimg.width * imagesize.card.height / cardimg.height
+                let imagePadding = cardimg.height * imagesize.card.padding / imagesize.card.height
+                ctx.drawImage(cardimg,
+                    0,imagePadding,
+                    cardimg.width,cardimg.height-(imagePadding*2),
+                    imagesize.wrapper.width - imageWidth, ystart,
+                    imageWidth, imagesize.card.height);
 
-              //그라디언트
-              grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
-              let nameLen = info.name.replaceAll(" ","").replaceAll(".","").length;
-              if (nameLen < 10) {
-                  grd.addColorStop(0, "rgb(34,34,34)");
-                  grd.addColorStop(1, "rgba(34,34,34,0)");
-              } else {
-                  grd.addColorStop(0, "rgb(34,34,34)");
-                  grd.addColorStop(0.7, "rgba(34,34,34,0.8)");
-                  grd.addColorStop(1, "rgba(34,34,34,0)");
-              }
-              ctx.fillStyle = grd;
-              ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
-              ctx.fillStyle = "rgb(34,34,34)";
-              ctx.fillRect(0, ystart, imagesize.card.gradient_start, imagesize.card.height);
+                //그라디언트
+                grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
+                let nameLen = info.name.replaceAll(" ","").replaceAll(".","").length;
+                if (nameLen < 10) {
+                    grd.addColorStop(0, "rgb(34,34,34)");
+                    grd.addColorStop(1, "rgba(34,34,34,0)");
+                } else {
+                    grd.addColorStop(0, "rgb(34,34,34)");
+                    grd.addColorStop(0.7, "rgba(34,34,34,0.8)");
+                    grd.addColorStop(1, "rgba(34,34,34,0)");
+                }
+                ctx.fillStyle = grd;
+                ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
+                ctx.fillStyle = "rgb(34,34,34)";
+                ctx.fillRect(0, ystart, imagesize.card.gradient_start, imagesize.card.height);
 
-              //비용
-              ctx.fillStyle = "#256BB0";
-              ctx.fillRect(0, ystart, imagesize.card.cost.width, imagesize.card.height);
+                //비용
+                ctx.fillStyle = "#256BB0";
+                ctx.fillRect(0, ystart, imagesize.card.cost.width, imagesize.card.height);
 
-              ctx.fillStyle = 'white';
-              ctx.lineWidth = 1;
-              ctx.texAlign = 'left';
+                ctx.fillStyle = 'white';
+                ctx.lineWidth = 1;
+                ctx.texAlign = 'left';
 
-              ctx.font = 'bold ' + imagesize.card.cost.font + 'px SpoqaHanSans';
-              ctx.textAlign = "center";
-              ctx.fillText(info.cost, imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
-
-              //이름
-              ctx.fillStyle = DATA.RARITY.COLOR_DECKIMAGE[info.rarity];
-              ctx.lineWidth = 1;
-              ctx.font = imagesize.card.name.font + "px SpoqaHanSans";
-              ctx.textAlign = "left";
-              ctx.fillText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
-
-              //수량
-              if (card[1] > 1 || info.rarity === "LEGENDARY") {
-                ctx.fillStyle = "black";
-                ctx.fillRect(imagesize.wrapper.width - imagesize.card.quantity.width, ystart, imagesize.card.quantity.width, imagesize.card.height);
-
-                ctx.fillStyle = 'gold';
-                ctx.font = 'bold ' + imagesize.card.quantity.font + 'px SpoqaHanSans';
+                ctx.font = 'bold ' + imagesize.card.cost.font + 'px SpoqaHanSans';
                 ctx.textAlign = "center";
-                let quantitytext = (info.rarity === "LEGENDARY") ? "★" : card[1].toString();
-                ctx.fillText(quantitytext, imagesize.wrapper.width - imagesize.card.quantity.width / 2, ystart + imagesize.card.quantity.padding + imagesize.card.quantity.font);
+                ctx.fillText(info.cost.toString(), imagesize.card.cost.font_position, ystart + imagesize.card.cost.padding + imagesize.card.cost.font);
 
-                ctx.fill();
-              }
+                //이름
+                ctx.fillStyle = DATA.RARITY.COLOR_DECKIMAGE[info.rarity.slug];
+                ctx.lineWidth = 1;
+                ctx.font = imagesize.card.name.font + "px SpoqaHanSans";
+                ctx.textAlign = "left";
+                ctx.fillText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
 
-              //테두리
-              ctx.strokeStyle = "black";
-              ctx.lineWidth = imagesize.card.border;
-              ctx.strokeRect(0, ystart, imagesize.wrapper.width, imagesize.card.height);
+                //수량
+                if (card[1] > 1 || info.rarity === "LEGENDARY") {
+                    ctx.fillStyle = "black";
+                    ctx.fillRect(imagesize.wrapper.width - imagesize.card.quantity.width, ystart, imagesize.card.quantity.width, imagesize.card.height);
 
+                    ctx.fillStyle = 'gold';
+                    ctx.font = 'bold ' + imagesize.card.quantity.font + 'px SpoqaHanSans';
+                    ctx.textAlign = "center";
+                    let quantitytext = (info.rarity === "LEGENDARY") ? "★" : card[1].toString()
+                    ctx.fillText(quantitytext, imagesize.wrapper.width - imagesize.card.quantity.width / 2, ystart + imagesize.card.quantity.padding + imagesize.card.quantity.font);
+
+                    ctx.fill();
+                }
+
+                //테두리
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = imagesize.card.border;
+                ctx.strokeRect(0, ystart, imagesize.wrapper.width, imagesize.card.height);
             })
 
-            //푸터
-              //배경
-              ctx.fillStyle = "#222222";
-              ctx.fillRect(0, imagesize.wrapper.height - imagesize.footer.height, imagesize.wrapper.width, imagesize.footer.height);
+        //푸터
+            //배경
+            ctx.fillStyle = "#222222";
+            ctx.fillRect(0, imagesize.wrapper.height - imagesize.footer.height, imagesize.wrapper.width, imagesize.footer.height);
 
-              //상단단 테두리
-              ctx.strokeStyle = "black";
-              ctx.lineWidth = imagesize.footer.border;
-              ctx.beginPath();
-              ctx.moveTo(0, imagesize.wrapper.height - imagesize.footer.height);
-              ctx.lineTo(imagesize.header.width, imagesize.wrapper.height - imagesize.footer.height);
-              ctx.stroke();
+            //상단단 테두리
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = imagesize.footer.border;
+            ctx.beginPath();
+            ctx.moveTo(0, imagesize.wrapper.height - imagesize.footer.height);
+            ctx.lineTo(imagesize.header.width, imagesize.wrapper.height - imagesize.footer.height);
+            ctx.stroke();
 
-              //"심플스톤"
-              ctx.fillStyle = 'white';
-              ctx.font = imagesize.footer.font + 'px SpoqaHanSans';
-              ctx.textAlign = "right";
-              ctx.fillText("Created at 심플스톤", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
-              ctx.fill();
+            //"심플스톤"
+            ctx.fillStyle = 'white';
+            ctx.font = imagesize.footer.font + 'px SpoqaHanSans';
+            ctx.textAlign = "right";
+            ctx.fillText("Created at 심플스톤", imagesize.wrapper.width - imagesize.footer.padding, imagesize.wrapper.height - imagesize.footer.padding);
+            ctx.fill();
 
-          //덱 이미지 출력
-          let result = deckcanvas.toDataURL("image/png");
-          resolve1(result);
+            //덱 이미지 출력
+            try {
+                let result = deckcanvas.toDataURL("image/png");
+                resolve1(result)
+            } catch(e) {
+                nativeToast({
+                    message: '오류 발생 - 덱 이미지를 생성할 수 없습니다.<br>(' + e + ')',
+                    position: 'center',
+                    timeout: 3000,
+                    type: 'error',
+                    closeOnClick: 'true'
+                })
+                resolve1(false)
+            }
         })
     })
 }
@@ -1036,6 +1051,6 @@ function export_url() {
             timeout: 2000,
             type: 'error',
             closeOnClick: 'true'
-        });
+        })
     }
 }

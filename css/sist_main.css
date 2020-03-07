@@ -121,7 +121,7 @@ body {
             height:40px;
 
             background-color:rgba(255,255,255,0.2);
-            border:2px white solid;
+            border:1px white solid;
             border-radius: 5px;
             box-sizing: border-box;
 
@@ -190,7 +190,7 @@ body {
                 height:40px;
 
                 background-color:rgba(255,255,255,0.2);
-                border:2px white solid;
+                border:1px white solid;
                 border-radius: 5px;
                 box-sizing: border-box;
 
@@ -280,7 +280,7 @@ body {
             height:36px;
 
             background-color:rgba(255,255,255,0.1);
-            border:2px white solid;
+            border:1px white solid;
             border-radius: 7px;
             box-sizing: border-box;
 
@@ -317,7 +317,7 @@ body {
                 font-weight:bold;
             }
             #search_keyword.activate {
-                border:2px lime solid;
+                border:1px lime solid;
             }
         #search_reset {
             float:right;
@@ -509,8 +509,8 @@ body {
             height:40px;
 
             background:#404040;
-            border:2px white solid;
-            border-radius: 10px;
+            border:1px white solid;
+            border-radius: 5px;
             box-sizing: border-box;
 
             color:white;
@@ -519,7 +519,7 @@ body {
             text-overflow: ellipsis;
         }
         #mobilefilter_keyword.activate {
-            border:2px lime solid;
+            border:1px lime solid;
         }
         .mobilefilter_close {
             margin-top:10px;
@@ -598,7 +598,7 @@ body {
             height:36px;
 
             background-color:rgba(255,255,255,0.1);
-            border:2px white solid;
+            border:1px white solid;
             border-radius: 7px;
             box-sizing: border-box;
 
@@ -765,10 +765,9 @@ body {
             padding:10px;
             width:calc(100% - 200px);
                 min-width:260px;
-            height:calc(100% - 10px - 90px);
+            height:calc(100% - 10px - 90px - 180px);
 
             background:rgba(0,0,0,0.6);
-            border-radius:10px;
             box-sizing: border-box;
         }
             #notice_content p[date] {
@@ -783,6 +782,33 @@ body {
             }
             #notice_content p[content].last {
                 margin-bottom:10px;
+            }
+        #notice_content_db {
+            position:relative;
+            overflow-y:scroll;
+
+            margin:5px auto 0 auto;
+            padding:10px;
+            width:calc(100% - 200px);
+                min-width:260px;
+            height:120px;
+
+            background:rgba(0,0,0,0.6);
+            box-sizing: border-box;
+        }
+            #notice_content_db p[date] {
+                margin-top:10px;
+                width:100%;
+                color:#b3ffff;
+            }
+                #notice_content_db p[date]:first-child {
+                    margin-top:0;
+                }
+            #notice_content_db p[content] {
+                margin-left:10px;
+                width:calc(100% - 5px);
+                color:white;
+                word-break: keep-all;
             }
     #footer_notice {
         position:absolute;
@@ -808,8 +834,8 @@ body {
             height:100%;
 
             background:rgba(255,255,255,0.1);
-            border:2px white solid;
-            border-radius: 10px;
+            border:1px white solid;
+            border-radius: 5px;
             box-sizing: border-box;
 
             color:white;
@@ -828,34 +854,37 @@ body {
         #button_start {
             float:left;
             width:calc(70% - 10px);
-            border:2px lime solid;
+            border:1px lime solid;
             color:lime;
             word-break: keep-all;
         }
         #button_offline {
             float:right;
             width:calc(30% - 10px);
-            border:2px #f8bb86 solid;
+            border:1px #f8bb86 solid;
             color:#f8bb86;
             word-break: keep-all;
         }
             #button_start[disabled], #button_offline[disabled] {
-                border:2px gray solid;
+                border:1px gray solid;
                 color:gray;
                 pointer-events: none;
             }
     /*=====================================================*/
     /* 업데이트 */
     /*=====================================================*/
-    #main_update {}
+    #main_update {
+        transition:transform 0.1s;
+    }
         #update_content {
             position:relative;
+            overflow-y:scroll;
 
             margin:10px auto 0 auto;
             padding:10px;
             width:calc(100% - 200px);
                 min-width:260px;
-            height:150px;
+            height:calc(100% - 150px);
 
             background:rgba(0,0,0,0.6);
             border-radius:10px;
@@ -865,19 +894,12 @@ body {
                 width:100%;
                 color:white;
             }
-        #update_progress {
-            position:relative;
-
-            margin:10px auto 0 auto;
-            padding:10px;
-            width:calc(100% - 200px);
-                min-width:260px;
-            height:30px;
-
-            background:rgba(0,0,0,0.6);
-            border-radius:10px;
-            box-sizing: border-box;
-        }
+            #update_content p.error {
+                color:orange;
+            }
+            #update_content p.info {
+                color:yellow;
+            }
     #footer_update {
         position:absolute;
             left:0;bottom:0;
@@ -902,8 +924,8 @@ body {
             height:100%;
 
             background:rgba(255,255,255,0.1);
-            border:2px white solid;
-            border-radius: 10px;
+            border:1px white solid;
+            border-radius: 5px;
             box-sizing: border-box;
 
             color:white;
@@ -923,11 +945,18 @@ body {
             display:block;
             margin:0 auto;
             width:90%;
-            border:2px #a0a0a0 solid;
+            border:1px #a0a0a0 solid;
             color:#a0a0a0;
             word-break: keep-all;
 
             pointer-events: none;
+        }
+        #button_update.complete {
+            border:1px lime solid;
+            color:lime;
+            word-break: keep-all;
+
+            pointer-events: auto;
         }
     /*=====================================================*/
     /* 타이틀스크린 */
@@ -1012,7 +1041,7 @@ body {
                 height:100%;
 
                 background-color:rgba(62,64,229,0.7);
-                border-radius: 10px;
+                border-radius: 5px;
                 box-sizing: border-box;
 
                 font-size:25px;
@@ -1055,7 +1084,7 @@ body {
             height:calc(100% - 60px);
 
             background:#F0F0F0;
-            border:2px #3e40e5 solid;
+            border:1px #3e40e5 solid;
             box-sizing: border-box;
         }
         #decklist_slot_content {
@@ -1243,7 +1272,7 @@ body {
             height:100%;
 
             background:rgba(255,255,255,0.1);
-            border-radius: 10px;
+            border-radius: 5px;
             box-sizing: border-box;
 
             font-size:22px;
@@ -1270,13 +1299,13 @@ body {
         #button_readcode {
             float:left;
             width:calc(40% - 10px);
-            border:2px orange solid;
+            border:1px orange solid;
             color:orange;
         }
         #botton_newdeck {
             float:right;
             width:calc(60% - 10px);
-            border:2px lime solid;
+            border:1px lime solid;
             color:lime;
         }
     /*=====================================================*/
@@ -1359,10 +1388,37 @@ body {
         transform:translate(0,100%);
         pointer-events: none;
     }
-        #footer_cardinfo.show {
-            transform:translate(0,0);
-            pointer-events: auto;
+            #footer_cardinfo.show {
+                transform:translate(0,0);
+                pointer-events: auto;
+            }
+        #cardinfo_related {
+            position:relative;
+            float:left;
+            padding-left:10px;
+            width:50%;
+            height:100%;
+
+            box-sizing: border-box;
+
+            font-size:20px;
+            color:white;
+            line-height:50px;
         }
+            #related_count {
+                font-size:inherit;
+                color:yellow;
+            }
+        #button_related {
+            display:none;
+            position:relative;
+            margin-right:5px;
+            width:calc(50% - 10px);
+        }
+            #button_related.active {
+                float:right;
+                display:block;
+            }
 
     /*=====================================================*/
     /* 덱 정보 */
@@ -1558,8 +1614,8 @@ body {
             height:40px;
 
             background:rgba(255,255,255,0.1);
-            border:2px white solid;
-            border-radius: 10px;
+            border:1px white solid;
+            border-radius: 5px;
             box-sizing: border-box;
 
             color:white;
@@ -1586,7 +1642,7 @@ body {
             }
                 #deckbuilding_redo {margin-right:0;}
                 #deckbuilding_undo.disabled, #deckbuilding_redo.disabled {
-                    border:2px gray solid;
+                    border:1px gray solid;
                     color:gray;
                     pointer-events: none;
                 }
@@ -1710,7 +1766,7 @@ body {
         overflow:hidden;
         height:80px;
     }
-    #deckchart_container_mana {
+    #deckchart_container_cost {
         margin-right:15px;
         width:calc((100% - 5px) * (3 / 5));
             max-width:360px;
@@ -1800,8 +1856,8 @@ body {
                 background-repeat:no-repeat;
                 background-position:10px 0px;
                 background-size:33px 33px;
-                border:2px white solid;
-                border-radius: 10px;
+                border:1px white solid;
+                border-radius: 5px;
                 box-sizing: border-box;
                 cursor:pointer;
 
@@ -2141,8 +2197,8 @@ body {
             height:100%;
 
             background:rgba(255,255,255,0.1);
-            border:2px white solid;
-            border-radius: 10px;
+            border:1px white solid;
+            border-radius: 5px;
             box-sizing: border-box;
 
             color:white;
@@ -2176,7 +2232,7 @@ body {
 
             margin:0 auto;
             width:calc(50% - 5px);
-            border:2px #f8bb86 solid;
+            border:1px #f8bb86 solid;
         }
             #button_metadeck_hot > img {
                 margin-right:5px;
@@ -2196,7 +2252,7 @@ body {
 
             margin:0 auto;
             width:calc(50% - 5px);
-            border:2px lime solid;
+            border:1px lime solid;
 
             color:lime;
             font-size:22px;
@@ -2263,6 +2319,82 @@ body {
         pointer-events: none;
     }
 /*=====================================================*/
+/* 별도 창 - 관련 카드 */
+/*=====================================================*/
+#frame_related {
+    position:fixed;
+        left:0;top:0;
+    z-index:10;
+    display:none;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.7);
+}
+        #frame_related.show {
+            display:block;
+            animation:related_show 0.2s;
+        }
+        @keyframes related_show {
+            0% {opacity:0;}
+            1% {opacity:0.01;}
+            100% {opacity:1;}
+        }
+    #related_top {
+        position:absolute;
+            left:0;top:0;
+
+        width:100%;
+        height:50px;
+
+        background:rgba(255,255,255,0.1);
+
+        color:white;
+        font-size:20px;
+        line-height:50px;
+        text-align: center;
+        pointer-events: none;
+    }
+        #related_top_name {
+            font-size:inherit;
+        }
+    #related_middle {
+        position:absolute;
+            left:0;top:50px;
+        overflow-y:scroll;
+
+        padding:20px;
+        width:100%;
+        height:calc(100% - 100px);
+
+        box-sizing: border-box;
+        text-align:center;
+    }
+        #related_middle .cardinfo.wrapper {
+            margin-top:10px;
+        }
+    #related_bottom {
+        position:absolute;
+            left:0;bottom:0;
+
+        width:100%;
+        height:50px;
+
+        background:rgba(255,255,255,0.1);
+
+        color:white;
+        font-size:20px;
+        line-height:50px;
+        text-align: center;
+        pointer-events: none;
+    }
+        #related_bottom:hover {
+            background:#FF6A00;
+            user-select: none;
+            cursor:pointer;
+        }
+/*=====================================================*/
 /* 별도 창 - 덱 이미지 */
 /*=====================================================*/
 #frame_deckimage {
@@ -2325,8 +2457,8 @@ body {
           height:65px;
 
           background:rgba(255,255,255,0.1);
-          border:2px white solid;
-          border-radius: 10px;
+          border:1px white solid;
+          border-radius: 5px;
           box-sizing: border-box;
 
           color:white;
@@ -2625,7 +2757,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
     background-color: gold;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px gold outset;
 }
 

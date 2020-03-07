@@ -39,45 +39,22 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#header_notice").classList.add("show");
             $("#footer_notice").classList.add("show");
 
-            //공지사항 출력
-            let notice = keyword2.notice;
-            let noticeFrag = document.createDocumentFragment();
-            for (let i = 0;i < Math.min(30,notice.length);i++) {//공지는 최대 30개만
-                let each = notice[i];
-                //날짜
-                let date = document.createElement("p[date]");
-                    date.innerHTML = each.date;
-                noticeFrag.appendChild(date);
-                //내용
-                if (typeof each.content === "string") {
-                    let content = document.createElement("p.last[content]");
-                        content.innerHTML = "- " + each.content;
-                    noticeFrag.appendChild(content);
-                } else {
-                    each.content.forEach(function(p, index) {
-                        let paragraph = document.createElement("p[content]");
-                        if (index == each.content.length - 1)
-                            paragraph.classList.add("last");
-                        paragraph.innerHTML = "- " + p;
-                        noticeFrag.appendChild(paragraph);
-                    })
-                }
-            }
-            $("#notice_content").appendChild(noticeFrag);
+            //공지사항 - 이미 출력됨
+            //DB 업데이트 공지사항 - 이미 출력됨
 
             //상호작용
             $("#button_start").onclick = function() {
                 //오프라인 모드 비활성화
                 session.offline = false;
                 //업데이트 확인
-                window_shift("update", keyword2);
+                window_shift("update");
             }
             $("#button_offline").onclick = function() {
                 //오프라인 모드 의사 물어보기
                 swal({
                     type:"info",
                     title:"데이터 절약 모드",
-                    text:"카드 이미지를 불러오지 않아 데이터를 절약할 수 있습니다.",
+                    html:"카드 일러스트를 불러오지 않아 데이터를 절약할 수 있습니다.<br>(덱 리스트 내 카드 이미지는 출력됨)",
                     showCancelButton:true,
                     confirmButtonText: '시작하기',
                     cancelButtonText: '취소',
@@ -91,7 +68,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //오프라인 모드 활성화
                         session.offline = true;
                         //업데이트 확인
-                        window_shift("update", keyword2);
+                        window_shift("update");
                     }
                 })
             }
@@ -102,173 +79,612 @@ async function window_shift(keyword, keyword2, keyword3) {
         //※ 업데이트 창
         //===========================================================
         case "update":
-            //최신 DB 버전 확인
-            let dbinfo = keyword2.dbinfo;
-            //저장된 DB 버전 확인
-            localforage.getItem("sist_db_version")
-            .then(function(version) {
-                //DB 버전이 없거나 불일치 : 업데이트 실시
-                if (!version || version !== dbinfo.version) {
-                    process_update_window()
-                //DB 버전 일치 : 저장된 DB 불러오기
-                } else {
-                    process_load()
-                }
-            }).catch(function() {
-                //DB 버전 확인 불가 : 업데이트 실시
-                process_update_window()
-            })
-
+        //0-1. 각종 변수
+            let dataUpdated = 0//업데이트 여부(업데이트가 되면 데이터 일괄 정비)
+            let errorOccured = 0//오류 발생 여부(발생 시 화면을 자동으로 넘기지 않음)
+            let windowShifted = 0//창 전환 여부(업데이트 화면 전환이 되었다면 "1"로 변경)
+            let updateMsg = ""//업데이트 시 출력되는 메시지 내용
+        //0-2. 함수 선언 - 창 전환
             function process_update_window() {
                 //창 전환
-                window_clear();
-                $("#main_update").classList.add("show");
-                $("#footer_update").classList.add("show");
-
-                //업데이트 창 작성
-                let updateFrag = document.createDocumentFragment();
-                //버전
-                let ver = document.createElement("p");
-                    ver.innerHTML = 'DB 버전 : ' + dbinfo.version;
-                updateFrag.appendChild(ver);
-                //날짜
-                let date = document.createElement("p");
-                    date.innerHTML = 'DB 업데이트 일시 : ' + dbinfo.date;
-                updateFrag.appendChild(date);
-                //내용
-                let desc = document.createElement("p");
-                    desc.innerHTML = '업데이트 내용 : ' + dbinfo.description;
-                updateFrag.appendChild(desc);
-                $("#update_content").appendChild(updateFrag);
-
-                //(1초 후) 업데이트 실시
-                setTimeout(function() {
-                    process_update();
-                }, 500);
+                window_clear()
+                $("#main_update").classList.add("show")
+                $("#footer_update").classList.add("show")
             }
-            //1-1차 / DB버전 불일치 : DB 업데이트
-            function process_update() {
-                //카드 정보 불러오기
-                fetch("./js/cards.collectible.json")
-                .then(function(response) {
-                    return response.json();
-                })
-                .catch(function(e) {
-                    nativeToast({
-                        message: '카드 정보를 불러올 수 없습니다. 제작자에게 문의해주세요.<br>(https://blog.naver.com/ansewo/221319675157)<br>('+e+')',
-                        position: 'center',
-                        timeout: 3000,
-                        type: 'error',
-                        closeOnClick: 'true'
-                    });
-                })
-                .then(function(myJson) {
-                    //카드정보 입력
-                    session.db = myJson;
-                    //카드정보 정렬
-                    sort_arr(session.db);
-                    //카드정보 정제
-                    session.db.forEach(function(x, index) {
-                        //dbfId대문자 제거 및 문자열로 변환
-                        x.dbfid = x.dbfId.toString();
-                        //collectionText가 있는 카드들은 텍스트 대체
-                        if (x.collectionText !== undefined && x.collectionText.length >= 10) {
-                            x.text = x.collectionText;
-                        }
-                        //이벤트 세트일 경우 이름 앞에 "*" 표시
-                        if (DATA.SET[x.set] !== undefined && DATA.SET[x.set].EVENT === true) {
-                            x.name = "*" + x.name + "*";
-                        }
-                        //검색용 키워드 입력
-                        x.keywords = {};
-                        let wordbook = x.keywords;
-                        let list = ["name","text","race","type"];
-                        for (let i = 0;i<list.length;i++) {
-                            if (x[list[i]]) wordbook[list[i]] = searchable(x[list[i]]);
-                        }
-                    })
+        //0-3. 함수 선언 - 메시지 출력
+            function process_update_message(msg, delay, type) {
+                return new Promise(resolve => {
+                    let message = document.createElement("p")
+                        message.innerHTML = msg
+                        if (type === "error") message.className = "error"
+                        else if (type === "info") message.className = "info"
+                    $("#update_content").appendChild(message)
 
-                    //DB 저장
-                    localforage.setItem("sist_db",session.db)
-                    .then(function() {
-                        //DB 버전 저장
-                        localforage.setItem("sist_db_version",dbinfo.version)
-                        .then(function() {
-                            //카드정보 구축 시작
-                            process_update_finish();
-                        }).catch(function() {
-                            //버전 저장 못해도 '아무튼' 구축 시작
-                            process_update_finish();
-                        })
-                    }).catch(function() {
-                        //DB 저장 못해도 '아무튼' 구축 시작
-                        process_update_finish();
-                    });
-                })
-                .catch(function(e) {
-                    nativeToast({
-                        message: '카드 정보를 처리할 수 없습니다. 제작자에게 문의해주세요.<br>(https://blog.naver.com/ansewo/221319675157)<br>('+e+')',
-                        position: 'center',
-                        timeout: 3000,
-                        type: 'error',
-                        closeOnClick: 'true'
-                    });
-                })
-            }
-
-            //1-2차 / DB버전 일치 : 저장된 DB 불러오기
-            function process_load() {
-                //DB 불러오기
-                localforage.getItem("sist_db")
-                .then(function(db) {
-                    //불러온 정보 적용
-                    session.db = deepCopy(db);
-                    //카드정보 구축 시작
-                    process_update_finish();
-                })
-                .catch(function(err) {
-                    //불러올 수 없다고 알리기
-                    nativeToast({
-                        message: '저장된 카드 정보를 불러올 수 없습니다. DB 업데이트를 실시합니다.',
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'error',
-                        closeOnClick: 'true'
-                    });
-                    //강제 업데이트
-                    process_update_window()
-
-                    return false;
+                    setTimeout(() => {
+                        resolve()
+                    }, delay)
                 });
             }
+        //1-1. 메타데이터 업데이트 점검, 준비
+            //temp_metadata 변수 준비
+            let temp_metadata = []
+            //서버 버전 불명일 경우
+            if (session.serverVersion === undefined) {
+                //^로컬 sist_metadata 불러옴
+                try {
+                    let local_metadata = await localforage.getItem("sist_metadata")
+                    //있을 시
+                    if (local_metadata !== null) {
+                        //temp_metadata에 메타데이터 할당
+                        temp_metadata = local_metadata
+                    //없을 시
+                    } else {
+                        //무시 (로컬 메타데이터 없음 - 강제 업데이트)
+                        //오류메시지 출력
+                        updateMsg = "[ERROR] 저장된 메타데이터가 없습니다."
+                        await process_update_message(updateMsg, 0, "error")
+                        errorOccured = 1
+                    }
+                //실패 시
+                } catch(e) {
+                    //무시 (로컬 메타데이터 확인불가 - 강제 업데이트)
+                    //오류메시지 출력
+                    updateMsg = "[ERROR] 저장된 메타데이터를 확인할 수 없습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    errorOccured = 1
+                }
+            //서버 버전 알 수 있으면
+            } else if (session.serverVersion !== undefined) {
+                //^로컬 sist_metadata_version 불러옴
+                try {
+                    let local_metadata_version = await localforage.getItem("sist_metadata_version")
+                    //로컬 버전 정보가 있을 시
+                    if (local_metadata_version !== null) {
+                        //버전 일치 시
+                        if (local_metadata_version === session.serverVersion.meta) {
+                            //^로컬 sist_metadata 불러옴
+                            try {
+                                let local_metadata = await localforage.getItem("sist_metadata")
+                                //있을 시
+                                if (local_metadata !== null) {
+                                    //temp_metadata에 메타데이터 할당
+                                    temp_metadata = local_metadata
+                                //없을 시
+                                } else {
+                                    //무시 (버전 정보는 있지만 로컬 메타데이터 없음 - 강제 업데이트)
+                                    //오류메시지 출력
+                                    updateMsg = "[ERROR] 저장되었던 메타데이터를 찾을 수 없습니다. 삭제된 것으로 추정됩니다."
+                                    await process_update_message(updateMsg, 0, "error")
+                                    errorOccured = 1
+                                }
+                            //실패 시
+                            } catch(e) {
+                                //무시 (로컬 메타데이터 확인불가 - 강제 업데이트)
+                                //오류메시지 출력
+                                updateMsg = "[ERROR] 저장된 메타데이터를 확인할 수 없습니다."
+                                await process_update_message(updateMsg, 0, "error")
+                                await process_update_message("(" + e + ")", 0, "error")
+                                errorOccured = 1
+                            }
+                        //버전 불일치 시
+                        } else {
+                            //무시 (메타데이터 업데이트 확인 - 정상 업데이트)
+                            //메시지 출력
+                            updateMsg = "새로운 메타데이터를 확인하였습니다."
+                            await process_update_message(updateMsg, 0, "info")
+                        }
+                    //로컬 버전 정보가 없을 시
+                    } else {
+                        //무시 (로컬 버전 미비 - 최초 업데이트)
+                        //메시지 출력
+                        updateMsg = "저장된 메타데이터가 없습니다."
+                        await process_update_message(updateMsg, 0, "info")
+                    }
+                //오류 시
+                } catch(e) {
+                    //무시 (로컬 버전 확인불가 - 강제 업데이트)
+                    //오류메시지 출력
+                    updateMsg = "[ERROR] 저장된 메타데이터 버전을 확인할 수 없습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    errorOccured = 1
+                }
+            }
+        //1-2. 메타데이터 업데이트 (필요하면) 실시
+            //temp_metadata 비어있으면 (로컬 메타데이터 불러오기 실패 - 업데이트 필요)
+            if (temp_metadata.length <= 0) {
+                //창 (전환 안했으면) 전환
+                if (windowShifted === 0) {
+                    windowShifted = 1
+                    await process_update_window()
+                }
+                //업데이트 시작 메시지 출력
+                updateMsg = "메타데이터 업데이트를 시작합니다."
+                await process_update_message(updateMsg, 500)
+                //*sist_data_meta.json 불러옴
+                try {
+                    let response = await fetch("https://solarias.github.io/simplestone_database/json/sist_data_meta.json")
+                    temp_metadata = await response.json()
+                    dataUpdated += 1
+                    //업데이트 완료 메시지 출력
+                    updateMsg = "&#9989; 메타데이터 업데이트 완료!"
+                    await process_update_message(updateMsg, 500)
+                //불러오는 데 실패 시
+                } catch (e) {
+                    //진행 불가 버튼
+                    $("#button_update").innerHTML = "진행 불가"
+                    //오류 메시지 출력
+                    updateMsg = "[ERROR] 메타데이터를 불러오는 데 실패하였습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    updateMsg = "[ERROR] 오류가 지속되면 개발자에게 문의해주세요. (https://blog.naver.com/ansewo/221319675157)"
+                    await process_update_message(updateMsg, 0, "error")
+                    //#진행 포기 (참고할 메타데이터 없음)
+                    return
+                }
+            }
+        //2-1. 카드데이터 업데이트 점검, 준비
+            //temp_db 변수 준비
+            let temp_db = []
+            //서버 버전 불명일 경우
+            if (session.serverVersion === undefined) {
+                //^로컬 sist_db 불러옴
+                try {
+                    let local_db = await localforage.getItem("sist_db")
+                    //있을 시
+                    if (local_db !== null) {
+                        //temp_db에 카드데이터 할당
+                        temp_db = local_db
+                    //없을 시
+                    } else {
+                        //무시 (버전 정보는 있지만 로컬 카드데이터 없음 - 강제 업데이트)
+                        //오류메시지 출력
+                        updateMsg = "[ERROR] 저장되었던 카드데이터를 찾을 수 없습니다. 삭제된 것으로 추정됩니다."
+                        await process_update_message(updateMsg, 0, "error")
+                        errorOccured = 1
+                    }
+                //실패 시
+                } catch(e) {
+                    //무시 (로컬 카드데이터 확인불가 - 강제 업데이트)
+                    //오류메시지 출력
+                    updateMsg = "[ERROR] 저장된 카드데이터를 확인할 수 없습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    errorOccured = 1
+                }
+            //서버 버전 알 수 있으면
+            } else if (session.serverVersion !== undefined) {
+                //^로컬 sist_db_version 불러옴
+                try {
+                    let local_db_version = await localforage.getItem("sist_db_version")
+                    //로컬 버전 정보가 있을 시
+                    if (local_db_version !== null) {
+                        //버전 일치 시
+                        if (local_db_version === session.serverVersion.card) {
+                            //^로컬 sist_metadata 불러옴
+                            try {
+                                let local_db = await localforage.getItem("sist_db")
+                                //있을 시
+                                if (local_db !== null) {
+                                    //temp_db에 메타데이터 할당
+                                    temp_db = local_db
+                                //없을 시
+                                } else {
+                                    //무시 (로컬 카드데이터 없음 - 강제 업데이트)
+                                    //오류메시지 출력
+                                    updateMsg = "[ERROR] 저장된 카드데이터가 없습니다."
+                                    await process_update_message(updateMsg, 0, "error")
+                                    errorOccured = 1
+                                }
+                            //실패 시
+                            } catch(e) {
+                                //무시 (로컬 카드데이터 확인불가 - 강제 업데이트)
+                                //오류메시지 출력
+                                updateMsg = "[ERROR] 저장된 카드데이터를 확인할 수 없습니다."
+                                await process_update_message(updateMsg, 0, "error")
+                                await process_update_message("(" + e + ")", 0, "error")
+                                errorOccured = 1
+                            }
+                        //버전 불일치 시
+                        } else {
+                            //무시 (카드데이터 업데이트 확인 - 정상 업데이트)
+                            //메시지 출력
+                            updateMsg = "새로운 카드데이터를 확인하였습니다."
+                            await process_update_message(updateMsg, 0, "info")
+                        }
+                    //로컬 버전 정보가 없을 시
+                    } else {
+                        //무시 (로컬 버전 미비 - 최초 업데이트)
+                        //메시지 출력
+                        updateMsg = "저장된 카드데이터가 없습니다."
+                        await process_update_message(updateMsg, 0, "info")
+                    }
+                //오류 시
+                } catch(e) {
+                    //무시 (로컬 버전 확인불가 - 강제 업데이트)
+                    //오류메시지 출력
+                    updateMsg = "[ERROR] 저장된 카드데이터 버전을 확인할 수 없습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    errorOccured = 1
+                }
+            }
+        //2-2. 카드데이터 업데이트 (필요하면) 실시
+            //temp_db 비어있으면 (로컬 업데이트 실패 - 업데이트 필요)
+            if (temp_db.length <= 0) {
+                //창 (전환 안했으면) 전환
+                if (windowShifted === 0) {
+                    windowShifted = 1
+                    process_update_window()
+                }
+                //업데이트 시작 메시지 출력
+                updateMsg = "카드데이터 업데이트를 시작합니다."
+                await process_update_message(updateMsg, 500)
+                //*sist_data_card.json 불러옴
+                try {
+                    let response = await fetch("https://solarias.github.io/simplestone_database/json/sist_data_card.json")
+                    temp_db = await response.json()
+                    dataUpdated += 1
+                    //카드 장수 세기
+                    let cardCount = {all:0,card:0,token:0}
+                    temp_db.forEach(card => {
+                        cardCount.all += 1
+                        if (card.collectible === 1) {
+                            cardCount.card += 1
+                        } else {
+                            cardCount.token += 1
+                        }
+                    })
+                    //업데이트 완료 메시지 출력
+                    updateMsg = "&#9989; 카드데이터 정리 완료! (총 " + thousand(cardCount.all) + "장 / 카드 " + thousand(cardCount.card) + "장, 토큰 " + thousand(cardCount.token) + "장)"
+                    await process_update_message(updateMsg, 500)
+                //불러오는 데 실패 시
+                } catch (e) {
+                    //진행 불가 버튼
+                    $("#button_update").innerHTML = "진행 불가"
+                    //진행 불가 오류 메시지 출력
+                    updateMsg = "[ERROR] 카드데이터를 불러오는 데 실패하였습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    console.log(e)
+                    updateMsg = "[ERROR] 오류가 지속되면 개발자에게 문의해주세요. (https://blog.naver.com/ansewo/221319675157)"
+                    await process_update_message(updateMsg, 0, "error")
+                    //#진행 포기 (참고할 카드데이터 없음)
+                    return
+                }
+            }
+        //3. 전장데이터 점검
+            //향후 추가
+        //4. 메타데이터, 카드데이터 (하나라도 업데이트했다면) 정비, 저장
+            if (dataUpdated > 0) {
+            //메타데이터 정비 및 저장
+                //메시지 출력
+                updateMsg = "메타데이터 정리를 실시합니다."
+                await process_update_message(updateMsg, 500)
+                //메타데이터 정비
+                try {
+                    //1. 카드가 하나도 없는 세트는 제외
+                    for (let i = temp_metadata.sets.length - 1;i >= 0;i--) {
+                        let set = temp_metadata.sets[i]
+                        let count = 0
+                        temp_db.forEach(card => {
+                            if (card.cardSetId === set.id) {
+                                count += 1
+                            }
+                        })
+                        if (count === 0) {
+                            temp_metadata.sets.splice(i,1);
+                        }
+                    }
+                    //2. 세트 정보에 정규 여부 입력, 모든 슬러그를 대문자료 교체
+                    let standardArr = []
+                    temp_metadata.setGroups.find(x => x.slug === "standard").cardSets.forEach(set => {
+                        standardArr.push(set.toUpperCase())
+                    })
+                    temp_metadata.sets.forEach(set => {
+                        set.slug = set.slug.toUpperCase()
+                        if (standardArr.indexOf(set.slug) < 0) {
+                            set.format = "야생"
+                        } else {
+                            set.format = "정규"
+                        }
+                    })
+                    //3. 클래스 정보의 모든 슬러그를 대문자로 교체
+                    temp_metadata.classes.forEach(cls => {
+                        cls.slug = cls.slug.toUpperCase()
+                    })
+                    //4. 업데이트 당시의 연도 기억
+                    temp_metadata.year = ""
+                    let thisYear = 0
+                    temp_metadata.setGroups.forEach(group => {
+                        if (group.year !== undefined && !isNaN(group.year)) {
+                            let year = parseInt(group.year)
+                            if (thisYear < group.year) {
+                                thisYear = group.year
+                                temp_metadata.year = group.name + "(" + thisYear.toString() + ")"
+                            }
+                        }
+                    })
+                    //^^로컬 sist_metadata_version에 버전 저장
+                    try {
+                        await localforage.setItem("sist_metadata_version", session.serverVersion.meta)
+                    //저장 실패 시
+                    } catch(e) {
+                        //무시 (향후 재업데이트 필요 - 메타데이터 버전 확인 불가)
+                        //오류메시지
+                        updateMsg = "[ERROR] 메타데이터 버전을 저장할 수 없습니다. (향후 재업데이트 필요)"
+                        await process_update_message(updateMsg, 0, "error")
+                        await process_update_message("(" + e + ")", 0, "error")
+                        errorOccured = 1
+                    }
+                    //^^로컬 sist_metadata에 내용 저장
+                    try {
+                        await localforage.setItem("sist_metadata", temp_metadata)
+                    //저장 실패 시
+                    } catch(e) {
+                        //무시 (향후 재업데이트 필요 - 메타데이터가 저장되지 않음)
+                        //오류메시지
+                        updateMsg = "[ERROR] 메타데이터를 저장할 수 없습니다. (향후 재업데이트 필요)"
+                        await process_update_message(updateMsg, 0, "error")
+                        await process_update_message("(" + e + ")", 0, "error")
+                        errorOccured = 1
+                    }
+                    //정비 완료 메시지 출력
+                    updateMsg = "&#9989; 메타데이터 정비 완료!"
+                    await process_update_message(updateMsg, 500)
+                } catch(e) {
+                    //진행 불가 버튼
+                    $("#button_update").innerHTML = "진행 불가"
+                    //오류 메시지 출력
+                    updateMsg = "[ERROR] 메타데이터를 정리하는 데 실패하였습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    updateMsg = "[ERROR] 오류가 지속되면 개발자에게 문의해주세요. (https://blog.naver.com/ansewo/221319675157)"
+                    await process_update_message(updateMsg, 0, "error")
+                    //#진행 포기 (참고할 메타데이터 없음)
+                    return
+                }
+            //카드데이터 정비 및 저장
+                //메시지 출력
+                updateMsg = "카드데이터 정리를 실시합니다."
+                await process_update_message(updateMsg, 500)
+                //카드데이터 정비
+                try {
+                    temp_db.forEach(card => {
+                        //1. 카드 검색을 위한 다양한 속성 추가
+                        //1-1. class (직업 정보)
+                            card.class = {}
+                            let thisClass = temp_metadata.classes.find(x => x.id === card.classId)
+                            //소속을 알 수 없는 카드는 "중립" 정보 입력
+                            if (thisClass === undefined) {
+                                thisClass = temp_metadata.classes.find(x => x.name === "중립")
+                            }
+                            //직업 정보 입력
+                            try {
+                                card.class.slug = thisClass.slug
+                                card.class.name = thisClass.name
+                            //만에 하나 직업정보 입력에 문제가 있으면 '중립' 정보 강제로 입력
+                            } catch(e) {
+                                card.class.slug = "NEUTRAL"
+                                card.class.name = "중립"
+                            }
+                            //classId - 삭제하지 않음 (메타데이터 업데이트 시 세트 확인용으로 필요)
+                            //delete card.classId
+                        //1-2. multiClass (다중직업 정보 - "slug"만 입력)
+                            card.multiClass = []
+                            if (card.multiClassIds !== undefined) {
+                                if (card.multiClassIds.length > 0) {
+                                    card.multiClassIds.forEach(c => {
+                                        let thisClass = temp_metadata.classes.find(x => x.id === c)
+                                        if (thisClass !== undefined) {
+                                            card.multiClass.push(thisClass.slug)
+                                        //소속을 알 수 없는 정보는 중립으로 입력
+                                        } else {
+                                            card.multiClass.push("NEUTRAL")
+                                        }
+                                    })
+                                }
+                                //multiClassIds 삭제 (활용하지 않음)
+                                delete card.multiClassIds
+                            }
+                        //1-3. set (세트 정보)
+                            card.cardSet = {}
+                            let thisSet = temp_metadata.sets.find(x => x.id === card.cardSetId)
+                            //세트 정보 입력
+                            if (thisSet !== undefined) {
+                                card.cardSet.slug = thisSet.slug
+                                card.cardSet.name = thisSet.name
+                                card.cardSet.format = thisSet.format
+                            //세트를 알 수 없는 카드는 "알 수 없는 세트"로 취급
+                            } else if (thisSet === undefined) {
+                                card.cardSet.slug = "ETC"
+                                card.cardSet.name = "알 수 없는 세트(세트 ID : " + card.cardSetId + ")"
+                            }
+                            //setId 삭제 (활용하지 않음)
+                            delete card.cardSetId
+                        //1-4. cardType (카드 종류 정보)
+                            card.cardType = {}
+                            let thisCardType = temp_metadata.types.find(x => x.id === card.cardTypeId)
+                            //카드타입 정보 입력
+                            if (thisCardType !== undefined) {
+                                card.cardType.slug = thisCardType.slug.toUpperCase()
+                                card.cardType.name = thisCardType.name
+                            //카드 종류를 알 수 없는 카드는 "기타" 종류로 취급
+                            } else if (thisCardType === undefined) {
+                                card.cardType.slug = "ETC"
+                                card.cardType.name = "기타"
+                            }
+                            //cardTypeId 삭제 (활용하지 않음)
+                            delete card.cardTypeId
+                        //1-5. rarity (등급 정보)
+                            card.rarity = {}
+                            let thisRarity = temp_metadata.rarities.find(x => x.id === card.rarityId)
+                            //등급 정보 입력
+                            if (thisRarity !== undefined) {
+                                card.rarity.slug = thisRarity.slug.toUpperCase()
+                                card.rarity.name = thisRarity.name
+                                card.rarity.dust = thisRarity.craftingCost[0]
+                            //등급을 알 수 없는 카드는 "등급 없음" 등급으로 취급
+                            } else if (thisRarity === undefined) {
+                                card.rarity.slug = "ETC"
+                                card.rarity.name = "등급 없음"
+                                card.rarity.dust = 0
+                            }
+                            //rarityId 삭제 (활용하지 않음)
+                            delete card.rarityId
+                        //1-6. minionType (하수인 종류 정보) - 있는 경우에만
+                            if (card.minionTypeId !== undefined) {
+                                card.minionType = {}
+                                let thisMinionType = temp_metadata.minionTypes.find(x => x.id === card.minionTypeId)
+                                //하수인 종류 정보 입력
+                                if (thisMinionType !== undefined) {
+                                    card.minionType.slug = thisMinionType.slug.toUpperCase()
+                                    card.minionType.name = thisMinionType.name
+                                //하수인 종류를 알 수 없는 카드는 "종족 불명" 종류로 취급
+                                } else if (thisMinionType === undefined) {
+                                    card.minionType.slug = "ETC"
+                                    card.minionType.name = "종족 불명"
+                                }
+                                //minionTypeId 삭제 (활용하지 않음)
+                                delete card.minionTypeId
+                            }
+                        //1-7. cost (비용 - dataset에서 대문자 활용 문제)
+                            card.cost = card.manaCost
+                            //manaCost 삭제 (활용하지 않음)
+                            delete card.manaCost
+                        //1-8. 활용하지 않는 속성 삭제
+                            if (card.slug !== undefined) delete card.slug
+                            if (card.imageGold !== undefined) delete card.imageGold
+                            if (card.cropImage !== undefined) delete card.cropImage
+                        //2-1. childIds 중 존재하지 않는 것은 제거하기
+                        if (card.childIds !== undefined) {
+                            for (let i = card.childIds.length - 1;i >= 0;i--) {
+                                let id = card.childIds[i]
+                                let child = temp_db.find(x => x.id === id)
+                                if (child === undefined) {
+                                    card.childIds.splice(i,1)
+                                }
+                            }
+                            //이후에 childIds가 비어있으면 제거하기
+                            if (card.childIds.length <= 0) {
+                                delete card.childIds
+                            }
+                        }
+                        //3. keywords 속성 제작 (검색용, 이름/텍스트/종족/종류)
+                        //획득 가능한 카드만 실시 (일부 토큰은 메타데이터에 정보가 없음)
+                        if (card.collectible === 1) {
+                            card.keywords = {};
+                            card.keywords.name = searchable(card.name)
+                            card.keywords.text = searchable(card.text)
+                            if (card.minionType !== undefined) {
+                                card.keywords.minionType = searchable(card.minionType.name)
+                            }
+                            card.keywords.cardType = searchable(card.cardType.name)
+                        }
+                    })
+                    //카드 정렬
+                    sort_arr(temp_db)
+                    //^^로컬 sist_db_version에 버전 저장
+                    try {
+                        await localforage.setItem("sist_db_version", session.serverVersion.card)
+                    //저장 실패 시
+                    } catch(e) {
+                        //무시 (향후 재업데이트 필요 - 카드데이터 버전 확인 불가)
+                        //오류메시지
+                        updateMsg = "[ERROR] 카드데이터 버전을 저장할 수 없습니다. (향후 재업데이트 필요)"
+                        await process_update_message(updateMsg, 0, "error")
+                        await process_update_message("(" + e + ")", 0, "error")
+                        errorOccured = 1
+                    }
+                    //^^로컬 sist_db에 내용 저장
+                    try {
+                        await localforage.setItem("sist_db", temp_db)
+                    //저장 실패 시
+                    } catch(e) {
+                        //무시 (향후 재업데이트 필요 - 카드데이터가 저장되지 않음)
+                        //오류메시지
+                        updateMsg = "[ERROR] 카드데이터를 저장할 수 없습니다. (향후 재업데이트 필요)"
+                        await process_update_message(updateMsg, 0, "error")
+                        await process_update_message("(" + e + ")", 0, "error")
+                        errorOccured = 1
+                    }
+                    //업데이트 완료 메시지 출력
+                    updateMsg = "&#9989; 카드데이터 정리 완료!"
+                    await process_update_message(updateMsg, 500)
+                } catch(e) {
+                    //진행 불가 버튼
+                    $("#button_update").innerHTML = "진행 불가"
+                    //진행 불가 오류 메시지 출력
+                    updateMsg = "[ERROR] 카드데이터를 정비하는 데 실패하였습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                    await process_update_message("(" + e + ")", 0, "error")
+                    console.log(e)
+                    updateMsg = "[ERROR] 오류가 지속되면 개발자에게 문의해주세요. (https://blog.naver.com/ansewo/221319675157)"
+                    await process_update_message(updateMsg, 0, "error")
+                    //#진행 포기 (참고할 카드데이터 없음)
+                    return
+                }
+            }
 
-            //2차: 카드 정보 구축
+            //session.metadata에 temp_metadata 저장
+            session.metadata = temp_metadata
+            //session.db에 카드데이터 저장
+            session.db = temp_db
+        //5. 전장데이터 (하나라도 업데이트했다면) 정비, 저장
+            //향후 추가
+        //6. 기타 정보 구축
+            //카드 인덱스 정보 구축
+            session.dbIndex = {}
+            session.db.forEach((card, i) => {
+                session.dbIndex[card.id.toString()] = i
+                card.index = i
+            })
+            //직업 인덱스 정보 구축
+            session.classInfo = {}
+            session.metadata.classes.forEach((cls, i) => {
+                session.classInfo[cls.slug] = cls
+            })
+            //마스터 노드, 마스터 인포, 마스터 슬롯, 마스터 메타덱 생성
+            session.masterNode = card_generateMaster();
+            session.masterInfo = cardinfo_generateMaster();
+            session.masterSlot = deckslot_generateMaster();
+            session.masterMetaSlot = metadeckslot_generateMaster();
+            //카드 Fragment 생성
+            session.fragment = [];
+            session.db.forEach(function(info, index) {
+                session.fragment[index] = card_generateFragment(info);
+            })
+        //5. 다음 단계로 진행
+            //에러가 1번이라도 발생 시 : "다음으로 진행" 버튼을 눌려야 진행 가능
+            if (errorOccured > 0) {
+                //진행 안내 메시지 출력
+                updateMsg = "모든 업데이트가 완료되었습니다. 아래의 '진행하기' 버튼을 눌려주세요."
+                await process_update_message(updateMsg, 0)
+                updateMsg = "오류가 지속되면 개발자에게 문의해주세요. (https://blog.naver.com/ansewo/221319675157)"
+                await process_update_message(updateMsg, 0)
+
+                //진행 버튼 세팅
+                $("#button_update").innerHTML = "진행하기"
+                $("#button_update").classList.add("complete")
+                $("#button_update").onclick = () => {
+                    process_update_finish()
+                }
+            //에러가 없으면 즉시진행
+            } else {
+                process_update_finish()
+            }
+
             function process_update_finish() {
-                //인덱스 정보 구축
-                session.index = {};
-                session.db.forEach(function(x,index) {
-                    session.index[x.dbfid] = index;
-                })
-                //마스터 노드, 마스터 인포, 마스터 슬롯, 마스터 메타덱 생성
-                session.masterNode = card_generateMaster();
-                session.masterInfo = cardinfo_generateMaster();
-                session.masterSlot = deckslot_generateMaster();
-                session.masterMetaSlot = metadeckslot_generateMaster();
-                //카드 Fragment 생성
-                session.fragment = [];
-                session.db.forEach(function(info, index) {
-                    session.fragment[index] = card_generateFragment(info);
-                })
-
                 //URL 패러미터에 덱코드가 있으면
                 if (Object.keys(session.urlParams).length > 0 && session.urlParams.deckcode !== undefined) {
                     try {
                         //덱코드 해석
-                        let deckcode = decodeURIComponent(session.urlParams.deckcode);
-                        let test = deckstrings.decode(deckcode);
+                        let deckcode = decodeURIComponent(session.urlParams.deckcode)
+                        let test = deckstrings.decode(deckcode)
                         //덱코드 기억
-                        process.deck = {};
-                        process.deck.deckcode = deckcode;
+                        process.deck = {}
+                        process.deck.deckcode = deckcode
                         //덱코드 인식했다고 알리기
                         nativeToast({
                             message: 'URL에서 덱코드가 인식되었습니다.',
@@ -276,11 +692,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                             timeout: 2000,
                             type: 'success',
                             closeOnClick: 'true'
-                        });
+                        })
                         //덱 공개
-                        window_shift("loading","deckconfig");
+                        window_shift("loading","deckconfig")
                     } catch(e) {
-                        console.log(e);
+                        console.log(e)
                         //불러올 수 없다고 알리기
                         nativeToast({
                             message: 'URL에 포함된 덱코드가 올바르지 않습니다.',
@@ -288,16 +704,17 @@ async function window_shift(keyword, keyword2, keyword3) {
                             timeout: 2000,
                             type: 'error',
                             closeOnClick: 'true'
-                        });
-                        window_shift("titlescreen");
+                        })
+                        window_shift("titlescreen")
                     }
                 //없으면 : 화면 전환
                 } else {
-                    window_shift("titlescreen");
+                    //#타이틀스크린 이동
+                    window_shift("titlescreen")
                 }
             }
 
-            break;
+            break
 
         //===========================================================
         //※ 메인화면 창
@@ -306,20 +723,20 @@ async function window_shift(keyword, keyword2, keyword3) {
             //공용 함수
             function process_titlescreen() {
                 //진행정보 초기화
-                process = {};
+                process = {}
                 //진행상태 표시, 기억
-                process.state = "titlescreen";
-                $("#header_status").innerHTML = "심플 스톤";
+                process.state = "titlescreen"
+                $("#header_status").innerHTML = "심플 스톤"
                 //창 전환
-                window_clear();
-                $("#main_titlescreen").classList.add("show");
-                $("#header_back").classList.remove("show");
+                window_clear()
+                $("#main_titlescreen").classList.add("show")
+                $("#header_back").classList.remove("show")
                     //모바일 한정 - 히스토리 뒤로 가기 시 종료여부 결정
                     window.onpopstate = () => {
                         if (blockBack > 0) {
                             if (swal.isVisible()) {
-                                swal.close();
-                                window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                                swal.close()
+                                window.history.pushState({ noBackExitsApp: true }, 'DEF')
                             } else {
                                 nativeToast({
                                     message: '심플스톤을 종료하려면 뒤로 버튼을 한 번 더 눌려주세요.',
@@ -327,30 +744,30 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     timeout: 2000,
                                     type: 'close',
                                     closeOnClick: 'true'
-                                });
-                                clearTimeout(autoPopstate);
+                                })
+                                clearTimeout(autoPopstate)
                                 autoPopstate = setTimeout(() => {
                                     window.history.pushState({ noBackExitsApp: true }, 'DEF')
-                                },2000);
+                                },2000)
                             }
                         }
                     }
                 //이용 정보 표시안함
-                $("#header_info").classList.remove("show");
-                $("#header_sort").classList.remove("show");
+                $("#header_info").classList.remove("show")
+                $("#header_sort").classList.remove("show")
 
                 //최신 확장팩 문구 표기
-                $("#titlescreen_latest_name").innerHTML = DATA.SET[DATA.SET_LATEST].KR;
+                $("#titlescreen_latest_name").innerHTML = session.metadata.sets[0].name
 
                 //시작 버튼
                 $("#start_card").onclick = function() {
-                    window_shift("loading","cardinfo");
+                    window_shift("loading","cardinfo")
                 }
                 $("#start_deck").onclick = function() {
-                    window_shift("decklist");
+                    window_shift("decklist")
                 }
                 $("#start_metadeck").onclick = function() {
-                    window_shift("metadeck");
+                    window_shift("metadeck")
                 }
                 $("#start_information").onclick = function() {
                     swal({
@@ -360,7 +777,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                         html:'<b>제작자</b>: 솔라리어스<br>'+
                             '<b>의견 남기기</b>: ansewo@naver.com,<br>'+
                             '<a href="https://blog.naver.com/ansewo/221319675157" target="_blank">https://blog.naver.com/ansewo/221319675157</a><br><br>'+
-                            '<b>카드정보 & 카드이미지 출처</b>: <a href="https://hearthstonejson.com/" target="_blank">HearthstoneJSON</a><br>'+
+                            '<b>카드정보 & 카드이미지 출처</b>: <a href="https://develop.battle.net/" target="_blank">블리자드 공식 API</a><br>'+
+                            '<b>메타 덱 정보 출처</b>: <a href="https://hsreplay.net/" target="_blank">HSReplay.net</a><br>'+
                             '<b>각종 아이콘 출처</b>: <a href="https://ko.icons8.com/icon" target="_blank">https://ko.icons8.com/icon</a><br><br>'+
                             '<b>로고 아이콘 정보</b><br>'+
                             '<div>Icons made by <a href="http://www.freepik.com" target="_blank" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><br>'+
@@ -374,64 +792,64 @@ async function window_shift(keyword, keyword2, keyword3) {
             if (process.state && process.state !== "titlescreen") {
                 if (keyword2 === "always") {
                     //강제 화면 전환
-                    process_titlescreen();
+                    process_titlescreen()
                 } else {
                     //덱 (있으면)
                     if (process.deck) {
                         if (process.deck.class && process.deck.format) {
                             //덱 저장 후 화면전환
                             deck_save().then(() => {
-                                process_titlescreen();
-                            });
+                                process_titlescreen()
+                            })
                         } else {
                             //없으면 그냥 화면전환
-                            process_titlescreen();
+                            process_titlescreen()
                         }
                     } else {
                         //없으면 그냥 화면전환
-                        process_titlescreen();
+                        process_titlescreen()
                     }
                 }
             } else {
                 //화면 전환
-                process_titlescreen();
+                process_titlescreen()
             }
 
-            break;
+            break
 
         //===========================================================
         //※ 덱목록 창
         //===========================================================
         case "decklist":
             //진행상태 표시, 기억
-            process.state = "decklist";
-                process.prestate = undefined;
-            $("#header_status").innerHTML = "덱 목록";
+            process.state = "decklist"
+                process.prestate = undefined
+            $("#header_status").innerHTML = "덱 목록"
             //창 전환
-            window_clear();
-            $("#main_decklist").classList.add("show");
-            $("#footer_decklist").classList.add("show");
+            window_clear()
+            $("#main_decklist").classList.add("show")
+            $("#footer_decklist").classList.add("show")
             //뒤로 버튼
-            $("#header_back").classList.add("show");
+            $("#header_back").classList.add("show")
                 window_goback = () => {
-                    window_shift("titlescreen");
+                    window_shift("titlescreen")
                 }
-                $("#header_back").onclick = window_goback;
+                $("#header_back").onclick = window_goback
                 //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
                 window.onpopstate = () => {
                     if (blockBack > 0) {
-                        if (swal.isVisible()) swal.close();
-                            else window_goback();
-                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                        if (swal.isVisible()) swal.close()
+                            else window_goback()
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF')
                     }
                 }
             //이용 정보 표시안함
-            $("#header_info").classList.remove("show");
-            $("#header_sort").classList.remove("show");
+            $("#header_info").classList.remove("show")
+            $("#header_sort").classList.remove("show")
 
             //덱 설정 초기화
-            process.deck = {};
-            process.deck.deckcode = "";
+            process.deck = {}
+            process.deck.deckcode = ""
             //==================
             //※ 메인 버튼: 덱 목록
             //==================
@@ -441,19 +859,19 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //비어있으면
                 if (!tempdeck) {
                     //비었다고 표시
-                    $("#decklist_temp").innerHTML = "최근 작업 덱 : 없음";
-                    $("#decklist_temp").onclick = "";
+                    $("#decklist_temp").innerHTML = "최근 작업 덱 : 없음"
+                    $("#decklist_temp").onclick = ""
                 //불러올 게 있으면
                 } else {
                     //덱 이름 표기
-                    let name = tempdeck.name + "<br>(" + DATA.CLASS.KR[tempdeck.class] + ", " + tempdeck.format + ")";
-                    $("#decklist_temp").innerHTML = "최근 작업 덱 : <b>" + name + "</b>";
+                    let name = tempdeck.name + "<br>(" + session.classInfo[tempdeck.class].name + ", " + tempdeck.format + ")"
+                    $("#decklist_temp").innerHTML = "최근 작업 덱 : <b>" + name + "</b>"
                     //클릭하면 불러오기
                     $("#decklist_temp").onclick = function() {
                         //덱 정보 적용
-                        process.deck = deepCopy(tempdeck);
+                        process.deck = deepCopy(tempdeck)
                         //로딩 개시
-                        window_shift("loading","deckconfig");
+                        window_shift("loading","deckconfig")
                     }
                 }
 
@@ -461,25 +879,25 @@ async function window_shift(keyword, keyword2, keyword3) {
             //==================
             //※ 저장된 덱 목록 불러오기, 클릭
             //==================
-            deckslot_refresh();
+            deckslot_refresh()
 
             $("#decklist_slot").onclick = function(e) {
-                e = e || event;
-                let target = e.target || e.srcElement;
+                e = e || event
+                let target = e.target || e.srcElement
                 //덱 편집
                 if (target.classList.contains("slot_button_main")) {
                     localforage.getItem("sist_decks")
                     .then(function(decks) {
-                        process.deck = deepCopy(decks[target.dataset.id]);
-                        window_shift("loading","deckconfig");
+                        process.deck = deepCopy(decks[target.dataset.id])
+                        window_shift("loading","deckconfig")
                     })
                     .catch(function() {
-                        console.log("덱 불러오기 실패!");
+                        console.log("덱 불러오기 실패!")
                     })
                 }
                 //덱 삭제
                 if (target.classList.contains("slot_button_delete")) {
-                    let number = target.dataset.number;
+                    let number = target.dataset.number
                     //경고창
                     swal({
                         imageUrl:"./images/icon_delete.png",
@@ -504,7 +922,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     closeOnClick: 'true'
                                 });
                                 //덱 목록 다시 불러오기에
-                                deckslot_refresh();
+                                deckslot_refresh()
                             })
                         }
                     })
@@ -532,13 +950,13 @@ async function window_shift(keyword, keyword2, keyword3) {
                     showCloseButton:true,
                     onOpen: function() {
                         if (process.deck.deckcode)
-                            $(".swal2-textarea").value = process.deck.deckcode;
-                        $(".swal2-textarea").select();
+                            $(".swal2-textarea").value = process.deck.deckcode
+                        $(".swal2-textarea").select()
                     },
                     inputValidator: function(deckcode) {
                         return new Promise(function(resolve, reject) {
                             try {
-                                let codelist = deckcode.split("\n");
+                                let codelist = deckcode.split("\n")
                                 let code = "";
                                 codelist.forEach(function(line) {
                                     if (line.startsWith("###")) {
@@ -546,32 +964,32 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     } else if (line.startsWith("#")) {
                                         //아무것도 하지 않음
                                     } else {
-                                        code = line;
+                                        code = line
                                     }
                                 })
-                                resolve(deckstrings.decode(code));
+                                resolve(deckstrings.decode(code))
                             } catch(e) {
-                                reject("올바르지 않은 덱코드입니다.");
+                                reject("올바르지 않은 덱코드입니다.")
                             }
                         })
                     }
                 }).then(function(deckcode) {
                     if (deckcode) {
                         //덱코드 기억
-                        process.deck.deckcode = deckcode;
+                        process.deck.deckcode = deckcode
                         //덱 사전 등록
                         deck_favorite("on")
                         .then(() => {
                             //다음 진행
                             window_shift("loading","deckconfig")
-                        });
+                        })
                     }
                 })
             }
             //새로운 덱 생성
             $("#botton_newdeck").onclick = function() {
                 //덱 설정 초기화
-                process.deck = {};
+                process.deck = {}
                 //팝업창 열기
                 swal({
                     html:
@@ -594,22 +1012,22 @@ async function window_shift(keyword, keyword2, keyword3) {
                             target.onclick = function() {
                                 if (target.dataset.class) {
                                     //직업 세팅
-                                    if (!process.deck) process.deck = {};
-                                    process.deck.class = target.dataset.class;
+                                    if (!process.deck) process.deck = {}
+                                    process.deck.class = target.dataset.class
                                     //버튼 세팅
                                     $$(".newdeck_class").forEach(function(x) {
-                                        x.classList.remove("selected");
+                                        x.classList.remove("selected")
                                     })
-                                    target.classList.add("selected");
+                                    target.classList.add("selected")
                                 } else if (target.dataset.format) {
                                     //대전 방식 세팅
-                                    if (!process.deck) process.deck = {};
-                                    process.deck.format = target.dataset.format;
+                                    if (!process.deck) process.deck = {}
+                                    process.deck.format = target.dataset.format
                                     //버튼 세팅
                                     $$(".newdeck_format").forEach(function(x) {
-                                        x.classList.remove("selected");
+                                        x.classList.remove("selected")
                                     })
-                                    target.classList.add("selected");
+                                    target.classList.add("selected")
                                 }
                             }
                         })
@@ -617,11 +1035,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                     preConfirm: function() {
                         return new Promise(function(resolve, reject) {
                             if (!process.deck || !process.deck.class) {
-                                reject('직업을 설정해주세요.');
+                                reject('직업을 설정해주세요.')
                             } else if (!process.deck.format) {
-                                reject('대전 방식을 설정해주세요.');
+                                reject('대전 방식을 설정해주세요.')
                             } else {
-                                resolve();
+                                resolve()
                             }
                         })
                     },
@@ -637,13 +1055,13 @@ async function window_shift(keyword, keyword2, keyword3) {
                         deck_favorite("on")
                         .then(() => {
                             //다음 진행
-                            window_shift("loading","deckbuilding");
-                        });
+                            window_shift("loading","deckbuilding")
+                        })
                     }
                 })
             }
 
-            break;
+            break
 
         //===========================================================
         //※ 카드정보 불러오기
@@ -651,56 +1069,73 @@ async function window_shift(keyword, keyword2, keyword3) {
         case "loading":
             //덱코드가 있다면 덱코드 해석
             if (process.deck !== undefined && process.deck.deckcode !== undefined && process.deck.deckcode !== "") {
-                loading_deckcode();
+                loading_deckcode()
             //없으면 덱 검증
             } else {
-                loading_deckvalidate();
+                loading_deckvalidate()
             }
 
             //덱코드 해석
             function loading_deckcode() {
                 //덱코드 분석, 저장
-                let codelist = process.deck.deckcode.split("\n");
-                let code = "";
+                let codelist = process.deck.deckcode.split("\n")
+                let code = ""
                 codelist.forEach(function(line) {
                     if (line.startsWith("###")) {
-                        process.deck.name = line.replace("###","").trim();
+                        process.deck.name = line.replace("###","").trim()
                     } else if (line.startsWith("#")) {
                         //아무것도 하지 않음
                     } else {
-                        code = line;
+                        code = line
                     }
                 })
-                decoded = deckcode_decode(code);
-                process.deck.cards = decoded.cards;
-                process.deck.class = decoded.class;
+                decoded = deckcode_decode(code)
+                process.deck.cards = decoded.cards
+                process.deck.class = decoded.class
                 //기존 포맷 정보가 없으면 덱코드에서 해석한 걸 사용
                 if (!process.deck.format) {
-                    process.deck.format = decoded.format;
+                    process.deck.format = decoded.format
                 }
 
                 //저장된 덱코드 제거(향후 덱코드 동기화 방지)
-                delete process.deck.deckcode;
+                delete process.deck.deckcode
 
                 //있으면 덱 검증
-                loading_deckvalidate();
+                loading_deckvalidate()
             }
 
             //불러올 덱 포맷 검증
             function loading_deckvalidate() {
                 //덱이 있으면 검증
                 if (process.deck) {
-                    //포맷 검증
                     if (process.deck !== undefined && process.deck.cards !== undefined && process.deck.cards.length > 0) {
-                        let standard = isStandard(process.deck.cards);
+                        //DB에 없는 카드가 있는지 점검
+                        let notExist = 0
+                        process.deck.cards.forEach(x => {
+                            if (session.db[session.dbIndex[x[0].toString()]] === undefined) {
+                                notExist += 1
+                            }
+                        })
+                        if (notExist > 0) {
+                            nativeToast({
+                                message: '덱을 불러올 수 없습니다 : ' + notExist.toString() + '가지의 알 수 없는 카드가 있습니다.',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'error',
+                                closeOnClick: 'true'
+                            })
+
+                            return
+                        }
+                        //포맷 검증
+                        let standard = isStandard(process.deck.cards)
                         if (!standard) {
-                            process.deck.format = "야생";
+                            process.deck.format = "야생"
                         }
                     }
                 }
-
                 //Fragment 불러오기
-                window_shift(keyword2, keyword3);
+                window_shift(keyword2, keyword3)
             }
 
             break;
@@ -710,129 +1145,172 @@ async function window_shift(keyword, keyword2, keyword3) {
         //===========================================================
         case "cardinfo":
             //상태 기억
-            process.state = "cardinfo";
+            process.state = "cardinfo"
             //제목 표시
-            $("#header_status").innerHTML = "카드 정보";
+            $("#header_status").innerHTML = "카드 정보"
             //==================
             //※ 화면 구성
             //==================
             //화면 출력
-            window_clear();
-            $("#header_search").classList.add("show");
-            $("#main_collection").classList.add("show","below_footer");
-                $("#main_collection").classList.remove("below_chart","below_none");
-            $("#main_cardinfo").classList.add("show","below_footer");
-                $("#main_cardinfo").classList.remove("below_chart","below_none");
+            window_clear()
+            $("#header_search").classList.add("show")
+            $("#main_collection").classList.add("show","below_footer")
+                $("#main_collection").classList.remove("below_chart","below_none")
+            $("#main_cardinfo").classList.add("show","below_footer")
+                $("#main_cardinfo").classList.remove("below_chart","below_none")
 
-            $("#footer_cardinfo").classList.add("show");
+            $("#footer_cardinfo").classList.add("show")
             //뒤로 버튼
-            $("#header_back").classList.add("show");
+            $("#header_back").classList.add("show")
                 window_goback = () => {
-                    window_shift("titlescreen");
+                    window_shift("titlescreen")
                 }
-                $("#header_back").onclick = window_goback;
+                $("#header_back").onclick = window_goback
                 //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
                 window.onpopstate = () => {
                     if (blockBack > 0) {
-                        if (swal.isVisible()) swal.close();
-                            else window_goback();
-                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                        if (swal.isVisible()) swal.close()
+                            else window_goback()
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF')
                     }
                 }
             //이용 정보 표시안함
-            $("#header_info").classList.remove("show");
-            $("#header_sort").classList.remove("show");
+            $("#header_info").classList.remove("show")
+            $("#header_sort").classList.remove("show")
 
             //==================
             //※ 필터 구성
             //==================
             //검색 초기치 강제 설정, 필터 활성화
-            if (!process.deck) process.deck = {};
-                process.deck.class = undefined;
-                process.deck.format = "야생";
+            if (!process.deck) process.deck = {}
+                process.deck.class = undefined
+                process.deck.format = "야생"
             //필터 활성화
-            card_setFilter("init");
+            card_cardSetFilter("init")
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
-            card_search();
+            card_search()
 
             //==================
             //※ 카드정보 구성
             //==================
             //카드정보 노드 설치
-            cardinfo_setup("main_cardinfo");
+            cardinfo_cardSetup("main_cardinfo")
 
             //카드 보기 상호작용
-            clearAllEvent();//이전 등록된 이벤트 제거
+            clearAllEvent()//이전 등록된 이벤트 제거
             eventObj.collection_list_content.click = function(e) {
-                e = e || event;
-                let target = e.target || e.srcElement;
+                e = e || event
+                let target = e.target || e.srcElement
                 if (target.classList.contains("card")) {
-                    let info = session.db[session.index[target.dataset.dbfid]];
-                    cardinfo_show("main_cardinfo",info);
+                    //카드 정보 출력
+                    let info = session.db[session.dbIndex[target.dataset.id]]
+                    cardinfo_show("main_cardinfo",0,info)
+                    //관련 카드 조사
+                    if (info.childIds !== undefined) {
+                        let childs = []
+                        info.childIds.forEach(childId => {
+                            let child = session.db[session.dbIndex[childId]]
+                            childs.push(child)
+                        })
+                        $("#related_count").innerHTML = childs.length + "장"
+                        $("#button_related").classList.add("active")
+                        $("#button_related").onclick = (e) => {
+                            //관련 카드 창 열기
+                            $("#frame_related").classList.add("show")
+                            //원본 카드 이름 출력
+                            $("#related_top_name").innerHTML = info.name
+                            //관련 카드 출력
+                            childs.forEach((tokenInfo, i) => {
+                                cardinfo_cardSetup("related_middle", "simplest", true)
+                                cardinfo_show("related_middle",i,tokenInfo)
+                            })
+                            $("#frame_related").onclick = (e) => {
+                                //창 비우기
+                                while ($("#related_middle").hasChildNodes()) {
+                                    $("#related_middle").removeChild($("#related_middle").lastChild)
+                                }
+                                //창 닫기
+                                $("#frame_related").classList.remove("show")
+                            }
+                        }
+                    //관련 카드가 없으면 설명과 버튼 초기화
+                    } else {
+                        $("#related_count").innerHTML = "없음"
+                        $("#button_related").classList.remove("active")
+                        $("#button_related").onclick = ""
+                    }
                 }}
-                    $("#collection_list_content").addEventListener("click",eventObj.collection_list_content.click);
+                    $("#collection_list_content").addEventListener("click",eventObj.collection_list_content.click)
             eventObj.collection_list_content.scroll = function(e) {
-                e = e || event;
-                e.preventDefault();}
-                    $("#collection_list_content").addEventListener("scroll",eventObj.collection_list_content.scroll);
+                e = e || event
+                e.preventDefault()}
+                    $("#collection_list_content").addEventListener("scroll",eventObj.collection_list_content.scroll)
 
-            break;
+            //==================
+            //※ 관련 카드 보기
+            //==================
+            //관련 카드 보기 초기화
+            $("#related_count").innerHTML = "없음"
+            $("#button_related").classList.remove("active")
+            $("#button_related").onclick = ""
+
+            break
 
         //===========================================================
         //※ 덱 제작 창
         //===========================================================
         case "deckbuilding":
             //상태 기억
-            process.state = "deckbuilding";
+            process.state = "deckbuilding"
             //제목 표시
-            $("#header_status").innerHTML = "덱 편집기";
+            $("#header_status").innerHTML = "덱 편집기"
             //==================
             //※ 화면 구성
             //==================
             //화면 출력
-            window_clear();
-            $("#header_search").classList.add("show");
-            $("#main_collection").classList.add("show");
-            $("#main_deck").classList.add("show");
-            $("#footer_deckbuilding").classList.add("show");
-            $("#main_deckchart").classList.add("show");
+            window_clear()
+            $("#header_search").classList.add("show")
+            $("#main_collection").classList.add("show")
+            $("#main_deck").classList.add("show")
+            $("#footer_deckbuilding").classList.add("show")
+            $("#main_deckchart").classList.add("show")
 
             //뒤로 버튼
-            $("#header_back").classList.add("show");
+            $("#header_back").classList.add("show")
                 window_goback = () => {
                     //로그 삭제
-                    process.log = undefined;
-                    process.redo = undefined;
+                    process.log = undefined
+                    process.redo = undefined
                     //뒤로가기 전 덱 저장
                     deck_save().then(() => {
                         if (process.prestate) {
-                            window_shift(process.prestate);
+                            window_shift(process.prestate)
                         } else {
-                            window_shift("decklist");
+                            window_shift("decklist")
                         }
                     })
                 }
-                $("#header_back").onclick = window_goback;
+                $("#header_back").onclick = window_goback
                 //모바일 한정 - 히스토리 뒤로 갈 시에도 작동
                 window.onpopstate = () => {
                     if (blockBack > 0) {
-                        if (swal.isVisible()) swal.close();
-                            else window_goback();
-                        window.history.pushState({ noBackExitsApp: true }, 'DEF');
+                        if (swal.isVisible()) swal.close()
+                            else window_goback()
+                        window.history.pushState({ noBackExitsApp: true }, 'DEF')
                     }
                 }
             //이용 정보 표시
-            $("#header_info").classList.add("show");
-            $("#header_sort").classList.remove("show");
+            $("#header_info").classList.add("show")
+            $("#header_sort").classList.remove("show")
 
             //차트 준비
-            setChart("init");
+            setChart("init")
             $("#deckbuilding_chart").onclick = function() {
-                setChart("toggle");
+                setChart("toggle")
             }
             //덱 차트 모니터 설치
-            $("#frame_deckchartmonitor").classList.add("show");
+            $("#frame_deckchartmonitor").classList.add("show")
 
             //==================
             //※ 카드정보 안내
@@ -854,134 +1332,134 @@ async function window_shift(keyword, keyword2, keyword3) {
 
             //로그 초기화
             if (process.log !== undefined)
-                $("#undo_num").innerHTML = process.log.length;
+                $("#undo_num").innerHTML = process.log.length
             else {
-                $("#undo_num").innerHTML = "0";
-                $("#deckbuilding_undo").classList.add("disabled");
+                $("#undo_num").innerHTML = "0"
+                $("#deckbuilding_undo").classList.add("disabled")
             }
             if (process.redo !== undefined)
-                $("#redo_num").innerHTML = process.redo.length;
+                $("#redo_num").innerHTML = process.redo.length
             else {
-                $("#redo_num").innerHTML = "0";
-                $("#deckbuilding_redo").classList.add("disabled");
+                $("#redo_num").innerHTML = "0"
+                $("#deckbuilding_redo").classList.add("disabled")
             }
 
             //==================
             //※ 덱 & 필터 구성
             //==================
             //검색 초기치 설정, 필터 활성화
-            card_setFilter("init");//필터 활성화
+            card_cardSetFilter("init")//필터 활성화
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
-            card_search();
+            card_search()
 
             //덱 초기화
-            deck_refresh("init");
+            deck_refresh("init")
 
             //덱 임시저장
-            await deck_save();
+            await deck_save()
 
             //==================
             //※ 카드정보 구성
             //==================
             //카드모니터 설치
-            $("#frame_cardmonitor").classList.add("show");
+            $("#frame_cardmonitor").classList.add("show")
             //카드정보 노드 설치
-                cardinfo_setup("cardcover_top", false);
-                cardinfo_setup("frame_cardmonitor", false);
+                cardinfo_cardSetup("cardcover_top", false)
+                cardinfo_cardSetup("frame_cardmonitor", false)
 
             //==================
             //※ 상호작용
             //==================
             //카드 보기 상호작용
-            let interact_target;
+            let interact_target
 
             //카드 목록 상호작용
-            clearAllEvent();//이전 등록된 이벤트 제거
+            clearAllEvent()//이전 등록된 이벤트 제거
             eventObj.collection_list_content.mouseover = function(e) {
-                interact_infoMonitor(e);}
-                    $("#collection_list_content").addEventListener("mouseover",eventObj.collection_list_content.mouseover);
+                interact_infoMonitor(e)}
+                    $("#collection_list_content").addEventListener("mouseover",eventObj.collection_list_content.mouseover)
             eventObj.collection_list_content.mousedown = function(e) {
-                interact_infoCoverWait(e, true);
-                return false;}
-                    $("#collection_list_content").addEventListener("mousedown",eventObj.collection_list_content.mousedown);
+                interact_infoCoverWait(e, true)
+                return false}
+                    $("#collection_list_content").addEventListener("mousedown",eventObj.collection_list_content.mousedown)
             eventObj.collection_list_content.mouseout = function(e) {
-                interact_stopAuto(e);
-                return false;}
-                    $("#collection_list_content").addEventListener("mouseout",eventObj.collection_list_content.mouseout);
+                interact_stopAuto(e)
+                return false}
+                    $("#collection_list_content").addEventListener("mouseout",eventObj.collection_list_content.mouseout)
             eventObj.collection_list_content.mouseup = function(e) {
-                interact_addCard(e, true);
-                return false;}
-                    $("#collection_list_content").addEventListener("mouseup",eventObj.collection_list_content.mouseup);
+                interact_addCard(e, true)
+                return false}
+                    $("#collection_list_content").addEventListener("mouseup",eventObj.collection_list_content.mouseup)
             eventObj.collection_list_content.contextmenu = function(e) {
-                interact_infoCoverNow(e);
-                e.preventDefault();
-                return false;}
-                    $("#collection_list_content").addEventListener("contextmenu",eventObj.collection_list_content.contextmenu);
+                interact_infoCoverNow(e)
+                e.preventDefault()
+                return false}
+                    $("#collection_list_content").addEventListener("contextmenu",eventObj.collection_list_content.contextmenu)
                 //터치 기반
                 eventObj.collection_list_content.touchstart = function(e) {
-                    interact_infoCoverWait(e);}
-                        $("#collection_list_content").addEventListener("touchstart",eventObj.collection_list_content.touchstart);
+                    interact_infoCoverWait(e)}
+                        $("#collection_list_content").addEventListener("touchstart",eventObj.collection_list_content.touchstart)
                 eventObj.collection_list_content.touchcancel = function(e) {
-                    interact_stopAuto(e);
-                    return false;}
-                        $("#collection_list_content").addEventListener("touchcancel",eventObj.collection_list_content.touchcancel);
+                    interact_stopAuto(e)
+                    return false}
+                        $("#collection_list_content").addEventListener("touchcancel",eventObj.collection_list_content.touchcancel)
                 eventObj.collection_list_content.touchmove = function(e) {
-                    interact_stopAuto(e);
-                    return false;}
-                        $("#collection_list_content").addEventListener("touchmove",eventObj.collection_list_content.touchmove);
+                    interact_stopAuto(e)
+                    return false}
+                        $("#collection_list_content").addEventListener("touchmove",eventObj.collection_list_content.touchmove)
                 eventObj.collection_list.scroll = function(e) {
-                    interact_stopAuto(e);
-                    return false;}
-                        $("#collection_list").addEventListener("scroll",eventObj.collection_list.scroll);
+                    interact_stopAuto(e)
+                    return false}
+                        $("#collection_list").addEventListener("scroll",eventObj.collection_list.scroll)
                 eventObj.collection_list_content.touchend = function(e) {
-                    interact_addCard(e);
-                    return false;}
-                        $("#collection_list_content").addEventListener("touchend",eventObj.collection_list_content.touchend);
+                    interact_addCard(e)
+                    return false}
+                        $("#collection_list_content").addEventListener("touchend",eventObj.collection_list_content.touchend)
             //덱 목록 상호작용
             eventObj.deck_list_content.mouseover = function(e) {
-                interact_infoMonitor(e);}
-                    $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover);
+                interact_infoMonitor(e)}
+                    $("#deck_list_content").addEventListener("mouseover",eventObj.deck_list_content.mouseover)
             eventObj.deck_list_content.mousedown = function(e) {
-                interact_infoCoverWait(e, true);
-                return false;}
-                    $("#deck_list_content").addEventListener("mousedown",eventObj.deck_list_content.mousedown);
+                interact_infoCoverWait(e, true)
+                return false}
+                    $("#deck_list_content").addEventListener("mousedown",eventObj.deck_list_content.mousedown)
             eventObj.deck_list_content.mouseout = function(e) {
-                interact_stopAuto(e);
-                return false;}
-                    $("#deck_list_content").addEventListener("mouseout",eventObj.deck_list_content.mouseout);
+                interact_stopAuto(e)
+                return false}
+                    $("#deck_list_content").addEventListener("mouseout",eventObj.deck_list_content.mouseout)
             eventObj.deck_list_content.mouseup = function(e) {
-                interact_removeCard(e, true);
-                return false;}
-                    $("#deck_list_content").addEventListener("mouseup",eventObj.deck_list_content.mouseup);
+                interact_removeCard(e, true)
+                return false}
+                    $("#deck_list_content").addEventListener("mouseup",eventObj.deck_list_content.mouseup)
             eventObj.deck_list_content.contextmenu = function(e) {
-                interact_infoCoverNow(e);
-                e.preventDefault();
-                return false;}
-                    $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu);
+                interact_infoCoverNow(e)
+                e.preventDefault()
+                return false}
+                    $("#deck_list_content").addEventListener("contextmenu",eventObj.deck_list_content.contextmenu)
                 //터치 기반
                 eventObj.deck_list_content.touchstart = function(e) {
-                    interact_infoCoverWait(e);}
-                        $("#deck_list_content").addEventListener("touchstart",eventObj.deck_list_content.touchstart);
+                    interact_infoCoverWait(e)}
+                        $("#deck_list_content").addEventListener("touchstart",eventObj.deck_list_content.touchstart)
                 eventObj.deck_list_content.touchcancel = function(e) {
-                    interact_stopAuto(e);
-                    return false;}
-                        $("#deck_list_content").addEventListener("touchcancel",eventObj.deck_list_content.touchcancel);
+                    interact_stopAuto(e)
+                    return false}
+                        $("#deck_list_content").addEventListener("touchcancel",eventObj.deck_list_content.touchcancel)
                 eventObj.deck_list_content.touchmove = function(e) {
-                    interact_stopAuto(e);
-                    return false;}
-                        $("#deck_list_content").addEventListener("touchmove",eventObj.deck_list_content.touchmove);
+                    interact_stopAuto(e)
+                    return false}
+                        $("#deck_list_content").addEventListener("touchmove",eventObj.deck_list_content.touchmove)
                 eventObj.deck_list.scroll = function(e) {
-                    interact_stopAuto(e);
-                    return false;}
-                        $("#deck_list").addEventListener("scroll",eventObj.deck_list.scroll);
+                    interact_stopAuto(e)
+                    return false}
+                        $("#deck_list").addEventListener("scroll",eventObj.deck_list.scroll)
                 eventObj.deck_list_content.touchend = function(e) {
-                    interact_removeCard(e);
-                    return false;}
-                        $("#deck_list_content").addEventListener("touchend",eventObj.deck_list_content.touchend);
+                    interact_removeCard(e)
+                    return false}
+                        $("#deck_list_content").addEventListener("touchend",eventObj.deck_list_content.touchend)
                 //카드 정보창 닫기
                 $("#frame_cardcover").onclick = function() {
-                    $("#frame_cardcover").classList.remove("show");
+                    $("#frame_cardcover").classList.remove("show")
                 }
 
             //덱 완료
@@ -991,7 +1469,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //저장은 deckconfig 진입하면서 실시
             }
 
-            break;
+            break
 
         //===========================================================
         //※ 덱 목록 창
@@ -1103,7 +1581,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         timeout: 2000,
                         type: 'error',
                         closeOnClick: 'true'
-                    });
+                    })
                 //미완성 시 경고창(허용 시 출력)
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
                     swal({
@@ -1115,7 +1593,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         cancelButtonText: '취소'
                     }).then(function(result) {
                         if (result) {
-                            export_deckcode();//덱코드 출력
+                            export_deckcode()//덱코드 출력
                         }
                     })
                 //아니면 출력
@@ -1370,8 +1848,8 @@ async function window_shift(keyword, keyword2, keyword3) {
             //카드모니터 설치
             $("#frame_cardmonitor").classList.add("show");
             //카드정보 노드 설치
-                cardinfo_setup("cardcover_top");
-                cardinfo_setup("frame_cardmonitor");
+                cardinfo_cardSetup("cardcover_top");
+                cardinfo_cardSetup("frame_cardmonitor");
 
             //이벤트 등록
             clearAllEvent();//이전 등록된 이벤트 제거
@@ -1773,7 +2251,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                             deck.cards = JSON.parse(deck.deck_list);//덱리스트(문자열이 아닌 배열)
                                             deck.dust = 0;//가루 계산
                                             deck.cards.forEach((cardInfo) => {
-                                                deck.dust += DATA.RARITY.DUST[session.db[session.index[cardInfo[0]]].rarity] * cardInfo[1];
+                                                deck.dust += session.db[session.dbIndex[cardInfo[0].toString()]].rarity.dust
                                             })
                                             //덱코드 분석
                                             deck.deckcode = deckcode_encode(deck);
@@ -2050,7 +2528,7 @@ let interact_addCard = function(e, ismouse) {
         if (cardReady === 1) {//카드 이동 대기중이라면
             //상호작용 대상 비우기
             interact_target = "";
-            card_move("add " + target.dataset.dbfid, true);
+            card_move("add " + target.dataset.id, true);
             cardReady = 0;//카드 이동 대기 취소
             e.preventDefault();
         }
@@ -2066,7 +2544,7 @@ let interact_removeCard = function(e, ismouse) {
         if (cardReady === 1) {//카드 이동 대기중이라면
             //상호작용 대상 비우기
             interact_target = "";
-            card_move("remove " + target.dataset.dbfid, true);
+            card_move("remove " + target.dataset.id, true);
             cardReady = 0;//카드 이동 대기 취소
             e.preventDefault();
         }
@@ -2076,9 +2554,9 @@ let interact_infoMonitor = function(e) {
     e = e || event;
     let target = e.target || e.srcElement;
     if (target.classList.contains("card")) {
-        let info = session.db[session.index[target.dataset.dbfid]];
-        cardinfo_setScale($(".cardinfo.wrapper",$("#frame_cardmonitor")), false);
-        cardinfo_show("frame_cardmonitor",info);
+        let info = session.db[session.dbIndex[target.dataset.id]]
+        cardinfo_cardSetScale($(".cardinfo.wrapper",$("#frame_cardmonitor")), false);
+        cardinfo_show("frame_cardmonitor",0,info);
     }
 }
 let interact_infoCoverNow = function(e) {//우클릭 전용
@@ -2087,10 +2565,10 @@ let interact_infoCoverNow = function(e) {//우클릭 전용
     if (target.classList.contains("card")) {
         //상호작용 대상 비우기
         interact_target = "";
-        let info = session.db[session.index[target.dataset.dbfid]];
+        let info = session.db[session.dbIndex[target.dataset.id]]
         $("#frame_cardcover").classList.add("show");
-        cardinfo_setScale($(".cardinfo.wrapper",$("#frame_cardcover")), false);
-        cardinfo_show("cardcover_top",info);
+        cardinfo_cardSetScale($(".cardinfo.wrapper",$("#frame_cardcover")), false);
+        cardinfo_show("cardcover_top",0,info);
     }
     return false;
 }
@@ -2105,10 +2583,10 @@ let interact_infoCoverWait = function(e, ismouse) {
         cardReady = 1;
         //0.5초 지속 : 카드 정보
         autoInfo = setTimeout(function() {
-            let info = session.db[session.index[target.dataset.dbfid]];
+            let info = session.db[session.dbIndex[target.dataset.id]]
             $("#frame_cardcover").classList.add("show");
-            cardinfo_setScale($(".cardinfo.wrapper",$("#frame_cardcover")), false);
-            cardinfo_show("cardcover_top",info);
+            cardinfo_cardSetScale($(".cardinfo.wrapper",$("#frame_cardcover")), false);
+            cardinfo_show("cardcover_top",0,info);
             //창이 뜨면 상호작용 대상 비우기
             interact_target = "";
             e.preventDefault();

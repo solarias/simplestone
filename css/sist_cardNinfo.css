@@ -1,4 +1,7 @@
 /*공용 - 카드등급*/
+.rarity_, .rarity_ETC {
+    background-color:transparent;
+}
 .rarity_FREE, .rarity_COMMON {
     background-color:#858585;
 }
@@ -10,6 +13,9 @@
 }
 .rarity_LEGENDARY {
     background-color:#ffb00d;
+}
+.rarity_BATTLEGROUNDS {
+    background-color:#BF168E;
 }
 
 /*공용 - 카드*/
@@ -71,9 +77,10 @@
     pointer-events: none;
     user-select:none;
 
+    margin-top:-1px;
     padding-left:5px;
     width:calc(100% - 50px);
-    height:40px;
+    height:42px;
 
     background: linear-gradient(
         to right,
@@ -150,6 +157,9 @@
         }
         .cardinfo.wrapper.simple {
             height:460px;
+        }
+        .cardinfo.wrapper.simplest {
+            height:400px;
         }
     .cardinfo.notice {
         position:relative;
@@ -250,13 +260,13 @@
                 height:100%;
 
                 background-repeat:no-repeat;
-                background-size:140% auto;
-                background-position:50% 30%;
+                background-size:cover;
+                background-position:100% 50%;
 
                 color:#A0A0A0;
                 font-size:30px;
             }
-            .cardinfo.mana {
+            .cardinfo.cost {
                 position:absolute;
                     left:0;top:0;
                 z-index:2;
@@ -332,7 +342,7 @@
             pointer-events: none;
             user-select:none;
         }
-            .cardinfo.rarity.rarity_FREE {
+            .cardinfo.rarity.rarity_2 {
                 background-color:white;
             }
         .cardinfo.text {
@@ -400,7 +410,7 @@
                 font-weight:bold;
                 text-align:center;
             }
-            .cardinfo.race {
+            .cardinfo.minionType {
                 position:relative;
 
                 margin:0 auto;
@@ -438,7 +448,7 @@
 
                     color:black;
                 }
-    .cardinfo.set {
+    .cardinfo.cardSet {
         position:relative;
         display:none;
 
@@ -459,10 +469,13 @@
         pointer-events: none;
         user-select:none;
     }
-        .cardinfo.set.show {
+        .cardinfo.cardSet.show {
             display:block;
         }
-    .cardinfo.flavor {
+        .simplest .cardinfo.cardSet {
+            display:none;
+        }
+    .cardinfo.flavorText {
         position:relative;
         overflow:hidden;
         display:table;
@@ -478,10 +491,10 @@
         pointer-events: none;
         user-select:none;
     }
-        .simple .cardinfo.flavor {
+        .simple .cardinfo.flavorText, .simplest .cardinfo.flavorText {
             display:none;
         }
-        .cardinfo.flavor p {
+        .cardinfo.flavorText p {
             display:table-cell;
             vertical-align: middle;
 

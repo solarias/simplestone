@@ -62,9 +62,9 @@
 						</div>
 
 						<div class="desktop_only">
-							<button id="search_mana" class="search_button" aria-label="검색필터_마나">마나 : 전체</button>
+							<button id="search_cost" class="search_button" aria-label="검색필터_비용">비용 : 전체</button>
 							<button id="search_rarity" class="search_button" aria-label="검색필터_등급">등급 : 전체</button>
-							<button id="search_set" class="search_button" aria-label="검색필터_세트">세트 : 전체</button>
+							<button id="search_cardSet" class="search_button" aria-label="검색필터_세트">세트 : 전체</button>
 
 							<button id="search_reset" class="search_button" aria-label="검색필터_초기화">필터<br>초기화</button>
 							<button id="search_keyword" class="search_button" aria-label="검색필터_키워드">&#128269;  <span id="keyword_text">검색어</span></button>
@@ -84,6 +84,8 @@
 				<div id="main_notice" class="mainscreen main_both">
 					<div class="main_title">공지사항</div>
 					<div id="notice_content"></div>
+					<div class="main_title">DB 업데이트 현황</div>
+					<div id="notice_content_db"></div>
 				</div>
 				<footer id="footer_notice" class="subscreen">
 					<button id="button_start" class="footer_notice_button" aria-label="시작하기">시작하기</button>
@@ -94,9 +96,6 @@
 				<div id="main_update" class="mainscreen main_both">
 					<div class="main_title">DB 업데이트 진행중</div>
 					<div id="update_content"></div>
-					<div id="update_progress">
-						<div id="update_progress_bar"></div>
-					</div>
 				</div>
 				<footer id="footer_update" class="subscreen">
 					<button id="button_update" class="footer_update_button" aria-label="잠시만 기다리세요">잠시만 기다리세요</button>
@@ -157,6 +156,8 @@
 				<!--카드 정보-->
 				<div id="main_cardinfo" class="mainscreen main_right"></div>
 				<footer id="footer_cardinfo" class="subscreen">
+					<div id="cardinfo_related">관련 카드 : <span id="related_count">없음</span></div>
+					<button id="button_related" class="footer_button" aria-label="관련 카드 보기">관련 카드 보기</button>
 				</footer>
 
 				<!--덱 목록-->
@@ -205,8 +206,8 @@
 
 				<!--덱 차트-->
 				<div id="main_deckchart" class="subscreen">
-					<div id="deckchart_container_mana" class="deckchart_container">
-						<canvas id="deckchart_mana" class="deckchart_chart"></canvas>
+					<div id="deckchart_container_cost" class="deckchart_container">
+						<canvas id="deckchart_cost" class="deckchart_chart"></canvas>
 					</div>
 					<div id="deckchart_container_type" class="deckchart_container">
 						<canvas id="deckchart_type" class="deckchart_chart"></canvas>
@@ -265,12 +266,12 @@
 				<div class="mobilefilter_desc top">&#128295; 검색 필터</div>
 				<button class="mobilefilter_close mobilefilter_button" aria-label="필터 닫기">필터 닫기</button>
 
-				<div class="mobilefilter_desc margin_top">카드 마나</div>
-				<button id="mobilefilter_mana" class="mobilefilter_button" aria-label="모바일 필터_마나">마나 : 전체</button>
+				<div class="mobilefilter_desc margin_top">카드 비용</div>
+				<button id="mobilefilter_cost" class="mobilefilter_button" aria-label="모바일 필터_비용">비용 : 전체</button>
 				<div class="mobilefilter_desc margin_top">카드 등급</div>
 				<button id="mobilefilter_rarity" class="mobilefilter_button" aria-label="모바일 필터_등급">등급 : 전체</button>
 				<div class="mobilefilter_desc margin_top">카드 세트</div>
-				<button id="mobilefilter_set" class="mobilefilter_button" aria-label="모바일 필터_세트">세트 : 전체</button>
+				<button id="mobilefilter_cardSet" class="mobilefilter_button" aria-label="모바일 필터_세트">세트 : 전체</button>
 				<div class="mobilefilter_desc margin_top">검색어</div>
 				<button id="mobilefilter_keyword" class="mobilefilter_button" aria-label="모바일 필터_검색어">&#128269;  <span id="keyword_text2">검색어</span></button>
 
@@ -298,6 +299,14 @@
 				화면을 클릭하면 창이 닫힙니다.
 			</div>
 		</section>
+		<!--별도 창 - 관련 카드-->
+		<section id="frame_related" class="extrascreen">
+			<div id="related_top"><span id="related_top_name"></span> 관련 카드</div>
+			<div id="related_middle"></div>
+			<div id="related_bottom">
+				화면을 클릭하면 창이 닫힙니다.
+			</div>
+		</section>
 		<!--별도 창 - 덱 이미지-->
 		<section id="frame_deckimage" class="extrascreen">
 			<div id="deckimage_top">
@@ -317,8 +326,8 @@
 		<section id="frame_cardmonitor" class="subscreen"></section>
 		<!--별도 창 - 덱 차트 (우측)-->
 		<section id="frame_deckchartmonitor" class="subscreen">
-			<div id="deckchartmonitor_container_mana" class="deckchartmonitor_container">
-				<canvas id="deckchartmonitor_mana" class="deckchartmonitor_chart"></canvas>
+			<div id="deckchartmonitor_container_cost" class="deckchartmonitor_container">
+				<canvas id="deckchartmonitor_cost" class="deckchartmonitor_chart"></canvas>
 			</div>
 			<div id="deckchartmonitor_container_type" class="deckchartmonitor_container">
 				<canvas id="deckchartmonitor_type" class="deckchartmonitor_chart"></canvas>
