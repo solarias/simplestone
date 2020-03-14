@@ -65,10 +65,10 @@ function cardinfo_cardSetup(id, showflavor, allowDuplicate) {
         site.appendChild(session.masterInfo.cloneNode(true));
         //마지막으로 추가된 카드의 사이즈 조절
         cardinfo_cardSetScale($$(".cardinfo.wrapper",site)[$$(".cardinfo.wrapper",site).length-1], showflavor);
-        //화면 크기 변경 시 마지막으로 추가된 카드의 사이즈 재조절
-        window.addEventListener("resize",function(e) {
+        //화면 크기 변경 시 마지막으로 추가된 카드의 사이즈 재조절 - 하지 않음
+        /*window.addEventListener("resize",function(e) {
             cardinfo_cardSetScale($$(".cardinfo.wrapper",site)[$$(".cardinfo.wrapper",site).length-1], showflavor);
-        });
+        });*/
     }
     if (showflavor === false)
         $$(".cardinfo.wrapper",site)[$$(".cardinfo.wrapper",site).length-1].classList.add("simple");

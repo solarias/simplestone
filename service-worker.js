@@ -59,7 +59,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_cardinfo.js",
-    "revision": "0da32f7a5886213e23487d955c44b0d8"
+    "revision": "29234284e177de925756d223786779fe"
   },
   {
     "url": "js/sist_data.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "07497a4456bbd9d50da72663d943b0d9"
+    "revision": "1e4088752b2050dd5f17afe307551e11"
   },
   {
     "url": "package/Chart.min.js",
