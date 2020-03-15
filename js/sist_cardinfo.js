@@ -115,15 +115,17 @@ function cardinfo_show(id, order, info) {
     //안내 문구 닫기, 카드 및 세트 출력
     $$(".notice",site)[order].classList.remove("show")
     $$(".cardSet",site)[order].classList.add("show")
-    //카드 세부정보 출력
+    //카드 세부정보 출력여부 결정(1 : 출력)
     //$(".cardcase",site).classList.add("show")
+    let setDesc = 0
     //카드 일러스트 출력 여부
-    //데이터 절약 - 일러스트 없이 세부 정보 표기
+        //데이터 절약 - 일러스트 없이 세부 정보 표기
     if (session.offline === true)   {
         $$(".illust",site)[order].classList.remove("show")
         $$(".cardcase",site)[order].classList.add("show")
             $$(".top",site)[order].classList.add("offline")
             $$(".image",site)[order].innerHTML = "오프라인 모드"
+            setDesc = 1
             /*
             image = "url(" + TILEURL + info.id + ".jpg)"
             $(".image",site).style.backgroundImage = image
@@ -142,6 +144,7 @@ function cardinfo_show(id, order, info) {
             $$(".cardcase",site)[order].classList.add("show");
                 $$(".top",site)[order].classList.add("offline");
                 $$(".image",site)[order].innerHTML = "이미지 로딩 실패";
+                setDesc = 1
                 /*
                 image = "url(" + tileImage + info.id + ".jpg)"
                 $(".image",site).style.backgroundImage = image
@@ -151,32 +154,37 @@ function cardinfo_show(id, order, info) {
         $$(".illust",site)[order].classList.add("show")
         $$(".cardcase",site)[order].classList.remove("show")
     }
-    //카드 세부정보 - 상단 출력
-    $$(".top",site)[order].classList.add("show");
-    //카드 세부정보 - 비용
-    $$(".cost",site)[order].innerHTML = info.cost.toString();
-    //카드 세부정보 - 타입
-    $$(".type",site)[order].innerHTML = info.cardType.name;
-    //카드 세부정보 - 이름
-    $$(".name",site)[order].innerHTML = info.name;
-    //카드 세부정보 - 등급
-    session.metadata.rarities.forEach(function(rarityInfo) {
-        $$(".rarity",site)[order].classList.remove("rarity_" + rarityInfo.slug);
-    })
-    $$(".rarity",site)[order].classList.add("rarity_" + info.rarity.slug);
-    $$(".rarity",site)[order].innerHTML = info.rarity.name;
-    //카드 세부정보 - 텍스트
-    if (info.text && info.text !== "" && info.text.length > 0)
-        $$(".text",site)[order].innerHTML = "<p>" + readable(info.text) + "</p>";
-    else
-        $$(".text",site)[order].innerHTML = "";
-    //카드 세부정보 - 하단부
-    let statpoint = [0,0,0];//각각 공격력, 종족, 체력/방어도 유무
+    if (setDesc >= 1) {
+        //카드 세부정보 - 상단 출력
+        $$(".top",site)[order].classList.add("show");
+        //카드 세부정보 - 비용
+        $$(".cost",site)[order].innerHTML = info.cost.toString();
+        //카드 세부정보 - 타입
+        $$(".type",site)[order].innerHTML = info.cardType.name;
+        //카드 세부정보 - 이름
+        $$(".name",site)[order].innerHTML = info.name;
+        //카드 세부정보 - 등급
+        session.metadata.rarities.forEach(function(rarityInfo) {
+            $$(".rarity",site)[order].classList.remove("rarity_" + rarityInfo.slug);
+        })
+        $$(".rarity",site)[order].classList.add("rarity_" + info.rarity.slug);
+        $$(".rarity",site)[order].innerHTML = info.rarity.name;
+        //카드 세부정보 - 텍스트
+        if (info.text && info.text !== "" && info.text.length > 0)
+            $$(".text",site)[order].innerHTML = "<p>" + readable(info.text) + "</p>";
+        else
+            $$(".text",site)[order].innerHTML = "";
+        //카드 세부정보 - 하단부 표시 여부
+        let statpoint = {
+            attack:0,//공격력 존재 여부
+            minionType:0,//종족 존재 여부
+            health:0//체력/방어도 존재 여부
+        }
         //공격력
         if (info.attack !== undefined && info.attack !== "") {
             $$(".attack",site)[order].style.display = "block";
             $$(".attack",site)[order].innerHTML = info.attack.toString();
-            statpoint[0] += 1;
+            statpoint.attack += 1
         } else {
             $$(".attack",site)[order].style.display = "none";
         }
@@ -184,7 +192,7 @@ function cardinfo_show(id, order, info) {
         if (info.minionType !== undefined) {
             $$(".minionType",site)[order].style.display = "block";
             $$(".minionType",site)[order].innerHTML = info.minionType.name;
-            statpoint[1] += 1;
+            statpoint.minionType += 1
         } else {
             $$(".minionType",site)[order].style.display = "none";
         }
@@ -193,19 +201,26 @@ function cardinfo_show(id, order, info) {
             (info.armor !== undefined && info.armor !== "")) {
             $$(".health",site)[order].style.display = "block";
             $$(".health",site)[order].classList.add("armor");
-            let stat = info.durability || info.armor;
+            let stat = 0
+            if (info.durability !== undefined) {
+                stat = info.durability
+            } else if (info.armor !== undefined) {
+                stat = info.armor
+            } else {
+                stat = 0
+            }
             $$(".health",site)[order].innerHTML = stat.toString();
-            statpoint[2] += 1;
+            statpoint.health += 1;
         } else if (info.health !== undefined && info.health !== "") {
             $$(".health",site)[order].style.display = "block";
             $$(".health",site)[order].classList.remove("armor");
             $$(".health",site)[order].innerHTML = info.health.toString();
-            statpoint[2] += 1;
+            statpoint.health += 1;
         } else {
             $$(".health",site)[order].style.display = "none";
         }
         //하단부를 하나도 출력하지 않았다면 하단부 가리기
-        if (statpoint[0] + statpoint[1] + statpoint[2] <= 0) {
+        if (statpoint.attack + statpoint.minionType + statpoint.health <= 0) {
             $$(".bottom",site)[order].style.display = "none";
             //텍스트 칸 늘리기
             $$(".text",site)[order].classList.add("large");
@@ -214,6 +229,7 @@ function cardinfo_show(id, order, info) {
             //텍스트 칸 줄리기
             $$(".text",site)[order].classList.remove("large");
         }
+    }
     //세트
     $$(".cardSet",site)[order].innerHTML = info.cardSet.name;
     //플레이버 텍스트
