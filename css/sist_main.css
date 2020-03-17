@@ -368,6 +368,10 @@ body {
                     margin:0 2px 10px 2px;
                     width:calc(33% - 4px);
                 }
+                .popup_button.halfsection {
+                    margin:0 2px 10px 2px;
+                    width:calc(50% - 6px);
+                }
                 .popup_button.small {
                     margin:0 0 10px 0;
                     width:100%;

@@ -149,14 +149,15 @@ function card_cardSetFilter(cmd) {
                       '<button id="popup_class_WARLOCK" class="popup_button trisection" data-class="WARLOCK">흑마법사</button>' +
                       '<button id="popup_class_MAGE" class="popup_button trisection" data-class="MAGE">마법사</button>' +
                       '<button id="popup_class_PRIEST" class="popup_button trisection" data-class="PRIEST">사제</button>' +
-                      '<button id="popup_class_NEUTRAL" class="popup_button full" data-class="NEUTRAL">중립</button>',
+                      '<button id="popup_class_DEMONHUNTER" class="popup_button halfsection" data-class="DEMONHUNTER">악마사냥꾼</button>' +
+                      '<button id="popup_class_NEUTRAL" class="popup_button halfsection" data-class="NEUTRAL">중립</button>',
                     onOpen:function() {
                         //현재 직업 검색필터 보여주기
                         $("#popup_class_" + process.search.class).classList.add("selected");
                         //검색 결과가 없는 필터 흐릿하게 만들기
                         let searchArr = process.search.allClassResult;
                         session.metadata.classes.forEach(x => {
-                            if (x.slug !== "ALL") {
+                            if (x.slug !== "ALL" && $("#popup_class_" + x.slug) !== undefined) {
                                 let haveCard = 0;
                                 for (let i =0;i < searchArr.length;i++) {
                                     if (session.db[session.dbIndex[searchArr[i].toString()]].class.slug === x.slug) {

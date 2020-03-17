@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "d5a31807d12703a74b7676110036bd61"
+    "revision": "7549273bd9b7c92336fa87469febd8e2"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -71,7 +71,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_filterNsearch.js",
-    "revision": "8b81014025b409bdde080400a089e3f3"
+    "revision": "60ee2f419dab2340525840b38b0e7944"
   },
   {
     "url": "js/sist_icondata.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "0ae1286877e73800a7c323bb8abbde93"
+    "revision": "b2a85412282dc4ce02782a59f942ae82"
   },
   {
     "url": "package/Chart.min.js",
