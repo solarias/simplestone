@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "2c421a4c83b34da326a655bdd8360062"
+    "revision": "92919a5c68f08bcf1b28eedcc552ffae"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "0ceabdcc4a68b24405a41653e3c9b042"
+    "revision": "b10c72bba58b7ebfa6d5997d433eec3e"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -71,7 +71,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_filterNsearch.js",
-    "revision": "2c0a0c74e277472c87341f486bd069d1"
+    "revision": "4eaaa36c3db453174cf809452b94c320"
   },
   {
     "url": "js/sist_icondata.js",
@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "fa35d8f2bc276b42b6c2604388bc8607"
+    "revision": "ab7fe6e4b92bfa9c98fdaa5079645c09"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "d0e95142d41da3392046ccabb87f60f8"
+    "revision": "386f586f977c937bd2600c313c137f96"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "6f8ea3c52df47ed7f3cf37cee62088ab"
+    "revision": "e32a81033afde94159ee63d711e633cb"
   },
   {
     "url": "package/Chart.min.js",

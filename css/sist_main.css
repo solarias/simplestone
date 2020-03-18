@@ -368,6 +368,9 @@ body {
                 .popup_button.tall {
                     height:90px;
                 }
+                .popup_button.heightmax {
+                    height:100%;
+                }
                 .popup_button.trisection {
                     margin:0 2px 8px 2px;
                     width:calc(33% - 4px);
@@ -2032,6 +2035,8 @@ body {
             height:calc(100% - 10px);
 
             box-sizing: border-box;
+
+            color:white;
         }
             #metadeck_slot_content {
                 position:relative;

@@ -136,21 +136,42 @@ function card_cardSetFilter(cmd) {
         } else {
             //카드 정보
             if (process.state === "cardinfo") {
+                //직업을 분석하여 버튼 추가 준비
+                let htmlText = ''+
+                '$classBtns' +
+                '<button id="popup_class_NEUTRAL" class="popup_button full" data-class="NEUTRAL">중립</button>'
+                let btnText = ""
+                let classArr = []
+                Object.keys(session.classInfo).forEach(key => {
+                    let c = session.classInfo[key]
+                    if (c.slug !== "ALL" && c.slug !== "NEUTRAL") classArr.push({slug:c.slug, name:c.name})
+                })
+                classArr.sort((a,b) => {
+                    let order = [a.name,b.name]
+                    order.sort()
+                    if (a.name === order[0]) {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                })
+                classArr.forEach((c, i) => {
+                    let btn = document.createElement("button")
+                        btn.id = "popup_class_" + c.slug
+                        btn.classList.add("popup_button","halfsection")
+                        btn.dataset.class = c.slug
+                        btn.innerHTML = c.name
+                        if (i === classArr.length - 1 && classArr.length % 2 === 1) {
+                            btn.classList.remove("halfsection")
+                            btn.classList.add("full")
+                        }
+                    btnText += btn.outerHTML
+                })
+                htmlText = htmlText.replace("$classBtns",btnText)
                 //팝업창 열기
                 swal({
                     title: '카드 직업 검색',
-                    html:
-                      '<button id="popup_class_WARRIOR" class="popup_button trisection" data-class="WARRIOR">전사</button>' +
-                      '<button id="popup_class_SHAMAN" class="popup_button trisection" data-class="SHAMAN">주술사</button>' +
-                      '<button id="popup_class_ROGUE" class="popup_button trisection" data-class="ROGUE">도적</button>' +
-                      '<button id="popup_class_PALADIN" class="popup_button trisection" data-class="PALADIN">성기사</button>' +
-                      '<button id="popup_class_HUNTER" class="popup_button trisection" data-class="HUNTER">사냥꾼</button>' +
-                      '<button id="popup_class_DRUID" class="popup_button trisection" data-class="DRUID">드루이드</button>' +
-                      '<button id="popup_class_WARLOCK" class="popup_button trisection" data-class="WARLOCK">흑마법사</button>' +
-                      '<button id="popup_class_MAGE" class="popup_button trisection" data-class="MAGE">마법사</button>' +
-                      '<button id="popup_class_PRIEST" class="popup_button trisection" data-class="PRIEST">사제</button>' +
-                      '<button id="popup_class_DEMONHUNTER" class="popup_button halfsection" data-class="DEMONHUNTER">악마사냥꾼</button>' +
-                      '<button id="popup_class_NEUTRAL" class="popup_button halfsection" data-class="NEUTRAL">중립</button>',
+                    html:htmlText,
                     onOpen:function() {
                         //현재 직업 검색필터 보여주기
                         $("#popup_class_" + process.search.class).classList.add("selected");
@@ -274,16 +295,36 @@ function card_cardSetFilter(cmd) {
             $("#search_rarity").innerHTML = text;
             $("#mobilefilter_rarity").innerHTML = text;
         } else {
+            //등급을 분석하여 버튼 추가 준비
+            let htmlText = '<button id="popup_rarity_all" class="popup_button full" data-rarity="전체">전체</button>' +
+                '$rarityBtns'
+            let btnText = ""
+            let rarityArr = []
+            session.metadata.rarities.forEach(r => {
+                rarityArr.push({slug:r.slug.toUpperCase(), name:r.name, id:r.id})
+            })
+            rarityArr.sort((a,b) => {
+                let order = [a.id,b.id]
+                order.sort()
+                if (a.id === order[0]) {
+                    return -1
+                } else {
+                    return 1
+                }
+            })
+            rarityArr.forEach((r, i) => {
+                let btn = document.createElement("button")
+                    btn.id = "popup_rarity_" + r.slug
+                    btn.classList.add("popup_button","full")
+                    btn.dataset.rarity = r.name
+                    btn.innerHTML = r.name + " 카드"
+                btnText += btn.outerHTML
+            })
+            htmlText = htmlText.replace("$rarityBtns",btnText)
             //팝업창 열기
             swal({
                 title: '카드 등급 검색',
-                html:
-                  '<button id="popup_rarity_all" class="popup_button full" data-rarity="전체">전체</button>' +
-                  '<button id="popup_rarity_FREE" class="popup_button full" data-rarity="기본"><img src="./images/cost_free.png">기본 카드</button>' +
-                  '<button id="popup_rarity_COMMON" class="popup_button full" data-rarity="일반"><img src="./images/cost_common.png">일반 카드</button>' +
-                  '<button id="popup_rarity_RARE" class="popup_button full" data-rarity="희귀"><img src="./images/cost_rare.png">희귀 카드</button>' +
-                  '<button id="popup_rarity_EPIC" class="popup_button full" data-rarity="특급"><img src="./images/cost_epic.png">특급 카드</button>' +
-                  '<button id="popup_rarity_LEGENDARY" class="popup_button full" data-rarity="전설"><img src="./images/cost_legendary.png">전설 카드</button>',
+                html:htmlText,
                 onOpen:function() {
                     //현재 등급 검색필터 보여주기
                     $("#popup_rarity_" + process.search.rarity).classList.add("selected");

@@ -8,6 +8,7 @@ function card_generateMaster() {
     let elm_card = document.createElement("div.card.selectable")
         elm_card.classList.add("card_$id")//$id: 카드 구분기호
         elm_card.dataset.id = "$id"//$id
+        elm_card.classList.add("background_tile")//tile 백그라운드(일러스트 활룡 시 background_illust로 전환)
         elm_card.classList.add("flash_hidden")//flash 대상은 이 클래스 제거
         elm_card.classList.add("unusable_hidden")//이용불가 대상은 이 클래스 제거
         //오프라인 모드가 아닐 경우에만 배경이미지 생성
@@ -37,7 +38,17 @@ function card_generateFragment(info) {
     let fragment = session.masterNode
     //필요한 정보 설정(수량 제외)
     fragment = fragment.replaceAll("$id",info.id)//인덱스 설정
-    fragment = fragment.replace("$url",TILEURL + info.id + ".jpg")//이미지 설정: 타일 이미지
+    if (info.tileId !== undefined) {
+        //이미지 설정: 타일 이미지(미리 등록해둔 이미지 사용)
+        fragment = fragment.replace("$url",TILEURL + info.id + ".jpg")
+    } else if (info.cropImage !== undefined) {
+        //이미지 설정: 타일 이미지(등록된 게 없어서 블리자드 이미지 사용)
+        fragment = fragment.replace("$url",info.cropImage)
+    } else if (info.image !== undefined) {
+        //이미지 설정: 카드 일러스트 (카드가 없음)
+        fragment = fragment.replace("$url",info.image)
+        fragment = fragment.replace("background_tile","background_illust")
+    }
     fragment = fragment.replace("$cost",info.cost)//비용 설정
     fragment = fragment.replace("$name",info.name)//이름 설정
     fragment = fragment.replace("$rarity",info.rarity.slug)//등급 설정
@@ -1092,7 +1103,7 @@ document.addEventListener("DOMContentLoaded", async function(e) {
             scrollId: 'metadeck_slot',
             contentId: 'metadeck_slot_content',
             rows_in_block:14,
-            no_data_text: '검색 메타 덱 없음'
+            no_data_text: '검색된 메타 덱 없음'
         })
 
         //종료 경고 메시지

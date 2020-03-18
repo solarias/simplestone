@@ -556,7 +556,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //1-8. 활용하지 않는 속성 삭제
                             if (card.slug !== undefined) delete card.slug
                             if (card.imageGold !== undefined) delete card.imageGold
-                            if (card.cropImage !== undefined) delete card.cropImage
+                            //cropImage : 삭제하지 않음(등록된 타일 이미지가 없을 경우 사용)
                         //2-1. childIds 중 존재하지 않는 것은 제거하기
                         if (card.childIds !== undefined) {
                             for (let i = card.childIds.length - 1;i >= 0;i--) {
@@ -1016,7 +1016,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }
                 })
                 classArr.forEach((c, i) => {
-                    console.log(c)
                     let btn = document.createElement("button")
                         btn.id = "popup_class_" + c.slug
                         btn.classList.add("popup_button","halfsection","newdeck_button","newdeck_class")
@@ -2010,30 +2009,55 @@ async function window_shift(keyword, keyword2, keyword3) {
             //직업 및 포맷 설정
             //인기있는 덱
             $("#button_metadeck_hot").onclick = function() {
+                //직업을 분석하여 버튼 추가 준비
+                let htmlText = ''+
+                '<div class="popup_frame_left_2">'+
+                '<span class="popup_subtitle">직업 선택</span>'+
+                '<button id="popup_class_ALL" class="popup_button full metadeck_button metadeck_class" data-class="ALL">모든 직업</button>'+
+                '$classBtns' +
+                '</div><div class="popup_frame_right_1">'+
+                '<span class="popup_subtitle">대전방식</span>'+
+                '<button id="popup_format_standard" class="popup_button full tall metadeck_button metadeck_format" data-format="standard">정규</button>' +
+                '<button id="popup_format_wild" class="popup_button full tall metadeck_button metadeck_format" data-format="wild">야생</button>' +
+                '</div><div class="popup_frame_finish"></div>'
+                let btnText = ""
+                let classArr = []
+                Object.keys(session.classInfo).forEach(key => {
+                    let c = session.classInfo[key]
+                    if (c.slug !== "ALL" && c.slug !== "NEUTRAL") classArr.push({slug:c.slug, name:c.name})
+                })
+                classArr.sort((a,b) => {
+                    let order = [a.name,b.name]
+                    order.sort()
+                    if (a.name === order[0]) {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                })
+                classArr.forEach((c, i) => {
+                    let btn = document.createElement("button")
+                        btn.id = "popup_class_" + c.slug
+                        btn.classList.add("popup_button","halfsection","metadeck_button","metadeck_class")
+                        btn.dataset.class = c.slug
+                        btn.innerHTML = c.name
+                    btnText += btn.outerHTML
+                })
+                htmlText = htmlText.replace("$classBtns",btnText)
                 //설정 팝업창 열기
                 swal({
-                    html:
-                      '<span class="popup_subtitle">직업 선택</span>'+
-                      '<button id="popup_class_ALL" class="popup_button full metadeck_button metadeck_class" data-class="ALL">모든 직업</button>'+
-                      '<button id="popup_class_WARRIOR" class="popup_button trisection metadeck_button metadeck_class" data-class="WARRIOR">전사</button>' +
-                      '<button id="popup_class_SHAMAN" class="popup_button trisection metadeck_button metadeck_class" data-class="SHAMAN">주술사</button>' +
-                      '<button id="popup_class_ROGUE" class="popup_button trisection metadeck_button metadeck_class" data-class="ROGUE">도적</button>' +
-                      '<button id="popup_class_PALADIN" class="popup_button trisection metadeck_button metadeck_class" data-class="PALADIN">성기사</button>' +
-                      '<button id="popup_class_HUNTER" class="popup_button trisection metadeck_button metadeck_class" data-class="HUNTER">사냥꾼</button>' +
-                      '<button id="popup_class_DRUID" class="popup_button trisection metadeck_button metadeck_class" data-class="DRUID">드루이드</button>' +
-                      '<button id="popup_class_WARLOCK" class="popup_button trisection metadeck_button metadeck_class" data-class="WARLOCK">흑마법사</button>' +
-                      '<button id="popup_class_MAGE" class="popup_button trisection metadeck_button metadeck_class" data-class="MAGE">마법사</button>' +
-                      '<button id="popup_class_PRIEST" class="popup_button trisection metadeck_button metadeck_class" data-class="PRIEST">사제</button>'+
-                      '<span class="popup_subtitle">대전방식 선택</span>'+
-                      '<button id="popup_format_standard" class="popup_button metadeck_button metadeck_format" data-format="standard">정규</button>' +
-                      '<button id="popup_format_wild" class="popup_button metadeck_button metadeck_format" data-format="wild">야생</button>',
+                    html:htmlText,
                     onOpen:function() {
                         //버튼 디폴트 세팅
                         if (process.state === "metadeck") {
-                            //직업
-                            $("#popup_class_" + session.metadeck.filter.hot.class).classList.add("selected")
-                            //포맷 디폴트
-                            $("#popup_format_" + session.metadeck.filter.hot.format).classList.add("selected")
+                            try {
+                                //직업
+                                $("#popup_class_" + session.metadeck.filter.hot.class).classList.add("selected")
+                                //포맷 디폴트
+                                $("#popup_format_" + session.metadeck.filter.hot.format).classList.add("selected")
+                            } catch(e) {
+                                //버튼 선택에 문제가 있으면 선택하지 않음
+                            }
                         }
 
                         //버튼 클릭 시
@@ -2087,26 +2111,47 @@ async function window_shift(keyword, keyword2, keyword3) {
             }
             //승률높은 덱
             $("#button_metadeck_winrate").onclick = function() {
+                //직업을 분석하여 버튼 추가 준비
+                let htmlText = ''+
+                '<div class="popup_frame_left_2">'+
+                '<span class="popup_subtitle">직업 선택</span>'+
+                '<button id="popup_class_ALL" class="popup_button full metadeck_button metadeck_class" data-class="ALL">모든 직업</button>'+
+                '$classBtns' +
+                '</div><div class="popup_frame_right_1">'+
+                '<span class="popup_subtitle">대전방식</span>'+
+                '<button id="popup_format_standard" class="popup_button full metadeck_button metadeck_format" data-format="standard">정규</button>' +
+                '<button id="popup_format_wild" class="popup_button full metadeck_button metadeck_format" data-format="wild">야생</button>'+
+                '<span class="popup_subtitle">게임횟수</span>'+
+                '<button id="popup_totalgame_0" class="popup_button full metadeck_button metadeck_totalgame" data-totalgame="0">제한없음</button>' +
+                '<button id="popup_totalgame_1000" class="popup_button full metadeck_button metadeck_totalgame" data-totalgame="1000">1,000판 이상</button>' +
+                '</div><div class="popup_frame_finish"></div>'
+                let btnText = ""
+                let classArr = []
+                Object.keys(session.classInfo).forEach(key => {
+                    let c = session.classInfo[key]
+                    if (c.slug !== "ALL" && c.slug !== "NEUTRAL") classArr.push({slug:c.slug, name:c.name})
+                })
+                classArr.sort((a,b) => {
+                    let order = [a.name,b.name]
+                    order.sort()
+                    if (a.name === order[0]) {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                })
+                classArr.forEach((c, i) => {
+                    let btn = document.createElement("button")
+                        btn.id = "popup_class_" + c.slug
+                        btn.classList.add("popup_button","halfsection","metadeck_button","metadeck_class")
+                        btn.dataset.class = c.slug
+                        btn.innerHTML = c.name
+                    btnText += btn.outerHTML
+                })
+                htmlText = htmlText.replace("$classBtns",btnText)
                 //설정 팝업창 열기
                 swal({
-                    html:
-                      '<span class="popup_subtitle">직업 선택</span>'+
-                      '<button id="popup_class_ALL" class="popup_button full metadeck_button metadeck_class" data-class="ALL">모든 직업</button>'+
-                      '<button id="popup_class_WARRIOR" class="popup_button trisection metadeck_button metadeck_class" data-class="WARRIOR">전사</button>' +
-                      '<button id="popup_class_SHAMAN" class="popup_button trisection metadeck_button metadeck_class" data-class="SHAMAN">주술사</button>' +
-                      '<button id="popup_class_ROGUE" class="popup_button trisection metadeck_button metadeck_class" data-class="ROGUE">도적</button>' +
-                      '<button id="popup_class_PALADIN" class="popup_button trisection metadeck_button metadeck_class" data-class="PALADIN">성기사</button>' +
-                      '<button id="popup_class_HUNTER" class="popup_button trisection metadeck_button metadeck_class" data-class="HUNTER">사냥꾼</button>' +
-                      '<button id="popup_class_DRUID" class="popup_button trisection metadeck_button metadeck_class" data-class="DRUID">드루이드</button>' +
-                      '<button id="popup_class_WARLOCK" class="popup_button trisection metadeck_button metadeck_class" data-class="WARLOCK">흑마법사</button>' +
-                      '<button id="popup_class_MAGE" class="popup_button trisection metadeck_button metadeck_class" data-class="MAGE">마법사</button>' +
-                      '<button id="popup_class_PRIEST" class="popup_button trisection metadeck_button metadeck_class" data-class="PRIEST">사제</button>'+
-                      '<span class="popup_subtitle">대전방식 선택</span>'+
-                      '<button id="popup_format_standard" class="popup_button metadeck_button metadeck_format" data-format="standard">정규</button>' +
-                      '<button id="popup_format_wild" class="popup_button metadeck_button metadeck_format" data-format="wild">야생</button>'+
-                      '<span class="popup_subtitle">최소 게임횟수</span>'+
-                      '<button id="popup_totalgame_0" class="popup_button metadeck_button metadeck_totalgame" data-totalgame="0">제한없음</button>' +
-                      '<button id="popup_totalgame_1000" class="popup_button metadeck_button metadeck_totalgame" data-totalgame="1000">1,000판 이상</button>',
+                    html:htmlText,
                     onOpen:function() {
                         //버튼 디폴트 세팅
                         if (process.state === "metadeck") {
@@ -2466,14 +2511,16 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //메타 덱 목록 구축
                 let metadeckslotArr = []
                 let decks = session.metadeck[metadeck_type][session.metadeck.filter[metadeck_type].format][session.metadeck.filter[metadeck_type].class];
-                let deckRank = 1;
-                for (let i = 0;i < decks.length;i++) {
-                    let oneDeck = decks[i];
-                    if (oneDeck.total_games >= session.metadeck.filter[metadeck_type].totalgame) {
-                        metadeckslotArr.push(metadeckslot_generateFragment(oneDeck, deckRank));
-                        deckRank += 1;
+                if (decks !== undefined && decks.length > 0) {
+                    let deckRank = 1;
+                    for (let i = 0;i < decks.length;i++) {
+                        let oneDeck = decks[i];
+                        if (oneDeck.total_games >= session.metadeck.filter[metadeck_type].totalgame) {
+                            metadeckslotArr.push(metadeckslot_generateFragment(oneDeck, deckRank));
+                            deckRank += 1;
+                        }
+                        if (deckRank > METADECKMAX) break;
                     }
-                    if (deckRank > METADECKMAX) break;
                 }
                 //클러스터 업데이트
                 clusterize.metadeck.update(metadeckslotArr);
