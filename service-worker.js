@@ -67,7 +67,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "21e9995993b9aed4fe5b1dd26b642c64"
+    "revision": "55b36b36efcab4e189f4c6e4d01e9cba"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -79,7 +79,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "e08418659c59ca4f25be9353d608c9cd"
+    "revision": "803c45048c62dbb6ff46bd6d527091a4"
   },
   {
     "url": "js/sist_window.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "b2a85412282dc4ce02782a59f942ae82"
+    "revision": "70bdb6d1617b697d11680e61b4e6b302"
   },
   {
     "url": "package/Chart.min.js",
