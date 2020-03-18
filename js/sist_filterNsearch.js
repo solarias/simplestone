@@ -340,7 +340,7 @@ function card_cardSetFilter(cmd) {
                     let text = ""
                     //"전체" 세트 추가
                     let btn1 = document.createElement("button")
-                        btn1.slug = "popup_cardSet_all"
+                        btn1.id = "popup_cardSet_all"
                         btn1.classList.add("popup_button","small")
                         btn1.dataset.set = "전체"
                         btn1.innerHTML = "전체"
@@ -350,7 +350,7 @@ function card_cardSetFilter(cmd) {
                     setarr.forEach(set => {
                         if (set.format === "정규") {
                             let btn2 = document.createElement("button")
-                                btn2.slug = "popup_cardSet_" + set.slug
+                                btn2.id = "popup_cardSet_" + set.slug
                                 btn2.classList.add("popup_button","small")
                                 btn2.dataset.set = set.name
                                 btn2.innerHTML = set.name
@@ -368,7 +368,7 @@ function card_cardSetFilter(cmd) {
                             $$(".popup_button").forEach(x => {
                                 x.onclick = function() {
                                     //세트 필터 변경
-                                    process.search.set = x.slug.replace("popup_cardSet_","");
+                                    process.search.set = x.id.replace("popup_cardSet_","");
                                     //키워드 변경
                                     let text = x.dataset.set;
                                     $("#search_cardSet").innerHTML = text;

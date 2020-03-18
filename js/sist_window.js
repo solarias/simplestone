@@ -699,7 +699,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         console.log(e)
                         //불러올 수 없다고 알리기
                         nativeToast({
-                            message: 'URL에 포함된 덱코드가 올바르지 않습니다.',
+                            message: 'URL에 포함된 덱코드가 올바르지 않습니다.<br>(' + e + ')',
                             position: 'center',
                             timeout: 2000,
                             type: 'error',
@@ -990,23 +990,45 @@ async function window_shift(keyword, keyword2, keyword3) {
             $("#botton_newdeck").onclick = function() {
                 //덱 설정 초기화
                 process.deck = {}
+                //직업을 분석하여 버튼 추가 준비
+                let htmlText = '<span class="popup_title">새로운 덱 설정</span>'+
+                '<div class="popup_frame_left_2">'+
+                '<span class="popup_subtitle">직업 선택</span>'+
+                '$classBtns' +
+                '</div><div class="popup_frame_right_1">'+
+                '<span class="popup_subtitle">대전방식</span>'+
+                '<button id="popup_format_standard" class="popup_button full tall newdeck_button newdeck_format" data-format="정규">정규</button>' +
+                '<button id="popup_format_wild" class="popup_button full tall newdeck_button newdeck_format" data-format="야생">야생</button>' +
+                '</div><div class="popup_frame_finish"></div>'
+                let btnText = ""
+                let classArr = []
+                Object.keys(session.classInfo).forEach(key => {
+                    let c = session.classInfo[key]
+                    if (c.slug !== "ALL" && c.slug !== "NEUTRAL") classArr.push({slug:c.slug, name:c.name})
+                })
+                classArr.sort((a,b) => {
+                    let order = [a.name,b.name]
+                    order.sort()
+                    if (a.name === order[0]) {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                })
+                classArr.forEach((c, i) => {
+                    console.log(c)
+                    let btn = document.createElement("button")
+                        btn.id = "popup_class_" + c.slug
+                        btn.classList.add("popup_button","halfsection","newdeck_button","newdeck_class")
+                        btn.dataset.class = c.slug
+                        btn.innerHTML = c.name
+                    btnText += btn.outerHTML
+                })
+                htmlText = htmlText.replace("$classBtns",btnText)
                 //팝업창 열기
                 swal({
                     html:
-                      '<span class="popup_title">새로운 덱 설정</span>'+
-                      '<span class="popup_subtitle">직업 선택</span>'+
-                      '<button id="popup_class_WARRIOR" class="popup_button trisection newdeck_button newdeck_class" data-class="WARRIOR">전사</button>' +
-                      '<button id="popup_class_SHAMAN" class="popup_button trisection newdeck_button newdeck_class" data-class="SHAMAN">주술사</button>' +
-                      '<button id="popup_class_ROGUE" class="popup_button trisection newdeck_button newdeck_class" data-class="ROGUE">도적</button>' +
-                      '<button id="popup_class_PALADIN" class="popup_button trisection newdeck_button newdeck_class" data-class="PALADIN">성기사</button>' +
-                      '<button id="popup_class_HUNTER" class="popup_button trisection newdeck_button newdeck_class" data-class="HUNTER">사냥꾼</button>' +
-                      '<button id="popup_class_DRUID" class="popup_button trisection newdeck_button newdeck_class" data-class="DRUID">드루이드</button>' +
-                      '<button id="popup_class_WARLOCK" class="popup_button trisection newdeck_button newdeck_class" data-class="WARLOCK">흑마법사</button>' +
-                      '<button id="popup_class_MAGE" class="popup_button trisection newdeck_button newdeck_class" data-class="MAGE">마법사</button>' +
-                      '<button id="popup_class_PRIEST" class="popup_button trisection newdeck_button newdeck_class" data-class="PRIEST">사제</button>'+
-                      '<span class="popup_subtitle">대전방식 선택</span>'+
-                      '<button id="popup_format_standard" class="popup_button newdeck_button newdeck_format" data-format="정규">정규</button>' +
-                      '<button id="popup_format_wild" class="popup_button newdeck_button newdeck_format" data-format="야생">야생</button>',
+                      htmlText,
                     onOpen:function() {
                         $$(".newdeck_button").forEach(function(target) {
                             target.onclick = function() {

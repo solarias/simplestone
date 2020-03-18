@@ -175,7 +175,7 @@ function card_getQuantity(id) {
 function card_move(cmd, log) {
     //커맨드 쪼개기
     let cmdarr = cmd.split(" ")
-    let movement = parseInt(cmdarr[0])
+    let movement = cmdarr[0]
     let deckarr = []
     //명령 구분
     switch (movement) {
@@ -185,7 +185,7 @@ function card_move(cmd, log) {
             let movednum = 0
             //카드 분류
             for (let i = 1;i < cmdarr.length;i++) {
-                deckarr.push(cmdarr[i])
+                deckarr.push(parseInt(cmdarr[i]))
             }
             //카드 추가
             deckarr.forEach(id => {
@@ -687,7 +687,7 @@ function setChart(cmd) {
                 if (!isError.chartLoad) {
                     isError.chartLoad = 1
                     nativeToast({
-                        message: '차트 출력여부 값을 로컬에서 불러올 수 없습니다.<br>' + e,
+                        message: '차트 출력여부 값을 로컬에서 불러올 수 없습니다.<br>(' + e + ')',
                         position: 'center',
                         timeout: 3000,
                         type: 'error',
@@ -756,7 +756,7 @@ function setChart(cmd) {
                 if (!isError.chartSave) {
                     isError.chartSave = 1
                     nativeToast({
-                        message: '차트 출력여부 값을 저장할 수 없습니다.<br>' + e,
+                        message: '차트 출력여부 값을 저장할 수 없습니다.<br>(' + e + ')',
                         position: 'center',
                         timeout: 3000,
                         type: 'error',
@@ -834,7 +834,7 @@ function deckslot_refresh() {
             clusterize.slot.update(slotarr)
         } catch(e) {
             nativeToast({
-                message: '덱 목록을 불러오는데 문제가 발생하였습니다.',
+                message: '덱 목록을 불러오는데 문제가 발생하였습니다.<br>(' + e + ')',
                 position: 'center',
                 timeout: 2000,
                 type: 'error',
@@ -844,9 +844,9 @@ function deckslot_refresh() {
             //클러스터 업데이트
             clusterize.slot.update(slotarr)
         }
-    }).catch(function(e) {
+    }).catch(e => {
         nativeToast({
-            message: '등록된 덱을 불러오지 못했습니다.',
+            message: '등록된 덱을 불러오지 못했습니다.<br>(' + e + ')',
             position: 'center',
             timeout: 2000,
             type: 'error',
@@ -895,7 +895,7 @@ async function deck_save(cmd) {
                         resolve()
                     } catch(e) {
                         nativeToast({
-                            message: '등록된 덱 저장에 실패하였습니다.',
+                            message: '등록된 덱 저장에 실패하였습니다.<br>(' + e + ')',
                             position: 'center',
                             timeout: 2000,
                             type: 'error',
@@ -910,7 +910,7 @@ async function deck_save(cmd) {
                 })
                 .catch(async function(e) {
                     nativeToast({
-                        message: '기존에 등록된 덱을 불러오는 데 실패하였습니다.',
+                        message: '기존에 등록된 덱을 불러오는 데 실패하였습니다.<br>(' + e + ')',
                         position: 'center',
                         timeout: 2000,
                         type: 'error',
@@ -929,7 +929,7 @@ async function deck_save(cmd) {
         })
         .catch(function(e) {
             nativeToast({
-                message: '덱 임시저장에 실패하였습니다.',
+                message: '덱 임시저장에 실패하였습니다.<br>(' + e + ')',
                 position: 'center',
                 timeout: 2000,
                 type: 'error',

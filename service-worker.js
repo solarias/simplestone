@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "7549273bd9b7c92336fa87469febd8e2"
+    "revision": "0ceabdcc4a68b24405a41653e3c9b042"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -67,11 +67,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "55b36b36efcab4e189f4c6e4d01e9cba"
+    "revision": "d926d069677893bdd8979617ccd1b3c1"
   },
   {
     "url": "js/sist_filterNsearch.js",
-    "revision": "7233f0f17798f140116a7816fc0e6679"
+    "revision": "2c0a0c74e277472c87341f486bd069d1"
   },
   {
     "url": "js/sist_icondata.js",
@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "803c45048c62dbb6ff46bd6d527091a4"
+    "revision": "fa35d8f2bc276b42b6c2604388bc8607"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "1008c9cfe2f998cb80993284c3db2759"
+    "revision": "d0e95142d41da3392046ccabb87f60f8"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "70bdb6d1617b697d11680e61b4e6b302"
+    "revision": "6f8ea3c52df47ed7f3cf37cee62088ab"
   },
   {
     "url": "package/Chart.min.js",

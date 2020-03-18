@@ -108,7 +108,7 @@ function export_deckcode() {
         //오류창 열기
         console.log(e)
         nativeToast({
-            message: '오류 발생 - 덱코드를 출력할 수 없습니다.',
+            message: '오류 발생 - 덱코드를 출력할 수 없습니다.<br>(' + e + ')',
             position: 'center',
             timeout: 2000,
             type: 'error',
@@ -187,7 +187,7 @@ function export_text() {
     } catch(e) {
         //오류창 열기
         nativeToast({
-            message: '오류 발생 - 텍스트를 출력할 수 없습니다.',
+            message: '오류 발생 - 텍스트를 출력할 수 없습니다.<br>(' + e + ')',
             position: 'center',
             timeout: 2000,
             type: 'error',
@@ -225,7 +225,7 @@ function export_tag() {
     } catch(e) {
         //오류창 열기
         nativeToast({
-            message: '오류 발생 - 텍스트를 출력할 수 없습니다.',
+            message: '오류 발생 - 텍스트를 출력할 수 없습니다.<br>(' + e + ')',
             position: 'center',
             timeout: 2000,
             type: 'error',
@@ -1046,7 +1046,7 @@ function export_url() {
     } catch(e) {
         //오류창 열기
         nativeToast({
-            message: '오류 발생 - URL을 출력할 수 없습니다.',
+            message: '오류 발생 - URL을 출력할 수 없습니다.<br>(' + e + ')',
             position: 'center',
             timeout: 2000,
             type: 'error',
