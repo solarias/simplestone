@@ -556,7 +556,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //1-8. 활용하지 않는 속성 삭제
                             if (card.slug !== undefined) delete card.slug
                             if (card.imageGold !== undefined) delete card.imageGold
-                            //cropImage : 삭제하지 않음(등록된 타일 이미지가 없을 경우 사용)
+                            //cropImage : 껍데기만 있으면 삭제
+                            if (card.cropImage === null || card.cropImage === "") delete card.cropImage
                         //2-1. childIds 중 존재하지 않는 것은 제거하기
                         if (card.childIds !== undefined) {
                             for (let i = card.childIds.length - 1;i >= 0;i--) {

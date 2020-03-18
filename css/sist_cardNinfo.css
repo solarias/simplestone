@@ -48,7 +48,7 @@
     }
     .card.background_illust {
         background-size:200px auto;
-        background-position:127% 30%;
+        background-position:right -50px top -60px;
     }
     .card.flash_hidden {
         animation:none;

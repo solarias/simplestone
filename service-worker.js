@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "92919a5c68f08bcf1b28eedcc552ffae"
+    "revision": "c75b960013579850a146d4c1a6e55994"
   },
   {
     "url": "css/sist_main.css",
@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "386f586f977c937bd2600c313c137f96"
+    "revision": "4c41772938f1c89d992089c3f757bfaf"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "99de22716e50335a2479dae122ef2034"
+    "revision": "e82069b19b9fb6b23ff9f00a7a3e3fb5"
   },
   {
     "url": "package/Chart.min.js",
