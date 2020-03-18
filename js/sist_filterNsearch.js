@@ -353,7 +353,7 @@ function card_cardSetFilter(cmd) {
                                 btn2.slug = "popup_cardSet_" + set.slug
                                 btn2.classList.add("popup_button","small")
                                 btn2.dataset.set = set.name
-                                btn2.innerHTML = s.name
+                                btn2.innerHTML = set.name
                             text += btn2.outerHTML
                         }
                     })

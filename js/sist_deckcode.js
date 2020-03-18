@@ -15,7 +15,7 @@ function deckcode_decode(deckcode) {
         arr[1] = card[1]
         output.cards.push(arr)
     })
-    output.cards.sort(function(a, b) {
+    output.cards.sort((a, b) => {
         let aIndex = session.dbIndex[a[0].toString()]
         let bIndex = session.dbIndex[b[0].toString()]
         return (aIndex < bIndex) ? -1 : 1
@@ -47,9 +47,9 @@ function deckcode_encode(deckObj) {
     output.heroes.push(session.classInfo[obj.class].cardId)
     //카드
     output.cards = []
-    obj.cards.forEach(function(card) {
+    obj.cards.forEach(card => {
         let arr = []
-        arr[0] = card[0]
+        arr[0] = parseInt(card[0])
         arr[1] = card[1]
         output.cards.push(arr)
     })

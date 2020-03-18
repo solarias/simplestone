@@ -163,7 +163,7 @@ function card_getQuantity(id) {
     else {
         //카드 정보를 찾으면 quantity 출력
         for (let i = 0;i < process.deck.cards.length;i++) {
-            if (process.deck.cards[i][0] === id)
+            if (parseInt(process.deck.cards[i][0]) === id)
                 return process.deck.cards[i][1]
         }
         //못찾았으면 0 출력
@@ -175,7 +175,7 @@ function card_getQuantity(id) {
 function card_move(cmd, log) {
     //커맨드 쪼개기
     let cmdarr = cmd.split(" ")
-    let movement = cmdarr[0]
+    let movement = parseInt(cmdarr[0])
     let deckarr = []
     //명령 구분
     switch (movement) {
@@ -185,7 +185,7 @@ function card_move(cmd, log) {
             let movednum = 0
             //카드 분류
             for (let i = 1;i < cmdarr.length;i++) {
-                deckarr.push(parseInt(cmdarr[i]))
+                deckarr.push(cmdarr[i])
             }
             //카드 추가
             deckarr.forEach(id => {
