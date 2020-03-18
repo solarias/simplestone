@@ -21,7 +21,18 @@ function deckcode_decode(deckcode) {
         return (aIndex < bIndex) ? -1 : 1
     })
     //직업
-    output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
+    output.class = ""
+    for (let key in session.classInfo) {
+        if (session.classInfo.hasOwnProperty(key)) {
+            if (session.classInfo[key].cardId === input.heroes[0]) {
+                output.class = session.classInfo[key].slug
+                break
+            }
+        }
+    }
+    if (output.class === "") {
+        output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
+    }
     //포맷(향후 덱 포맷 검증 별도로 함)
     output.format = "정규"
     for (let i = 0;i < output.cards.length;i++) {
