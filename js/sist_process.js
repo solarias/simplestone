@@ -56,6 +56,29 @@ function card_generateFragment(info) {
     return fragment
 }
 
+//마스터 카드_일러스트 노드 생성
+function cardIllust_generateMaster() {
+    //요소 생성
+    let elm_card = document.createElement("div.card_illust")
+        elm_card.classList.add("cardllust_$id")//$id: 카드 구분기호
+        elm_card.dataset.id = "$id"//$id
+        elm_card.style.backgroundImage = "url($url)"//$url: 카드 이미지 주소
+    //출력
+    return elm_card.outerHTML
+}
+//카드_일러스트 개별 요소 생성
+function cardIllust_generateFragment(id) {
+    //마스터 노드 복사
+    let fragment = session.masterNodeIllust
+    //아이디 설정
+    fragment = fragment.replaceAll("$id",id.toString())
+    //이미지 설정: 카드 일러스트
+    let info = session.db[session.dbIndex[id.toString()]]
+    fragment = fragment.replace("$url",info.image)
+    //반환
+    return fragment
+}
+
 //마스터 덱 슬롯 생성
 function deckslot_generateMaster() {
     //요소 생성
@@ -356,14 +379,81 @@ function cluster_update(position, latest, updateCollection) {
     let arr = []
     let nodearr = []
     switch (position) {
-        case "collection":
+        case "collection_list":
             arr = process.search.result
             //클러스터 입력정보 준비
             arr.forEach(function(x) {
-                nodearr.push(card_addFragment("collection",x,card_getQuantity(x),true,latest))
+                nodearr.push(card_addFragment("collection_list",x,card_getQuantity(x),true,latest))
             })
             //클러스터 업데이트
-            clusterize.collection.update(nodearr)
+            clusterize.collection_list.update(nodearr)
+
+            break
+        case "collection_illust":
+        //클러스터 입력정보 준비
+            let pWidth = $("#collection_illust_result_content").offsetWidth
+            arr = process.search.result
+            let rowText = ""
+            let rowStart = "<div class='collection_illust_row'>",
+                rowEnd = "</div>"
+
+
+
+            //=====================================================
+            //화면 크기에 따라 row, card_illust 크기를 "강제로" 적용
+            //======================================================
+
+
+
+            //348 미만 : 3줄(116px 미만)
+            //540 미만 : 3줄(116px)
+            rowText += rowStart
+            arr.forEach((x, i) => {
+                rowText += cardIllust_generateFragment(x)
+                if (i === arr.length - 1) {
+                    rowText += rowEnd
+                    nodearr.push(rowText)
+                } else if (pWidth < 480) {
+                    if ((i+1) % 3 === 0) {
+                        rowText += rowEnd
+                        nodearr.push(rowText)
+                        if (i < arr.length - 1) rowText = rowStart
+                    }
+                //540 이상 : 4줄(116px)
+                } else if (pWidth < 600) {
+                    if ((i+1) % 4 === 0) {
+                        rowText += rowEnd
+                        nodearr.push(rowText)
+                        if (i < arr.length - 1) rowText = rowStart
+                    }
+                //600 이상 : 5줄(116px)
+                } else if (pWidth < 720) {
+                    if ((i+1) % 5 === 0) {
+                        rowText += rowEnd
+                        nodearr.push(rowText)
+                        if (i < arr.length - 1) rowText = rowStart
+                    }
+                //720 이상 : 6줄(116px 이상)
+                } else if (pWidth >= 720) {
+                    if ((i+1) % 6 === 0) {
+                        rowText += rowEnd
+                        nodearr.push(rowText)
+                        if (i < arr.length - 1) rowText = rowStart
+                    }
+                }
+            })
+
+            //클러스터 업데이트
+            clusterize.collection_illust.update(nodearr)
+
+            //화면 크기 조절 시 - (일러스트 모드면) 재구성
+            window.addEventListener("resize", e => {
+                if (process !== undefined &&
+                process.state === "cardinfo" &&
+                session.setting.cardinfo_form === "illust") {
+                    cluster_update("collection_illust",false)
+                }
+            })
 
             break
         case "deck":
@@ -382,7 +472,7 @@ function cluster_update(position, latest, updateCollection) {
 
             //카드목록 (해당되면) 클러스터 업데이트
             if (updateCollection  !== false) {
-                cluster_update("collection", latest)
+                cluster_update("collection_list", latest)
             }
 
             break
@@ -721,8 +811,8 @@ function setChart(cmd) {
             //차트
             $("#main_deckchart").classList.add("show")
             //메인스크린
-            $("#main_collection").classList.add("below_chart")
-                $("#main_collection").classList.remove("below_footer","below_none")
+            $("#main_collection_list").classList.add("below_chart")
+                $("#main_collection_list").classList.remove("below_footer","below_none")
             $("#main_deck").classList.add("below_chart")
                 $("#main_deck").classList.remove("below_footer","below_none")
             $("#main_deckconfig").classList.add("below_chart")
@@ -738,8 +828,8 @@ function setChart(cmd) {
             //차트
             $("#main_deckchart").classList.remove("show")
             //메인스크린
-            $("#main_collection").classList.add("below_footer")
-                $("#main_collection").classList.remove("below_chart","below_none")
+            $("#main_collection_list").classList.add("below_footer")
+                $("#main_collection_list").classList.remove("below_chart","below_none")
             $("#main_deck").classList.add("below_footer")
                 $("#main_deck").classList.remove("below_chart","below_none")
             $("#main_deckconfig").classList.add("below_footer")
@@ -1072,11 +1162,46 @@ document.addEventListener("DOMContentLoaded", async function(e) {
             refreshing = true
         })
     }
-        //카드 클러스터 생성해두기
-        clusterize.collection = new Clusterize({
+    //심플스톤 세팅 불러오기
+    try {
+        let local_setting = await localforage.getItem("sist_setting")
+        //있을 시 적용
+        if (local_setting !== null) {
+            //temp_metadata에 메타데이터 할당
+            session.setting = local_setting
+        //없을 시
+        } else {
+            //비어있는 세팅 생성
+            session.setting = {}
+        }
+    //실패 시
+    } catch(e) {
+        //오류 출력
+        nativeToast({
+            message: '심플스톤 세팅 저장값을 불러올 수 없습니다.<br>(' + e + ')',
+            position: 'center',
+            timeout: 3000,
+            type: 'error',
+            closeOnClick: 'true'
+        })
+        //(불러올 수 없으니) 비어있는 세팅 생성
+        session.setting = {}
+    }
+    //클러스터 생성
+        //카드 리스트 클러스터 생성해두기
+        clusterize.collection_list = new Clusterize({
             tag: 'div',
-            scrollId: 'collection_list',
-            contentId: 'collection_list_content',
+            scrollId: 'collection_list_result',
+            contentId: 'collection_list_result_content',
+            rows_in_block:14,
+            no_data_text: '해당 직업 검색결과 없음',
+            no_data_class: 'clusterize-no-data'
+        })
+        //카드 일러스트 클러스트 생성해두기
+        clusterize.collection_illust = new Clusterize({
+            tag: 'div',
+            scrollId: 'collection_illust_result',
+            contentId: 'collection_illust_result_content',
             rows_in_block:14,
             no_data_text: '해당 직업 검색결과 없음',
             no_data_class: 'clusterize-no-data'

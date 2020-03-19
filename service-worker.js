@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "c75b960013579850a146d4c1a6e55994"
+    "revision": "9f4c28427c0edf2cd074155c8873ee98"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "b10c72bba58b7ebfa6d5997d433eec3e"
+    "revision": "ecaa27983558d3e29e29434fd78a730e"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "ad653f2d8c33a907b02e9d65016a5b74"
+    "revision": "6fc70ba37fbf4b1af18a19b038bad980"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -63,7 +63,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_data.js",
-    "revision": "5eed408ad64de0bd171c59fbbc9ea46c"
+    "revision": "98d477077d68978ff6b75d7535b225ad"
   },
   {
     "url": "js/sist_deckcode.js",
@@ -71,7 +71,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_filterNsearch.js",
-    "revision": "4eaaa36c3db453174cf809452b94c320"
+    "revision": "9703383114e51062f48316fe2f918dd7"
   },
   {
     "url": "js/sist_icondata.js",
@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "ab7fe6e4b92bfa9c98fdaa5079645c09"
+    "revision": "b7dbfc485c3ce7b6d8b802f91d76c3e9"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "4c41772938f1c89d992089c3f757bfaf"
+    "revision": "90ffdfdf132fe601478329ec699e5eee"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "e82069b19b9fb6b23ff9f00a7a3e3fb5"
+    "revision": "480c7a168e0690645709059f5283d12d"
   },
   {
     "url": "package/Chart.min.js",
@@ -196,6 +196,14 @@ self.__precacheManifest = [
   {
     "url": "package/no_ie.js",
     "revision": "5131445b85c855c9be568f5b36990321"
+  },
+  {
+    "url": "package/OverlayScrollbars.min.css",
+    "revision": "64c79f4b4306d5d923cb8bc27a4fc46a"
+  },
+  {
+    "url": "package/OverlayScrollbars.min.js",
+    "revision": "8e15e670796ba7cd0b75df37ca61170b"
   },
   {
     "url": "package/subtool.js",

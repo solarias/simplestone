@@ -22,6 +22,14 @@ function window_clear() {
     $$(".extrascreen").forEach(function(target) {
         target.classList.remove("show");
     })
+    //상단 모든 버튼 비활성화
+    $$(".header_button_left").forEach(function(target) {
+        target.classList.remove("show");
+    })
+    $$(".header_button_right").forEach(function(target) {
+        target.classList.remove("show");
+    })
+
 }
 //뒤로 가기 버튼 - 메뉴마다 별도로 설정
 function window_goback() {};
@@ -94,12 +102,15 @@ async function window_shift(keyword, keyword2, keyword3) {
         //0-3. 함수 선언 - 메시지 출력
             function process_update_message(msg, delay, type) {
                 return new Promise(resolve => {
+                    //메시지 1줄 추가
                     let message = document.createElement("p")
                         message.innerHTML = msg
                         if (type === "error") message.className = "error"
                         else if (type === "info") message.className = "info"
                     $("#update_content").appendChild(message)
-
+                    //메시지창 스크롤
+                    $("#update_content").scrollTop = $("#update_content").scrollHeight
+                    //일정 시간 이후 종료
                     setTimeout(() => {
                         resolve()
                     }, delay)
@@ -646,15 +657,16 @@ async function window_shift(keyword, keyword2, keyword3) {
             session.metadata.classes.forEach((cls, i) => {
                 session.classInfo[cls.slug] = cls
             })
-            //마스터 노드, 마스터 인포, 마스터 슬롯, 마스터 메타덱 생성
-            session.masterNode = card_generateMaster();
-            session.masterInfo = cardinfo_generateMaster();
-            session.masterSlot = deckslot_generateMaster();
-            session.masterMetaSlot = metadeckslot_generateMaster();
+            //마스터 노드, 마스터 일러스트 노드, 마스터 인포, 마스터 슬롯, 마스터 메타덱 생성
+            session.masterNode = card_generateMaster()
+            session.masterNodeIllust = cardIllust_generateMaster()
+            session.masterInfo = cardinfo_generateMaster()
+            session.masterSlot = deckslot_generateMaster()
+            session.masterMetaSlot = metadeckslot_generateMaster()
             //카드 Fragment 생성
-            session.fragment = [];
+            session.fragment = []
             session.db.forEach(function(info, index) {
-                session.fragment[index] = card_generateFragment(info);
+                session.fragment[index] = card_generateFragment(info)
             })
         //5. 다음 단계로 진행
             //에러가 1번이라도 발생 시 : "다음으로 진행" 버튼을 눌려야 진행 가능
@@ -1173,16 +1185,9 @@ async function window_shift(keyword, keyword2, keyword3) {
             //==================
             //※ 화면 구성
             //==================
-            //화면 출력
             window_clear()
+            //기본 구성 - 필터, 뒤로 버튼
             $("#header_search").classList.add("show")
-            $("#main_collection").classList.add("show","below_footer")
-                $("#main_collection").classList.remove("below_chart","below_none")
-            $("#main_cardinfo").classList.add("show","below_footer")
-                $("#main_cardinfo").classList.remove("below_chart","below_none")
-
-            $("#footer_cardinfo").classList.add("show")
-            //뒤로 버튼
             $("#header_back").classList.add("show")
                 window_goback = () => {
                     window_shift("titlescreen")
@@ -1196,9 +1201,86 @@ async function window_shift(keyword, keyword2, keyword3) {
                         window.history.pushState({ noBackExitsApp: true }, 'DEF')
                     }
                 }
-            //이용 정보 표시안함
-            $("#header_info").classList.remove("show")
-            $("#header_sort").classList.remove("show")
+            //보기 형식 버튼 표시
+            $("#header_cardinfo_list").classList.add("show")
+            $("#header_cardinfo_illust").classList.add("show")
+
+        //1. 보기 형식 준비
+            //보기 형식 세팅 - 리스트
+            let setCardinfoForm_list = async () => {
+                //"카드 형식" 기억
+                session.setting.cardinfo_form = "list"
+                try {
+                    await localforage.setItem("sist_setting", session.setting)
+                } catch(e) {
+                    //오류 출력
+                    nativeToast({
+                        message: '카드 정보 보기 형식을 저장할 수 없습니다.<br>(' + e + ')',
+                        position: 'center',
+                        timeout: 3000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    })
+                }
+                //화면 구성
+                $("#main_collection_list").classList.add("show","below_footer")
+                    $("#main_collection_list").classList.remove("below_chart","below_none")
+                $("#main_cardinfo").classList.add("show","below_footer")
+                    $("#main_cardinfo").classList.remove("below_chart","below_none")
+                $("#main_collection_illust").classList.remove("show")
+                $("#footer_cardinfo").classList.add("show")
+                //버튼 변경
+                $("#header_cardinfo_list").classList.add("selected")
+                $("#header_cardinfo_illust").classList.remove("selected")
+            }
+            //보기 형식 세팅 - 카드
+            let setCardinfoForm_illust = async () => {
+                //"카드 형식" 기억
+                session.setting.cardinfo_form = "illust"
+                try {
+                    await localforage.setItem("sist_setting", session.setting)
+                } catch(e) {
+                    //오류 출력
+                    nativeToast({
+                        message: '카드 정보 보기 형식을 저장할 수 없습니다.<br>(' + e + ')',
+                        position: 'center',
+                        timeout: 3000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    })
+                }
+                //화면 구성
+                $("#main_collection_list").classList.remove("show")
+                $("#main_cardinfo").classList.remove("show")
+                $("#main_collection_illust").classList.add("show","below_none")
+                    $("#main_collection_illust").classList.remove("below_chart","below_footer")
+                $("#footer_cardinfo").classList.remove("show")
+                //버튼 변경
+                $("#header_cardinfo_illust").classList.add("selected")
+                $("#header_cardinfo_list").classList.remove("selected")
+            }
+
+        //2. 보기 형식 적용
+            //이전에 불러온 형식에 따라 보기 형식 결정
+            if (session.setting !== undefined &&
+            session.setting.cardinfo_form !== undefined) {
+                if (session.setting.cardinfo_form === "list") {
+                    setCardinfoForm_list()
+                } else if (session.setting.cardinfo_form === "illust") {
+                    setCardinfoForm_illust()
+                }
+            //없으면 "카드 형식" 사용
+            } else {
+                setCardinfoForm_list()
+            }
+            //보기 형식 버튼 클릭
+            $("#header_cardinfo_list").onclick = () => {
+                setCardinfoForm_list()
+            }
+            //보기 형식 버튼 클릭
+            $("#header_cardinfo_illust").onclick = () => {
+                setCardinfoForm_illust()
+            }
 
             //==================
             //※ 필터 구성
@@ -1214,14 +1296,32 @@ async function window_shift(keyword, keyword2, keyword3) {
             card_search()
 
             //==================
-            //※ 카드정보 구성
+            //※ 카드정보 구성 - 일러스트
+            //==================
+            $("#main_collection_illust").onclick = () => {
+                nativeToast({
+                    message: '카드 일러스트 - 세부정보 보기 기능은 현재 개발중입니다.',
+                    position: 'center',
+                    timeout: 2000,
+                    type: 'error',
+                    closeOnClick: 'true'
+                })
+            }
+
+            //==================
+            //※ 관련 카드 보기 - 일러스트
+            //==================
+
+
+            //==================
+            //※ 카드정보 구성 - 리스트
             //==================
             //카드정보 노드 설치
             cardinfo_cardSetup("main_cardinfo")
 
             //카드 보기 상호작용
             clearAllEvent()//이전 등록된 이벤트 제거
-            eventObj.collection_list_content.click = function(e) {
+            eventObj.collection_list_result_content.click = function(e) {
                 e = e || event
                 let target = e.target || e.srcElement
                 if (target.classList.contains("card")) {
@@ -1263,14 +1363,14 @@ async function window_shift(keyword, keyword2, keyword3) {
                         $("#button_related").onclick = ""
                     }
                 }}
-                    $("#collection_list_content").addEventListener("click",eventObj.collection_list_content.click)
-            eventObj.collection_list_content.scroll = function(e) {
+                    $("#collection_list_result_content").addEventListener("click",eventObj.collection_list_result_content.click)
+            eventObj.collection_list_result_content.scroll = function(e) {
                 e = e || event
                 e.preventDefault()}
-                    $("#collection_list_content").addEventListener("scroll",eventObj.collection_list_content.scroll)
+                    $("#collection_list_result_content").addEventListener("scroll",eventObj.collection_list_result_content.scroll)
 
             //==================
-            //※ 관련 카드 보기
+            //※ 관련 카드 보기 - 리스트
             //==================
             //관련 카드 보기 초기화
             $("#related_count").innerHTML = "없음"
@@ -1293,7 +1393,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             //화면 출력
             window_clear()
             $("#header_search").classList.add("show")
-            $("#main_collection").classList.add("show")
+            $("#main_collection_list").classList.add("show")
             $("#main_deck").classList.add("show")
             $("#footer_deckbuilding").classList.add("show")
             $("#main_deckchart").classList.add("show")
@@ -1398,46 +1498,46 @@ async function window_shift(keyword, keyword2, keyword3) {
 
             //카드 목록 상호작용
             clearAllEvent()//이전 등록된 이벤트 제거
-            eventObj.collection_list_content.mouseover = function(e) {
+            eventObj.collection_list_result_content.mouseover = function(e) {
                 interact_infoMonitor(e)}
-                    $("#collection_list_content").addEventListener("mouseover",eventObj.collection_list_content.mouseover)
-            eventObj.collection_list_content.mousedown = function(e) {
+                    $("#collection_list_result_content").addEventListener("mouseover",eventObj.collection_list_result_content.mouseover)
+            eventObj.collection_list_result_content.mousedown = function(e) {
                 interact_infoCoverWait(e, true)
                 return false}
-                    $("#collection_list_content").addEventListener("mousedown",eventObj.collection_list_content.mousedown)
-            eventObj.collection_list_content.mouseout = function(e) {
+                    $("#collection_list_result_content").addEventListener("mousedown",eventObj.collection_list_result_content.mousedown)
+            eventObj.collection_list_result_content.mouseout = function(e) {
                 interact_stopAuto(e)
                 return false}
-                    $("#collection_list_content").addEventListener("mouseout",eventObj.collection_list_content.mouseout)
-            eventObj.collection_list_content.mouseup = function(e) {
+                    $("#collection_list_result_content").addEventListener("mouseout",eventObj.collection_list_result_content.mouseout)
+            eventObj.collection_list_result_content.mouseup = function(e) {
                 interact_addCard(e, true)
                 return false}
-                    $("#collection_list_content").addEventListener("mouseup",eventObj.collection_list_content.mouseup)
-            eventObj.collection_list_content.contextmenu = function(e) {
+                    $("#collection_list_result_content").addEventListener("mouseup",eventObj.collection_list_result_content.mouseup)
+            eventObj.collection_list_result_content.contextmenu = function(e) {
                 interact_infoCoverNow(e)
                 e.preventDefault()
                 return false}
-                    $("#collection_list_content").addEventListener("contextmenu",eventObj.collection_list_content.contextmenu)
+                    $("#collection_list_result_content").addEventListener("contextmenu",eventObj.collection_list_result_content.contextmenu)
                 //터치 기반
-                eventObj.collection_list_content.touchstart = function(e) {
+                eventObj.collection_list_result_content.touchstart = function(e) {
                     interact_infoCoverWait(e)}
-                        $("#collection_list_content").addEventListener("touchstart",eventObj.collection_list_content.touchstart)
-                eventObj.collection_list_content.touchcancel = function(e) {
+                        $("#collection_list_result_content").addEventListener("touchstart",eventObj.collection_list_result_content.touchstart)
+                eventObj.collection_list_result_content.touchcancel = function(e) {
                     interact_stopAuto(e)
                     return false}
-                        $("#collection_list_content").addEventListener("touchcancel",eventObj.collection_list_content.touchcancel)
-                eventObj.collection_list_content.touchmove = function(e) {
+                        $("#collection_list_result_content").addEventListener("touchcancel",eventObj.collection_list_result_content.touchcancel)
+                eventObj.collection_list_result_content.touchmove = function(e) {
                     interact_stopAuto(e)
                     return false}
-                        $("#collection_list_content").addEventListener("touchmove",eventObj.collection_list_content.touchmove)
-                eventObj.collection_list.scroll = function(e) {
+                        $("#collection_list_result_content").addEventListener("touchmove",eventObj.collection_list_result_content.touchmove)
+                eventObj.collection_list_result.scroll = function(e) {
                     interact_stopAuto(e)
                     return false}
-                        $("#collection_list").addEventListener("scroll",eventObj.collection_list.scroll)
-                eventObj.collection_list_content.touchend = function(e) {
+                        $("#collection_list").addEventListener("scroll",eventObj.collection_list_result.scroll)
+                eventObj.collection_list_result_content.touchend = function(e) {
                     interact_addCard(e)
                     return false}
-                        $("#collection_list_content").addEventListener("touchend",eventObj.collection_list_content.touchend)
+                        $("#collection_list_result_content").addEventListener("touchend",eventObj.collection_list_result_content.touchend)
             //덱 목록 상호작용
             eventObj.deck_list_content.mouseover = function(e) {
                 interact_infoMonitor(e)}

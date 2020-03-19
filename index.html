@@ -34,7 +34,6 @@
             <header id="frame_header">
                 <div id="header_top">
 					<button id="header_back" class="header_button_left" aria-label="BACK">
-						<img src="./images/icon_back.png" alt="BACK">
 					</button>
 					<div id="header_save" aria-label="save">
 						<span id="header_save_text">저장</span>
@@ -46,6 +45,10 @@
 					</button>
 					<button id="header_sort" class="header_button_right disabled" aria-label="정렬">
 						<p>정렬</p>
+					</button>
+					<button id="header_cardinfo_list" class="header_button_right" aria-label="이미지 보기">
+					</button>
+					<button id="header_cardinfo_illust" class="header_button_right" aria-label="카드 보기">
 					</button>
 				</div>
 				<div id="header_bottom">
@@ -143,13 +146,23 @@
                     <div id="main_loading_title" class="main_title">카드정보 불러오는 중</div>
 				</div>
 
-				<!--카드 목록-->
-				<div id="main_collection" class="mainscreen main_left">
-					<div id="collection_loading">
+				<!--카드 목록 - 리스트-->
+				<div id="main_collection_list" class="mainscreen main_left">
+					<div id="collection_list_loading">
 						<img class="loading_mark" src="./images/loading_white.svg" alt="로딩 이미지">
 					</div>
-					<div id="collection_list" class="clusterize-scroll">
-						<div id="collection_list_content" class="clusterize-content"></div>
+					<div id="collection_list_result" class="clusterize-scroll">
+						<div id="collection_list_result_content" class="clusterize-content"></div>
+					</div>
+				</div>
+
+				<!--카드 목록 - 일러스트-->
+				<div id="main_collection_illust" class="mainscreen main_both">
+					<div id="collection_illust_loading">
+						<img class="loading_mark" src="./images/loading_white.svg" alt="로딩 이미지">
+					</div>
+					<div id="collection_illust_result" class="clusterize-scroll">
+						<div id="collection_illust_result_content" class="clusterize-content"></div>
 					</div>
 				</div>
 

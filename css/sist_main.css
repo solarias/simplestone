@@ -134,9 +134,17 @@ body {
                 height:32px;
             }
             #header_back{
-                left:5px;top:5px;
+                left:10px;top:5px;
                 display:none;
-                width:60px;}
+                width:40px;
+
+                background-color:transparent;
+                background-image:url(../images/icon_back.png);
+                    background-repeat:no-repeat;
+                    background-position:50% 50%;
+                    background-size:40px 32px;
+                border:0;
+            }
                 #header_back.show {display:block;}
             #header_save {
                 position:absolute;
@@ -185,7 +193,7 @@ body {
                 z-index:2;
                 display:none;
 
-                padding:0 5px;
+                padding:0 3px;
                 width:80px;
                 height:40px;
 
@@ -206,25 +214,33 @@ body {
                 pointer-events: auto;
             }
                     .header_button_right.show {
-                        display:block;}
+                        display:flex;
+                        align-content: center;
+                    }
                     #header_sort.disabled {
                         background-image:url(../images/icon_sort_disabled.png);
                         border:gray;
                         color:gray;
                         pointer-events: none;
                     }
+            #header_info {
+                background-color:transparent;
+                border:0;
+            }
                 #header_info img {
+                    margin: 0 2px 0 0;
                     float:left;
-                    width:25px;
-                    height:25px;
+                    width:36px;
+                    height:36px;
                 }
                 #header_info p {
                     float:right;
                     width:30px;
                     height:30px;
 
-                    font-size:15px;
-                    line-height:15px;
+                    font-size:16px;
+                    font-weight:bold;
+                    line-height:18px;
                 }
                 #header_sort p {
                     float:right;
@@ -239,6 +255,44 @@ body {
             }
             .header_button:active {
                 background-color:rgba(255,255,255,0.8);
+            }
+        #header_cardinfo_list {
+            display:none;
+            right:10px;
+            width:40px;
+            height:40px;
+
+            background-color:transparent;
+            background-image:url(../images/icon_list.png);
+                background-repeat:no-repeat;
+                background-position:50% 50%;
+                background-size:40px 40px;
+            border:0;
+        }
+            #header_cardinfo_list.show {
+                display:block;
+            }
+            #header_cardinfo_list.selected {
+                background-image:url(../images/icon_list_selected.png);
+            }
+        #header_cardinfo_illust {
+            display:none;
+            right:65px;
+            width:40px;
+            height:40px;
+
+            background-color:transparent;
+            background-image:url(../images/icon_illust.png);
+                background-repeat:no-repeat;
+                background-position:50% 50%;
+                background-size:40px 40px;
+            border:0;
+        }
+            #header_cardinfo_illust.show {
+                display:block;
+            }
+            #header_cardinfo_illust.selected {
+                background-image:url(../images/icon_illust_selected.png);
             }
     #header_bottom {
         position:relative;
@@ -796,7 +850,7 @@ body {
 
             margin:5px auto 0 auto;
             padding:10px;
-            width:calc(100% - 200px);
+            width:calc(100% - 100px);
                 min-width:260px;
             height:calc(100% - 10px - 90px - 180px);
 
@@ -822,7 +876,7 @@ body {
 
             margin:5px auto 0 auto;
             padding:10px;
-            width:calc(100% - 200px);
+            width:calc(100% - 100px);
                 min-width:260px;
             height:120px;
 
@@ -915,7 +969,7 @@ body {
 
             margin:10px auto 0 auto;
             padding:10px;
-            width:calc(100% - 200px);
+            width:calc(100% - 100px);
                 min-width:260px;
             height:calc(100% - 150px);
 
@@ -1361,13 +1415,16 @@ body {
     /*=====================================================*/
     /* 카드 목록 */
     /*=====================================================*/
-    #main_collection {
-        position:relative;
+    #main_collection_list, #main_collection_illust {
+        position:absolute;
     }
-            #main_collection.below_chart {height:calc(100% - 130px);}
-            #main_collection.below_footer {height:calc(100% - 50px);}
-            #main_collection.below_none {height:calc(100%);}
-        #collection_loading {
+            #main_collection_list.below_chart {height:calc(100% - 130px);}
+                #main_collection_list.below_footer {height:calc(100% - 50px);}
+                #main_collection_list.below_none {height:calc(100%);}
+            #main_collection_illust.below_chart {height:calc(100% - 130px);}
+                #main_collection_illust.below_footer {height:calc(100% - 50px);}
+                #main_collection_illust.below_none {height:calc(100%);}
+        #collection_list_loading, #collection_illust_loading {
             position:absolute;
                 left:0;top:0;
             z-index:2;
@@ -1378,7 +1435,7 @@ body {
             background-color:rgba(0,0,0,0.5);
             box-sizing: border-box;
         }
-        #collection_list {
+        #collection_list_result, #collection_illust_result {
             position:relative;
             overflow-y:scroll;
 
@@ -1387,10 +1444,20 @@ body {
 
             background-color:#E7D099;
         }
-        #collection_list_content {
+        #collection_list_result_content {
             position:relative;
 
             padding:10px 5px;
+            width:100%;
+            height:100%;
+
+            box-sizing: border-box;
+            word-break: keep-all;
+        }
+        #collection_illust_result_content {
+            position:relative;
+
+            padding:0;
             width:100%;
             height:100%;
 
@@ -2613,7 +2680,7 @@ body {
         #deckbuilding_chart, #deckconfig_chart {
             display:none;
         }
-        #main_collection, #main_deck, #main_deckconfig {
+        #main_collection_list, #main_collection_illust, #main_deck, #main_deckconfig {
             height:calc(100% - 50px) !important;
         }
     }
@@ -2783,17 +2850,17 @@ body {
 }
 
 ::-webkit-scrollbar:vertical {
-    width: 12px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar:horizontal {
-    height: 12px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: gold;
-    border-radius: 5px;
-    border: 2px gold outset;
+    border-radius: 2px;
+    border: 1px gold outset;
 }
 
 ::-webkit-scrollbar-track {

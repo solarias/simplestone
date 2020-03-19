@@ -18,6 +18,27 @@
     background-color:#BF168E;
 }
 
+/*공용 - 카드_일러스트*/
+.collection_illust_row {
+    position:relative;
+    width:100%;
+    height:169px;
+}
+.collection_illust_row .card_illust {
+    position:relative;
+    float:left;
+    overflow:hidden;
+
+    width:116px;
+    height:169px;
+
+    background-repeat:no-repeat;
+    background-position:right 0%;
+    background-size:contain;
+
+    cursor:pointer;
+}
+
 /*공용 - 카드*/
 .card {
     position:relative;

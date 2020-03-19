@@ -678,11 +678,13 @@ function card_getSearchResult(className) {
 //카드 검색
 function card_search(action) {
     //로딩 이미지 출력
-    $("#collection_loading").style.display = "block";
+    $("#collection_list_loading").style.display = "block";
+    $("#collection_illust_loading").style.display = "block";
 
     setTimeout(function() {
         //0) 로딩 이미지 닫기
-        $("#collection_loading").style.display = "none";
+        $("#collection_list_loading").style.display = "none";
+        $("#collection_illust_loading").style.display = "none";
     },10);
 
     //검색 결과물 준비
@@ -758,6 +760,11 @@ function card_showResult(arr) {
     process.search.result = arr
         //전체 직업 카드 목록 저장(필터링용)
         process.search.allClassResult = card_getSearchResult("all")
-    //카드 목록에 따라 노드 불러오기
-    cluster_update("collection",false)
+    //카드 리스트에 노드 불러오기
+    cluster_update("collection_list",false)
+    //IF 카드 정보 : 카드 일러스트에 노드 불러오기 (화면 전환을 위해 동시에 구성)
+    if (process.state === "cardinfo") {
+        cluster_update("collection_illust",false)
+    }
+
 }

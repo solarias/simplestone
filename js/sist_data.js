@@ -23,7 +23,8 @@ let session = {
         mana_monitor:undefined,//차트 - 마나커브
         type:undefined,//차트 - 타입
         type_monitor:undefined//차트 - 타입
-    }
+    },
+    setting:undefined//심플스톤 각종 설정
 };
 let isError = {}//에러 발생 시 1회에 한해 출력
 //const TILEURL = "https://art.hearthstonejson.com/v1/tiles/";//HearthstoneJSON에서 이미지 가져오기
@@ -58,8 +59,10 @@ let cardReady = 0;//이 값이 1인 상태에서만 카드 추가 가능
 const AUTOINFOTIME = 500;//카드 정보를 보기 위해 누르는 시간: 0.5초
 //이벤트 관리
 let eventObj = {
-    "collection_list_content":{},
-    "collection_list":{},
+    "collection_list_result_content":{},
+    "collection_list_result":{},
+    "collection_illust_result_content":{},
+    "collection_illust":{},
     "deck_list_content":{},
     "deck_list":{}
 };
