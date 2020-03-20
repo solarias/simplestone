@@ -415,34 +415,36 @@ function cluster_update(position, latest, updateCollection) {
                 if (i === arr.length - 1) {
                     rowText += rowEnd
                     nodearr.push(rowText)
-                } else if (pWidth < 480) {
+                //420 미만 : 3줄(가로 140 미만)
+                } else if (pWidth < 426 + 5) {
                     if ((i+1) % 3 === 0) {
                         rowText += rowEnd
                         nodearr.push(rowText)
                         if (i < arr.length - 1) rowText = rowStart
                     }
-                //540 이상 : 4줄(116px)
-                } else if (pWidth < 600) {
+                //420 이상 : 3줄(140*204)
+                } else if (pWidth < 420 + 5) {
+                    if ((i+1) % 3 === 0) {
+                        rowText += rowEnd
+                        nodearr.push(rowText)
+                        if (i < arr.length - 1) rowText = rowStart
+                    }
+                //560 이상 : 4줄(140*204)
+                } else if (pWidth < 560 + 5) {
                     if ((i+1) % 4 === 0) {
                         rowText += rowEnd
                         nodearr.push(rowText)
                         if (i < arr.length - 1) rowText = rowStart
                     }
-                //600 이상 : 5줄(116px)
-                } else if (pWidth < 720) {
+                //700 이상 : 5줄(140*204)
+                } else if (pWidth >= 710 + 5) {
                     if ((i+1) % 5 === 0) {
                         rowText += rowEnd
                         nodearr.push(rowText)
                         if (i < arr.length - 1) rowText = rowStart
                     }
-                //720 이상 : 6줄(116px 이상)
-                } else if (pWidth >= 720) {
-                    if ((i+1) % 6 === 0) {
-                        rowText += rowEnd
-                        nodearr.push(rowText)
-                        if (i < arr.length - 1) rowText = rowStart
-                    }
                 }
+                //790 : 최대치
             })
 
             //클러스터 업데이트
@@ -1204,7 +1206,7 @@ document.addEventListener("DOMContentLoaded", async function(e) {
             tag: 'div',
             scrollId: 'collection_illust_result',
             contentId: 'collection_illust_result_content',
-            rows_in_block:14,
+            rows_in_block:8,
             no_data_text: '해당 직업 검색결과 없음',
             no_data_class: 'clusterize-no-data'
         })

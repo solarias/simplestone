@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "9f4c28427c0edf2cd074155c8873ee98"
+    "revision": "f2c09e2fdec115eda0c2b92d67efa3ab"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "ecaa27983558d3e29e29434fd78a730e"
+    "revision": "c49586e56e250b8f0340c030700a9777"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -79,7 +79,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "b1bcb2fff83f1efe048a9b48386b6893"
+    "revision": "584827ec55dd3952da26349a1a161aad"
   },
   {
     "url": "js/sist_window.js",
