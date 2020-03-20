@@ -2710,7 +2710,7 @@ let interact_addCard = function(e, ismouse) {
         }
     }
 }
-let interact_removeCard = function(e, ismouse) {
+let interact_removeCard = (e, ismouse) => {
     e = e || event;
         if (ismouse === true && e.button !== 0) return false;//우클릭 배제
     let target = e.target || e.srcElement;

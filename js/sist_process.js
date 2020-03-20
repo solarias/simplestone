@@ -462,7 +462,7 @@ function cluster_update(position, latest, updateCollection) {
             process.deck.unusable = 0
             //클러스터 입력정보 준비
             arr.forEach(function(x) {
-                nodearr.push(card_addFragment("deck",x[0],x[1],false,latest))
+                nodearr.push(card_addFragment("deck",parseInt(x[0]),x[1],false,latest))
             })
             //클러스터 업데이트
             clusterize.deck.update(nodearr)
