@@ -763,7 +763,7 @@ function card_showResult(arr) {
     //카드 리스트에 노드 불러오기
     cluster_update("collection_list",false)
     //IF 카드 정보 : 카드 일러스트에 노드 불러오기 (화면 전환을 위해 동시에 구성)
-    if (process.state === "cardinfo") {
+    if (process.state === "cardinfo" && session.setting.cardinfo_form === "illust") {
         cluster_update("collection_illust",false)
     }
 

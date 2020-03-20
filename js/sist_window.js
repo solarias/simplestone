@@ -1232,6 +1232,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //버튼 변경
                 $("#header_cardinfo_list").classList.add("selected")
                 $("#header_cardinfo_illust").classList.remove("selected")
+
+                //카드 재검색
+                cluster_update("collection_list",false)
             }
             //보기 형식 세팅 - 카드
             let setCardinfoForm_illust = async () => {
@@ -1258,6 +1261,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                 //버튼 변경
                 $("#header_cardinfo_illust").classList.add("selected")
                 $("#header_cardinfo_list").classList.remove("selected")
+
+                //카드 재검색
+                cluster_update("collection_illust",false)
             }
 
         //2. 보기 형식 적용
@@ -1533,7 +1539,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 eventObj.collection_list_result.scroll = function(e) {
                     interact_stopAuto(e)
                     return false}
-                        $("#collection_list").addEventListener("scroll",eventObj.collection_list_result.scroll)
+                        $("#collection_list_result").addEventListener("scroll",eventObj.collection_list_result.scroll)
                 eventObj.collection_list_result_content.touchend = function(e) {
                     interact_addCard(e)
                     return false}
