@@ -380,10 +380,13 @@ async function window_shift(keyword, keyword2, keyword3) {
                         let set = temp_metadata.sets[i]
                         let count = 0
                         temp_db.forEach(card => {
+                            console.log(card)
                             if (card.cardSetId === set.id) {
                                 count += 1
                             }
                         })
+                        console.log(set)
+                        console.log(count)
                         if (count === 0) {
                             temp_metadata.sets.splice(i,1);
                         }
@@ -480,8 +483,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 card.class.slug = "NEUTRAL"
                                 card.class.name = "중립"
                             }
-                            //classId - 삭제하지 않음 (메타데이터 업데이트 시 세트 확인용으로 필요)
-                            //delete card.classId
                         //1-2. multiClass (다중직업 정보 - "slug"만 입력)
                             card.multiClass = []
                             if (card.multiClassIds !== undefined) {
@@ -496,8 +497,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                                         }
                                     })
                                 }
-                                //multiClassIds 삭제 (활용하지 않음)
-                                delete card.multiClassIds
                             }
                         //1-3. set (세트 정보)
                             card.cardSet = {}
@@ -512,8 +511,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 card.cardSet.slug = "ETC"
                                 card.cardSet.name = "알 수 없는 세트(세트 ID : " + card.cardSetId + ")"
                             }
-                            //setId 삭제 (활용하지 않음)
-                            delete card.cardSetId
                         //1-4. cardType (카드 종류 정보)
                             card.cardType = {}
                             let thisCardType = temp_metadata.types.find(x => x.id === card.cardTypeId)
@@ -526,8 +523,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 card.cardType.slug = "ETC"
                                 card.cardType.name = "기타"
                             }
-                            //cardTypeId 삭제 (활용하지 않음)
-                            delete card.cardTypeId
                         //1-5. rarity (등급 정보)
                             card.rarity = {}
                             let thisRarity = temp_metadata.rarities.find(x => x.id === card.rarityId)
@@ -542,8 +537,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 card.rarity.name = "등급 없음"
                                 card.rarity.dust = 0
                             }
-                            //rarityId 삭제 (활용하지 않음)
-                            delete card.rarityId
                         //1-6. minionType (하수인 종류 정보) - 있는 경우에만
                             if (card.minionTypeId !== undefined) {
                                 card.minionType = {}
@@ -557,13 +550,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                     card.minionType.slug = "ETC"
                                     card.minionType.name = "종족 불명"
                                 }
-                                //minionTypeId 삭제 (활용하지 않음)
-                                delete card.minionTypeId
                             }
                         //1-7. cost (비용 - dataset에서 대문자 활용 문제)
                             card.cost = card.manaCost
-                            //manaCost 삭제 (활용하지 않음)
-                            delete card.manaCost
                         //1-8. 활용하지 않는 속성 삭제
                             if (card.slug !== undefined) delete card.slug
                             if (card.imageGold !== undefined) delete card.imageGold

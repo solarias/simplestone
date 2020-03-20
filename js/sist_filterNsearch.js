@@ -138,6 +138,7 @@ function card_cardSetFilter(cmd) {
             if (process.state === "cardinfo") {
                 //직업을 분석하여 버튼 추가 준비
                 let htmlText = ''+
+                '<button id="popup_class_all" class="popup_button full" data-class="all">모든 직업</button>' +
                 '$classBtns' +
                 '<button id="popup_class_NEUTRAL" class="popup_button full" data-class="NEUTRAL">중립</button>'
                 let btnText = ""
@@ -197,7 +198,12 @@ function card_cardSetFilter(cmd) {
                                 let classtext = x.dataset.class
                                 process.search.class = classtext
                                 //키워드 변경
-                                let krtext = session.classInfo[classtext].name
+                                let krtext = ""
+                                if (classtext === "all") {
+                                    krtext = "모든 직업"
+                                } else {
+                                    krtext = session.classInfo[classtext].name
+                                }
                                 $("#search_class").innerHTML = krtext
                                 //창 닫기
                                 swal.close()
