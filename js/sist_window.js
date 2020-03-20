@@ -380,13 +380,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         let set = temp_metadata.sets[i]
                         let count = 0
                         temp_db.forEach(card => {
-                            console.log(card)
                             if (card.cardSetId === set.id) {
                                 count += 1
                             }
                         })
-                        console.log(set)
-                        console.log(count)
                         if (count === 0) {
                             temp_metadata.sets.splice(i,1);
                         }
