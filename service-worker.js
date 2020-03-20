@@ -79,7 +79,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "787b6951d00c9cc2921e25d9eddfc828"
+    "revision": "b1bcb2fff83f1efe048a9b48386b6893"
   },
   {
     "url": "js/sist_window.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "7c2dc795bd6207b7d6117b8529da0c20"
+    "revision": "9977a5a033a03437454bdd22fc425cbc"
   },
   {
     "url": "package/Chart.min.js",

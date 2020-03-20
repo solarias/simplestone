@@ -246,7 +246,7 @@ function card_move(cmd, log) {
                         //1) 카드정보 변경
                         for (let i = 0;i < process.deck.cards.length;i++) {
                             let card = process.deck.cards[i]
-                            if (card[0] === id) {
+                            if (parseInt(card[0]) === id) {
                                 card[1] += 1
                                 break
                             }
@@ -264,6 +264,7 @@ function card_move(cmd, log) {
             break
         //카드 제거
         case "remove":
+            console.log(cmd)
             //로그 기록(제거는 예외사항 없으니 바로 실시)
             if (log === true) log_record(cmd)
             //카드 분류
@@ -275,7 +276,7 @@ function card_move(cmd, log) {
                 let quantity = card_getQuantity(id)
                 for (let i = 0;i < process.deck.cards.length;i++) {
                     let card = process.deck.cards[i]
-                    if (card[0] === id) {
+                    if (parseInt(card[0]) === id) {
                         //수량이 2 이상이면 수량 감소
                         if (card[1] >= 2) {
                             //수량 감소
@@ -290,6 +291,7 @@ function card_move(cmd, log) {
                 }
             })
             //카드 목록에 따라 노드 불러오기
+            console.log(deckarr)
             cluster_update("deck",deckarr)
             setChart("update")
 
