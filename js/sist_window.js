@@ -1229,6 +1229,7 @@ async function window_shift(keyword, keyword2, keyword3) {
 
                 //카드 재검색
                 cluster_update("collection_list",false)
+                $("#collection_list_result").scrollTop = 0
             }
             //보기 형식 세팅 - 카드
             let setCardinfoForm_illust = async () => {
@@ -1258,6 +1259,7 @@ async function window_shift(keyword, keyword2, keyword3) {
 
                 //카드 재검색
                 cluster_update("collection_illust",false)
+                $("#collection_illust_result").scrollTop = 0
             }
 
         //2. 보기 형식 적용
