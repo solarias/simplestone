@@ -183,7 +183,7 @@
         max-width:310px;
     height:565px;
 
-    background:rgba(0,0,0,0.5);
+    background:rgba(0,0,0,0.3);
     border-radius:10px;
     box-sizing: border-box;
     transform-origin:0% 0%;
@@ -234,8 +234,6 @@
 
         width:100%;
         height:400px;
-
-        background-color:black;
     }
         .cardinfo.illust.show {
             display:block;

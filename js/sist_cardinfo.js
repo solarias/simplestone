@@ -142,9 +142,7 @@ function cardinfo_show(id, order, info) {
         $$(".illustImage",site)[order].style.backgroundImage = ""
         let image = new Image()
         //일러스트 불러온 후 세부 정보를 숨기고 일러스트 표시
-        image.onload = () => {
-            $$(".illustImage",site)[order].style.backgroundImage = "url(" + image.src + ")"
-        }
+        image.onload = () => {}
         //일러스트를 불러올 수 없으면 세부 정보만 표시
         image.onerror = () => {
             $$(".illust",site)[order].classList.remove("show");
@@ -158,6 +156,7 @@ function cardinfo_show(id, order, info) {
                 */
         }
         image.src = info.image
+        $$(".illustImage",site)[order].style.backgroundImage = "url(" + image.src + ")"
         $$(".illust",site)[order].classList.add("show")
         $$(".cardcase",site)[order].classList.remove("show")
     }
