@@ -80,6 +80,12 @@ function cardinfo_cardSetScale(node, showflavor) {
     let scaleH = (h / 460).toString()
     let scaleW = (w / 260).toString()
     if (w >= 260) {
+        node.style.transform = ""
+    } else {
+        node.style.transform = "scale(" + scaleW + ")"
+    }
+    /*
+    if (w >= 260) {
         if (h >= 565) {
             //node.classList.remove("simple")
             node.style.transform = ""
@@ -102,6 +108,7 @@ function cardinfo_cardSetScale(node, showflavor) {
             node.style.transform = "scale(" + scaleH + ")"
         }
     }
+    */
     if (showflavor === false) {
         node.classList.add("simple")
     } else if (showflavor === "simplest") {

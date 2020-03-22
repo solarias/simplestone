@@ -69,7 +69,7 @@ body {
 
     margin:0 auto;
     width:100%;
-        max-width:800px;
+        max-width:900px;
     height:100%;
         min-height:550px;
         max-height:2000px;
@@ -2432,7 +2432,7 @@ body {
     width:100%;
     height:100%;
 
-    background:rgba(0,0,0,0.7);
+    background:rgba(0,0,0,0.8);
 }
         #frame_related.show {
             display:block;
@@ -2458,24 +2458,56 @@ body {
         text-align: center;
         pointer-events: none;
     }
-        #related_top_name {
-            font-size:inherit;
-        }
     #related_middle {
         position:absolute;
             left:0;top:50px;
-        overflow-y:scroll;
+        overflow-y:none;
 
-        padding:20px;
         width:100%;
         height:calc(100% - 100px);
 
         box-sizing: border-box;
         text-align:center;
     }
+            #related_middle.list {
+                display:block;
+            }
+            #related_middle.illust {
+                display:flex;
+                    justify-content: center;
+            }
         #related_middle .cardinfo.wrapper {
             margin-top:10px;
         }
+        #related_middle_right .cardinfo.wrapper {
+            margin-top:20px;
+        }
+        .related_middle_column {
+            position:relative;
+            width:300px;
+            height:100%;
+            overflow-y:auto;
+        }
+            #related_middle_left {
+                margin-right:20px
+            }
+            .related_middle_column_content {
+                color:white;
+                font-size:20px;
+                line-height:50px;
+                text-align: center;
+            }
+    @media (max-width: 619px) {
+        #related_middle.list, #related_middle.illust {
+            display:block;
+            overflow-y:auto;
+        }
+        .related_middle_column {
+            width:100%;
+            height:auto;
+            overflow-y:none;
+        }
+    }
     #related_bottom {
         position:absolute;
             left:0;bottom:0;
@@ -2614,7 +2646,7 @@ body {
 /*=====================================================*/
 #frame_cardmonitor {
     position:absolute;
-        left:calc((100vw - 800px) / 2 - 260px);top:90px;
+        left:calc((100vw - 900px) / 2 - 260px);top:90px;
     overflow:hidden;
     display:none;
 
@@ -2631,7 +2663,7 @@ body {
     @media (max-width: 1320px) {
         #frame_cardmonitor {
             left:0;
-            width:calc((100vw - 800px) / 2);
+            width:calc((100vw - 900px) / 2);
         }
     }
     @media (max-width: 1120px) {
@@ -2642,7 +2674,7 @@ body {
 /*=====================================================*/
 #frame_deckchartmonitor {
     position:absolute;
-        right:calc((100vw - 800px) / 2 - 260px);top:90px;
+        right:calc((100vw - 900px) / 2 - 260px);top:90px;
     overflow:hidden;
     display:none;
 
@@ -2680,7 +2712,7 @@ body {
         #deckbuilding_chart, #deckconfig_chart {
             display:none;
         }
-        #main_collection_list, #main_collection_illust, #main_deck, #main_deckconfig {
+        #main_collection_list, #main_deck, #main_deckconfig {
             height:calc(100% - 50px) !important;
         }
     }
@@ -2850,11 +2882,11 @@ body {
 }
 
 ::-webkit-scrollbar:vertical {
-    width: 5px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar:horizontal {
-    height: 5px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "css/sist_cardNinfo.css",
-    "revision": "f2c09e2fdec115eda0c2b92d67efa3ab"
+    "revision": "ad2c74e2f62e1211a169fe33a1d4a27b"
   },
   {
     "url": "css/sist_main.css",
-    "revision": "c49586e56e250b8f0340c030700a9777"
+    "revision": "96b2f771aa0f2323a69ded4f2b3342fb"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "6fc70ba37fbf4b1af18a19b038bad980"
+    "revision": "dc393c021f36c18f368ead3ff61f21ce"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -59,7 +59,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_cardinfo.js",
-    "revision": "d67962ea0e0cfa6c57bae200ebc31cde"
+    "revision": "f2ef9fd121c9269ad636d25c56099fb9"
   },
   {
     "url": "js/sist_data.js",
@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "584827ec55dd3952da26349a1a161aad"
+    "revision": "7b2dfdac096bfedfa75722028bcf8ecf"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "9a0d41111577b6bea1403dc21aa52876"
+    "revision": "619b107c1a3e95abd0039aeb6e0e6caa"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "15d1dac27d76cfe9c2ec1cc29e6ff378"
+    "revision": "fd3550ddefbfd3d033716a89ee4999f7"
   },
   {
     "url": "package/Chart.min.js",

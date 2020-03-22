@@ -67,13 +67,12 @@ function cardIllust_generateMaster() {
     return elm_card.outerHTML
 }
 //카드_일러스트 개별 요소 생성
-function cardIllust_generateFragment(id) {
+function cardIllust_generateFragment(info) {
     //마스터 노드 복사
     let fragment = session.masterNodeIllust
     //아이디 설정
-    fragment = fragment.replaceAll("$id",id.toString())
+    fragment = fragment.replaceAll("$id",info.id.toString())
     //이미지 설정: 카드 일러스트
-    let info = session.db[session.dbIndex[id.toString()]]
     fragment = fragment.replace("$url",info.image)
     //반환
     return fragment
@@ -398,53 +397,45 @@ function cluster_update(position, latest, updateCollection) {
             let rowText = ""
             let rowStart = "<div class='collection_illust_row'>",
                 rowEnd = "</div>"
-
-
-
-            //=====================================================
-            //화면 크기에 따라 row, card_illust 크기를 "강제로" 적용
-            //======================================================
-
-
-
             //348 미만 : 3줄(116px 미만)
             //540 미만 : 3줄(116px)
             rowText += rowStart
             arr.forEach((x, i) => {
-                rowText += cardIllust_generateFragment(x)
+                rowText += session.illustFragment[session.dbIndex[x.toString()]]
                 if (i === arr.length - 1) {
                     rowText += rowEnd
                     nodearr.push(rowText)
-                //420 미만 : 3줄(가로 140 미만)
-                } else if (pWidth < 426 + 5) {
+
+                //340 미만 : 2줄(가로 170 미만, 자동 조정)
+                //340 ~ 510 : 2줄(가로 170)
+                } else if (pWidth < 510 + 5) {
+                    if ((i+1) % 2 === 0) {
+                        rowText += rowEnd
+                        nodearr.push(rowText)
+                        if (i < arr.length - 1) rowText = rowStart
+                    }
+                //510 ~ 680 : 3줄(가로 170)
+                } else if (pWidth < 680 + 6) {
                     if ((i+1) % 3 === 0) {
                         rowText += rowEnd
                         nodearr.push(rowText)
                         if (i < arr.length - 1) rowText = rowStart
                     }
-                //420 이상 : 3줄(140*204)
-                } else if (pWidth < 420 + 5) {
-                    if ((i+1) % 3 === 0) {
-                        rowText += rowEnd
-                        nodearr.push(rowText)
-                        if (i < arr.length - 1) rowText = rowStart
-                    }
-                //560 이상 : 4줄(140*204)
-                } else if (pWidth < 560 + 5) {
+                //680 ~ 850 : 4줄(가로 170)
+                } else if (pWidth < 850 + 6) {
                     if ((i+1) % 4 === 0) {
                         rowText += rowEnd
                         nodearr.push(rowText)
                         if (i < arr.length - 1) rowText = rowStart
                     }
-                //700 이상 : 5줄(140*204)
-                } else if (pWidth >= 710 + 5) {
+                //850 이상 : 5줄(가로 170)
+                } else if (pWidth >= 850 + 6) {
                     if ((i+1) % 5 === 0) {
                         rowText += rowEnd
                         nodearr.push(rowText)
                         if (i < arr.length - 1) rowText = rowStart
                     }
                 }
-                //790 : 최대치
             })
 
             //클러스터 업데이트
@@ -1271,7 +1262,8 @@ document.addEventListener("DOMContentLoaded", async function(e) {
                 return new Promise(async (resolve) => {
                     try {
                         let response = await fetch("./notice.json")
-                        let notice = await response.json()
+                        let noticeJson = await response.json()
+                        let notice = noticeJson.content
                         let noticeFrag = document.createDocumentFragment()
                         for (let i = 0;i < Math.min(30,notice.length);i++) {//공지는 최대 30개만
                             let each = notice[i]

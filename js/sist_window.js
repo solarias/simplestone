@@ -654,6 +654,11 @@ async function window_shift(keyword, keyword2, keyword3) {
             session.db.forEach(function(info, index) {
                 session.fragment[index] = card_generateFragment(info)
             })
+            //카드 일러스트 Fragment 생성
+            session.illustFragment = []
+            session.db.forEach(function(info, index) {
+                session.illustFragment[index] = cardIllust_generateFragment(info)
+            })
         //5. 다음 단계로 진행
             //에러가 1번이라도 발생 시 : "다음으로 진행" 버튼을 눌려야 진행 가능
             if (errorOccured > 0) {
@@ -1189,7 +1194,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             //보기 형식 버튼 표시
             $("#header_cardinfo_list").classList.add("show")
-            $("#header_cardinfo_illust").classList.add("show")
+            //오프라인 모드면 일러스트 모드 사용 금지
+            if (session.offline !== true) {
+                $("#header_cardinfo_illust").classList.add("show")
+            }
 
         //1. 보기 형식 준비
             //보기 형식 세팅 - 리스트
@@ -1254,8 +1262,9 @@ async function window_shift(keyword, keyword2, keyword3) {
 
         //2. 보기 형식 적용
             //이전에 불러온 형식에 따라 보기 형식 결정
-            if (session.setting !== undefined &&
-            session.setting.cardinfo_form !== undefined) {
+            if (session.offline !== true &&
+            (session.setting !== undefined &&
+            session.setting.cardinfo_form !== undefined)) {
                 if (session.setting.cardinfo_form === "list") {
                     setCardinfoForm_list()
                 } else if (session.setting.cardinfo_form === "illust") {
@@ -1288,21 +1297,56 @@ async function window_shift(keyword, keyword2, keyword3) {
             card_search()
 
             //==================
-            //※ 카드정보 구성 - 일러스트
+            //※ 카드정보 구성 - 일러스트 (관련 카드 보기 포함)
             //==================
-            $("#main_collection_illust").onclick = () => {
-                nativeToast({
-                    message: '카드 일러스트 - 세부정보 보기 기능은 현재 개발중입니다.',
-                    position: 'center',
-                    timeout: 2000,
-                    type: 'error',
-                    closeOnClick: 'true'
-                })
-            }
+            $("#main_collection_illust").onclick = (e) => {
+                e = e || event
+                let target = e.target || e.srcElement
+                if (target.classList.contains("card_illust")) {
+                    //카드 정보 출력
+                    let info = session.db[session.dbIndex[target.dataset.id]]
+                    //관련 카드 창 열기
+                    $("#frame_related").classList.add("show")
+                    $("#related_middle").classList.add("illust")
+                    $("#related_middle").classList.remove("list")
+                    //선정 카드 이름 출력
+                    $("#related_top").innerHTML = info.name + " 카드 정보"
+                    //열 추가
+                    let column_left = document.createElement('div#related_middle_left.related_middle_column')
+                    $("#related_middle").appendChild(column_left)
+                    //선정 카드 출력
+                    cardinfo_cardSetup("related_middle_left")
+                    cardinfo_show("related_middle_left",0,info)
+                    //관련 카드 출력
+                    if (info.childIds !== undefined) {
+                        let childs = []
+                        info.childIds.forEach(childId => {
+                            let child = session.db[session.dbIndex[childId]]
+                            childs.push(child)
+                        })
+                        let column_right = document.createElement('div#related_middle_right.related_middle_column')
+                        $("#related_middle").appendChild(column_right)
 
-            //==================
-            //※ 관련 카드 보기 - 일러스트
-            //==================
+                        let column_desc = document.createElement('div#related_middle_desc.related_middle_column_content')
+                            column_desc.innerHTML = "관련 카드 (" + childs.length + "장)"
+                        $("#related_middle_right").appendChild(column_desc)
+
+                        childs.forEach((tokenInfo, i) => {
+                            cardinfo_cardSetup("related_middle_right", "simplest", true)
+                            cardinfo_show("related_middle_right",i,tokenInfo)
+                        })
+
+                    }
+                    $("#frame_related").onclick = (e) => {
+                        //창 비우기
+                        while ($("#related_middle").hasChildNodes()) {
+                            $("#related_middle").removeChild($("#related_middle").lastChild)
+                        }
+                        //창 닫기
+                        $("#frame_related").classList.remove("show")
+                    }
+                }
+            }
 
 
             //==================
@@ -1332,8 +1376,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         $("#button_related").onclick = (e) => {
                             //관련 카드 창 열기
                             $("#frame_related").classList.add("show")
+                            $("#related_middle").classList.add("list")
+                            $("#related_middle").classList.remove("illust")
                             //원본 카드 이름 출력
-                            $("#related_top_name").innerHTML = info.name
+                            $("#related_top").innerHTML = info.name + " 관련 카드"
                             //관련 카드 출력
                             childs.forEach((tokenInfo, i) => {
                                 cardinfo_cardSetup("related_middle", "simplest", true)
