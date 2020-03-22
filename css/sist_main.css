@@ -259,41 +259,74 @@ body {
         #header_cardinfo_list {
             display:none;
             right:10px;
-            width:40px;
+            width:105px;
             height:40px;
 
             background-color:transparent;
             background-image:url(../images/icon_list.png);
                 background-repeat:no-repeat;
-                background-position:50% 50%;
+                background-position:0% 50%;
                 background-size:40px 40px;
             border:0;
         }
+                #header_cardinfo_list_name {
+                    display:block;
+                    float:right;
+
+                    font-size:20px;
+                    font-weight:bold;
+                }
             #header_cardinfo_list.show {
                 display:block;
+            }
+            #header_cardinfo_list.selected #header_cardinfo_list_name {
+                color:gold;
             }
             #header_cardinfo_list.selected {
                 background-image:url(../images/icon_list_selected.png);
             }
         #header_cardinfo_illust {
             display:none;
-            right:65px;
-            width:40px;
+            right:140px;
+            width:105px;
             height:40px;
 
             background-color:transparent;
             background-image:url(../images/icon_illust.png);
                 background-repeat:no-repeat;
-                background-position:50% 50%;
+                background-position:5% 50%;
                 background-size:40px 40px;
             border:0;
         }
+                #header_cardinfo_illust_name {
+                    display:block;
+                    float:right;
+
+                    font-size:20px;
+                    font-weight:bold;
+                }
             #header_cardinfo_illust.show {
                 display:block;
             }
             #header_cardinfo_illust.selected {
                 background-image:url(../images/icon_illust_selected.png);
             }
+            #header_cardinfo_illust.selected #header_cardinfo_illust_name {
+                color:gold;
+            }
+    /*모바일 모드 - 카드형/목록형 설명 삭제*/
+    @media (max-width: 635px) {
+        #header_cardinfo_list {
+            width:40px;
+        }
+        #header_cardinfo_illust {
+            right:65px;
+            width:40px;
+        }
+        #header_cardinfo_list_name, #header_cardinfo_illust_name {
+            display:none;
+        }
+    }
     #header_bottom {
         position:relative;
         z-index:1;

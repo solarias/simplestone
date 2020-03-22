@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "96b2f771aa0f2323a69ded4f2b3342fb"
+    "revision": "4d137b9801470d611a3cb4ba92e6d216"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "dc393c021f36c18f368ead3ff61f21ce"
+    "revision": "117d9b72e05fb3d0d19be6185b61c0c8"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
