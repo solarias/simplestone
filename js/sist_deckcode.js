@@ -751,7 +751,7 @@ async function export_image() {
             $("#button_download").download = process.deck.name + ".png"
             //덱 이미지 공유
             if (navigator.canShare) {
-                let imageBlob = await (await fetch(url)).blob()
+                let imageBlob = await (await fetch(deckimage)).blob()
                 if (navigator.canShare({ files: imageBlob })) {
                     $("#button_shareimage").classList.add("show")
                     $("#button_download").classList.add("short")
