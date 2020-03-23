@@ -185,7 +185,7 @@ function export_text() {
                 allowOutsideClick:false,
                 showConfirmButton:true,
                 showCancelButton:true,
-                confirmButtonText: '\uE800 공유',
+                confirmButtonText: '&#x1f517; 공유',
                 cancelButtonText: '닫기',
                 cancelButtonColor: '#d33',
                 showCloseButton:true,
@@ -201,23 +201,21 @@ function export_text() {
                     title: '심플스톤 덱 공유',
                     text: decktext
                 }).then(() => {
-                    console.log('덱 코드 공유 완료!')
+                    nativeToast({
+                        message: '텍스트 공유 완료!',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'success',
+                        closeOnClick: 'true'
+                    })
                 }).catch((e) => {
                     nativeToast({
-                        message: '오류 발생 - 덱 공유 실패!.<br>(' + e + ')',
+                        message: '오류 발생 - 텍스트 공유 실패!.<br>(' + e + ')',
                         position: 'center',
                         timeout: 2000,
                         type: 'error',
                         closeOnClick: 'true'
                     })
-                })
-            }).catch((e) => {
-                nativeToast({
-                    message: '오류 발생 - 덱 공유 실패!.<br>(' + e + ')',
-                    position: 'center',
-                    timeout: 2000,
-                    type: 'error',
-                    closeOnClick: 'true'
                 })
             })
         } else {
@@ -744,13 +742,50 @@ async function export_image() {
         $("#button_download").classList.add("wait");
 
         //이미지 제작 완료 - 출력
-        let deckimage = await deckcode_image();//텍스트 출력
+        let deckimage = await deckcode_image()//텍스트 출력
         if (deckimage !== false) {
-            $("#deckimage_img").src = deckimage;
+            $("#deckimage_img").src = deckimage
 
-            $("#button_download").classList.remove("wait");
-            $("#button_download").href = deckimage;
-            $("#button_download").download = process.deck.name + ".jpg";
+            $("#button_download").classList.remove("wait")
+            $("#button_download").href = deckimage
+            $("#button_download").download = process.deck.name + ".jpg"
+            //덱 이미지 공유
+            if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+                $("#button_shareimage").classList.add("show")
+                $("#button_download").classList.add("short")
+                let deckcode = ""
+                //공유용 덱코드 생성 시도
+                try {
+                    deckcode = deckcode_encode()
+                } catch(e) {
+                    deckcode = ""
+                }
+                navigator.share({
+                    title: '심플스톤 덱 이미지 : ' + process.deck.name,
+                    files: deckimage,
+                    text: deckcode,
+                }).then(() => {
+                    nativeToast({
+                        message: '덱 이미지 공유 완료!',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'success',
+                        closeOnClick: 'true'
+                    })
+                }).catch((e) => {
+                    //오류창 열기
+                    nativeToast({
+                        message: '오류 발생 - 이미지를 공유할 수 없습니다.<br>(' + e + ')',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+                })
+            } else {
+                $("#button_shareimage").classList.remove("show")
+                $("#button_download").classList.remove("short")
+            }
         }
     } catch (e) {
         //오류창 열기

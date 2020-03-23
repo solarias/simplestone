@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/sist_main.css",
-    "revision": "4d137b9801470d611a3cb4ba92e6d216"
+    "revision": "90829995f8914388629ec328be84a96c"
   },
   {
     "url": "history/cards_collectible_11.4.json",
@@ -39,7 +39,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "117d9b72e05fb3d0d19be6185b61c0c8"
+    "revision": "0ca7a3231c30a9fc96aa6a908e1cedd3"
   },
   {
     "url": "js_newset/cards.BOOMSDAY.json",
@@ -67,7 +67,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "7a87cdfbd96aae6878030b58a8a5dcc5"
+    "revision": "e9df3bf5caf73f9518852814c8dbae1f"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "ed4e1e332fcfad9c98bbb68a0d0da1e5"
+    "revision": "9dbbf85ebb7e85fc8b6fe499958cf33d"
   },
   {
     "url": "package/Chart.min.js",

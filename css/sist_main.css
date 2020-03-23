@@ -2637,16 +2637,31 @@ body {
           cursor:pointer;
           white-space: nowrap;
       }
+          #button_shareimage {
+            display:none;
+
+            margin-right:10px;
+            width:15%;
+            border-color:rgb(48, 133, 214);
+
+            color:rgb(48, 133, 214);
+          }
+              #button_shareimage.show {
+                  display:block;
+              }
           #button_download {
             display:flex;
             align-items: center;
             justify-content:center;
 
             margin-right:10px;
-            width:65%;
+            width:70%;
             border-color:lime;
             color:lime;
           }
+                  #button_download.short {
+                      width:calc(55% - 10px);
+                  }
                   #button_download.wait {
                       border-color:gray;
                       color:gray;
@@ -2663,17 +2678,17 @@ body {
                   font-size:22px;
                       line-height:25px;
               }
-          #button_closeimage {
-            width:25%;
+        #button_closeimage {
+            width:20%;
             border-color:orange;
             color:orange;
-          }
-          .deckmiage_botton:hover {
-              background-color:rgba(255,255,255,0.2);
-          }
-          .deckmiage_botton:active {
-              background-color:rgba(255,255,255,0.4);
-          }
+        }
+              .deckmiage_botton:hover {
+                  background-color:rgba(255,255,255,0.2);
+              }
+              .deckmiage_botton:active {
+                  background-color:rgba(255,255,255,0.4);
+              }
 /*=====================================================*/
 /* 별도 창 - 카드 모니터 */
 /*=====================================================*/
