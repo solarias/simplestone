@@ -754,7 +754,8 @@ async function export_image() {
                 let imageRes = await fetch(deckimage)
                 let imageBuf = await imageRes.arrayBuffer()
                 let imageFile = new File([imageBuf], process.deck.name + ".png", {type:"image/png"});
-                if (navigator.canShare({ files: imageFile })) {
+                let imageFiles = [imageFile]
+                if (navigator.canShare({ files: imageFiles })) {
                     $("#button_shareimage").classList.add("show")
                     $("#button_download").classList.add("short")
                     let deckcode = ""
@@ -766,7 +767,7 @@ async function export_image() {
                     }
                     navigator.share({
                         title: '심플스톤 덱 이미지 : ' + process.deck.name,
-                        files: imageFile,
+                        files: imageFiles,
                         text: deckcode,
                     }).then(() => {
                         nativeToast({
@@ -1027,14 +1028,16 @@ function deckcode_image() {
                 //그라디언트
                 grd = ctx.createLinearGradient(imagesize.card.gradient_start, 0, imagesize.card.gradient_end, 0);
                 let nameLen = info.name.replaceAll(" ","").replaceAll(".","").length;
-                if (nameLen < 10) {
+                grd.addColorStop(0, "rgb(34,34,34)");
+                grd.addColorStop(1, "rgba(34,34,34,0)");
+                /*if (nameLen < 10) {
                     grd.addColorStop(0, "rgb(34,34,34)");
                     grd.addColorStop(1, "rgba(34,34,34,0)");
                 } else {
                     grd.addColorStop(0, "rgb(34,34,34)");
                     grd.addColorStop(0.7, "rgba(34,34,34,0.8)");
                     grd.addColorStop(1, "rgba(34,34,34,0)");
-                }
+                }*/
                 ctx.fillStyle = grd;
                 ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
                 ctx.fillStyle = "rgb(34,34,34)";
