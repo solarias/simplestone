@@ -178,7 +178,7 @@ function export_text() {
         //팝업창 열기
         if (navigator.share) {
             swal({
-                title: '텍스트 공유',
+                title: '텍스트 출력',
                 text: '텍스트가 복사되었습니다!',
                 input: 'textarea',
                 inputValue: decktext,
@@ -210,7 +210,7 @@ function export_text() {
                     })
                 }).catch((e) => {
                     nativeToast({
-                        message: '오류 발생 - 텍스트 공유 실패!.<br>(' + e + ')',
+                        message: '텍스트 공유 취소!.<br>(' + e + ')',
                         position: 'center',
                         timeout: 2000,
                         type: 'error',
@@ -220,7 +220,7 @@ function export_text() {
             })
         } else {
             swal({
-                title: '텍스트 공유',
+                title: '텍스트 출력',
                 text: '텍스트가 복사되었습니다!',
                 input: 'textarea',
                 inputValue: decktext,
@@ -260,7 +260,7 @@ function export_tag() {
         let decktag = deckcode_tag();
         //팝업창 열기
         swal({
-            title: 'HTML 태그 공유',
+            title: 'HTML 태그 출력',
             text: 'HTML 태그가 복사되었습니다!',
             input: 'textarea',
             inputValue: decktag,
@@ -780,7 +780,7 @@ async function export_image() {
                     }).catch((e) => {
                         //오류창 열기
                         nativeToast({
-                            message: '오류 발생 - 이미지를 공유할 수 없습니다.<br>(' + e + ')',
+                            message: '덱 이미지 공유 취소!<br>(' + e + ')',
                             position: 'center',
                             timeout: 2000,
                             type: 'error',
@@ -1126,23 +1126,64 @@ function deckcode_image() {
 function export_url() {
     try {
         let deckurl = deckcode_toURL();
-        //팝업창 열기
-        swal({
-            title: '덱 URL 공유',
-            text: 'URL이 복사되었습니다!',
-            input: 'text',
-            inputValue: deckurl,
-            allowOutsideClick:false,
-            showConfirmButton:false,
-            showCancelButton:true,
-            cancelButtonText: '닫기',
-            cancelButtonColor: '#d33',
-            showCloseButton:true,
-            onOpen: function() {
-                $(".swal2-input").select();
-                document.execCommand("copy");
-            }
-        })
+        //팝업창 열기 (공유기능 지원 시 공유 버튼 열기)
+        if (navigator.share) {
+            swal({
+                title: '덱 URL 출력',
+                text: 'URL이 복사되었습니다!',
+                input: 'text',
+                inputValue: deckurl,
+                allowOutsideClick:false,
+                showConfirmButton:true,
+                showCancelButton:true,
+                confirmButtonText: '&#x1f517; 공유',
+                cancelButtonText: '닫기',
+                cancelButtonColor: '#d33',
+                showCloseButton:true,
+                onOpen: function() {
+                    $(".swal2-input").select();
+                    document.execCommand("copy");
+                }
+            }).then(async (isConfirm) => {
+                navigator.share({
+                    title: '심플스톤 덱 공유',
+                    url: deckurl
+                }).then(() => {
+                    nativeToast({
+                        message: '덱 URL 공유 완료!',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'success',
+                        closeOnClick: 'true'
+                    })
+                }).catch((e) => {
+                    nativeToast({
+                        message: '덱 URL 공유 취소!.<br>(' + e + ')',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    })
+                })
+            })
+        } else {
+            swal({
+                title: '덱 URL 공유',
+                text: 'URL이 복사되었습니다!',
+                input: 'text',
+                inputValue: deckurl,
+                allowOutsideClick:false,
+                showConfirmButton:false,
+                showCancelButton:true,
+                cancelButtonText: '닫기',
+                cancelButtonColor: '#d33',
+                showCloseButton:true,
+                onOpen: function() {
+                    $(".swal2-input").select();
+                    document.execCommand("copy");
+                }
+            })
+        }
     } catch(e) {
         //오류창 열기
         nativeToast({
