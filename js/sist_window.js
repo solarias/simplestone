@@ -1272,9 +1272,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                 } else if (session.setting.cardinfo_form === "illust") {
                     setCardinfoForm_illust()
                 }
-            //없으면 "카드 형식" 사용
+            //없으면 "디폴트 카드 형식(일러스트)" 사용
             } else {
-                setCardinfoForm_list()
+                setCardinfoForm_illust()
             }
             //보기 형식 버튼 클릭
             $("#header_cardinfo_list").onclick = () => {
@@ -1307,7 +1307,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 if (target.classList.contains("card_illust")) {
                     //카드 정보 출력
                     let info = session.db[session.dbIndex[target.dataset.id]]
-                    //관련 카드 창 열기
+                    //관련 카드 창 열기 & 초기화
                     $("#frame_related").classList.add("show")
                     $("#related_middle").classList.add("illust")
                     $("#related_middle").classList.remove("list")
@@ -1339,6 +1339,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         })
 
                     }
+                    //화면 클릭 - 세부 정보 창 닫기
                     $("#frame_related").onclick = (e) => {
                         //창 비우기
                         while ($("#related_middle").hasChildNodes()) {
@@ -1347,6 +1348,31 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //창 닫기
                         $("#frame_related").classList.remove("show")
                     }
+                    //모바일 "뒤로 가기" - 세부 정보 창 닫기
+                        window_goback2 = () => {
+                            //1. 창 비우고 닫기
+                            while ($("#related_middle").hasChildNodes()) {
+                                $("#related_middle").removeChild($("#related_middle").lastChild)
+                            }
+                            $("#frame_related").classList.remove("show")
+                            //2. 뒤로 한번 더 눌렀을 때 세팅
+                            //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
+                            window.onpopstate = () => {
+                                if (blockBack > 0) {
+                                    if (swal.isVisible()) swal.close()
+                                        else window_shift("titlescreen")
+                                    window.history.pushState({ noBackExitsApp: true }, 'DEF')
+                                }
+                            }
+                        }
+                        //모바일 한정 - 히스토리 뒤로 가기 시에도 작동
+                        window.onpopstate = () => {
+                            if (blockBack > 0) {
+                                if (swal.isVisible()) swal.close()
+                                    else window_goback2()
+                                window.history.pushState({ noBackExitsApp: true }, 'DEF')
+                            }
+                        }
                 }
             }
 

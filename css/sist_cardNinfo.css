@@ -34,8 +34,8 @@
     height:247px;
 
     background-repeat:no-repeat;
-    background-position:right 0%;
-    background-size:contain;
+    background-position:right 0%, 50% 50%;
+    background-size:contain, 60% 60%;
     box-shadow: 0;
 
     cursor:pointer;

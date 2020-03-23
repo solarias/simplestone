@@ -62,7 +62,7 @@ function cardIllust_generateMaster() {
     let elm_card = document.createElement("div.card_illust")
         elm_card.classList.add("cardllust_$id")//$id: 카드 구분기호
         elm_card.dataset.id = "$id"//$id
-        elm_card.style.backgroundImage = "url($url)"//$url: 카드 이미지 주소
+        elm_card.style.backgroundImage = "url($url), url('../images/loading_white.svg')"//$url: 카드 이미지 주소
     //출력
     return elm_card.outerHTML
 }
