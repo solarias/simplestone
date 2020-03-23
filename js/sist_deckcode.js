@@ -750,7 +750,7 @@ async function export_image() {
             $("#button_download").href = deckimage
             $("#button_download").download = process.deck.name + ".jpg"
             //덱 이미지 공유
-            if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+            if (navigator.canShare && navigator.canShare({ files: deckimage })) {
                 $("#button_shareimage").classList.add("show")
                 $("#button_download").classList.add("short")
                 let deckcode = ""
