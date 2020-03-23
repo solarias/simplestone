@@ -176,25 +176,71 @@ function export_text() {
         //텍스트 얻기
         let decktext = deckcode_text();
         //팝업창 열기
-        swal({
-            title: '텍스트 공유',
-            text: '텍스트가 복사되었습니다!',
-            input: 'textarea',
-            inputValue: decktext,
-            allowOutsideClick:false,
-            showConfirmButton:false,
-            showCancelButton:true,
-            cancelButtonText: '닫기',
-            cancelButtonColor: '#d33',
-            showCloseButton:true,
-            onOpen: function() {
-                $(".swal2-textarea").style.fontSize = "12px";
-                $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
-                $(".swal2-textarea").scrollTop = 0;
-                $(".swal2-textarea").select();
-                document.execCommand("copy");
-            }
-        })
+        if (navigator.share) {
+            swal({
+                title: '텍스트 공유',
+                text: '텍스트가 복사되었습니다!',
+                input: 'textarea',
+                inputValue: decktext,
+                allowOutsideClick:false,
+                showConfirmButton:true,
+                showCancelButton:true,
+                confirmButtonText: '\uE800 공유',
+                cancelButtonText: '닫기',
+                cancelButtonColor: '#d33',
+                showCloseButton:true,
+                onOpen: function() {
+                    $(".swal2-textarea").style.fontSize = "12px";
+                    $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
+                    $(".swal2-textarea").scrollTop = 0;
+                    $(".swal2-textarea").select();
+                    document.execCommand("copy");
+                }
+            }).then(async (isConfirm) => {
+                navigator.share({
+                    title: '심플스톤 덱 공유',
+                    text: decktext
+                }).then(() => {
+                    console.log('덱 코드 공유 완료!')
+                }).catch((e) => {
+                    nativeToast({
+                        message: '오류 발생 - 덱 공유 실패!.<br>(' + e + ')',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    })
+                })
+            }).catch((e) => {
+                nativeToast({
+                    message: '오류 발생 - 덱 공유 실패!.<br>(' + e + ')',
+                    position: 'center',
+                    timeout: 2000,
+                    type: 'error',
+                    closeOnClick: 'true'
+                })
+            })
+        } else {
+            swal({
+                title: '텍스트 공유',
+                text: '텍스트가 복사되었습니다!',
+                input: 'textarea',
+                inputValue: decktext,
+                allowOutsideClick:false,
+                showConfirmButton:false,
+                showCancelButton:true,
+                cancelButtonText: '닫기',
+                cancelButtonColor: '#d33',
+                showCloseButton:true,
+                onOpen: function() {
+                    $(".swal2-textarea").style.fontSize = "12px";
+                    $(".swal2-textarea").style.height = ($(".swal2-textarea").offsetHeight * 2).toString() + "px";
+                    $(".swal2-textarea").scrollTop = 0;
+                    $(".swal2-textarea").select();
+                    document.execCommand("copy");
+                }
+            })
+        }
     } catch(e) {
         //오류창 열기
         nativeToast({
@@ -203,7 +249,7 @@ function export_text() {
             timeout: 2000,
             type: 'error',
             closeOnClick: 'true'
-        });
+        })
     }
 }
 
