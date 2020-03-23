@@ -67,7 +67,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "b153f4a4790e54b271eba9151c8937d0"
+    "revision": "63ed42f09cd5053aa70bf6bfe2659b7e"
   },
   {
     "url": "js/sist_filterNsearch.js",

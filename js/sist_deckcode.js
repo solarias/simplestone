@@ -748,40 +748,43 @@ async function export_image() {
 
             $("#button_download").classList.remove("wait")
             $("#button_download").href = deckimage
-            $("#button_download").download = process.deck.name + ".jpg"
+            $("#button_download").download = process.deck.name + ".png"
             //덱 이미지 공유
-            if (navigator.canShare && navigator.canShare({ files: deckimage })) {
-                $("#button_shareimage").classList.add("show")
-                $("#button_download").classList.add("short")
-                let deckcode = ""
-                //공유용 덱코드 생성 시도
-                try {
-                    deckcode = deckcode_encode()
-                } catch(e) {
-                    deckcode = ""
-                }
-                navigator.share({
-                    title: '심플스톤 덱 이미지 : ' + process.deck.name,
-                    files: deckimage,
-                    text: deckcode,
-                }).then(() => {
-                    nativeToast({
-                        message: '덱 이미지 공유 완료!',
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'success',
-                        closeOnClick: 'true'
+            if (navigator.canShare) {
+                let imageBlob = await (await fetch(url)).blob()
+                if (navigator.canShare({ files: imageBlob })) {
+                    $("#button_shareimage").classList.add("show")
+                    $("#button_download").classList.add("short")
+                    let deckcode = ""
+                    //공유용 덱코드 생성 시도
+                    try {
+                        deckcode = deckcode_encode()
+                    } catch(e) {
+                        deckcode = ""
+                    }
+                    navigator.share({
+                        title: '심플스톤 덱 이미지 : ' + process.deck.name,
+                        files: imageBlob,
+                        text: deckcode,
+                    }).then(() => {
+                        nativeToast({
+                            message: '덱 이미지 공유 완료!',
+                            position: 'center',
+                            timeout: 2000,
+                            type: 'success',
+                            closeOnClick: 'true'
+                        })
+                    }).catch((e) => {
+                        //오류창 열기
+                        nativeToast({
+                            message: '오류 발생 - 이미지를 공유할 수 없습니다.<br>(' + e + ')',
+                            position: 'center',
+                            timeout: 2000,
+                            type: 'error',
+                            closeOnClick: 'true'
+                        });
                     })
-                }).catch((e) => {
-                    //오류창 열기
-                    nativeToast({
-                        message: '오류 발생 - 이미지를 공유할 수 없습니다.<br>(' + e + ')',
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'error',
-                        closeOnClick: 'true'
-                    });
-                })
+                }
             } else {
                 $("#button_shareimage").classList.remove("show")
                 $("#button_download").classList.remove("short")
