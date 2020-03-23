@@ -750,28 +750,11 @@ async function export_image() {
             $("#button_download").href = deckimage
             $("#button_download").download = process.deck.name + ".png"
             //덱 이미지 공유
-            /*
-            function dataURLtoBlob(dataurl) {
-                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-                while(n--){
-                    u8arr[n] = bstr.charCodeAt(n);
-                }
-                return new Blob([u8arr], {type:mime});
-            }
-            var imageBlob = dataURLtoBlob(deckimage)
-            console.log(imageBlob)
             if (navigator.canShare) {
-                function dataURLtoBlob(dataurl) {
-                    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-                    while(n--){
-                        u8arr[n] = bstr.charCodeAt(n);
-                    }
-                    return new Blob([u8arr], {type:mime});
-                }
-                var imageBlob = dataURLtoBlob(deckimage)
-                if (navigator.canShare({ files: imageBlob })) {
+                let imageRes = await fetch(deckimage)
+                let imageBuf = await imageRes.arrayBuffer()
+                let imageFile = new File([imageBuf], process.deck.name + ".png", {type:"image/png"});
+                if (navigator.canShare({ files: imageFile })) {
                     $("#button_shareimage").classList.add("show")
                     $("#button_download").classList.add("short")
                     let deckcode = ""
@@ -783,7 +766,7 @@ async function export_image() {
                     }
                     navigator.share({
                         title: '심플스톤 덱 이미지 : ' + process.deck.name,
-                        files: imageBlob,
+                        files: imageFile,
                         text: deckcode,
                     }).then(() => {
                         nativeToast({
@@ -808,7 +791,6 @@ async function export_image() {
                 $("#button_shareimage").classList.remove("show")
                 $("#button_download").classList.remove("short")
             }
-            */
         }
     } catch (e) {
         //오류창 열기
