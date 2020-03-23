@@ -730,6 +730,10 @@ function deckcode_tag() {
 
 //덱 이미지 출력
 async function export_image() {
+    //공유 버튼 초기화
+    $("#button_shareimage").classList.remove("show")
+    $("#button_download").classList.remove("short")
+
     $("#button_closeimage").onclick = function() {
         $("#frame_deckimage").classList.remove("show");
     }
@@ -765,28 +769,31 @@ async function export_image() {
                     } catch(e) {
                         deckcode = ""
                     }
-                    navigator.share({
-                        title: '심플스톤 덱 이미지 : ' + process.deck.name,
-                        files: imageFiles,
-                        text: deckcode,
-                    }).then(() => {
-                        nativeToast({
-                            message: '덱 이미지 공유 완료!',
-                            position: 'center',
-                            timeout: 2000,
-                            type: 'success',
-                            closeOnClick: 'true'
+                    //덱 이미지 공유 버튼 클릭
+                    $("#button_shareimage").onclick = async () => {
+                        navigator.share({
+                            title: '심플스톤 덱 이미지 : ' + process.deck.name,
+                            files: imageFiles,
+                            text: deckcode,
+                        }).then(() => {
+                            nativeToast({
+                                message: '덱 이미지 공유 완료!',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'success',
+                                closeOnClick: 'true'
+                            })
+                        }).catch((e) => {
+                            //오류창 열기
+                            nativeToast({
+                                message: '덱 이미지 공유 취소!<br>(' + e + ')',
+                                position: 'center',
+                                timeout: 2000,
+                                type: 'error',
+                                closeOnClick: 'true'
+                            });
                         })
-                    }).catch((e) => {
-                        //오류창 열기
-                        nativeToast({
-                            message: '덱 이미지 공유 취소!<br>(' + e + ')',
-                            position: 'center',
-                            timeout: 2000,
-                            type: 'error',
-                            closeOnClick: 'true'
-                        });
-                    })
+                    }
                 }
             } else {
                 $("#button_shareimage").classList.remove("show")
