@@ -751,7 +751,15 @@ async function export_image() {
             $("#button_download").download = process.deck.name + ".png"
             //덱 이미지 공유
             if (navigator.canShare) {
-                let imageBlob = await (await fetch(deckimage)).blob()
+                function dataURLtoBlob(dataurl) {
+                    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                    while(n--){
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+                    return new Blob([u8arr], {type:mime});
+                }
+                var imageBlob = dataURLtoBlob(deckimage)
                 if (navigator.canShare({ files: imageBlob })) {
                     $("#button_shareimage").classList.add("show")
                     $("#button_download").classList.add("short")
