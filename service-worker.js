@@ -67,7 +67,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_deckcode.js",
-    "revision": "98f640ddaa24558d0a78cf101e9ea020"
+    "revision": "7a87cdfbd96aae6878030b58a8a5dcc5"
   },
   {
     "url": "js/sist_filterNsearch.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "83e6dde443219e9e7cb118951cfc989e"
+    "revision": "ed4e1e332fcfad9c98bbb68a0d0da1e5"
   },
   {
     "url": "package/Chart.min.js",
