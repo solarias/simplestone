@@ -1225,6 +1225,59 @@ document.addEventListener("DOMContentLoaded", async function(e) {
             rows_in_block:14,
             no_data_text: '검색된 메타 덱 없음'
         })
+        //영구 저장소 적용
+        try {
+            if (navigator.storage && navigator.storage.persist) {
+                //영구저장소 설정 함수
+                let setPersist = async () => {
+                    let persistent = await navigator.storage.persist()
+                    if (persistent) {
+                        nativeToast({
+                            message: '심플스톤의 덱이 브라우저에서 임의로 지워지지 않도록 설정되었습니다.<br>'+
+                            '(이제 심플스톤 저장소를 지우려면 브라우저 설정에서 직접 삭제해야 합니다)',
+                            position: 'center',
+                            timeout: 3000,
+                            type: 'success',
+                            closeOnClick: 'true'
+                        })
+                    } else {
+                        //아이폰이면 메시지 출력하지 않음 (IOS는 데이터를 임의로 지우지 않는다고 함)
+                        if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+                            //Do nothing
+                        //아이폰이 아니라면 경고 메시지 출력
+                        } else {
+                            nativeToast({
+                                message: '심플스톤의 덱이 지워지지 않도록 설정하는 데 실패하였습니다.<br>'+
+                                '(아이폰 사파리 브라우저가 아니면 브라우저 저장소 용량이 부족하면 덱이 삭제될 수 있으니 주의해주세요.)',
+                                position: 'center',
+                                timeout: 3000,
+                                type: 'error',
+                                closeOnClick: 'true'
+                            })
+                        }
+                    }
+                }
+                //영구저장소 점검기능 여부
+                if (navigator.storage.persisted) {
+                    let isPersist = await navigator.storage.persisted()
+                    //영구저장소가 적용되지 않았다면 적용
+                    if (!isPersist) {
+                        setPersist()
+                    }
+                //점검할 줄 모르면 강제로 적용
+                } else {
+                    setPersist()
+                }
+            }
+        } catch(e) {
+            nativeToast({
+                message: '오류 - 심플스톤 저장소 영구 설정에 실패하였습니다.<br>(' + e + ')',
+                position: 'center',
+                timeout: 3000,
+                type: 'error',
+                closeOnClick: 'true'
+            })
+        }
 
         //종료 경고 메시지
         window.onunload = window.onbeforeunload = function(e) {

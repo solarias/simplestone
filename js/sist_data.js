@@ -42,6 +42,7 @@ const METADECKAPI = {
     //"localhost":"./localtest/",
     "localhost":"https://solarias.github.io/simplestone_metadeck/"
 }
+const DECKMAX = 1000//덱 최대 보유량
 const METADECKMAX = 100;//메타덱 출력 최대 순위
     //메타덱 API는 hsreplay에서 데이터를 수집하려 파일별로 나눠 보관함
     //metadeck_archetype.json : 덱 아키타입
