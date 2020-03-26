@@ -130,8 +130,17 @@ function card_cardSetFilter(cmd) {
     function filter_class(text) {
         //초기"글자" 설정
         if (text === "init") {
-            //검색버튼 키워드 변경
-            $("#search_class").innerHTML = session.classInfo[process.search.class].name
+            //모든 직업 : 해당 키워드 출력
+            if (process.search.class === "all" || process.search.class === "ALL") {
+                $("#search_class").innerHTML = "모든 직업"
+            } else {
+                //검색 직업을 알 수 없으면 "전사"로 지정
+                if (session.classInfo[process.search.class] === undefined) {
+                    process.search.class === "WARRIOR"
+                }
+                //검색 직업명 출력
+                $("#search_class").innerHTML = session.classInfo[process.search.class].name
+            }
         //버튼 클릭
         } else {
             //카드 정보
