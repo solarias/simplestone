@@ -1070,14 +1070,14 @@ function deckcode_image() {
                 ctx.fillText(fittingString(ctx, info.name, imagesize.card.name.maxwidth), imagesize.card.cost.width + imagesize.card.name.position, ystart + imagesize.card.name.padding + imagesize.card.name.font);
 
                 //수량
-                if (card[1] > 1 || info.rarity === "LEGENDARY") {
+                if (card[1] > 1 || info.rarity.slug === "LEGENDARY") {
                     ctx.fillStyle = "black";
                     ctx.fillRect(imagesize.wrapper.width - imagesize.card.quantity.width, ystart, imagesize.card.quantity.width, imagesize.card.height);
 
                     ctx.fillStyle = 'gold';
                     ctx.font = 'bold ' + imagesize.card.quantity.font + 'px SpoqaHanSans';
                     ctx.textAlign = "center";
-                    let quantitytext = (info.rarity === "LEGENDARY") ? "★" : card[1].toString()
+                    let quantitytext = (info.rarity.slug === "LEGENDARY") ? "★" : card[1].toString()
                     ctx.fillText(quantitytext, imagesize.wrapper.width - imagesize.card.quantity.width / 2, ystart + imagesize.card.quantity.padding + imagesize.card.quantity.font);
 
                     ctx.fill();
