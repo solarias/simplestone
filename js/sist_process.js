@@ -290,7 +290,6 @@ function card_move(cmd, log) {
                 }
             })
             //카드 목록에 따라 노드 불러오기
-            console.log(deckarr)
             cluster_update("deck",deckarr)
             setChart("update")
 

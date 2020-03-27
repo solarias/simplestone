@@ -527,7 +527,14 @@ async function window_shift(keyword, keyword2, keyword3) {
                             if (thisRarity !== undefined) {
                                 card.rarity.slug = thisRarity.slug.toUpperCase()
                                 card.rarity.name = thisRarity.name
-                                card.rarity.dust = thisRarity.craftingCost[0]
+                                //card.rarity.dust = thisRarity.craftingCost[0]
+                                if (DATA.RARITY.DUST[card.rarity.slug] !== undefined) {
+                                    card.rarity.dust = DATA.RARITY.DUST[card.rarity.slug]
+                                } else if (thisRarity.craftingCost[0]) {
+                                    card.rarity.dust = thisRarity.craftingCost[0]
+                                } else {
+                                    card.rarity.dust = 0
+                                }
                             //등급을 알 수 없는 카드는 "등급 없음" 등급으로 취급
                             } else if (thisRarity === undefined) {
                                 card.rarity.slug = "ETC"

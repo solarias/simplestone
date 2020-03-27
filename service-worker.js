@@ -79,11 +79,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_process.js",
-    "revision": "5329f384bc9c1ef36abe0b5c1fcb2b21"
+    "revision": "46376030166d57906f55146fe6b6ab0a"
   },
   {
     "url": "js/sist_window.js",
-    "revision": "55ad7bf436a509c62621614f9d39d320"
+    "revision": "aed81aa33e04988cdcaa468785b1e216"
   },
   {
     "url": "localtest/metadeck_archetype.json",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "7fc90a8c63ba16b553d4978b8e1dbd8e"
+    "revision": "7d6172243073032c5e0521cbafe1b283"
   },
   {
     "url": "package/Chart.min.js",
