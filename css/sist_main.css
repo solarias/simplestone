@@ -2224,7 +2224,7 @@ body {
                     width:100%;
                     height:30px;
 
-                    color:yellow;
+                    color:mediumpurple;
                     /*text-shadow:0 -1px black,1px -1px black,1px 0 black,1px 1px black,0 1px black,-1px 1px black,-1px 0 black,-1px -1px black;*/
                     text-shadow:
                         1px 0 black,
@@ -2246,7 +2246,7 @@ body {
                     .metadeckslot_button_name.PALADIN {
                         color:orange;}
                     .metadeckslot_button_name.HUNTER {
-                        color:green;}
+                        color:limegreen;}
                     .metadeckslot_button_name.DRUID {
                         color:brown;}
                     .metadeckslot_button_name.WARLOCK {
@@ -2255,6 +2255,8 @@ body {
                         color:aqua;}
                     .metadeckslot_button_name.PRIEST {
                         color:yellow;}
+                    .metadeckslot_button_name.DEMONHUNTER {
+                        color:darkgreen;}
                 .metadeckslot_button_class {
                     position:absolute;
                         left:5px;bottom:5px;
