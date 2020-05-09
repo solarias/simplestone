@@ -2492,7 +2492,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                             deck.cards = JSON.parse(deck.deck_list);//덱리스트(문자열이 아닌 배열)
                                             deck.dust = 0;//가루 계산
                                             deck.cards.forEach((cardInfo) => {
-                                                deck.dust += session.db[session.dbIndex[cardInfo[0].toString()]].rarity.dust
+                                                let cardCount = 1
+                                                if (cardInfo[1] !== undefined) cardCount = cardInfo[1]
+                                                deck.dust += session.db[session.dbIndex[cardInfo[0].toString()]].rarity.dust * cardCount
                                             })
                                             //덱코드 분석
                                             deck.deckcode = deckcode_encode(deck);
