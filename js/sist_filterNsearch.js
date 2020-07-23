@@ -661,18 +661,13 @@ function card_getSearchResult(className) {
     session.db.forEach(function(card) {
         if (card.collectible === 1 &&//수집가능한 카드만 검색 가능
         //직업
-        (className === "all" || (card.class.slug === className &&//검색 직업과 카드 직업은 반드시 맞아야 함
-            (process.deck.class === undefined ||//정해둔 직업 없으면 다 출력
-            (process.deck.class !== undefined &&//정해둔 직업 있으면
-                (card.class.slug === process.deck.class ||//현 직업과 맞거나
-                card.multiClass.length === 0 ||//다중직업이 없거나
-                (card.multiClass.length > 0 &&//다중직업 중 하나에 속하거나
-                    card.multiClass.indexOf(process.deck.class)>= 0
-                )
-                )
-            )
-            )
-        )) &&//현 직업 있음: 검색직업이 맞고 현 직업이 포함되면
+        (className === "all" ||//"모든 직업"이면 다 출력
+        (card.multiClass.length === 0 &&//다중직업 없으면
+            card.class.slug === className//카드 직업이 검색명 포함해야
+        ) ||
+        (card.multiClass.length > 0 &&//다중직업 있으면
+            card.multiClass.indexOf(className) >= 0//다중 직업이 검색명 포함해야
+        )) &&//직업 외 조건
         (card.cardType.slug !== "HERO" || card.rarity.slug !== "FREE") &&//기본 영웅 제외
         (card.cardType.slug !== "HERO" || card.cardSet.slug !== "ETC") &&//스킨 영웅 제외 : "알 수 없는 세트(17) 소속 카드"
         (card.cardSet.slug !== "ETC" &&
