@@ -1768,14 +1768,45 @@ async function window_shift(keyword, keyword2, keyword3) {
             }
             //덱코드 출력
             $("#deckconfig_deckstring").onclick = function() {
-                //사용불가 카드가 있다면 경고
+                //사용불가 카드가 있다면 경고(허용 시 출력)
                 if (process.deck.unusable > 0) {
+                    /*
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
                         timeout: 2000,
                         type: 'error',
                         closeOnClick: 'true'
+                    })
+                    */
+                    swal({
+                        type:"warning",
+                        title:"대전 방식과 맞지 않는 카드가 있습니다.",
+                        text:"정말로 덱코드를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //미완성 시 경고창(허용 시 출력)
+                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                                swal({
+                                    type:"warning",
+                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    text:"정말로 덱코드를 출력하시겠습니까?",
+                                    showCancelButton:true,
+                                    confirmButtonText: '확인',
+                                    cancelButtonText: '취소'
+                                }).then(function(result2) {
+                                    if (result2) {
+                                        export_deckcode()//덱코드 출력
+                                    }
+                                })
+                            //아니면 출력
+                            } else {
+                                export_deckcode();//덱코드 출력
+                            }
+                        }
                     })
                 //미완성 시 경고창(허용 시 출력)
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
@@ -1798,8 +1829,9 @@ async function window_shift(keyword, keyword2, keyword3) {
             }
             //텍스트 출력
             $("#deckconfig_text").onclick = function() {
-                //사용불가 카드가 있다면 경고
+                //사용불가 카드가 있다면 경고(허용 시 출력)
                 if (process.deck.unusable > 0) {
+                    /*
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
@@ -1807,6 +1839,35 @@ async function window_shift(keyword, keyword2, keyword3) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
+                    */
+                    swal({
+                        type:"warning",
+                        title:"대전 방식과 맞지 않는 카드가 있습니다.",
+                        text:"정말로 텍스트를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //미완성 시 경고창
+                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                                swal({
+                                    type:"warning",
+                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    text:"정말로 텍스트를 출력하시겠습니까?",
+                                    showCancelButton:true,
+                                    confirmButtonText: '확인',
+                                    cancelButtonText: '취소'
+                                }).then(function(result2) {
+                                    if (result2) {
+                                        export_text();//텍스트 출력
+                                    }
+                                })
+                            } else {
+                                export_text();//텍스트 출력
+                            }
+                        }
+                    })
                 //미완성 시 경고창
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
                     swal({
@@ -1827,8 +1888,9 @@ async function window_shift(keyword, keyword2, keyword3) {
             }
             //HTML 태그 출력
             $("#deckconfig_tag").onclick = function() {
-                //사용불가 카드가 있다면 경고
+                //사용불가 카드가 있다면 경고(허용 시 출력)
                 if (process.deck.unusable > 0) {
+                    /*
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
@@ -1836,7 +1898,36 @@ async function window_shift(keyword, keyword2, keyword3) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
-                //미완성 시 경고창
+                    */
+                    swal({
+                        type:"warning",
+                        title:"대전 방식과 맞지 않는 카드가 있습니다.",
+                        text:"정말로 HTML 태그를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //미완성 시 경고창(허용 시 출력)
+                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                                swal({
+                                    type:"warning",
+                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    text:"정말로 HTML 태그를 출력하시겠습니까?",
+                                    showCancelButton:true,
+                                    confirmButtonText: '확인',
+                                    cancelButtonText: '취소'
+                                }).then(function(result2) {
+                                    if (result2) {
+                                        export_tag();//텍스트 출력
+                                    }
+                                })
+                            } else {
+                                export_tag();//텍스트 출력
+                            }
+                        }
+                    })
+                //미완성 시 경고창(허용 시 출력)
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
@@ -1856,8 +1947,9 @@ async function window_shift(keyword, keyword2, keyword3) {
             }
             //이미지 출력
             $("#deckconfig_image").onclick = function() {
-                //사용불가 카드가 있다면 경고
+                //사용불가 카드가 있다면 경고(허용 시 출력)
                 if (process.deck.unusable > 0) {
+                    /*
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
@@ -1865,7 +1957,36 @@ async function window_shift(keyword, keyword2, keyword3) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
-                //미완성 시 경고창
+                    */
+                    swal({
+                        type:"warning",
+                        title:"대전 방식과 맞지 않는 카드가 있습니다.",
+                        text:"정말로 이미지를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //미완성 시 경고창(허용 시 출력)
+                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                                swal({
+                                    type:"warning",
+                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    text:"정말로 이미지를 출력하시겠습니까?",
+                                    showCancelButton:true,
+                                    confirmButtonText: '확인',
+                                    cancelButtonText: '취소'
+                                }).then(function(result2) {
+                                    if (result2) {
+                                        export_image();//이미지 출력
+                                    }
+                                })
+                            } else {
+                                export_image();//이미지 출력
+                            }
+                        }
+                    })
+                //미완성 시 경고창(허용 시 출력)
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
@@ -1885,8 +2006,9 @@ async function window_shift(keyword, keyword2, keyword3) {
             }
             //URL 출력
             $("#deckconfig_url").onclick = function() {
-                //사용불가 카드가 있다면 경고
+                //사용불가 카드가 있다면 경고(허용 시 출력)
                 if (process.deck.unusable > 0) {
+                    /*
                     nativeToast({
                         message: '대전 방식과 맞지 않는 카드가 있습니다.',
                         position: 'center',
@@ -1894,6 +2016,36 @@ async function window_shift(keyword, keyword2, keyword3) {
                         type: 'error',
                         closeOnClick: 'true'
                     });
+                    */
+                    swal({
+                        type:"warning",
+                        title:"대전 방식과 맞지 않는 카드가 있습니다.",
+                        text:"정말로 덱코드를 출력하시겠습니까?",
+                        showCancelButton:true,
+                        confirmButtonText: '확인',
+                        cancelButtonText: '취소'
+                    }).then(function(result) {
+                        if (result) {
+                            //미완성 시 경고창(허용 시 출력)
+                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                                swal({
+                                    type:"warning",
+                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    text:"정말로 덱코드를 출력하시겠습니까?",
+                                    showCancelButton:true,
+                                    confirmButtonText: '확인',
+                                    cancelButtonText: '취소'
+                                }).then(function(result2) {
+                                    if (result2) {
+                                        export_url();//덱코드 출력
+                                    }
+                                })
+                            //아니면 출력
+                            } else {
+                                export_url();//덱코드 출력
+                            }
+                        }
+                    })
                 //미완성 시 경고창(허용 시 출력)
                 } else if (process.deck.quantity < DATA.DECK_LIMIT) {
                     swal({
