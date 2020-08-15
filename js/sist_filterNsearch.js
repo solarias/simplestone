@@ -114,11 +114,21 @@ function card_matchKeyword(target, keyword) {
 
 //카드 필터 구성
 function card_cardSetFilter(cmd) {
-    //초기 작업: 검색치 초기화
-    if (cmd === "init") {
+    //초기 작업: 검색치 초기화 (카드 정보)
+    if (cmd === "cardInfoInit") {
         //검색 초기치 설정, 필터 활성화
         if (!process.search) process.search = {};
-        process.search.class = (process.deck.class) ? process.deck.class : "WARRIOR"//직업
+        process.search.class = (process.deck.class) ? process.deck.class : "all"//전체 직업
+        process.search.cost = "all"//비용
+        process.search.rarity = "all"//등급
+        process.search.set = (session.metadata.sets[0].slug) ? session.metadata.sets[0].slug : "all"//세트(만에 하나 오류가 나면 모든 세트)
+        process.search.format = process.deck.format//포맷
+        process.search.keyword = ""//키워드
+    //초기 작업: 검색치 초기화 (덱 빌딩)
+    } else if (cmd === "deckBuildingInit") {
+        //검색 초기치 설정, 필터 활성화
+        if (!process.search) process.search = {};
+        process.search.class = (process.deck.class) ? process.deck.class : "NEUTRAL"//직업(만에 하나 오류가 나면 중립 직업)
         process.search.cost = "all"//비용
         process.search.rarity = "all"//등급
         process.search.set = "all"//세트

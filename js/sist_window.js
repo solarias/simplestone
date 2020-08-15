@@ -1300,7 +1300,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 process.deck.class = undefined
                 process.deck.format = "야생"
             //필터 활성화
-            card_cardSetFilter("init")
+            card_cardSetFilter("cardInfoInit")
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
             card_search()
@@ -1543,7 +1543,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             //※ 덱 & 필터 구성
             //==================
             //검색 초기치 설정, 필터 활성화
-            card_cardSetFilter("init")//필터 활성화
+            card_cardSetFilter("deckBuildingInit")//필터 활성화
 
             //검색 초기치에 따라 검색결과 출력(최초 검색)
             card_search()
