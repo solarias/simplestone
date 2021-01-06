@@ -1248,7 +1248,8 @@ document.addEventListener("DOMContentLoaded", async function(e) {
                         } else {
                             nativeToast({
                                 message: '심플스톤의 덱이 지워지지 않도록 설정하는 데 실패하였습니다.<br>'+
-                                '(아이폰 사파리 브라우저가 아니면 브라우저 저장소 용량이 부족하면 덱이 삭제될 수 있으니 주의해주세요.)',
+                                '(아이폰 사파리 브라우저이거나 카카오톡/네이버 등 특정 브라우저는 해당 설정을 지원하지 않을 수 있습니다.<br>'+
+                                '브라우저 저장소 용량이 부족하면 덱이 삭제될 수 있으니 주의해주세요.)',
                                 position: 'center',
                                 timeout: 3000,
                                 type: 'error',

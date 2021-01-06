@@ -30,7 +30,7 @@ function searchable(keyword) {
     let text = keyword
     //불필요 기호 제거
     //text = text.replace(/\s|<b>|<\/b>|\n|\[x\]|\$|#|<i>|<\/i>|@|\.|,|(|)|:/g,"");
-    let unseable = [" ", "<b>", "</b>", "\n", "<i>", "</i>", ".", ",", "/", "(", ")", ":", "( 남음!)", "(달성!)"]
+    let unseable = ["&nbsp;", " ", "<b>", "</b>", "\n", "<i>", "</i>", ".", ",", "/", "(", ")", ":", "( 남음!)", "(달성!)"]
     unseable.forEach(function(x) {
         text = text.replaceAll(x,"")
     })
