@@ -7,6 +7,7 @@ function deckcode_decode(deckcode) {
     //(검증된) 덱코드 해석
     let input = deckstrings.decode(deckcode)
     let output = {}
+    console.log(input)
     //카드
     output.cards = []
     input.cards.forEach(card => {
@@ -31,7 +32,22 @@ function deckcode_decode(deckcode) {
         }
     }
     if (output.class === "") {
-        output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
+        //카드 DB에 영웅 정보 있으면 해당 직업으로 설정
+        if (session.db[session.dbIndex[input.heroes[0].toString()]] !== undefined) {
+            output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
+        //카드 DB에 영웅 정보 없으면 - 보유 카드로 직업 추적
+        } else {
+            for (let i = 0;i < output.cards.length;i++) {
+                if (session.db[session.dbIndex[output.cards[i][0].toString()]].class.slug !== "NEUTRAL") {
+                    output.class = session.db[session.dbIndex[output.cards[i][0].toString()]].class.slug
+                    break
+                }
+            }
+            //그것조차 못 찾겠으면(중립덱) - '중립 영웅 취급' -> 오류 방지
+            if (output.class === "") {
+                output.class === "NEUTRAL"
+            }
+        }
     }
     //포맷(향후 덱 포맷 검증 별도로 함)
     output.format = "정규"

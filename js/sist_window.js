@@ -1121,19 +1121,29 @@ async function window_shift(keyword, keyword2, keyword3) {
                         code = line
                     }
                 })
-                decoded = deckcode_decode(code)
-                process.deck.cards = decoded.cards
-                process.deck.class = decoded.class
-                //기존 포맷 정보가 없으면 덱코드에서 해석한 걸 사용
-                if (!process.deck.format) {
-                    process.deck.format = decoded.format
+                try {
+                    decoded = deckcode_decode(code)
+                    process.deck.cards = decoded.cards
+                    process.deck.class = decoded.class
+                    //기존 포맷 정보가 없으면 덱코드에서 해석한 걸 사용
+                    if (!process.deck.format) {
+                        process.deck.format = decoded.format
+                    }
+
+                    //저장된 덱코드 제거(향후 덱코드 동기화 방지)
+                    delete process.deck.deckcode
+
+                    //있으면 덱 검증
+                    loading_deckvalidate()
+                } catch(e) {
+                    nativeToast({
+                        message: '덱코드 해석 중 오류가 발생하였습니다. 개발자에게 해당 덱코드와 함께 문의해주세요.',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    })
                 }
-
-                //저장된 덱코드 제거(향후 덱코드 동기화 방지)
-                delete process.deck.deckcode
-
-                //있으면 덱 검증
-                loading_deckvalidate()
             }
 
             //불러올 덱 포맷 검증
