@@ -99,17 +99,31 @@ function card_matchCost(target, cost) {
 function card_matchKeyword(target, keyword) {
     //필터가 비었으면 통과
     if (!keyword || keyword === "") return true
-    //필터 분류(공백)
-    let list = ["name","text","minionType","cardType"]
-    for (let i = 0;i<list.length;i++) {
-        if (target[list[i]] !== undefined) {
-            if (target.keywords[list[i]].indexOf(keyword) >= 0) {
-                return true;
+    //'&'로 키워드 쪼개기
+    let keywordArr = []
+    keyword.split("&").forEach(word => {
+        keywordArr.push(word.trim())
+    })
+    //키워드 확인
+    let searchedWord = []
+    let list = ["name","text","minionType","cardType","spellSchool"]
+    keywordArr.forEach(w => {
+        for (let i = 0;i<list.length;i++) {
+            if (target[list[i]] !== undefined) {
+                if (target.keywords[list[i]].indexOf(w) >= 0) {
+                    searchedWord.push(w)
+                    break
+                }
             }
         }
+    })
+    //쪼개진 키워드가 모두 검색되면 true
+    if (searchedWord.length === keywordArr.length) {
+        return true
+    //그렇지 않으면 false
+    } else {
+        return false
     }
-    //true가 나오지 않으면 false
-    return false;
 }
 
 //카드 필터 구성
@@ -592,7 +606,7 @@ function card_cardSetFilter(cmd) {
             swal({
                 title: '검색어 설정',
                 input: 'text',
-                text: '카드의 이름, 텍스트, 종족, 종류를 검색합니다',
+                html: '이름, 종류, 텍스트, 하수인종족, 주문계열 검색가능<br><b>※ \'&\' 연산자를 지원합니다(예시 : 주문&신성)</b>',
                 inputPlaceholder: '검색어를 입력하세요',
                 showCancelButton:true,
                 confirmButtonText: '적용',

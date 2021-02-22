@@ -462,7 +462,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 await process_update_message(updateMsg, 500)
                 //카드데이터 정비
                 try {
-                    temp_db.forEach(card => {
+                    temp_db.forEach((card, cardIndex) => {
                         //1. 카드 검색을 위한 다양한 속성 추가
                         //1-1. class (직업 정보)
                             card.class = {}
@@ -557,7 +557,21 @@ async function window_shift(keyword, keyword2, keyword3) {
                             }
                         //1-7. cost (비용 - dataset에서 대문자 활용 문제)
                             card.cost = card.manaCost
-                        //1-8. 활용하지 않는 속성 삭제
+                        //1-8. spellSchool (주문 종류 정보) - 있는 경우에만
+                            if (card.spellSchoolId !== undefined) {
+                                card.spellSchool = {}
+                                let thisSpellSchool = temp_metadata.spellSchools.find(x => x.id === card.spellSchoolId)
+                                //주문 종류 정보 입력
+                                if (thisSpellSchool !== undefined) {
+                                    card.spellSchool.slug = thisSpellSchool.slug.toUpperCase()
+                                    card.spellSchool.name = thisSpellSchool.name
+                                //하수인 종류를 알 수 없는 카드는 "종족 불명" 종류로 취급
+                                } else if (thisSpellSchool === undefined) {
+                                    card.spellSchool.slug = "ETC"
+                                    card.spellSchool.name = "주문계열 불명"
+                                }
+                            }
+                        //1-9. 활용하지 않는 속성 삭제
                             if (card.slug !== undefined) delete card.slug
                             if (card.imageGold !== undefined) delete card.imageGold
                             //cropImage : 껍데기만 있으면 삭제
@@ -584,6 +598,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                             card.keywords.text = searchable(card.text)
                             if (card.minionType !== undefined) {
                                 card.keywords.minionType = searchable(card.minionType.name)
+                            }
+                            if (card.spellSchool !== undefined) {
+                                card.keywords.spellSchool = searchable(card.spellSchool.name)
                             }
                             card.keywords.cardType = searchable(card.cardType.name)
                         }
