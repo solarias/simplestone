@@ -417,21 +417,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                             }
                         }
                     })
-                    //^^로컬 sist_metadata_version에 버전 저장
                     try {
-                        await localforage.setItem("sist_metadata_version", session.serverVersion.meta)
-                    //저장 실패 시
-                    } catch(e) {
-                        //무시 (향후 재업데이트 필요 - 메타데이터 버전 확인 불가)
-                        //오류메시지
-                        updateMsg = "[ERROR] 메타데이터 버전을 저장할 수 없습니다. (향후 재업데이트 필요)"
-                        await process_update_message(updateMsg, 0, "error")
-                        await process_update_message("(" + e + ")", 0, "error")
-                        errorOccured = 1
-                    }
-                    //^^로컬 sist_metadata에 내용 저장
-                    try {
+                        //^^로컬 sist_metadata에 내용 저장
                         await localforage.setItem("sist_metadata", temp_metadata)
+                        //^^로컬 sist_metadata_version에 버전 저장
+                        await localforage.setItem("sist_metadata_version", session.serverVersion.meta)
                     //저장 실패 시
                     } catch(e) {
                         //무시 (향후 재업데이트 필요 - 메타데이터가 저장되지 않음)
@@ -607,21 +597,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                     })
                     //카드 정렬
                     sort_arr(temp_db)
-                    //^^로컬 sist_db_version에 버전 저장
                     try {
-                        await localforage.setItem("sist_db_version", session.serverVersion.card)
-                    //저장 실패 시
-                    } catch(e) {
-                        //무시 (향후 재업데이트 필요 - 카드데이터 버전 확인 불가)
-                        //오류메시지
-                        updateMsg = "[ERROR] 카드데이터 버전을 저장할 수 없습니다. (향후 재업데이트 필요)"
-                        await process_update_message(updateMsg, 0, "error")
-                        await process_update_message("(" + e + ")", 0, "error")
-                        errorOccured = 1
-                    }
-                    //^^로컬 sist_db에 내용 저장
-                    try {
+                        //^^로컬 sist_db에 내용 저장
                         await localforage.setItem("sist_db", temp_db)
+                        //^^로컬 sist_db_version에 버전 저장
+                        await localforage.setItem("sist_db_version", session.serverVersion.card)
                     //저장 실패 시
                     } catch(e) {
                         //무시 (향후 재업데이트 필요 - 카드데이터가 저장되지 않음)
@@ -1139,22 +1119,24 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }
                 })
                 try {
-                    decoded = deckcode_decode(code)
-                    process.deck.cards = decoded.cards
-                    process.deck.class = decoded.class
-                    //기존 포맷 정보가 없으면 덱코드에서 해석한 걸 사용
-                    if (!process.deck.format) {
-                        process.deck.format = decoded.format
-                    }
+                    deckcode_decode(code).then((result) => {
+                        decoded = result
+                        process.deck.cards = decoded.cards
+                        process.deck.class = decoded.class
+                        //기존 포맷 정보가 없으면 덱코드에서 해석한 걸 사용
+                        if (!process.deck.format) {
+                            process.deck.format = decoded.format
+                        }
 
-                    //저장된 덱코드 제거(향후 덱코드 동기화 방지)
-                    delete process.deck.deckcode
+                        //저장된 덱코드 제거(향후 덱코드 동기화 방지)
+                        delete process.deck.deckcode
 
-                    //있으면 덱 검증
-                    loading_deckvalidate()
+                        //있으면 덱 검증
+                        loading_deckvalidate()
+                    }).catch(() => {})
                 } catch(e) {
                     nativeToast({
-                        message: '덱코드 해석 중 오류가 발생하였습니다. 개발자에게 해당 덱코드와 함께 문의해주세요.',
+                        message: '덱코드 해석 중 오류가 발생하였습니다. 개발자에게 해당 덱코드와 함께 문의해주세요.' + e,
                         position: 'center',
                         timeout: 2000,
                         type: 'error',

@@ -4,62 +4,128 @@
 //===============================================================
 //디코드
 function deckcode_decode(deckcode) {
-    //(검증된) 덱코드 해석
-    let input = deckstrings.decode(deckcode)
-    let output = {}
-    console.log(input)
-    //카드
-    output.cards = []
-    input.cards.forEach(card => {
-        let arr = []
-        arr[0] = card[0]
-        arr[1] = card[1]
-        output.cards.push(arr)
-    })
-    output.cards.sort((a, b) => {
-        let aIndex = session.dbIndex[a[0].toString()]
-        let bIndex = session.dbIndex[b[0].toString()]
-        return (aIndex < bIndex) ? -1 : 1
-    })
-    //직업
-    output.class = ""
-    for (let key in session.classInfo) {
-        if (session.classInfo.hasOwnProperty(key)) {
-            if (session.classInfo[key].cardId === input.heroes[0]) {
-                output.class = session.classInfo[key].slug
+    return new Promise((res, rej) => {
+        //(검증된) 덱코드 해석
+        let input = deckstrings.decode(deckcode)
+        let output = {}
+        //카드
+        output.cards = []
+        input.cards.forEach(card => {
+            let arr = []
+            arr[0] = card[0]
+            arr[1] = card[1]
+            output.cards.push(arr)
+        })
+        output.cards.sort((a, b) => {
+            let aIndex = session.dbIndex[a[0].toString()]
+            let bIndex = session.dbIndex[b[0].toString()]
+            return (aIndex < bIndex) ? -1 : 1
+        })
+        //포맷(향후 덱 포맷 검증 별도로 함)
+        output.format = "정규"
+        for (let i = 0;i < output.cards.length;i++) {
+            if (session.db[session.dbIndex[output.cards[i][0].toString()]].cardSet.format === "야생") {
+                output.format = "야생"
                 break
             }
         }
-    }
-    if (output.class === "") {
-        //카드 DB에 영웅 정보 있으면 해당 직업으로 설정
-        if (session.db[session.dbIndex[input.heroes[0].toString()]] !== undefined) {
-            output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
-        //카드 DB에 영웅 정보 없으면 - 보유 카드로 직업 추적
-        } else {
-            for (let i = 0;i < output.cards.length;i++) {
-                if (session.db[session.dbIndex[output.cards[i][0].toString()]].class.slug !== "NEUTRAL") {
-                    output.class = session.db[session.dbIndex[output.cards[i][0].toString()]].class.slug
+        //직업
+        output.class = ""
+        for (let key in session.classInfo) {
+            if (session.classInfo.hasOwnProperty(key)) {
+                if (session.classInfo[key].cardId === input.heroes[0]) {
+                    output.class = session.classInfo[key].slug
                     break
                 }
             }
-            //그것조차 못 찾겠으면(중립덱) - '중립 영웅 취급' -> 오류 방지
-            if (output.class === "") {
-                output.class === "NEUTRAL"
+        }
+        if (output.class !== "") {
+            res(output)
+        } else {
+            //카드 DB에 영웅 정보 있으면 해당 직업으로 설정
+            if (session.db[session.dbIndex[input.heroes[0].toString()]] !== undefined &&
+                session.db[session.dbIndex[input.heroes[0].toString()]].class !== undefined) {
+                output.class = session.db[session.dbIndex[input.heroes[0].toString()]].class.slug
+                res(output)
+            //카드 DB에 영웅 정보 없으면 - 보유 카드로 직업 추적
+            } else {
+                for (let i = 0;i < output.cards.length;i++) {
+                    if (session.db[session.dbIndex[output.cards[i][0].toString()]].class.slug !== "NEUTRAL" &&
+                        (session.db[session.dbIndex[output.cards[i][0].toString()]].multiClass === undefined ||
+                            (session.db[session.dbIndex[output.cards[i][0].toString()]].multiClass !== undefined &&
+                            session.db[session.dbIndex[output.cards[i][0].toString()]].multiClass <= 0)
+                        )) {
+                        output.class = session.db[session.dbIndex[output.cards[i][0].toString()]].class.slug
+                        res(output)
+                        break
+                    }
+                }
+                //그것조차 못 찾겠으면(중립덱) - '중립 영웅 취급' -> 오류 방지
+                if (output.class === "") {
+                    //직업을 분석하여 버튼 추가 준비
+                    let htmlText = '$classBtns'
+                    let btnText = ""
+                    let classArr = []
+                    Object.keys(session.classInfo).forEach(key => {
+                        let c = session.classInfo[key]
+                        if (c.slug !== "ALL" && c.slug !== "NEUTRAL") classArr.push({slug:c.slug, name:c.name})
+                    })
+                    classArr.sort((a,b) => {
+                        let order = [a.name,b.name]
+                        order.sort()
+                        if (a.name === order[0]) {
+                            return -1
+                        } else {
+                            return 1
+                        }
+                    })
+                    classArr.forEach((c, i) => {
+                        let btn = document.createElement("button")
+                            btn.id = "popup_class_" + c.slug
+                            btn.classList.add("popup_button","halfsection")
+                            btn.dataset.class = c.slug
+                            btn.innerHTML = c.name
+                            if (i === classArr.length - 1 && classArr.length % 2 === 1) {
+                                btn.classList.remove("halfsection")
+                                btn.classList.add("full")
+                            }
+                        btnText += btn.outerHTML
+                    })
+                    htmlText = htmlText.replace("$classBtns",btnText)
+                    //팝업창 열기
+                    function swalClass() {
+                        return new Promise((resolve, reject) => {
+                            swal({
+                                title: '덱 직업 확인 불가!<br>직업을 직접 선택하세요',
+                                html:htmlText,
+                                onOpen:function() {
+                                    //버튼 상호작용
+                                    $$(".popup_button").forEach(x => {
+                                        x.onclick = function() {
+                                            //직업 선정
+                                            output.class = x.dataset.class
+                                            //창 닫기
+                                            swal.close()
+                                            resolve()
+                                        }
+                                    })
+                                },
+                                showConfirmButton:false,
+                                showCancelButton:true,
+                                cancelButtonText: '취소',
+                                cancelButtonColor: '#d33'
+                            })
+                        })
+                    }
+                    swalClass().then(() => {
+                        res(output)
+                    }).catch(() => {
+                        rej()
+                    })
+                }
             }
         }
-    }
-    //포맷(향후 덱 포맷 검증 별도로 함)
-    output.format = "정규"
-    for (let i = 0;i < output.cards.length;i++) {
-        if (session.db[session.dbIndex[output.cards[i][0].toString()]].cardSet.format === "야생") {
-            output.format = "야생"
-            break
-        }
-    }
-    //output.format = DATA.FORMAT.DECODE[input.format.toString()]
-    //출력
-    return output
+    })
 }
 //인코드
 function deckcode_encode(deckObj) {
