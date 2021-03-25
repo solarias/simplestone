@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "notice.json",
-    "revision": "8aeec02e2fd1c533fdcbd9b5dd0de8e7"
+    "revision": "7abeadb4c0eaac0cdf17048810a90e45"
   },
   {
     "url": "package/Chart.min.js",
