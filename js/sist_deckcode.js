@@ -1082,7 +1082,7 @@ function deckcode_image() {
 
             ctx.font = imagesize.header.format + 'px SpoqaHanSans';
             ctx.textAlign = "right";
-            ctx.fillText(process.deck.format + "전", imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
+            ctx.fillText(process.deck.format, imagesize.wrapper.width - imagesize.date.padding, imagesize.header.height + imagesize.date.padding + imagesize.date.font);
             ctx.fill();
 
           //하단 테두리
