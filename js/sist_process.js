@@ -124,7 +124,7 @@ function deckslot_generateFragment(deck, number, key) {
     fragment = fragment.replaceAll("$name",deck.name)//이름
     fragment = fragment.replaceAll("$quantity",deck.quantity.toString() + " / " + DATA.DECK_LIMIT.toString())//수량
     fragment = fragment.replaceAll("$formatcolor",DATA.FORMAT.EN[deck.format])//대전방식 색상
-    fragment = fragment.replaceAll("$format",deck.format + "전")//대전방식
+    fragment = fragment.replaceAll("$format",deck.format)//대전방식
 
     //반환
     return fragment
@@ -363,9 +363,21 @@ function card_addFragment(pos, id, quantity, show1, flasharr) {
             fragment = fragment.replace(" unusable_hidden","")
             process.deck.unusable += 1
         } else*/
-        //정규 덱에서 야생카드
+        //정규 : 정규가 아니면 금지
         if (process.deck.format === "정규") {
-            if (card.cardSet.format === "야생") {
+            if (card.cardSet.format !== "정규") {
+                fragment = fragment.replace(" unusable_hidden","")
+                process.deck.unusable += 1
+            }
+        //야생 : 정규, 야생이 아니면 금지
+        } else if (process.deck.format === "야생") {
+            if (card.cardSet.format !== "정규" && card.cardSet.format !== "야생") {
+                fragment = fragment.replace(" unusable_hidden","")
+                process.deck.unusable += 1
+            }
+        //클래식 : 클래식이 아니면 금지
+        } else if (process.deck.format === "클래식") {
+            if (card.cardSet.format !== "클래식") {
                 fragment = fragment.replace(" unusable_hidden","")
                 process.deck.unusable += 1
             }
@@ -575,7 +587,14 @@ function deck_refresh(cmd) {
         if (process.deck.name) {
             $("#deck_name").innerHTML = process.deck.name
         } else {
-            let deckname = "나만의 " + session.classInfo[process.deck.class].name + " 덱"
+            //클래식 - 오리지널 XXX
+            let deckname = ""
+            if (process.deck.format === "클래식") {
+                deckname = "오리지널 " + session.classInfo[process.deck.class].name + " 덱"
+            //정규, 야생 - 나만의 XXX
+            } else {
+                deckname = "나만의 " + session.classInfo[process.deck.class].name + " 덱"
+            }
             process.deck.name = deckname
             $("#deck_name").innerHTML = deckname
         }
@@ -584,7 +603,7 @@ function deck_refresh(cmd) {
     }
     //정규/야생 출력
     $("#deck_format").className = DATA.FORMAT.EN[process.deck.format]
-    $("#deck_format").innerHTML = process.deck.format + "전"
+    $("#deck_format").innerHTML = process.deck.format
 
     //덱 가루, 수량 확인
     let quantity = 0

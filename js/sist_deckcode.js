@@ -24,7 +24,10 @@ function deckcode_decode(deckcode) {
         //포맷(향후 덱 포맷 검증 별도로 함)
         output.format = "정규"
         for (let i = 0;i < output.cards.length;i++) {
-            if (session.db[session.dbIndex[output.cards[i][0].toString()]].cardSet.format === "야생") {
+            if (session.db[session.dbIndex[output.cards[i][0].toString()]].cardSet.format === "클래식") {
+                output.format = "클래식"
+                break
+            } else if (session.db[session.dbIndex[output.cards[i][0].toString()]].cardSet.format === "야생") {
                 output.format = "야생"
                 break
             }
@@ -485,8 +488,13 @@ function deckcode_tag() {
                 let _format = document.createElement("div.simplestone_format");
                     _format.innerHTML = deck.format;
                     let formatcolor = "";
-                    if (deck.format === "정규") formatcolor = "lime";
-                        else formatcolor = "orange";
+                    if (deck.format === "정규") {
+                        formatcolor = "lime";
+                    } else if (deck.format === "야생") {
+                        formatcolor = "orange";
+                    } else {
+                        formatcolor = "yellow"
+                    }
                     _format.setAttribute("style",
                         "CLEAR:both;FLOAT:right;"+
                         "MARGIN-TOP:0.5em;"+
@@ -1065,9 +1073,11 @@ function deckcode_image() {
 
             //포맷
             if (process.deck.format === "정규") {
-                ctx.fillStyle = 'lime';
+                ctx.fillStyle = 'lime'
+            } else if (process.deck.format === "야생") {
+                ctx.fillStyle = 'orange'
             } else {
-                ctx.fillStyle = 'orange';
+                ctx.fillStyle = 'yellow'
             }
 
             ctx.font = imagesize.header.format + 'px SpoqaHanSans';

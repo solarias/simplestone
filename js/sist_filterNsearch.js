@@ -136,7 +136,7 @@ function card_cardSetFilter(cmd) {
         process.search.cost = "all"//비용
         process.search.rarity = "all"//등급
         process.search.set = (session.metadata.sets[0].slug) ? session.metadata.sets[0].slug : "all"//세트(만에 하나 오류가 나면 모든 세트)
-        process.search.format = process.deck.format//포맷
+        process.search.format = (session.metadata.sets[0].slug) ? session.metadata.sets[0].format : "야생"//포맷 - 최신 세트 포맷 적용, 없으면 야생
         process.search.keyword = ""//키워드
     //초기 작업: 검색치 초기화 (덱 빌딩)
     } else if (cmd === "deckBuildingInit") {
@@ -404,11 +404,17 @@ function card_cardSetFilter(cmd) {
             let formattext = "";
             switch (process.deck.format) {
                 case "정규":
-                    formattext = "세트 : 전체";
-                    break;
+                    formattext = "세트 : 전체"
+                    break
                 case "야생":
-                    formattext = "세트／포맷";
-                    break;
+                    formattext = "세트／포맷"
+                    break
+                case "클래식":
+                    formattext = "클래식"
+                    break
+                case "검색":
+                    formattext = "세트／포맷"
+                    break
             }
             $("#search_cardSet").innerHTML = formattext
             $("#mobilefilter_cardSet").innerHTML = formattext
@@ -469,113 +475,250 @@ function card_cardSetFilter(cmd) {
                     break;
 
                 case "야생":
-                //팝업창 열기
-                swal({
-                    title: '세트／포맷 검색',
-                    html:
-                      '<button id="popup_standrad" class="popup_button" data-rarity="정규">정규 전체</button>' +
-                      '<button id="popup_wild" class="popup_button" data-rarity="야생">야생 전체</button>'+
-                      '<select id="popup_select_standard" class="popup_select swal2-select" style="display: block;"></select>'+
-                      '<select id="popup_select_wild" class="popup_select swal2-select" style="display: block;"></select>',
-                    onOpen:function() {
-                        //선택창 구성
-                        let select_standard = $("#popup_select_standard")
-                        let select_wild = $("#popup_select_wild")
-                        //정규 세트
-                            //"타이틀" 추가
-                            select_standard.options[0] = new Option("개별 세트(정규)")
-                            select_standard.options[0].disabled = true
-                            //개별 세트
-                            let setarr = session.metadata.sets
-                            setarr.forEach(set => {
-                                if (set.format === "정규") {
-                                    select_standard.options[select_standard.options.length] = new Option(set.name,set.slug)
-                                    //현재 검색필터 세트이면 강조
-                                    if (set.slug === process.search.set) {
-                                        select_standard.options[select_standard.options.length-1].selected = true
+                    //팝업창 열기
+                    swal({
+                        title: '세트／포맷 검색',
+                        html:
+                          '<button id="popup_standrad" class="popup_button" data-rarity="정규">정규 전체</button>' +
+                          '<button id="popup_wild" class="popup_button" data-rarity="야생">야생 전체</button>'+
+                          '<select id="popup_select_standard" class="popup_select swal2-select" style="display: block;"></select>'+
+                          '<select id="popup_select_wild" class="popup_select swal2-select" style="display: block;"></select>',
+                        onOpen:function() {
+                            //선택창 구성
+                            let select_standard = $("#popup_select_standard")
+                            let select_wild = $("#popup_select_wild")
+                            //정규 세트
+                                //"타이틀" 추가
+                                select_standard.options[0] = new Option("개별 세트(정규)")
+                                select_standard.options[0].disabled = true
+                                //개별 세트
+                                let setarr = session.metadata.sets
+                                setarr.forEach(set => {
+                                    if (set.format === "정규") {
+                                        select_standard.options[select_standard.options.length] = new Option(set.name,set.slug)
+                                        //현재 검색필터 세트이면 강조
+                                        if (set.slug === process.search.set) {
+                                            select_standard.options[select_standard.options.length-1].selected = true
+                                        }
                                     }
-                                }
-                            })
-                        //야생 세트
-                            //"타이틀" 추가
-                            select_wild.options[0] = new Option("개별 세트(야생)")
-                            select_wild.options[0].disabled = true
-                            //개별 세트
-                            let setarr2 = session.metadata.sets
-                            setarr2.forEach(set => {
-                                if (set.format === "야생") {
-                                    select_wild.options[select_wild.options.length] = new Option(set.name,set.slug)
-                                    //현재 검색필터 세트이면 강조
-                                    if (set.slug === process.search.set) {
-                                        select_wild.options[select_wild.options.length-1].selected = true
+                                })
+                            //야생 세트
+                                //"타이틀" 추가
+                                select_wild.options[0] = new Option("개별 세트(야생)")
+                                select_wild.options[0].disabled = true
+                                //개별 세트
+                                let setarr2 = session.metadata.sets
+                                setarr2.forEach(set => {
+                                    if (set.format === "야생") {
+                                        select_wild.options[select_wild.options.length] = new Option(set.name,set.slug)
+                                        //현재 검색필터 세트이면 강조
+                                        if (set.slug === process.search.set) {
+                                            select_wild.options[select_wild.options.length-1].selected = true
+                                        }
                                     }
-                                }
-                            })
-                        //버튼 상호작용
-                        if (process.search.format === "정규" && process.search.set === "all") {
-                            $("#popup_standrad").classList.add("selected");
-                        } else if (process.search.format === "야생" && process.search.set === "all") {
-                            $("#popup_wild").classList.add("selected");
-                        }
-                        $("#popup_standrad").onclick = function() {
-                            //세트, 포맷 필터 변경
-                            process.search.format = "정규";
-                            process.search.set = "all";
-                            //키워드 변경
-                            let text = "정규 전체";
-                            $("#search_cardSet").innerHTML = text;
-                            $("#mobilefilter_cardSet").innerHTML = text;
-                            //창 닫기
-                            swal.close();
-                            //검색 개시
-                            card_search();
-                        }
-                        $("#popup_wild").onclick = function() {
-                            //세트, 포맷 필터 변경
-                            process.search.format = "야생";
-                            process.search.set = "all";
-                            //키워드 변경
-                            let text = "야생 전체";
-                            $("#search_cardSet").innerHTML = text;
-                            $("#mobilefilter_cardSet").innerHTML = text;
-                            //창 닫기
-                            swal.close();
-                            //검색 개시
-                            card_search();
-                        }
-                        //선택창 상호작용
-                        select_standard.onchange = function() {
-                            //세트, 포맷 필터 변경
-                            process.search.format = "정규";
-                            process.search.set = select_standard.value;
-                            //키워드 변경
-                            let text = select_standard.options[select_standard.selectedIndex].text;
-                            $("#search_cardSet").innerHTML = text;
-                            $("#mobilefilter_cardSet").innerHTML = text;
-                            //창 닫기
-                            swal.close();
-                            //검색 개시
-                            card_search();
-                        }
-                        select_wild.onchange = function() {
-                            //세트, 포맷 필터 변경
-                            process.search.format = "야생";
-                            process.search.set = select_wild.value;
-                            //키워드 변경
-                            let text = select_wild.options[select_wild.selectedIndex].text;
-                            $("#search_cardSet").innerHTML = text;
-                            $("#mobilefilter_cardSet").innerHTML = text;
-                            //창 닫기
-                            swal.close();
-                            //검색 개시
-                            card_search();
-                        }
-                    },
-                    showConfirmButton:false,
-                    showCancelButton:true,
-                    cancelButtonText: '취소',
-                    cancelButtonColor: '#d33'
-                })
+                                })
+                            //버튼 상호작용
+                            if (process.search.format === "정규" && process.search.set === "all") {
+                                $("#popup_standrad").classList.add("selected");
+                            } else if (process.search.format === "야생" && process.search.set === "all") {
+                                $("#popup_wild").classList.add("selected");
+                            }
+                            $("#popup_standrad").onclick = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "정규";
+                                process.search.set = "all";
+                                //키워드 변경
+                                let text = "정규 전체";
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            $("#popup_wild").onclick = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "야생";
+                                process.search.set = "all";
+                                //키워드 변경
+                                let text = "야생 전체";
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            //선택창 상호작용
+                            select_standard.onchange = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "정규";
+                                process.search.set = select_standard.value;
+                                //키워드 변경
+                                let text = select_standard.options[select_standard.selectedIndex].text;
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            select_wild.onchange = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "야생";
+                                process.search.set = select_wild.value;
+                                //키워드 변경
+                                let text = select_wild.options[select_wild.selectedIndex].text;
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                        },
+                        showConfirmButton:false,
+                        showCancelButton:true,
+                        cancelButtonText: '취소',
+                        cancelButtonColor: '#d33'
+                    })
+
+                    break;
+                case "클래식":
+                    //클래식은 단일 세트/포맷
+                    nativeToast({
+                        message: '클래식 모드는 단일 세트(오리지널 세트)로 구성되어 있습니다.',
+                        position: 'center',
+                        timeout: 2000,
+                        type: 'error',
+                        closeOnClick: 'true'
+                    });
+
+                    break
+                case "검색":
+                    //팝업창 열기
+                    swal({
+                        title: '세트／포맷 검색',
+                        html:
+                          '<button id="popup_standrad" class="popup_button" data-rarity="정규">정규 전체</button>' +
+                          '<button id="popup_wild" class="popup_button" data-rarity="야생">야생 전체</button>'+
+                          '<select id="popup_select_standard" class="popup_select swal2-select" style="display: block;"></select>'+
+                          '<select id="popup_select_wild" class="popup_select swal2-select" style="display: block;"></select>'+
+                          '<button id="popup_classic" class="popup_button full" data-rarity="클래식">클래식</button>',
+                        onOpen:function() {
+                            //선택창 구성
+                            let select_standard = $("#popup_select_standard")
+                            let select_wild = $("#popup_select_wild")
+                            //정규 세트
+                                //"타이틀" 추가
+                                select_standard.options[0] = new Option("개별 세트(정규)")
+                                select_standard.options[0].disabled = true
+                                //개별 세트
+                                let setarr = session.metadata.sets
+                                setarr.forEach(set => {
+                                    if (set.format === "정규") {
+                                        select_standard.options[select_standard.options.length] = new Option(set.name,set.slug)
+                                        //현재 검색필터 세트이면 강조
+                                        if (set.slug === process.search.set) {
+                                            select_standard.options[select_standard.options.length-1].selected = true
+                                        }
+                                    }
+                                })
+                            //야생 세트
+                                //"타이틀" 추가
+                                select_wild.options[0] = new Option("개별 세트(야생)")
+                                select_wild.options[0].disabled = true
+                                //개별 세트
+                                let setarr2 = session.metadata.sets
+                                setarr2.forEach(set => {
+                                    if (set.format === "야생") {
+                                        select_wild.options[select_wild.options.length] = new Option(set.name,set.slug)
+                                        //현재 검색필터 세트이면 강조
+                                        if (set.slug === process.search.set) {
+                                            select_wild.options[select_wild.options.length-1].selected = true
+                                        }
+                                    }
+                                })
+                            //버튼 상호작용
+                            if (process.search.format === "정규" && process.search.set === "all") {
+                                $("#popup_standrad").classList.add("selected")
+                            } else if (process.search.format === "야생" && process.search.set === "all") {
+                                $("#popup_wild").classList.add("selected")
+                            } else if (process.search.format === "클래식" && process.search.set === "all") {
+                                $("#popup_classic").classList.add("selected")
+                            }
+                            $("#popup_standrad").onclick = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "정규";
+                                process.search.set = "all";
+                                //키워드 변경
+                                let text = "정규 전체";
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            $("#popup_wild").onclick = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "야생";
+                                process.search.set = "all";
+                                //키워드 변경
+                                let text = "야생 전체";
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            $("#popup_classic").onclick = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "클래식";
+                                process.search.set = "all";
+                                //키워드 변경
+                                let text = "클래식";
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            //선택창 상호작용
+                            select_standard.onchange = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "정규";
+                                process.search.set = select_standard.value;
+                                //키워드 변경
+                                let text = select_standard.options[select_standard.selectedIndex].text;
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                            select_wild.onchange = function() {
+                                //세트, 포맷 필터 변경
+                                process.search.format = "야생";
+                                process.search.set = select_wild.value;
+                                //키워드 변경
+                                let text = select_wild.options[select_wild.selectedIndex].text;
+                                $("#search_cardSet").innerHTML = text;
+                                $("#mobilefilter_cardSet").innerHTML = text;
+                                //창 닫기
+                                swal.close();
+                                //검색 개시
+                                card_search();
+                            }
+                        },
+                        showConfirmButton:false,
+                        showCancelButton:true,
+                        cancelButtonText: '취소',
+                        cancelButtonColor: '#d33'
+                    })
                     break;
                 default:
                     break;
@@ -684,22 +827,29 @@ function card_getSearchResult(className) {
     let arr = []
     session.db.forEach(function(card) {
         if (card.collectible === 1 &&//수집가능한 카드만 검색 가능
-        //직업
-        (className === "all" ||//"모든 직업"이면 다 출력
-        (card.multiClass.length === 0 &&//다중직업 없으면
-            card.class.slug === className//카드 직업이 검색명 포함해야
-        ) ||
-        (card.multiClass.length > 0 &&//다중직업 있으면
-            card.multiClass.indexOf(className) >= 0//다중 직업이 검색명 포함해야
-        )) &&//직업 외 조건
-        (card.cardType.slug !== "HERO" || card.rarity.slug !== "FREE") &&//기본 영웅 제외
-        (card.cardType.slug !== "HERO" || card.cardSet.slug !== "ETC") &&//스킨 영웅 제외 : "알 수 없는 세트(17) 소속 카드"
-        (card.cardSet.slug !== "ETC" &&
-            (card.cardSet.format === "정규" ||
-            card.cardSet.format === process.search.format)) &&//포맷(정규는 무조건 포함)
-        (process.search.cost === "all" || card_matchCost(card, process.search.cost) === true) &&//비용
-        (process.search.rarity === "all" || card.rarity.slug === process.search.rarity) &&//등급
-        (process.search.set === "all" || card.cardSet.slug === process.search.set) &&
+            //직업
+            (className === "all" ||//"모든 직업"이면 다 출력
+            (card.multiClass.length === 0 &&//다중직업 없으면
+                card.class.slug === className//카드 직업이 검색명 포함해야
+            ) ||
+            (card.multiClass.length > 0 &&//다중직업 있으면
+                card.multiClass.indexOf(className) >= 0//다중 직업이 검색명 포함해야
+            )) &&
+            //포맷
+            (card.cardSet.slug !== "ETC" &&
+                //클래식 - 클래식 포맷만 검색
+                (process.search.format === "클래식" &&
+                    card.cardSet.format === "클래식") ||
+                //그외
+                (process.search.format !== "클래식" &&
+                    (card.cardSet.format === "정규" ||//정규 - 정규
+                    card.cardSet.format === process.search.format))) &&//야생 - 정규 + 야생
+            //직업 외 조건
+            (card.cardType.slug !== "HERO" || card.rarity.slug !== "FREE") &&//기본 영웅 제외
+            (card.cardType.slug !== "HERO" || card.cardSet.slug !== "ETC") &&//스킨 영웅 제외 : "알 수 없는 세트(17) 소속 카드"
+            (process.search.cost === "all" || card_matchCost(card, process.search.cost) === true) &&//비용
+            (process.search.rarity === "all" || card.rarity.slug === process.search.rarity) &&//등급
+            (process.search.set === "all" || card.cardSet.slug === process.search.set) &&
         card_matchKeyword(card, keyword) === true) {
             arr.push(card.id)
         }
@@ -710,7 +860,7 @@ function card_getSearchResult(className) {
 }
 
 //카드 검색
-function card_search(action) {
+async function card_search(action) {
     //로딩 이미지 출력
     $("#collection_list_loading").style.display = "block";
     $("#collection_illust_loading").style.display = "block";

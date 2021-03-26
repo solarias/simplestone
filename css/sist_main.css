@@ -455,7 +455,7 @@ body {
                     width:calc(100% - 6px);
                 }
                 .popup_button.tall {
-                    height:90px;
+                    height:80px;
                 }
                 .popup_button.heightmax {
                     height:100%;
@@ -1349,6 +1349,9 @@ body {
                     .slot_button_format.wild {
                         color:orange;
                     }
+                    .slot_button_format.classic {
+                        color:yellow;
+                    }
                 .slot_button_delete {
                     position:relative;
                     float:right;
@@ -1634,6 +1637,9 @@ body {
                     }
                     #deck_format.wild {
                         color:orange;
+                    }
+                    #deck_format.classic {
+                        color:yellow;
                     }
                 #deck_name {
                     position:absolute;

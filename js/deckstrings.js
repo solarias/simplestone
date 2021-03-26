@@ -213,7 +213,8 @@ function trisort_cards(cards) {
 }
 function encode$1(deck) {
     if (typeof deck !== "object" ||
-        (deck.format !== 1 && deck.format !== 2) ||
+        !Number.isInteger(deck.format) ||
+		(Number.isInteger(deck.format) && deck.format < 0) ||
         !Array.isArray(deck.heroes) ||
         !Array.isArray(deck.cards)) {
         throw new Error("Invalid deck definition");
@@ -255,7 +256,8 @@ function decode$2(deckstring) {
         throw new Error("Unsupported deckstring version " + version);
     }
     var format = reader.nextVarint();
-    if (format !== 1 && format !== 2) {
+    if (!Number.isInteger(format) ||
+		(Number.isInteger(format) && format < 0)) {
         throw new Error("Unsupported format " + format + " in deckstring");
     }
     var heroes = new Array(reader.nextVarint());

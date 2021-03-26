@@ -111,6 +111,11 @@ const DATA = {
             "NEUTRAL":"중립",
             "ALL":"모든 직업",
         },
+        CLASSIC:[//클래식 직업군(루프전용)
+            "WARRIOR","SHAMAN","ROGUE",
+            "PALADIN","HUNTER","DRUID",
+            "WARLOCK","MAGE","PRIEST"
+        ],
         CARDCLASS:[//카드 관련 직업명(루프전용)
             "WARRIOR","SHAMAN","ROGUE",
             "PALADIN","HUNTER","DRUID",
@@ -198,19 +203,24 @@ const DATA = {
             "야생":1,
             "wild":1,//에러 방지
             "정규":2,
-            "standard":2//에러 방지
+            "standard":2,//에러 방지
+            "클래식":3,
+            "classic":3//에러 방지
         },
         DECODE:{
             "1":"야생",
-            "2":"정규"
+            "2":"정규",
+            "3":"클래식",
         },
         EN:{
             "야생":"wild",
-            "정규":"standard"
+            "정규":"standard",
+            "클래식":"classic"
         },
         KR:{
             "wild":"야생",
-            "standard":"정규"
+            "standard":"정규",
+            "classic":"클래식"
         }
     },
     DECK_SLOT_LIMIT:5,

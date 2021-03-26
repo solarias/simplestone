@@ -92,6 +92,10 @@ async function window_shift(keyword, keyword2, keyword3) {
             let errorOccured = 0//오류 발생 여부(발생 시 화면을 자동으로 넘기지 않음)
             let windowShifted = 0//창 전환 여부(업데이트 화면 전환이 되었다면 "1"로 변경)
             let updateMsg = ""//업데이트 시 출력되는 메시지 내용
+            let forcedUpdateVersion = 0//강제 업데이트 여부
+                //0 : 강제 업데이트 대상 아님
+                //1 이상 : 강제 업데이트 대상임(업데이트 대상 버전)
+                //-1 : 강제 업데이트를 확인할 수 없음 => 강제 업데이트
         //0-2. 함수 선언 - 창 전환
             function process_update_window() {
                 //창 전환
@@ -116,11 +120,49 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }, delay)
                 });
             }
+        //1-0. 강제 업데이트 확인
+            //notice.json 불러오기
+            try {
+                //성공하면
+                let forcedVersionNotice = await fetch("./notice.json")
+                let forcedVersionNoticeJson = await forcedVersionNotice.json()
+                let forcedVersion = forcedVersionNoticeJson.forcedUpdateVersion
+                //^로컬 sist_forcedUpdateVersion 불러옴
+                try {
+                    let local_forcedUpdateVersion = await localforage.getItem("sist_forcedUpdateVersion")
+                    //성공하면
+                    //같으면
+                    if (forcedVersion === local_forcedUpdateVersion) {
+                        //강제 업데이트 X
+                        forcedUpdateVersion = 0
+                    } else {
+                        //강제 업데이트 O
+                        forcedUpdateVersion = forcedVersion
+                    }
+                } catch(e) {
+                    //실패하면 : 강제 업데이트 O
+                    forcedUpdateVersion = -1
+                }
+            } catch(e) {
+                //실패하면 : 강제 업데이트 O
+                forcedUpdateVersion = -1
+            }
         //1-1. 메타데이터 업데이트 점검, 준비
             //temp_metadata 변수 준비
             let temp_metadata = []
+            //강제 업데이트일 경우
+            if (forcedUpdateVersion !== 0) {
+                if (forcedUpdateVersion > 0) {
+                    //메시지 출력
+                    updateMsg = "[NOTICE] 강제 업데이트 요청을 확인하였습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                } else if (forcedUpdateVersion === -1) {
+                    //메시지 출력
+                    updateMsg = "[NOTICE] 강제 업데이트 요청여부 확인 불가 - 업데이트 실시"
+                    await process_update_message(updateMsg, 0, "error")
+                }
             //서버 버전 불명일 경우
-            if (session.serverVersion === undefined) {
+            } else if (session.serverVersion === undefined) {
                 //^로컬 sist_metadata 불러옴
                 try {
                     let local_metadata = await localforage.getItem("sist_metadata")
@@ -238,8 +280,19 @@ async function window_shift(keyword, keyword2, keyword3) {
         //2-1. 카드데이터 업데이트 점검, 준비
             //temp_db 변수 준비
             let temp_db = []
+            //강제 업데이트일 경우
+            if (forcedUpdateVersion !== 0) {
+                if (forcedUpdateVersion > 0) {
+                    //메시지 출력
+                    updateMsg = "[NOTICE] 강제 업데이트 요청을 확인하였습니다."
+                    await process_update_message(updateMsg, 0, "error")
+                } else if (forcedUpdateVersion === -1) {
+                    //메시지 출력
+                    updateMsg = "[NOTICE] 강제 업데이트 요청여부 확인 불가 - 업데이트 실시"
+                    await process_update_message(updateMsg, 0, "error")
+                }
             //서버 버전 불명일 경우
-            if (session.serverVersion === undefined) {
+            } else if (session.serverVersion === undefined) {
                 //^로컬 sist_db 불러옴
                 try {
                     let local_db = await localforage.getItem("sist_db")
@@ -390,12 +443,15 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }
                     //2. 세트 정보에 정규 여부 입력, 모든 슬러그를 대문자료 교체
                     let standardArr = []
+                    let wildArr = []
                     temp_metadata.setGroups.find(x => x.slug === "standard").cardSets.forEach(set => {
                         standardArr.push(set.toUpperCase())
                     })
                     temp_metadata.sets.forEach(set => {
                         set.slug = set.slug.toUpperCase()
-                        if (standardArr.indexOf(set.slug) < 0) {
+                        if (set.slug === "CLASSIC-CARDS") {
+                            set.format = "클래식"
+                        } else if (standardArr.indexOf(set.slug) < 0) {
                             set.format = "야생"
                         } else {
                             set.format = "정규"
@@ -497,6 +553,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                             } else if (thisSet === undefined) {
                                 card.cardSet.slug = "ETC"
                                 card.cardSet.name = "알 수 없는 세트(세트 ID : " + card.cardSetId + ")"
+                                card.cardSet.format = "사용불가"//사용불가 포맷 - 어느 포맷에서도 검색불가
                             }
                         //1-4. cardType (카드 종류 정보)
                             card.cardType = {}
@@ -627,7 +684,27 @@ async function window_shift(keyword, keyword2, keyword3) {
                     //#진행 포기 (참고할 카드데이터 없음)
                     return
                 }
+                //강제 업데이트 버전 저장(제대로 되었을 경우)
+                if (forcedUpdateVersion > 0) {
+                    try {
+                        //^^로컬 sist_forcedUpdateVersion에 강제 업데이트 버전 저장
+                        await localforage.setItem("sist_forcedUpdateVersion", forcedUpdateVersion)
+                    } catch(e) {
+                        //무시 (향후 재업데이트 필요 - 강제 업데이트 버전이 저장되지 않음)
+                        //오류메시지
+                        updateMsg = "[ERROR] 강제 업데이트 버전을 저장할 수 없습니다. (향후 재업데이트 필요)"
+                        await process_update_message(updateMsg, 0, "error")
+                        await process_update_message("(" + e + ")", 0, "error")
+                        errorOccured = 1
+                    }
+                } else {
+                    //오류메시지
+                    updateMsg = "[ERROR] 강제 업데이트 버전을 확인할 수 없었습니다. (향후 재업데이트 필요)"
+                    await process_update_message(updateMsg, 0, "error")
+                    errorOccured = 1
+                }
             }
+
 
             //session.metadata에 temp_metadata 저장
             session.metadata = temp_metadata
@@ -1007,6 +1084,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                 '<span class="popup_subtitle">대전방식</span>'+
                 '<button id="popup_format_standard" class="popup_button full tall newdeck_button newdeck_format" data-format="정규">정규</button>' +
                 '<button id="popup_format_wild" class="popup_button full tall newdeck_button newdeck_format" data-format="야생">야생</button>' +
+                '<button id="popup_format_classic" class="popup_button full tall newdeck_button newdeck_format" data-format="클래식">클래식</button>' +
                 '</div><div class="popup_frame_finish"></div>'
                 let btnText = ""
                 let classArr = []
@@ -1039,7 +1117,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                     onOpen:function() {
                         $$(".newdeck_button").forEach(function(target) {
                             target.onclick = function() {
-                                if (target.dataset.class) {
+                                //직업 버튼 클릭(noCard 상태가 아닐 경우에만 상호작용)
+                                if (target.dataset.class && !target.classList.contains("noCard")) {
                                     //직업 세팅
                                     if (!process.deck) process.deck = {}
                                     process.deck.class = target.dataset.class
@@ -1048,8 +1127,9 @@ async function window_shift(keyword, keyword2, keyword3) {
                                         x.classList.remove("selected")
                                     })
                                     target.classList.add("selected")
+                                //대전방식 버튼 클릭
                                 } else if (target.dataset.format) {
-                                    //대전 방식 세팅
+                                    //대전방식 세팅
                                     if (!process.deck) process.deck = {}
                                     process.deck.format = target.dataset.format
                                     //버튼 세팅
@@ -1057,6 +1137,30 @@ async function window_shift(keyword, keyword2, keyword3) {
                                         x.classList.remove("selected")
                                     })
                                     target.classList.add("selected")
+                                    //클래식 모드는 기본 9직업 외엔 비활성화
+                                    if (process.deck.format === "클래식") {
+                                        Object.keys(session.classInfo).forEach(key => {
+                                            let c = session.classInfo[key]
+                                            if (c.slug !== "ALL" && c.slug !== "NEUTRAL") {
+                                                if (DATA.CLASS.CLASSIC.indexOf(c.slug) < 0) {
+                                                    $("#popup_class_" + c.slug).classList.add("noCard")
+                                                    //선택된 직업이 비활성화되면 선택사항도 초기화
+                                                    if (c.slug === process.deck.class) {
+                                                        $("#popup_class_" + c.slug).classList.remove("selected")
+                                                        process.deck.class = ""
+                                                    }
+                                                }
+                                            }
+                                        })
+                                    //아니면 모두 활성화
+                                    } else {
+                                        Object.keys(session.classInfo).forEach(key => {
+                                            let c = session.classInfo[key]
+                                            if (c.slug !== "ALL" && c.slug !== "NEUTRAL") {
+                                                $("#popup_class_" + c.slug).classList.remove("noCard")
+                                            }
+                                        })
+                                    }
                                 }
                             }
                         })
@@ -1307,7 +1411,7 @@ async function window_shift(keyword, keyword2, keyword3) {
             //검색 초기치 강제 설정, 필터 활성화
             if (!process.deck) process.deck = {}
                 process.deck.class = undefined
-                process.deck.format = "야생"
+                process.deck.format = "검색"//검색 전용 포맷
             //필터 활성화
             card_cardSetFilter("cardInfoInit")
 
@@ -2075,45 +2179,43 @@ async function window_shift(keyword, keyword2, keyword3) {
                 }
             }
             //포맷 전환
-            if (process.deck.format === "정규") {
-                $("#deckconfig_format").innerHTML = "\"야생\"으로 전환";
-            } else {
-                $("#deckconfig_format").innerHTML = "\"정규\"로 전환";
-            }
+            $("#deckconfig_format").innerHTML = "대전방식 변경"
             $("#deckconfig_format").onclick = async () => {
-                if (process.deck.format === "정규") {
-                    //덱 포맷 전환
-                    process.deck.format = "야생";
-                    deck_refresh("init");
-                    //버튼 문구 변경
-                    $("#deckconfig_format").innerHTML = "\"정규\"로 전환";
-                    //문구 출력
-                    nativeToast({
-                        message: '대전방식이 변경되었습니다.<br>(정규 -> 야생)',
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'success',
-                        closeOnClick: 'true'
-                    });
-                    //저장
-                    await deck_save();
-                } else if (process.deck.format === "야생") {
-                    //덱 포맷 전환
-                    process.deck.format = "정규";
-                    deck_refresh("init");
-                    //버튼 문구 변경
-                    $("#deckconfig_format").innerHTML = "\"야생\"으로 전환";
-                    //문구 출력
-                    nativeToast({
-                        message: '대전방식이 변경되었습니다.<br>(야생 -> 정규)',
-                        position: 'center',
-                        timeout: 2000,
-                        type: 'success',
-                        closeOnClick: 'true'
-                    });
-                    //저장
-                    await deck_save();
-                }
+                swal({
+                    title: '대전방식 선택',
+                    html:
+                      '<button id="popup_format_standard" class="popup_button full" data-format="정규">정규</button>' +
+                      '<button id="popup_format_wild" class="popup_button full" data-format="야생">야생</button>' +
+                      '<button id="popup_format_classic" class="popup_button full" data-format="클래식">클래식</button>',
+                    onOpen:function() {
+                        //현재 비용 검색필터 보여주기
+                        $("#popup_format_" + DATA.FORMAT.EN[process.deck.format]).classList.add("selected");
+                        //버튼 상호작용
+                        $$(".popup_button").forEach(async (x) => {
+                            x.onclick = async () => {
+                                //덱 포맷 전환
+                                process.deck.format = x.dataset.format;
+                                deck_refresh("init");
+                                //문구 출력
+                                nativeToast({
+                                    message: '대전방식이 ' + x.dataset.format + '으로 변경되었습니다.',
+                                    position: 'center',
+                                    timeout: 2000,
+                                    type: 'success',
+                                    closeOnClick: 'true'
+                                });
+                                //저장
+                                await deck_save();
+                                //창 닫기
+                                swal.close();
+                            }
+                        })
+                    },
+                    showConfirmButton:false,
+                    showCancelButton:true,
+                    cancelButtonText: '취소',
+                    cancelButtonColor: '#d33'
+                })
             }
 
             //덱 편집
