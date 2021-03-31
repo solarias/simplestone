@@ -543,6 +543,11 @@ async function window_shift(keyword, keyword2, keyword3) {
                             }
                         //1-3. set (세트 정보)
                             card.cardSet = {}
+                            //명예의 전당 : 고전 세트로 취급(카드검색 오류 방지)
+                            if (card.cardSetId === 4) {
+                                card.cardSetId = 1635
+                            }
+                            //세트 정보 검색
                             let thisSet = temp_metadata.sets.find(x => x.id === card.cardSetId)
                             //세트 정보 입력
                             if (thisSet !== undefined) {
@@ -685,7 +690,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                     return
                 }
                 //강제 업데이트 버전 저장(제대로 되었을 경우)
-                if (forcedUpdateVersion > 0) {
+                if (forcedUpdateVersion >= 0) {
                     try {
                         //^^로컬 sist_forcedUpdateVersion에 강제 업데이트 버전 저장
                         await localforage.setItem("sist_forcedUpdateVersion", forcedUpdateVersion)
@@ -697,7 +702,8 @@ async function window_shift(keyword, keyword2, keyword3) {
                         await process_update_message("(" + e + ")", 0, "error")
                         errorOccured = 1
                     }
-                } else {
+                //강제 업데이트 버전 확인을 못했을 경우
+                } else if (forcedUpdateVersion < 0) {
                     //오류메시지
                     updateMsg = "[ERROR] 강제 업데이트 버전을 확인할 수 없었습니다. (향후 재업데이트 필요)"
                     await process_update_message(updateMsg, 0, "error")
