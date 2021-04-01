@@ -544,7 +544,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                         //1-3. set (세트 정보)
                             card.cardSet = {}
                             //구 오리지널, 명예의 전당 : 고전 세트로 취급(카드검색 오류 방지)
-                            let oldCards = [3,4]
+                            let oldCards = [3,4]//3 : 오리지널, 4 : 명예의전당
                             if (oldCards.indexOf(card.cardSetId) >= 0) {
                                 card.cardSetId = 1635
                             }
@@ -560,9 +560,6 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 card.cardSet.slug = "ETC"
                                 card.cardSet.name = "알 수 없는 세트(세트 ID : " + card.cardSetId + ")"
                                 card.cardSet.format = "사용불가"//사용불가 포맷 - 어느 포맷에서도 검색불가
-                                console.log(card.name)
-                                console.log(card.cardSetId)
-                                console.log('===============================')
                             }
                         //1-4. cardType (카드 종류 정보)
                             card.cardType = {}

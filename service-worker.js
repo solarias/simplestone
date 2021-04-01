@@ -83,7 +83,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/sist_window.js",
-    "revision": "e321c21f8c0d3cd8f80bd770989cce7f"
+    "revision": "0b476f00b45fd17bd2cb506bd8fb5a14"
   },
   {
     "url": "localtest/metadeck_archetype.json",
