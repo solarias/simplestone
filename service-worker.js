@@ -119,7 +119,7 @@ self.__precacheManifest = [
   },
   {
     "url": "package/Chart.min.js",
-    "revision": "02c4ffbe5ddf310174120fa063bad884"
+    "revision": "b5c2301eb15826bf38c9bdcaa3bbe786"
   },
   {
     "url": "package/clusterize.css",
