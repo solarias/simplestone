@@ -1909,10 +1909,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }).then(function(result) {
                         if (result) {
                             //미완성 시 경고창(허용 시 출력)
-                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                            if (process.deck.quantity !== DATA.DECK_LIMIT) {
                                 swal({
                                     type:"warning",
-                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                                     text:"정말로 덱코드를 출력하시겠습니까?",
                                     showCancelButton:true,
                                     confirmButtonText: '확인',
@@ -1929,10 +1929,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         }
                     })
                 //미완성 시 경고창(허용 시 출력)
-                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                } else if (process.deck.quantity !== DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
-                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                         text:"정말로 덱코드를 출력하시겠습니까?",
                         showCancelButton:true,
                         confirmButtonText: '확인',
@@ -1970,10 +1970,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }).then(function(result) {
                         if (result) {
                             //미완성 시 경고창
-                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                            if (process.deck.quantity !== DATA.DECK_LIMIT) {
                                 swal({
                                     type:"warning",
-                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                                     text:"정말로 텍스트를 출력하시겠습니까?",
                                     showCancelButton:true,
                                     confirmButtonText: '확인',
@@ -1989,10 +1989,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         }
                     })
                 //미완성 시 경고창
-                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                } else if (process.deck.quantity !== DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
-                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                         text:"정말로 텍스트를 출력하시겠습니까?",
                         showCancelButton:true,
                         confirmButtonText: '확인',
@@ -2029,10 +2029,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }).then(function(result) {
                         if (result) {
                             //미완성 시 경고창(허용 시 출력)
-                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                            if (process.deck.quantity !== DATA.DECK_LIMIT) {
                                 swal({
                                     type:"warning",
-                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                                     text:"정말로 HTML 태그를 출력하시겠습니까?",
                                     showCancelButton:true,
                                     confirmButtonText: '확인',
@@ -2048,10 +2048,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         }
                     })
                 //미완성 시 경고창(허용 시 출력)
-                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                } else if (process.deck.quantity !== DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
-                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                         text:"정말로 HTML 태그를 출력하시겠습니까?",
                         showCancelButton:true,
                         confirmButtonText: '확인',
@@ -2088,10 +2088,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }).then(function(result) {
                         if (result) {
                             //미완성 시 경고창(허용 시 출력)
-                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                            if (process.deck.quantity !== DATA.DECK_LIMIT) {
                                 swal({
                                     type:"warning",
-                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                                     text:"정말로 이미지를 출력하시겠습니까?",
                                     showCancelButton:true,
                                     confirmButtonText: '확인',
@@ -2107,10 +2107,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         }
                     })
                 //미완성 시 경고창(허용 시 출력)
-                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                } else if (process.deck.quantity !== DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
-                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                         text:"정말로 이미지를 출력하시겠습니까?",
                         showCancelButton:true,
                         confirmButtonText: '확인',
@@ -2147,10 +2147,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                     }).then(function(result) {
                         if (result) {
                             //미완성 시 경고창(허용 시 출력)
-                            if (process.deck.quantity < DATA.DECK_LIMIT) {
+                            if (process.deck.quantity !== DATA.DECK_LIMIT) {
                                 swal({
                                     type:"warning",
-                                    title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                                    title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                                     text:"정말로 덱코드를 출력하시겠습니까?",
                                     showCancelButton:true,
                                     confirmButtonText: '확인',
@@ -2167,10 +2167,10 @@ async function window_shift(keyword, keyword2, keyword3) {
                         }
                     })
                 //미완성 시 경고창(허용 시 출력)
-                } else if (process.deck.quantity < DATA.DECK_LIMIT) {
+                } else if (process.deck.quantity !== DATA.DECK_LIMIT) {
                     swal({
                         type:"warning",
-                        title:"덱이 " + DATA.DECK_LIMIT.toString() + "장을 채우지 못했습니다.",
+                        title:"덱 매수가 " + DATA.DECK_LIMIT.toString() + "장이 아닙니다.",
                         text:"정말로 덱코드를 출력하시겠습니까?",
                         showCancelButton:true,
                         confirmButtonText: '확인',

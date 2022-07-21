@@ -224,8 +224,8 @@ function card_move(cmd, log) {
             deckarr.forEach(id => {
                 let card = session.db[session.dbIndex[id.toString()]]
                 let quantity = card_getQuantity(id)
-                //덱이 30장 미만이고, 카드 없거나 카드가 1장일 때 전설이 아니면 카드 추가
-                if (process.deck.quantity < DATA.DECK_LIMIT &&
+                //카드 없거나 카드가 1장일 때 전설이 아니면 카드 추가 ("덱이 30장 미만"인 조건은 삭제)
+                if (/*process.deck.quantity < DATA.DECK_LIMIT &&*/
                     (quantity <= 0 || (quantity === 1 && card.rarity.slug !== "LEGENDARY"))) {
                     //로그 기록
                     if (log === true) log_record(cmd)
@@ -618,11 +618,16 @@ function deck_refresh(cmd) {
         //덱 가루 저장, 출력
         process.deck.dust = dust
         $("#dust_quantity").innerHTML = thousand(dust)
-    //덱이 완성되었으면 배경 변경
-    if (process.deck.quantity >= DATA.DECK_LIMIT) {
+    //덱에 카드가 30장 이상이면 배경 변경
+    if (process.deck.quantity === DATA.DECK_LIMIT) {//덱 카드 30장
         $("#deck_list_cover_overlay").classList.add("complete")
+        $("#deck_list_cover_overlay").classList.remove("over")
+    } else if (process.deck.quantity > DATA.DECK_LIMIT) {//30장 초과
+        $("#deck_list_cover_overlay").classList.remove("complete")
+        $("#deck_list_cover_overlay").classList.add("over")
     } else {
         $("#deck_list_cover_overlay").classList.remove("complete")
+        $("#deck_list_cover_overlay").classList.remove("over")
     }
 }
 

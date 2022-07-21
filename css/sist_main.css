@@ -1684,6 +1684,19 @@ body {
                         #B3FFFF 0%,
                         transparent 15px);
             }
+            #deck_list_cover_overlay.over {
+                background:
+                    linear-gradient(
+                        to bottom,
+                        #FF7F50 0%,
+                        transparent 15px,
+                        transparent calc(100% - 15px),
+                        #FF7F50 100%),
+                    linear-gradient(
+                        to right,
+                        #FF7F50 0%,
+                        transparent 15px);
+            }
         #deck_list {
             position: relative;
             overflow-y:scroll;
