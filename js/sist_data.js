@@ -135,7 +135,7 @@ const DATA = {
             "DRUID":"brown",
             "WARLOCK":"purple",
             "MAGE":"azure",
-            "PRIEST":"white",
+            "PRIEST":"white"
         }
     },
     RARITY:{

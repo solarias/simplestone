@@ -612,7 +612,7 @@ function deckcode_tag() {
                             switch (info.cardType.slug) {
                                 case "MINION":
                                     classinfo += " " + info.attack.toString() + "/" + info.health.toString()
-                                    if (info.minionType !== undefined) classinfo += ", " + info.minionType.name
+                                    if (info.minionType !== undefined) classinfo += ", " + info.minionType.name.join("&")
                                     break
                                 case "WEAPON":
                                     classinfo += " " + info.attack.toString() + "/" + info.durability.toString()
@@ -736,7 +736,7 @@ function deckcode_tag() {
                             switch (info.cardType.slug) {
                                 case "MINION":
                                     classinfo += " " + info.attack.toString() + "/" + info.health.toString()
-                                    if (info.minionType !== undefined) classinfo += ", " + info.minionType.name
+                                    if (info.minionType !== undefined) classinfo += ", " + info.minionType.name.join("&")
                                     break
                                 case "WEAPON":
                                     classinfo += " " + info.attack.toString() + "/" + info.durability.toString()

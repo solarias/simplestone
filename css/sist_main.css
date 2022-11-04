@@ -1287,7 +1287,7 @@ body {
                     background: linear-gradient(
                         to right,
                         rgba(60,60,60,1) 0%,
-                        rgba(60,60,60,1) calc(100% - 190px),
+                        rgba(60,60,60,1) calc(100% - 170px),
                         rgba(60,60,60,0) calc(100% - 25px),
                         rgba(60,60,60,0) 100%);
                     box-sizing: border-box;
@@ -2276,6 +2276,8 @@ body {
                         color:yellow;}
                     .metadeckslot_button_name.DEMONHUNTER {
                         color:darkgreen;}
+                    .metadeckslot_button_name.DEATHKNIGHT {
+                        color:#2B3031;}
                 .metadeckslot_button_class {
                     position:absolute;
                         left:5px;bottom:5px;

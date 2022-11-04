@@ -596,16 +596,31 @@ async function window_shift(keyword, keyword2, keyword3) {
                             }
                         //1-6. minionType (하수인 종류 정보) - 있는 경우에만
                             if (card.minionTypeId !== undefined) {
-                                card.minionType = {}
+                                card.minionType = {slug:[],name:[]}
                                 let thisMinionType = temp_metadata.minionTypes.find(x => x.id === card.minionTypeId)
                                 //하수인 종류 정보 입력
                                 if (thisMinionType !== undefined) {
-                                    card.minionType.slug = thisMinionType.slug.toUpperCase()
-                                    card.minionType.name = thisMinionType.name
+                                    card.minionType.slug.push(thisMinionType.slug.toUpperCase())
+                                    card.minionType.name.push(thisMinionType.name)
                                 //하수인 종류를 알 수 없는 카드는 "종족 불명" 종류로 취급
                                 } else if (thisMinionType === undefined) {
-                                    card.minionType.slug = "ETC"
-                                    card.minionType.name = "종족 불명"
+                                    card.minionType.slug.push("ETC")
+                                    card.minionType.name.push("종족 불명")
+                                }
+                                //1-7. multiType (다중 하수인 종류 정보) - 있는 경우에만
+                                if (card.multiTypeIds !== undefined) {
+                                    card.multiTypeIds.forEach(mtype => {
+                                        let multiType = temp_metadata.minionTypes.find(x => x.id === mtype)
+                                        //하수인 종류 정보 입력
+                                        if (multiType !== undefined) {
+                                            card.minionType.slug.push(multiType.slug.toUpperCase())
+                                            card.minionType.name.push(multiType.name)
+                                        //하수인 종류를 알 수 없는 카드는 "종족 불명" 종류로 취급
+                                        } else if (multiType === undefined) {
+                                            card.minionType.slug.push("ETC")
+                                            card.minionType.name.push("종족 불명")
+                                        }
+                                    })
                                 }
                             }
                         //1-7. cost (비용 - dataset에서 대문자 활용 문제)
@@ -618,7 +633,7 @@ async function window_shift(keyword, keyword2, keyword3) {
                                 if (thisSpellSchool !== undefined) {
                                     card.spellSchool.slug = thisSpellSchool.slug.toUpperCase()
                                     card.spellSchool.name = thisSpellSchool.name
-                                //하수인 종류를 알 수 없는 카드는 "종족 불명" 종류로 취급
+                                //주문 종류를 알 수 없는 카드는 "종족 불명" 종류로 취급
                                 } else if (thisSpellSchool === undefined) {
                                     card.spellSchool.slug = "ETC"
                                     card.spellSchool.name = "주문계열 불명"
@@ -650,12 +665,17 @@ async function window_shift(keyword, keyword2, keyword3) {
                             card.keywords.name = searchable(card.name)
                             card.keywords.text = searchable(card.text)
                             if (card.minionType !== undefined) {
-                                card.keywords.minionType = searchable(card.minionType.name)
+                                card.minionType.name.forEach(name => {
+                                    card.keywords.minionType = searchable(name)
+                                })
                             }
                             if (card.spellSchool !== undefined) {
                                 card.keywords.spellSchool = searchable(card.spellSchool.name)
                             }
                             card.keywords.cardType = searchable(card.cardType.name)
+                        }
+                        if (card.name === "천하무적") {
+                            console.log(card)
                         }
                     })
                     //카드 정렬
