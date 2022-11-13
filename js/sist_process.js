@@ -117,7 +117,7 @@ function deckslot_generateFragment(deck, number, key) {
     //마스터 슬롯 복사
     let fragment = session.masterSlot
     //필요한 정보 설정
-    fragment = fragment.replaceAll("$url",HEROURL + deck.class + ".jpg")//직업 이미지
+    fragment = fragment.replaceAll("$url",HEROURL + session.classInfo[deck.class].cardId + ".jpg")//직업 이미지
     fragment = fragment.replaceAll("$number",number.toString())//번호
     fragment = fragment.replaceAll("$date","편집: " + deck.date)//날짜
     fragment = fragment.replaceAll("$id",key)//이름
@@ -174,7 +174,7 @@ function metadeckslot_generateFragment(deck, number, key) {
     //마스터 슬롯 복사
     let fragment = session.masterMetaSlot
     //필요한 정보 설정
-    fragment = fragment.replaceAll("$url",HEROURL + deck.class + ".jpg")//직업 이미지
+    fragment = fragment.replaceAll("$url",HEROURL + session.classInfo[deck.class].cardId + ".jpg")//직업 이미지
     fragment = fragment.replaceAll("$number","#" + number.toString())//순번
     fragment = fragment.replaceAll("$deckcode",deck.deckcode)//이름
     fragment = fragment.replaceAll("$name",deck.archetype_name)//덱 이름
@@ -582,7 +582,7 @@ function deck_refresh(cmd) {
         }
         //영웅 이미지 출력
         /*if (session.offline === false)*/
-            $("#deck_hero").style.backgroundImage = "url(" + HEROURL + process.deck.class + ".jpg)"
+            $("#deck_hero").style.backgroundImage = "url(" + HEROURL + session.classInfo[process.deck.class].cardId + ".jpg)"
         //덱 이름 출력
         if (process.deck.name) {
             $("#deck_name").innerHTML = process.deck.name

@@ -234,6 +234,8 @@ function deckcode_text() {
     outputtext += "# " + session.metadata.year + "\n";
     //가루
     outputtext += "# 가루 : " + thousand(process.deck.dust) + "\n";
+    //카드수량
+    outputtext += "# 카드 수량 : " + thousand(process.deck.quantity) + "\n";
     outputtext += "#\n";
     //카드
     process.deck.cards.forEach(function(card) {
@@ -414,16 +416,6 @@ function deckcode_tag() {
                 "FONT-WEIGHT:bold;"
             )
         _wrapper.appendChild(_header)
-            let _icon = document.createElement("img.simplestone_icon")
-                _icon.src = ICONDATA[deck.class]
-                _icon.alt = session.classInfo[deck.class].name
-                _icon.setAttribute("style",
-                    "FLOAT:left;"+
-                    "DISPLAY:block;"+
-                    "WIDTH:3em;"+
-                    "HEIGHT:3em;"
-                )
-            _header.appendChild(_icon);
             let _headercenter = document.createElement("div.simplestone_headercenter");
                 _headercenter.setAttribute("style",
                     "FLOAT:left;"+
@@ -472,7 +464,7 @@ function deckcode_tag() {
             let _headerlight = document.createElement("div.simplestone_headerlight")
                 _headerlight.setAttribute("style",
                     "FLOAT:right;"+
-                    "WIDTH:5em;"+
+                    "WIDTH:6em;"+
                     "HEIGHT:3em;"
                 )
             _header.appendChild(_headerlight);
@@ -913,6 +905,8 @@ function deckcode_image() {
             return new Promise((resolve2) => {
                 imageArr.push(HEROURL + session.classInfo[process.deck.class].slug + ".jpg")//헤더 이미지
                 imageArr.push("./images/icon_dust.png")//가루
+                imageArr.push("./images/icon_cardquantity.png")//가루
+
                 //if (session.offline === false) {
                     process.deck.cards.forEach(function(card) {
                         imageArr.push(TILEURL + session.db[session.dbIndex[card[0].toString()]].id + ".jpg")//덱에 있는 카드 이미지
@@ -934,6 +928,7 @@ function deckcode_image() {
                     }
                     imageLoaded[i].src = imageArr[i]
                 })
+
             })
         //다 불렀으면
         })().then(() => {
@@ -951,9 +946,11 @@ function deckcode_image() {
                 padding:5,
                 width:300,
                 height:50,
-                gradient_start:90,
+                gradient_start:120,
                 gradient_end:240,
                 dust:16,
+                cardquantity:16,
+                cardquantity_start:100,
                 format:18,
                 deckname:22
               },
@@ -1046,6 +1043,16 @@ function deckcode_image() {
             ctx.font = imagesize.header.dust + 'px SpoqaHanSans'
             ctx.fillText(thousand(process.deck.dust), imagesize.header.padding + imagesize.header.dust + 4, imagesize.header.padding + imagesize.header.dust - 2)
 
+            //카드수량 아이콘
+            let cardquantity = new Image(imagesize.header.cardquantity,imagesize.header.cardquantity)
+            cardquantity.src = "./images/icon_cardquantity.png"
+            ctx.drawImage(cardquantity, imagesize.header.cardquantity_start, imagesize.header.padding, imagesize.header.cardquantity, imagesize.header.cardquantity)
+            //카드수량
+            ctx.fillStyle = 'orange'
+            ctx.lineWidth = 0.5
+            ctx.font = imagesize.header.dust + 'px SpoqaHanSans'
+            ctx.fillText(thousand(process.deck.quantity), imagesize.header.cardquantity_start + imagesize.header.cardquantity + 4, imagesize.header.padding + imagesize.header.cardquantity - 2)
+
             //덱 이름
             ctx.fillStyle = 'white';
             ctx.lineWidth = 0.5;
@@ -1095,24 +1102,6 @@ function deckcode_image() {
 
             //카드
             process.deck.cards.forEach(function(card, i) {
-                //카드정보
-                let info = session.db[session.dbIndex[card[0].toString()]]
-                //Y축 시작점
-                let ystart = imagesize.header.height
-                 + imagesize.date.height
-                 + imagesize.card.gap * (i+1)
-                 + imagesize.card.height * i
-                //이미지 변수
-                let cardimg = new Image()
-
-                //이미지
-                /*
-                if (session.offline === false) {
-                    cardimg.src = TILEURL + info.id + ".jpg"
-                } else {
-                    cardimg.src = ""
-                }
-                */
                 cardimg.src = TILEURL + info.id + ".jpg"
                 //cardimg.height = imagesize.card.height;
                 //cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
@@ -1129,14 +1118,6 @@ function deckcode_image() {
                 let nameLen = info.name.replaceAll(" ","").replaceAll(".","").length;
                 grd.addColorStop(0, "rgb(34,34,34)");
                 grd.addColorStop(1, "rgba(34,34,34,0)");
-                /*if (nameLen < 10) {
-                    grd.addColorStop(0, "rgb(34,34,34)");
-                    grd.addColorStop(1, "rgba(34,34,34,0)");
-                } else {
-                    grd.addColorStop(0, "rgb(34,34,34)");
-                    grd.addColorStop(0.7, "rgba(34,34,34,0.8)");
-                    grd.addColorStop(1, "rgba(34,34,34,0)");
-                }*/
                 ctx.fillStyle = grd;
                 ctx.fillRect(imagesize.card.gradient_start - 5, ystart, imagesize.card.gradient_end, imagesize.card.height);
                 ctx.fillStyle = "rgb(34,34,34)";

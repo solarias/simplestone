@@ -36,7 +36,8 @@ const TILEURL = "https://solarias.github.io/simplestone_database/tile/tile_"
 const PORTRAITURL = "./images/portraits/"
     /*const TILEURL_REPLACE = "./images/tiles_replace/"
     const PORTRAITURL_REPLACE = "./images/portraits_replace/"*/
-const HEROURL = "./images/heroes/"
+const HEROURL = "https://solarias.github.io/simplestone_database/tile/tile_"
+    //const HEROURL = "./images/heroes/" - 기존 로컬 링크
 const METADECKAPI = {
     "solarias.github.io":"https://solarias.github.io/simplestone_metadeck/",
     //"localhost":"./localtest/",
