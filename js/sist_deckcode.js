@@ -1102,6 +1102,24 @@ function deckcode_image() {
 
             //카드
             process.deck.cards.forEach(function(card, i) {
+                //카드정보
+                let info = session.db[session.dbIndex[card[0].toString()]]
+                //Y축 시작점
+                let ystart = imagesize.header.height
+                    + imagesize.date.height
+                    + imagesize.card.gap * (i+1)
+                    + imagesize.card.height * i
+                //이미지 변수
+                let cardimg = new Image()
+
+                //이미지
+                /*
+                if (session.offline === false) {
+                    cardimg.src = TILEURL + info.id + ".jpg"
+                } else {
+                    cardimg.src = ""
+                }
+                */
                 cardimg.src = TILEURL + info.id + ".jpg"
                 //cardimg.height = imagesize.card.height;
                 //cardimg.width = imagesize.card.height * heroimg.naturalWidth / heroimg.naturalHeight;
