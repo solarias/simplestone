@@ -903,7 +903,7 @@ function deckcode_image() {
         let imageArr = [], imageLoaded = [], count = 0;
         (() => {
             return new Promise((resolve2) => {
-                imageArr.push(HEROURL + session.classInfo[process.deck.class].slug + ".jpg")//헤더 이미지
+                imageArr.push(HEROURL + session.classInfo[process.deck.class].cardId + ".jpg")//헤더 이미지
                 imageArr.push("./images/icon_dust.png")//가루
                 imageArr.push("./images/icon_cardquantity.png")//가루
 
@@ -1014,7 +1014,7 @@ function deckcode_image() {
         //헤더
             //헤더 이미지
             let heroimg = new Image()
-            heroimg.src = HEROURL + session.classInfo[process.deck.class].slug + ".jpg"
+            heroimg.src = HEROURL + session.classInfo[process.deck.class].cardId + ".jpg"
             heroimg.height = imagesize.header.height
             heroimg.width = imagesize.header.height * heroimg.naturalWidth / heroimg.naturalHeight
             ctx.drawImage(heroimg, imagesize.wrapper.width - heroimg.width, 0, heroimg.width, heroimg.height)
