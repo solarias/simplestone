@@ -5,7 +5,7 @@
 
 2. 서비스워커 업데이트 (업데이트하지 않으면 작동하지 않을 수도 있음)
  - 심플스톤 폴더에서 Git bash here
- - workbox generateSW workbox-config.js 입력
+ - workbox generateSW workbox-config.js
  (html, css, js, json 중 단 하나라도 바뀌었다면 서비스워커 업데이트 실행 후 테스트할 것)
 
 * 작동 테스트 하는 법
