@@ -1,10 +1,16 @@
 {
-    "forcedUpdateVersion":5,
+    "forcedUpdateVersion":6,
     "content":[
         {
             "date":"덱 저장 관련 주의사항",
             "content":[
                     "<span style='color:yellow;'>심플스톤 덱 정보는 크롬 브라우저의 저장소에 보관됩니다. 크롬 브라우저 저장기록을 삭제하면 덱 정보가 사라질 수 있으니 주의해주세요.</span>"
+                ]
+        },
+        {
+            "date":"2023-07-28",
+            "content":[
+                    "핵심 세트에서 제외된 카드가 검색되는 문제 수정"
                 ]
         },
         {

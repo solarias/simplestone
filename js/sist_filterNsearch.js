@@ -826,7 +826,7 @@ function card_getSearchResult(className) {
     //정해둔 직업으로 카드 검색
     let arr = []
     session.db.forEach(function(card) {
-        if (card.collectible === 1 &&//수집가능한 카드만 검색 가능
+        if (card.collectible === 1 && (!card.removed || card.removed !== true) &&//수집가능한 카드만 검색 & 금지가 아닌 카드만 가능
             //직업
             (className === "all" ||//"모든 직업"이면 다 출력
             (card.multiClass.length === 0 &&//다중직업 없으면
@@ -856,6 +856,7 @@ function card_getSearchResult(className) {
     })
 
     //검색된 결과 수량 출력
+    console.log(arr.length.toString() + "장 검색됨")
     return arr
 }
 
@@ -899,7 +900,7 @@ async function card_search(action) {
             })
         //"덱 짜기"라면
         } else if (process.state === "deckbuilding") {
-            //검색 직업이 중립 -
+            //검색 직업이 중립
             if (process.search.class === "NEUTRAL") classArr.push(process.deck.class)
             else classArr.push("NEUTRAL")
         }

@@ -355,16 +355,15 @@ function card_addFragment(pos, id, quantity, show1, flasharr) {
             }
         }//카드 수령이 0이면: 숨기기
     fragment = fragment.replace("$quantity",numtext)
-    //샤용불가 정보 입력
+
     //샤용불가 정보 입력
     if (pos === "deck") {
-        //사용불가 카드 - 당분간은 처리하지 않기
-        /*if (card.removed === true) {
+        //사용불가 카드 : 금지
+        if (card.removed === true) {
             fragment = fragment.replace(" unusable_hidden","")
             process.deck.unusable += 1
-        } else*/
         //정규 : 정규가 아니면 금지
-        if (process.deck.format === "정규") {
+        } else if (process.deck.format === "정규") {
             if (card.cardSet.format !== "정규") {
                 fragment = fragment.replace(" unusable_hidden","")
                 process.deck.unusable += 1
